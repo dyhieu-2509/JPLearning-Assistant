@@ -14,12 +14,43 @@ class KnowledgeSource(BaseModel):
     source: str = ""
 
 
+class StudentProfileContext(BaseModel):
+    """Learner profile snapshot supplied by the backend."""
+
+    user_id: str = Field(alias="userId")
+    current_level: str = Field(default="N5", alias="currentLevel")
+    target_level: str = Field(default="N4", alias="targetLevel")
+    goal: str = "JLPT preparation"
+    daily_study_minutes: int = Field(default=30, alias="dailyStudyMinutes")
+    explanation_style: str = Field(default="concise", alias="explanationStyle")
+    romaji_enabled: bool = Field(default=True, alias="romajiEnabled")
+    weak_skills: list[str] = Field(default_factory=list, alias="weakSkills")
+
+    model_config = ConfigDict(populate_by_name=True)
+
+
+class KnowledgeProgressContext(BaseModel):
+    """Learner mastery snapshot for one knowledge item."""
+
+    knowledge_type: str = Field(alias="knowledgeType")
+    knowledge_id: str = Field(alias="knowledgeId")
+    title: str = ""
+    level: str = "N5"
+    mastery_score: float = Field(default=0.0, alias="masteryScore")
+    correct_count: int = Field(default=0, alias="correctCount")
+    wrong_count: int = Field(default=0, alias="wrongCount")
+
+    model_config = ConfigDict(populate_by_name=True)
+
+
 class TutorChatRequest(BaseModel):
     """Learner question sent by the backend."""
 
     message: str = Field(min_length=1, max_length=2000)
     user_id: str | None = Field(default=None, alias="userId")
     context_topic: str | None = Field(default=None, alias="contextTopic")
+    profile: StudentProfileContext | None = None
+    weak_progress: list[KnowledgeProgressContext] = Field(default_factory=list, alias="weakProgress")
 
     model_config = ConfigDict(populate_by_name=True)
 
