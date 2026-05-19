@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     ollama_timeout_seconds: float = Field(default=120.0, alias="OLLAMA_TIMEOUT_SECONDS")
     openai_api_key: str | None = Field(default=None, alias="OPENAI_API_KEY")
     gemini_api_key: str | None = Field(default=None, alias="GEMINI_API_KEY")
+    gemini_model: str = Field(default="gemini-2.5-flash", alias="GEMINI_MODEL")
     llm_provider: str = Field(default="mock", alias="LLM_PROVIDER")
 
     model_config = SettingsConfigDict(
