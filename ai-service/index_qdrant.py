@@ -199,13 +199,21 @@ def main() -> None:
     parser.add_argument("--qdrant-url", default=None, help="Qdrant URL override")
     parser.add_argument("--collection", default=None, help="Collection name override")
     parser.add_argument("--batch-size", type=int, default=64, help="Embedding/upsert batch size")
+    parser.add_argument("--prefer-grpc", action="store_true", help="Use Qdrant gRPC for uploads")
     args = parser.parse_args()
 
     settings = get_settings()
     qdrant_url = args.qdrant_url or settings.qdrant_url
     collection_name = args.collection or settings.qdrant_collection
     embedder = create_text_embedder(settings)
-    client = QdrantClient(url=qdrant_url)
+    client_kwargs = {
+        "url": qdrant_url,
+        "prefer_grpc": args.prefer_grpc,
+        "timeout": 60,
+    }
+    if not args.prefer_grpc:
+        client_kwargs["headers"] = {"Accept-Encoding": "identity"}
+    client = QdrantClient(**client_kwargs)
 
     try:
         documents = build_documents(args.level)
