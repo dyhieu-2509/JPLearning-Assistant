@@ -20,12 +20,24 @@ class TutorServiceImpl(TutorService):
 
     def chat(self, request: TutorChatRequest) -> TutorChatResponse:
         """Retrieve context and generate a Vietnamese tutor answer."""
-        graph_sources = self._neo4j_reader.search(request.message, level="N5", limit=5)
-        vector_sources = self._qdrant_client.search(request.message, level="N5", limit=5)
+        level = self._profile_level(request)
+        graph_sources = self._neo4j_reader.search(request.message, level=level, limit=5)
+        vector_sources = self._qdrant_client.search(request.message, level=level, limit=5)
         sources = self._merge_sources(vector_sources, graph_sources, limit=8)
-        answer = self._llm_client.generate_tutor_answer(request.message, sources)
+        answer = self._llm_client.generate_tutor_answer(
+            request.message,
+            sources,
+            profile=request.profile,
+            weak_progress=request.weak_progress,
+        )
         confidence = 0.7 if sources else 0.3
         return TutorChatResponse(answer=answer, sources=sources, confidence=confidence)
+
+    def _profile_level(self, request: TutorChatRequest) -> str:
+        if request.profile is None:
+            return "N5"
+        level = request.profile.current_level.strip().upper()
+        return level if level in {"N1", "N2", "N3", "N4", "N5"} else "N5"
 
     def _merge_sources(self, *source_groups, limit: int):
         seen: set[tuple[str, str, str]] = set()
