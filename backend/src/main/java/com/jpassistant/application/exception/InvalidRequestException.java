@@ -1,4 +1,4 @@
-package com.jpassistant.application.service;
+package com.jpassistant.application.exception;
 
 public class InvalidRequestException extends RuntimeException {
 

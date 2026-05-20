@@ -1,6 +1,8 @@
-package com.jpassistant.application.service;
+package com.jpassistant.application.service.impl;
 
-import com.jpassistant.application.dto.KnowledgeItemResponse;
+import com.jpassistant.application.dto.response.KnowledgeItemResponse;
+import com.jpassistant.application.exception.InvalidRequestException;
+import com.jpassistant.application.service.KnowledgeService;
 import com.jpassistant.domain.knowledge.KnowledgeGraphRepository;
 import com.jpassistant.domain.knowledge.KnowledgeItem;
 import java.util.List;
