@@ -1,4 +1,4 @@
-package com.jpassistant.infrastructure.persistence;
+package com.jpassistant.infrastructure.persistence.neo4j;
 
 import com.jpassistant.domain.knowledge.KnowledgeGraphRepository;
 import com.jpassistant.domain.knowledge.KnowledgeItem;
@@ -26,7 +26,8 @@ public class Neo4jKnowledgeRepository implements KnowledgeGraphRepository {
             WHERE ($level = '' OR v.level = $level)
               AND (size(terms) = 0 OR any(term IN terms WHERE searchable CONTAINS term))
             WITH v,
-                 CASE WHEN coalesce(v.meaning_vi, '') <> '' OR coalesce(v.meaning_en, '') <> '' THEN 0 ELSE 1 END AS meaningRank
+                 CASE WHEN coalesce(v.meaning_vi, '') <> ''
+                           OR coalesce(v.meaning_en, '') <> '' THEN 0 ELSE 1 END AS meaningRank
             RETURN 'Vocabulary' AS type,
                    coalesce(v.reading, elementId(v)) + ':' + coalesce(v.level, '') AS id,
                    coalesce(v.kanji, v.reading, '') AS title,

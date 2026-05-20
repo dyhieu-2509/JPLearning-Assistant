@@ -1,6 +1,6 @@
 package com.jpassistant.application.service;
 
-import com.jpassistant.application.dto.KnowledgeItemResponse;
+import com.jpassistant.application.dto.response.KnowledgeItemResponse;
 import java.util.List;
 
 public interface KnowledgeService {
