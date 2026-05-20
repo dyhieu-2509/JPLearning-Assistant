@@ -1,4 +1,4 @@
-package com.jpassistant.api.v1;
+package com.jpassistant.api.v1.controller;
 
 import java.util.Map;
 import org.springframework.web.bind.annotation.GetMapping;

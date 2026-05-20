@@ -1,6 +1,6 @@
-package com.jpassistant.api.v1;
+package com.jpassistant.api.v1.controller;
 
-import com.jpassistant.application.dto.KnowledgeItemResponse;
+import com.jpassistant.application.dto.response.KnowledgeItemResponse;
 import com.jpassistant.application.service.KnowledgeService;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;

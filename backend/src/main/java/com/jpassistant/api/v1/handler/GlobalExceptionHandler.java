@@ -1,7 +1,8 @@
-package com.jpassistant.api.v1;
+package com.jpassistant.api.v1.handler;
 
-import com.jpassistant.application.dto.ApiErrorResponse;
-import com.jpassistant.application.service.InvalidRequestException;
+import com.jpassistant.application.dto.response.ApiErrorResponse;
+import com.jpassistant.application.exception.AccountLinkRequiredException;
+import com.jpassistant.application.exception.InvalidRequestException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,14 @@ public class GlobalExceptionHandler {
             HttpServletRequest request
     ) {
         return error(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(AccountLinkRequiredException.class)
+    public ResponseEntity<ApiErrorResponse> handleAccountLinkRequired(
+            AccountLinkRequiredException ex,
+            HttpServletRequest request
+    ) {
+        return error(HttpStatus.CONFLICT, ex.getMessage(), request);
     }
 
     /**
