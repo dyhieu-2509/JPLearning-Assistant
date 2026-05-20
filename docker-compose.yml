@@ -13,6 +13,11 @@ services:
       NEO4J_USER: ${NEO4J_USER:-neo4j}
       NEO4J_PASSWORD: ${NEO4J_PASSWORD:-neo4jpassword}
       AI_SERVICE_URL: http://ai-service:8000
+      AI_SERVICE_TIMEOUT: ${AI_SERVICE_TIMEOUT:-45s}
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-me-32-bytes-minimum-for-hs256}
+      JWT_ACCESS_TOKEN_TTL: ${JWT_ACCESS_TOKEN_TTL:-30m}
+      JWT_REFRESH_TOKEN_TTL: ${JWT_REFRESH_TOKEN_TTL:-14d}
+      FRONTEND_AUTH_REDIRECT_URL: ${FRONTEND_AUTH_REDIRECT_URL:-http://localhost:3000/auth/callback}
     depends_on:
       - postgres
       - neo4j
@@ -39,6 +44,7 @@ services:
       LLM_PROVIDER: ${LLM_PROVIDER:-mock}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.5-flash}
     depends_on:
       - neo4j
       - qdrant
