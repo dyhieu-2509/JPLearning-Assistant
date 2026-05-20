@@ -1,4 +1,4 @@
-package com.jpassistant.application.dto;
+package com.jpassistant.application.dto.response;
 
 public record KnowledgeItemResponse(
         String type,

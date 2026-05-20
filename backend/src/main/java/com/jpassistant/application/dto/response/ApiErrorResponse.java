@@ -1,4 +1,4 @@
-package com.jpassistant.application.dto;
+package com.jpassistant.application.dto.response;
 
 import java.time.Instant;
 
