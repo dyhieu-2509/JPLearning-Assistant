@@ -1,0 +1,24 @@
+package com.jpassistant.api.v1.controller;
+
+import com.jpassistant.application.dto.response.LearnerDashboardResponse;
+import com.jpassistant.application.service.DashboardService;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/v1/personalization")
+public class DashboardController {
+
+    private final DashboardService dashboardService;
+
+    public DashboardController(DashboardService dashboardService) {
+        this.dashboardService = dashboardService;
+    }
+
+    @GetMapping("/me/dashboard")
+    public LearnerDashboardResponse getLearnerDashboard(Authentication authentication) {
+        return dashboardService.getLearnerDashboard(authentication.getName());
+    }
+}
