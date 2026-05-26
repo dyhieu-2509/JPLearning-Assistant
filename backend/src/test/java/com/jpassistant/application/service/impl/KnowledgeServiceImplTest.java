@@ -1,8 +1,9 @@
-package com.jpassistant.application.service;
+package com.jpassistant.application.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.jpassistant.application.exception.InvalidRequestException;
 import com.jpassistant.domain.knowledge.KnowledgeGraphRepository;
 import com.jpassistant.domain.knowledge.KnowledgeItem;
 import java.util.List;
