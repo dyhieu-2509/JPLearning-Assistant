@@ -1,0 +1,848 @@
+level,grammar_pattern,meaning_en,meaning_vi
+N5,cha ikenai / ja ikenai,must not do (spoken Japanese),không được làm (nói tiếng Nhật)
+N5,da / desu,"to be (am, is, are, were, used to)","chỉ là (am, is, are, were, used to)"
+N5,dake,only; just; as much as ~,chỉ một; chỉ; tôi nghĩ là nhiều như ~
+N5,darou,I think; it seems; probably; right?,tôi nghĩ; có vẻ như; có lẽ; phải không?
+N5,de,in; at; on; by; with; via ~,TRONG; Tại; TRÊN; qua; với; thông qua ~
+N5,demo,but; however; though ~,Nhưng; Tuy nhiên; mặc dù ~
+N5,deshou,I think; it seems; probably; right?,tôi nghĩ; có vẻ như; có lẽ; phải không?
+N5,donna,what kind of; what sort of,loại gì; tại sao lại là loại
+N5,doushite,why; for what reason; how,Tại sao; vì lý do gì; thế nào
+N5,douyatte,how; in what way; by what means​,Làm sao; bằng cách nào; bằng cách​
+N5,ga,subject marker; however; but ~,điểm đánh dấu chủ đề; Tuy nhiên; nhưng ~
+N5,ga arimasu,there is; is (non-living things),có; là (vật không sống)
+N5,ga hoshii,to want something,muốn một cái gì đó
+N5,ga imasu,there is; to be; is (living things),có; được ; là (sinh vật sống)
+N5,hou ga ii,had better; it'd be better to; should ~,đã tốt hơn; sẽ tốt hơn; nên ~
+N5,i-adjectives,i-adjectives,i-tính từ
+N5,ichiban,the most; the best,nhiều nhất; the best
+N5,issho ni,together,cùng nhau
+N5,itsumo,always; usually; habitually,luôn luôn; thường xuyên; thói quen
+N5,janai / dewa nai,じゃない・ではないto not be (am not; is not; are not),じゃない・ではないkhông tồn tại (không phải; không phải; không phải)
+N5,ka,question particle,câu hỏi hạt
+N5,ka~ka,or,or
+N5,kara,because; since; from,bởi vì; từ; từ
+N5,kata,the way of doing something; how to do ~,cách làm điều gì đó; cách làm ~
+N5,kedo,but; however; although ~,Nhưng; Tuy nhiên; mặc dù ~
+N5,keredo mo,but; however; although ~,Nhưng; Tuy nhiên; mặc dù vẫn còn ~
+N5,mada,still; not yet,vẫn; chưa
+N5,mada ~te imasen,have not yet ~,vẫn chưa ~
+N5,made,until; as far as; to (an extent); even ~,cho đến khi; xa như ; đến (một mức độ); thậm chí ~
+N5,mae ni,before; in front of ~,trước; trước ~
+N5,masen ka,would you; do you want to; shall we ~,bạn sẽ; bạn có muốn không; chúng ta nhé ~
+N5,mashou,let's ~; shall we ~,hãy ~; chúng ta nhé ~
+N5,mashouka,shall I ~; used to offer help to the listener,tôi sẽ ~; cũng được sử dụng để đề nghị trợ giúp cho người nghe
+N5,mo,too; also; as well,cũng vậy; Mà còn; cũng
+N5,mou,already; anymore; again; other,đã; nữa; lại; other
+N5,na-adjectives,na-adjectives,na-tính từ
+N5,naa,"sentence ending particle; confirmation; admiration, etc","tiểu từ kết thúc câu; xác nhận; ngưỡng mộ, v.v."
+N5,naide,without doing ~; to do [B] without doing [A],không làm ~; làm [B] mà không làm [A]
+N5,naide kudasai,please don't do ~,làm ơn đừng làm vậy ~
+N5,naito ikenai,must do; have an obligation to do ~,phải làm; có nghĩa vụ phải làm ~
+N5,naku temo ii,don't have to,không cần phải làm
+N5,nakucha,must do; need to; gotta do ~,phải làm; cần phải ; phải làm ~
+N5,nakute wa ikenai,must do; need to do,phải làm; cần phải làm
+N5,nakute wa naranai,must do; need to do ~,phải làm; cần phải làm ~
+N5,naru,to become,to Become
+N5,ndesu,to explain something; show emphasis,để giải thích điều gì đó; show nhấn mạnh
+N5,ne,isn't it? right? eh?,phải không? Phải? eh?
+N5,ni,destination particle; in; at; on; to,hạt đích; TRONG; Tại; TRÊN; to
+N5,ni iku,go to do ~,go to do ~
+N5,ni suru,to decide on,quyết định on
+N5,ni/e,to (indicates direction / destination),to (biểu thị hướng/đích đến)
+N5,no,possessive particle,trợ từ sở hữu
+N5,no desu,to explain something; show emphasis,để giải thích điều gì đó; thể hiện sự nhấn mạnh
+N5,no ga heta,to be bad at doing something,làm việc gì đó dở
+N5,no ga jouzu,to be good at,giỏi
+N5,no ga suki,to like doing something,thích làm việc gì đó
+N5,no naka de [A] ga ichiban,"out of this group, [A] is best","trong nhóm này, [A] là best"
+N5,node,because of; given that; since ~,vì ; cho rằng; kể từ ~
+N5,o / go,polite marker; honorific prefix particle,điểm đánh dấu lịch sự; tiền tố kính ngữ hạt
+N5,o / wo,object marker particle,hạt đánh dấu đối tượng
+N5,o kudasai,please give me ~,làm ơn cho tôi ~
+N5,shikashi,but; however ~,Nhưng; tuy nhiên ~
+N5,sore kara,and; and then; after that; since then,Và; và sau đó; sau đó; kể từ đó
+N5,soshite,and; and then; thus; and now ~,Và; và sau đó; do đó; và bây giờ ~
+N5,sugiru,too much,quá nhiều
+N5,ta koto ga aru,to have done something before,đã làm việc gì đó trước đây
+N5,tai,want to do something,muốn làm gì đó
+N5,tari~tari,do such things as A and B,làm những việc như A và B
+N5,te aru,is/has been done (resulting state),đã/đã được thực hiện (trạng thái kết quả)
+N5,te iru,ongoing action or current state,hành động đang diễn ra hoặc trạng thái hiện tại
+N5,te kara,after doing ~,sau khi làm ~
+N5,te kudasai,please do,làm ơn đừng làm
+N5,te wa ikenai,must not; may not; cannot,không được; có thể không; không thể
+N5,temo ii desu,is OK to ~; is alright to ~; may I ~?,được ~; được thôi ~; tôi có thể ~?
+N5,to,and; with; as; connecting particle,Và; với; BẰNG; kết nối hạt
+N5,toki,when; at this time,khi; vào lúc này
+N5,totemo,very; awfully; exceedingly​,rất; khủng khiếp ; cực kỳ​
+N5,tsumori,plan to ~; intend to ~,dự định ~; dự định ~
+N5,wa - topic marker,topic marker,topic marker
+N5,wa ~yori... desu,[Noun-1] is more ~ than [Noun-2],[Danh từ-1] nhiều hơn ~ hơn [Danh từ-2]
+N5,wa dou desu ka,how about; how is,bạn nghĩ thế nào về
+N5,ya,and; or; connecting particle,Và; hoặc; kết nối hạt
+N5,yo,you know; emphasis (ending particle),Bạn biết; sự nhấn mạnh (tiểu từ kết thúc)
+N5,yori ~hou ga,[2] is more than [1],[2] nhiều hơn [1]
+N4,aida,while; during; between ~,trong khi; trong lúc; giữa ~
+N4,aida ni,while; during~ something happened,trong khi; trong~ có chuyện gì đó đã xảy ra
+N4,amari~nai,"not very, not much ~","không nhiều, không nhiều ~"
+N4,ato de,after~; later,sau~; sau
+N4,ba,conditional form; If [A] then [B],hình thức có điều kiện; Nếu [A] thì [B]
+N4,baai wa,in the event of; in the case that ~,trong trường hợp; chỉ trong trường hợp đó ~
+N4,bakari,only; nothing but ~,chỉ một; không có gì ngoài ~
+N4,dake de,just by; just by doing,chỉ bằng ; chỉ bằng cách làm
+N4,dasu,"to begin to; to start to; to burst into; ... out (e.g. to jump out, to carry out)​","bắt đầu ; bắt đầu ; xông vào; ... out (ví dụ: nhảy ra, biểu diễn)​"
+N4,de gozaimasu,to be (honorific),là (kính trọng)
+N4,demo,... or something; how about~,... hoặc thứ gì đó; thế còn~
+N4,dewa nai ka,right?; isn't it?,Phải?; phải không?
+N4,ga hitsuyou,need; necessary,nhu cầu; cần thiết
+N4,ga suru,to smell; hear; taste,ngửi; nghe; hương vị
+N4,gari,personality (someone tends to; has a tendency to; has a sensitivity to ~),cá tính (ai đó có xu hướng; có xu hướng; nhạy cảm với ~)
+N4,garu / gatteiru,"to show signs of; to appear; to feel, to think ~","có dấu hiệu; xuất hiện; cảm nhận, suy nghĩ ~"
+N4,gozaimasu,"to be, to exist (the polite form of いる/ある)","tồn tại, tồn tại (dạng lịch sự của いる/ある)"
+N4,hajimeru,to start; to begin to ~,bắt đầu; bắt đầu ~
+N4,hazu da,it must be; it should be (expectation),nó phải như vậy; lẽ ra phải là (kỳ vọng)
+N4,hazu ga nai,はずがないcannot be (impossible),はずがないkhông thể (không thể)
+N4,hitsuyou ga aru,need to; it is necessary to,cần phải ; cần phải
+N4,ikou kei - volitional form,volitional form​; let's do ~,hình thức ý chí; hãy làm ~
+N4,irassharu,to be; to come; to go (polite version),được ; đến ; đi (phiên bản lịch sự)
+N4,itashimasu,to do (polite form of する),làm (dạng lịch sự của する)
+N4,janai ka,right? isn't it? let's~; confirmation,Phải? phải không? hãy~; xác nhận
+N4,ka dou ka,whether or not ~,có hay không ~
+N4,ka shira,I wonder (feminine),Tôi tự hỏi (nữ tính)
+N4,kai,turns a sentence into a yes/no question,biến một câu thành câu hỏi có/không
+N4,kamo shirenai,might; perhaps; indicates possibility,có thể; có lẽ; chỉ ra khả năng
+N4,kana,I wonder; should I?,Tôi tự hỏi; tôi có nên không?
+N4,kara tsukuru,made from; made with,làm từ; chắc chắn được làm bằng
+N4,kitto,surely; undoubtedly; almost certainly; most likely,chắc chắn ; chắc chắn; gần như chắc chắn; rất có thể
+N4,koro / goro,around; about; when,xung quanh; Về; khi
+N4,koto,Verb nominalizer,Động từ danh nghĩa
+N4,koto ga aru,there are times when,có những lúc
+N4,koto ga dekiru,can; able to,Có thể; có thể to
+N4,koto ni naru,It has been decided that..; it turns out that..,Nó đã được quyết định rằng..; hóa ra là..
+N4,koto ni suru,to decide on,quyết định
+N4,ku suru,to make something ~,làm cái gì đó ~
+N4,kyuu ni,quickly; immediately; hastily; suddenly; abruptly; unexpectedly ~,nhanh chóng; ngay lập tức; vội vàng; đột nhiên; đột ngột; bất ngờ ~
+N4,made ni,by; by the time; indicates time limit,qua; theo thời gian; cho biết giới hạn thời gian
+N4,mama,as it is; current state; without changing,như nó vốn có; tình trạng hiện tại; không thay đổi
+N4,matawa,both; or; otherwise​; choice between [A] or [B],cả hai; hoặc; nếu không​; lựa chọn giữa [A] hoặc [B]
+N4,mitai da,like; similar to; resembling ~,giống; tương tự như; giống ~
+N4,mitai na,"like, similar to ~","thích, tương tự như ~"
+N4,mitai ni,like; similar to ~,giống; tương tự như ~
+N4,mo,as many as; as much as; up to; nearly ~,nhiều như vậy; nhiều như ; đến ; gần ~
+N4,na,don’t ~ (order somebody to not do something),đừng ~ (ra lệnh cho ai đó đừng làm gì đó)
+N4,nado,such as; things like ~,chẳng hạn như; những thứ như ~
+N4,nagara,while; during; as; simultaneously,trong khi; trong lúc; BẰNG; đồng thời
+N4,nakanaka~nai,not easy to; struggling to; not able to ~,không dễ dàng; đấu tranh để ; không thể ~
+N4,nakereba ikenai,must do something; have to do something,phải làm điều gì đó; phải làm gì đó
+N4,nakereba naranai,must do something; have to do something,phải làm điều gì đó; phải làm gì đó
+N4,nara,if; in the case that ~,nếu như; trong trường hợp ~
+N4,nasai,do this (soft/firm command),làm điều này (lệnh mềm/chắc chắn)
+N4,nasaru,to do (honorific),làm (kính trọng)
+N4,ni ki ga tsuku,to notice; to realize,để ý; để nhận ra
+N4,ni mieru,to look; to seem; to appear,nhìn ; dường như ; xuất hiện
+N4,ni suru,to make something ~,làm việc gì đó ~
+N4,nikui,difficult to do ~,khó làm ~
+N4,no naka de,in; among ~,TRONG; trong số ~
+N4,noni,"although, in spite of, even though ~","mặc dù, mặc dù, mặc dù ~"
+N4,nowa~da,[A] is [B]; the reason for [A] is [B],[A] là [B]; lý do của [A] là [B]
+N4,o~kudasai,please do ~ (honorific),xin hãy làm ~ (kính ngữ)
+N4,o~ni naru,to do (honorific),làm (kính trọng)
+N4,oki ni,"repeated at intervals, every ~","lặp đi lặp lại theo từng khoảng thời gian, cứ ~"
+N4,owaru,to finish; to end~,để kết thúc; để kết thúc~
+N4,rareru,potential form; ability or inability to do something,hình thức tiềm năng; khả năng hoặc không có khả năng làm điều gì đó
+N4,rashii,it seems like; I heard; apparently ~,có vẻ như; Tôi đã nghe; rõ ràng là ~
+N4,sa,-ness​ ; nominalizer for adjective,-sự ; từ hóa cho tính từ
+N4,sakki,some time ago; just now,cách đây một thời gian; vừa rồi
+N4,saserareru,causative-passive; to be made to do something,nguyên nhân-thụ động; bị bắt làm việc gì đó
+N4,saseru,causative form; to make/let somebody do something,dạng nguyên nhân; làm/để ai đó làm điều gì đó
+N4,sasete kudasai,please let me do,hãy để tôi làm
+N4,sasuga,as one would expect; as is to be expected; even ~,như người ta mong đợi; như dự kiến; thậm chí ~
+N4,shi,and; and what’s more ~ (emphasis),Và; và hơn thế nữa ~ (nhấn mạnh)
+N4,sonna ni,so much; so; like that,rất nhiều; Vì thế; giống như bản demo
+N4,sore demo,but still; and yet; even so ~,nhưng vẫn còn; và chưa; dù vậy ~
+N4,sore ni,besides; in addition; also; moreover ~,bên cạnh đó; Ngoài ra; Mà còn; hơn nữa ~
+N4,sou da [1],I heard that; it is said that ~,Tôi đã nghe điều đó; người ta nói rằng ~
+N4,sou da [2],looks like; appears like; seeming ~,trông giống như; có vẻ như; có vẻ như ~
+N4,sou ni / sou na,seems like; looks like ~,có vẻ như; có vẻ như ~
+N4,ta bakari,just finished; something just occurred,vừa xong; có chuyện gì đó vừa xảy ra
+N4,ta tokoro,"just finished doing, was just doing","vừa làm xong, vừa làm"
+N4,tadoushi & jidoushi,Transitive & Intransitive Verbs,Động từ chuyển tiếp và nội động từ
+N4,tagaru,wants to do ~ (third person),muốn làm ~ (người thứ ba)
+N4,tara,if; after; when ~,nếu như; sau đó; khi ~
+N4,tara dou,why don't you; how about ~ (used to give advice),tại sao bạn không; Thế còn ~ (dùng để đưa ra lời khuyên)
+N4,tara ii desu ka,what should I do?; speaker seeking instructions from listener,tôi nên làm gì?; người nói tìm kiếm sự hướng dẫn từ người nghe
+N4,te / de,"conjunctive particle; so; because of [A], [B]...","hạt liên kết; Vì thế; vì [A], [B]..."
+N4,te ageru,to do for; to do a favor,để làm gì ; giúp một việc
+N4,te hoshii,I want you to; need you to ~,Tôi muốn bạn làm vậy; cần bạn ~
+N4,te iku,to start; to continue; to go on,bắt đầu; tiếp tục; to go on
+N4,te ita,was doing something (past continuous),đang làm điều gì đó (quá khứ tiếp diễn)
+N4,te itadakemasen ka,could you please ~,bạn có thể vui lòng ~
+N4,te kureru,to do a favor; do something for someone,để làm một việc giúp đỡ; làm điều gì đó cho ai đó
+N4,te kuru,to do… and come back; to become; to continue; to start ~,làm… và quay lại; trở thành; tiếp tục; bắt đầu ~
+N4,te miru,try doing,thử làm
+N4,te morau,to get somebody to do something,khiến ai đó làm việc gì đó
+N4,te oku,to do something in advance,làm việc gì đó trước
+N4,te shimau / chau,"to do something by accident, to finish completely","vô tình làm điều gì đó, hoàn thành hoàn toàn"
+N4,te sumimasen,I’m sorry for,Tôi xin lỗi vì
+N4,te yaru,to do for; to do a favor (casual),để làm gì ; làm một việc giúp đỡ (thông thường)
+N4,te yokatta,I’m glad that ~,Tôi rất vui vì ~
+N4,teiru tokoro,in the process of doing,trong quá trình thực hiện
+N4,temo,even; even if; even though ~,thậm chí; ngay cả khi; mặc dù ~
+N4,to,"whenever [A] happens, [B] also happens","bất cứ khi nào [A] xảy ra, [B] cũng xảy ra"
+N4,to ittemo ii,you could say; one might say; I'd say ~,bạn có thể nói; người ta có thể nói; Tôi muốn nói ~
+N4,to iu,called; named; that ~,gọi điện; được đặt tên; that ~
+N4,to iu koto,convert phrase into noun,chuyển cụm từ thành danh từ
+N4,to iwarete iru,it is said that ~,người ta nói rằng ~
+N4,to kiita,I heard...,Tôi nghe nói...
+N4,to omou,to think…; I think…; you think…,suy nghĩ…; tôi nghĩ…; bạn nghĩ…
+N4,toka~toka,among other things; such as; like ~,trong số những thứ khác; chẳng hạn như; như ~
+N4,tokoro,just about to; on the verge of doing something,sắp sửa ; sắp sửa làm điều gì đó
+N4,tsuzukeru,continue to; keen on ~,tiếp tục ; quan tâm đến ~
+N4,tte,named; called ~,được đặt tên; được gọi là ~
+N4,ukemi kei,passive form; passive voice,hình thức thụ động; giọng bị động
+N4,wa~ga... wa,[A] but [B]; however; comparison,[A] nhưng [B]; Tuy nhiên; so sánh
+N4,yasui,easy to; likely to; prone to; have a tendency to ~,dễ dàng; có khả năng ; có xu hướng ; cuối cùng có xu hướng ~
+N4,yatto,at last; finally; barely; narrowly ~,cuối cùng; Cuối cùng; vừa đủ; thu hẹp ~
+N4,yori,than; rather than; more than ~,hơn; còn hơn là; hơn ~
+N4,yotei da,"plan to, intend to","dự định, có ý định"
+N4,you da,appears; seems; looks as if ~,xuất hiện; có vẻ ; trông như thể ~
+N4,you ni / you na,like; as; similar to ~,giống; BẰNG; tương tự như ~
+N4,you ni naru,to reach the point that; to come to be that; to turn into ~,để đạt đến điểm đó; trở thành cái đó; biến thành ~
+N4,you ni suru,to try to; to make sure that ~,cố gắng ; để đảm bảo rằng ~
+N4,you to omou,thinking of doing; planning to ~,nghĩ đến việc làm; lên kế hoạch ~
+N4,zehi,by all means; certainly; definitely ~,bằng mọi cách; chắc chắn; chắc chắn rồi ~
+N4,zenzen~nai,(not) at all,(không) chút nào
+N4,zurai,difficult to do ~,khó thực hiện ~
+N3,ageru,to finish doing ~,để hoàn thành việc làm ~
+N3,amari,so much… that,quá nhiều… that
+N3,amari ni mo,too much; so much… that; excessively ~,quá nhiều; rất nhiều... cái đó; quá mức ~
+N3,au,do something together,cùng nhau làm điều gì đó
+N3,ba ii,should; can; it’d be good if ~,nên; Có thể; sẽ tốt hơn nếu có ~
+N3,ba yokatta,should have; would have been better if ~,nên có; sẽ tốt hơn nếu ~
+N3,ba~hodo,the more… the more ~,càng nhiều… thì càng có nhiều ~
+N3,ba~noni,would have; should have; if only ~,sẽ có; nên có; giá mà ~
+N3,bakari de,only; just ~ (negative description),chỉ một; chỉ ~ (mô tả tiêu cực)
+N3,bakari denaku,not only... but also; as well as ~,không chỉ... mà còn; cũng như ~
+N3,beki da,should do; must do ~,nên làm; phải làm ~
+N3,beki dewa nai,should not do; must not do ~,không nên làm; không được làm ~
+N3,betsu ni~nai,"not really, not particularly","không hẳn, không đặc biệt"
+N3,buri ni,for the first time in (period of time),lần đầu tiên trong (khoảng thời gian)
+N3,chuu / juu,currently; during; at some point; throughout; before the end of ~,Hiện nay; trong lúc; tại một thời điểm nào đó; khắp; trước khi kết thúc ~
+N3,dake,as much as ~,nhiều như ~
+N3,dake de naku,not only… but also ~,không chỉ… mà còn ~
+N3,dakedo,but; however; although; regarding ~,Nhưng; Tuy nhiên; mặc dù; về ~
+N3,darake,full of; covered with; a lot of (something undesirable),đầy ; được bao phủ bởi; rất nhiều (thứ gì đó không mong muốn)
+N3,donna ni~temo,どんなに～てもno matter how (much),どんなに～てもbất kể thế nào (nhiều)
+N3,doushitemo,no matter what; at any cost; after all ~,không có vấn đề gì; bằng mọi giá; xét cho cùng ~
+N3,furi o suru,to pretend; to act as if ~,giả vờ ; hành động như thể ~
+N3,futo,suddenly; accidentally; unexpectedly; unintentionally ~,đột nhiên; vô tình; bất ngờ; vô tình ~
+N3,gachi,tend to; tendency to; frequently; often; to do something easily,có xu hướng ; xu hướng ; thường xuyên; thường; làm việc gì đó dễ dàng
+N3,gatai,very difficult to; hard to ~,rất khó để; khó ~
+N3,gimi,-like; -looking; -looked; tending to ~,-giống; - nhìn; -nhìn; chăm sóc ~
+N3,goto ni,each; every; at intervals of ~,mỗi; mọi; ở các khoảng ~
+N3,hodo,degree; extent; bounds; upper limit,bằng cấp; mức độ; giới hạn; giới hạn trên
+N3,hodo~nai,is not as… as ~,không phải là… như ~
+N3,ichido ni,all at once,tất cả cùng một lúc
+N3,ikura~temo,no matter how ~,dù thế nào đi nữa ~
+N3,ippou da,more and more; continue to ~,ngày càng nhiều hơn; tiếp tục nhấn mạnh ~
+N3,ittai,emphasis; what on earth; what in the world,nhấn mạnh; cái quái gì vậy; có thể là cái quái gì
+N3,janai,maybe; most likely; confirmation of information; express surprise towards listener,Có lẽ; rất có thể; xác nhận thông tin; bày tỏ sự ngạc nhiên với người nghe
+N3,ka nani ka,or something ~,hay gì đó ~
+N3,kakeru,half-; not yet finished; in the middle of~,một nửa-; chưa hoàn thành; ở giữa~
+N3,kara~ni kakete,through; from [A] to [B],bởi vì; từ [A] đến [B]
+N3,kawari ni,instead of; as a substitute for​; in exchange for; in return for,thay vì ; thay thế cho​; để đổi lấy; đổi lại
+N3,kekka,as a result of; after ~,bởi vì; sau ~
+N3,kekkyoku,after all; eventually; in the end ~,xét cho cùng; sau cùng; cuối cùng ~
+N3,kesshite~nai,never; by no means ~,không bao giờ; không có nghĩa là ~
+N3,kirenai,unable to do; too much to finish/complete,không thể làm được; quá nhiều để hoàn thành/chỉ hoàn thành
+N3,kiri,only; just; since; after ~,chỉ một; chỉ; từ; sau ~
+N3,kiru,to do something completely to the end,làm điều gì đó hoàn toàn đến cùng
+N3,kke,a casual suffix to confirm something you are trying to remember,một hậu tố thông thường để xác nhận điều gì đó bạn đang cố nhớ
+N3,komu,to do something for a long time or to move something inside,làm điều gì đó trong một thời gian dài hoặc di chuyển một cái gì đó bên trong
+N3,koso,for sure (emphasize preceding word); precisely; definitely ~,chắc chắn (nhấn mạnh từ trước); chính xác ; chắc chắn ~
+N3,koto,(must) do,(phải) do
+N3,koto kara,from the fact that ~,từ thực tế là ~
+N3,koto ni natteiru,"expresses a standard, rule or expectation","thể hiện một tiêu chuẩn, quy tắc hoặc kỳ vọng"
+N3,koto wa nai,there is no need to; (something) never happens; there is no possibility that ~,không cần phải làm vậy; (điều gì đó) không bao giờ xảy ra; không có khả năng là ~
+N3,koto wa~ga,although; but ~,mặc dù; nhưng xấp xỉ là ~
+N3,kurai / gurai,approximately; about; around; to the extent ~,khoảng; Về; xung quanh; đến mức ~
+N3,kuse ni,and yet; though; in spite of; despite ~,và chưa; mặc dù; mặc dù; mặc dù ~
+N3,maru de,as if; as though; just like ~,như thể ; như thể ; giống như ~
+N3,masaka,there's no way; that's impossible; you must be joking,không có cách nào; điều đó là không thể; chắc hẳn bạn đang đùa
+N3,metta ni~nai,hardly; rarely; seldom,khắc nghiệt; hiếm khi; hiếm khi
+N3,mo~ba~mo,and; also; as well; either/or; neither/nor,Và; Mà còn; cũng vậy; hoặc/hoặc; có lẽ cũng không/nor
+N3,moshika shitara,perhaps; maybe; perchance; by any chance ~,có lẽ; Có lẽ; có lẽ; có thể nào ~
+N3,moshimo~tara,if; in the case; supposing ~,nếu như; trong vụ án; giả sử ~
+N3,muke,intended for; aimed at ~,dành cho; nhằm vào ~
+N3,muki,suitable for ~,thích hợp cho ~
+N3,mushiro,rather; instead; better ~,hơn là; thay vì; tốt hơn ~
+N3,nagara mo,but; although; despite ~,Nhưng; mặc dù; mặc dù ~
+N3,nai koto wa nai,can do; is not impossible to ~,có thể làm được; không phải là không thể ~
+N3,naito,must do; unless/if you don't ~,phải làm; trừ khi/nếu bạn không ~
+N3,nakanaka,very; quite; pretty; rather; just not ~,rất; khá; đẹp; hơn là; chỉ là không ~
+N3,nanka / nante / nado,give examples; show modesty; make light of ~,cho ví dụ; thể hiện sự khiêm tốn; coi nhẹ ~
+N3,naosu,to do something again; to do over,làm lại điều gì đó; làm hơn
+N3,naru beku,as much as possible,càng nhiều càng tốt
+N3,nazenara,because; the reason is; if you want to know why,bởi vì; lý do là; nếu bạn muốn biết tại sao
+N3,ndatte,I hear that; heard that ~,Tôi nghe thấy điều đó; nghe nói rằng ~
+N3,ni chigai nai,I’m sure/ certain; no doubt that ~,Tôi chắc chắn/chắc chắn; chắc chắn rằng ~
+N3,ni hanshite,against; contrary to; in contrast to ~,chống lại; trái ngược với ; trái ngược với ~
+N3,ni kakete,over (a period); through; concerning; regarding ~,hơn (một khoảng thời gian); bởi vì; liên quan đến; về ~
+N3,ni kan suru / ni kan shite,about; regarding; related to ~,Về; về; liên quan đến ~
+N3,ni kawatte / ni kawari,instead of; replacing; on behalf of ~,thay vì ; thay thế; thay mặt cho ~
+N3,ni kurabete,compared to; in comparison to ~,so sánh với ; so với ~
+N3,ni nareru,to be used to something,quen với thứ gì đó
+N3,ni oite / ni okeru,in; at (place); regarding; as for; in relation to ~,TRONG; tại (địa điểm); về; như ; liên quan đến ~
+N3,ni shitagatte,as; therefore; in accordance with; according to; consequently ~,BẰNG; Vì vậy; phù hợp với; theo ; do đó ~
+N3,ni shite mo,even if; even though; regardless of ~,ngay cả khi; mặc dù; bất chấp ~
+N3,ni shite wa,for; considering it’s (something or someone),vì; xem xét nó (thứ gì đó hoặc ai đó)
+N3,ni taishite,towards; against; regarding; in contrast with​ ~,đối với; chống lại; về; ngược lại với​ ~
+N3,ni totte,to; for; concerning; as far as ... is concerned; regarding ~,ĐẾN; vì; liên quan đến; về phần... có liên quan; liên quan đến ~
+N3,ni tsuite,concerning; regarding; about; on ~,liên quan đến; về; Về; trên ~
+N3,ni tsurete,as; in proportion to; with; as… then ~,BẰNG; tương ứng với; với; như… thì ~
+N3,ni wa,for the purpose of; in order to ~,nhằm mục đích; để ~
+N3,ni yoru to/ni yoreba,according to ~,theo ~
+N3,ni yotte / ni yoru,by means of; due to; owing to; because of ~,bằng cách; bởi vì; nhờ vào ; vì ~
+N3,no deshou ka,ask a question in a polite way,đặt câu hỏi một cách lịch sự
+N3,o chuushin ni,focused on; centered on,tập trung vào; ví dụ như tập trung vào
+N3,o hajime,for example; starting with ~,Ví dụ; bắt đầu bằng ~
+N3,o komete,filled with; full of,chứa đầy ; đầy đủ
+N3,o tsuujite / o tooshite,through; via; throughout; by ~,bởi vì; thông qua; khắp; bởi ~
+N3,okage de,thanks to; owing to; because of ~,nhờ ; nhờ vào ; vì ~
+N3,ppanashi,leaving (something) on; leaving (something) still in use​,để lại (cái gì đó); để lại (thứ gì đó) vẫn còn được sử dụng​
+N3,ppoi,seems like; somewhat; -ish; easily does; often does ~,có vẻ như; phần nào; -ish; dễ dàng làm được; thường làm vậy ~
+N3,sae,even; so much as; not even,thậm chí; nhiều như; thậm chí không phải
+N3,sae~ba,if only; as long as ~,giá như ; miễn là ~
+N3,sai ni,when; at the time of; in the case of ~,khi; vào thời điểm đó; trong trường hợp ~
+N3,saichuu ni,while; during; in the middle of ~,trong khi; trong lúc; ở giữa ~
+N3,sara ni,furthermore; again; more and more ~,hơn nữa; lại; ngày càng nhiều ~
+N3,sate,conjunction: well; now; then ~,liên từ: tốt; Hiện nay; rồi ~
+N3,sei de,because of; due to; as a result of ~,vì ; bởi vì; kết quả là ~
+N3,seizei,at the most; at best; to the utmost,nhiều nhất; tốt nhất là; đến mức tối đa
+N3,shibaraku,for a moment; for a while; for the time being,trong giây lát; một lúc; tạm thời
+N3,shikanai,have no choice but ~,không có lựa chọn nào khác ngoài ~
+N3,sono tame ni,hence; for that reason; because of ~,kể từ đây; vì lý do đó; vì ~
+N3,soretomo,or; or else ~,hoặc; hoặc nếu không ~
+N3,sou mo nai /sou ni nai,very unlikely to; showing no signs of ~,rất khó xảy ra; không có dấu hiệu nào của ~
+N3,sude ni,something has already been done/taken place; is already the case,điều gì đó đã được thực hiện/đã diễn ra; đã là trường hợp
+N3,sunawachi,in other words; namely ~,nói cách khác; cụ thể là ~
+N3,suuryou + wa,at least ~,ít nhất ~
+N3,ta mono da,used to do; would often do,đã từng làm; thường sẽ làm
+N3,ta totan,as soon as; just as ~,càng sớm càng; giống như ~
+N3,tabi ni,whenever; every time ~,bất cứ khi nào; mỗi lần ~
+N3,tame ni,for; in order to; for the benefit of; because of; as a result of ~,vì; để; vì lợi ích của; vì ; bởi vì ~
+N3,tashika ni,"surely, certainly ~","chắc chắn, chắc chắn ~"
+N3,tate,just done; freshly done; newly done,vừa xong; mới làm xong; mới làm xong
+N3,tatoe~temo,even if… is the case,ngay cả khi… là trường hợp
+N3,tatoeba,for example; for instance ~,Ví dụ; ví dụ ~
+N3,tatte,even if; even though; no matter how ~,ngay cả khi; mặc dù; dù thế nào cũng chỉ ~
+N3,te bakari iru,only; nothing but ~,chỉ một; không có gì ngoài ~
+N3,te goran,(please) try to; (please) look,(làm ơn) cố gắng; (làm ơn) nhìn
+N3,te hajimete,not until; only after [x] did I,không cho đến khi ; chỉ sau [x] thì I
+N3,te kara de nai to,must first do; cannot do without first doing ~,đầu tiên phải làm; không thể làm được nếu không làm trước ~
+N3,te shou ga nai/te shikata ga nai,can't help but; very; extremely ~,không thể không; rất; cực kỳ ~
+N3,te sumu,sufficient by; no problem to; resolve by ~,đủ bởi; không có vấn đề gì; giải quyết bằng ~
+N3,te wa ikenai kara,in order to not~; to prevent a negative situation,để không~; để ngăn chặn tình huống tiêu cực
+N3,teiru baai janai,this is no time to be doing ~,đây không phải lúc để làm ~
+N3,teki,change noun into na-adjective or adverb,đổi danh từ thành tính từ hoặc trạng từ na
+N3,temo hajimaranai,even if you... it’s no use; there is no point to ~,ngay cả khi bạn... điều đó cũng vô ích; không có ích gì khi ~
+N3,temo kamawanai,it doesn't matter if ~,không sao cả nếu ~
+N3,temo shou ga nai / temo shikata ga nai,there's no point to~; it's no use to~; it cannot be helped,không có ích gì đâu~; chẳng ích gì đâu~; không thể nào khác được
+N3,to ieba,speaking of; when you talk of; when you say; if it were the case that ~,nói về ; khi bạn nói về; khi bạn nói; nếu đó là trường hợp ~
+N3,to ii / tara ii,it would be nice if; should; I hope ~,sẽ thật tuyệt nếu; nên; Tôi hy vọng ~
+N3,to ittemo,although I say; although one might say ~,mặc dù tôi nói; mặc dù người ta có thể nói ~
+N3,to iu koto da,I heard; it means that; in other words ~,Tôi đã nghe; nó có nghĩa là; nói cách khác ~
+N3,to iu nowa,this means; the meaning of … is; because; that is to say ~,điều này có nghĩa là; ý nghĩa của… là; bởi vì; nghĩa là ~
+N3,to iu to,speaking of; when you talk of; when you say ~,nói về ; khi bạn nói về; khi bạn nói ~
+N3,to iu yori,rather than ~,thay vì ~
+N3,to mieru / to miete,it seems that ~,có vẻ như ~
+N3,to sureba / to shitara / to suru to,in the case of~; assuming~; if A then B,trong trường hợp~; giả sử~; nếu A thì B
+N3,to tomo ni,together with; at the same time as; as well as ~,cùng với ; đồng thời với; cũng như ~
+N3,tochuu de / tochuu ni,on the way; in the middle of ~,"trên đường đi; nhân tiện, ở giữa ~"
+N3,tokoro de,by the way ~,nhân tiện ~
+N3,tokoro ga,even so; however; even though ~,thậm chí như vậy; Tuy nhiên; mặc dù ~
+N3,toori ni,in the same way as; in the way; as ~,theo cách tương tự như; trên đường đi; như ~
+N3,toosu,to do until the end; to continually do; through ~,làm cho đến cùng; liên tục làm; thông qua ~
+N3,toshite,as; in the role of ~,BẰNG; trong vai ~
+N3,totemo~nai,cannot possibly be; hardly ~,không thể nào được; hầu như không ~
+N3,towa kagiranai,not necessarily so; is not always true,không nhất thiết phải như vậy; không phải lúc nào cũng đúng
+N3,tsui,accidentally; unintentionally; by mistake,vô tình; vô tình; do nhầm lẫn
+N3,tsui ni,finally; at last; in the end ~,Cuối cùng; cuối cùng; cuối cùng ~
+N3,tsuide ni,"while, incidentally, at the same time, on the way ~","trong khi, tình cờ, cùng lúc đó, trên đường đi ~"
+N3,tsumari,in other words; in summary; in short ~,nói cách khác; tóm lại; tóm lại là ~
+N3,tsumori datta,I thought I~; I believe I~; was planning to~; was intending to ~,Tôi nghĩ là tôi~; Tôi tin tôi~; đang định~; đang có ý định ~
+N3,tsumori de,with the intention of doing ~,với ý định làm ~
+N3,uchi ni,while; before ~,trong khi; trước ~
+N3,ue de,upon; after; when; for; in order to,trên; sau đó; khi; vì; để to
+N3,ue ni,as well; besides; in addition to; not only… but also ~,cũng vậy; bên cạnh đó; ngoài ra; không chỉ… mà còn có ~
+N3,wa betsu toshite,aside from; apart from; except for; whether or not ~,ngoài ra ; ngoại trừ ; ngoại trừ ; có hay không ~
+N3,wa mochiron,not to mention; not only ... but also ~,chưa kể; không chỉ ... mà còn ~
+N3,wa~de yuumei,famous for ~,nổi tiếng với ~
+N3,wake da,for that reason; no wonder; as you’d expect; the fact is; so you mean ~,vì lý do đó; không có gì lạ; như bạn mong đợi; sự thật là; vậy ý ​​bạn là ~
+N3,wake dewa nai,it doesn’t mean that; it is not the case that; I don’t mean that; it is not true that ~,nó không có nghĩa như vậy; không phải vậy đâu; Ý tôi không phải vậy; ~
+N3,wake ga nai,there is no way that; it is impossible to ~,"không có cách nào như vậy; không thể đánh thức niwa ikanaiわけにはいかないkhông được; không đủ khả năng; phải, không có lựa chọn nào khác ngoài ~"
+N3,wake niwa ikanai,"must not; cannot afford to; must, have no choice but to ~","không được; không đủ khả năng; phải, không có lựa chọn nào khác ngoài ~"
+N3,wari ni,considering ~; for ~; despite ~,đang cân nhắc ~; cho ~; mặc dù có mục đích ~
+N3,wazato,on purpose; intentionally ~,có mục đích; cố ý ~
+N3,wazawaza,to go to the trouble of; to go out of one's way to ~,đi đến rắc rối; cố gắng đạt được ~
+N3,yorimo,in comparison to; rather than; more than ~,so với ; còn hơn là; hơn ~
+N3,you ga nai,there is no way to; it’s impossible to ~,không có cách nào để; không thể nào ~
+N3,you na ki ga suru,have a feeling that; feels like; seems like; think that ~,có cảm giác rằng; cảm thấy như thế; có vẻ như; nghĩ rằng ~
+N3,you ni,"in order to, so that ~","để, để ~"
+N3,you ni mieru,to look; to seem; to appear ~,nhìn ; dường như ; xuất hiện ~
+N3,you to shinai,not try to; not make an effort to ~,không cố gắng; không nỗ lực để ~
+N3,you to suru,try to; attempt to; be about to ~,cố gắng ; cố gắng ; sắp ~
+N3,zuni,without doing ~,không làm ~
+N3,zuni wa irarenai,can’t help but feel; can’t help but do; must do ~,không thể không cảm thấy; không thể không làm; phải làm ~
+N3,zutsu,apiece; each; at a time,mỗi người; mỗi; tại một thời điểm
+N2,ageku,to end up; in the end; finally; after all ~,kết thúc ; cuối cùng; Cuối cùng; xét cho cùng thì ~
+N2,aruiwa,or; either; maybe; perhaps; possibly ~,hoặc; hoặc; Có lẽ; có lẽ; có thể ~
+N2,bakari,"about, approximately ~","về, khoảng ~"
+N2,bakari da,continue to (go in negative direction),tiếp tục (đi theo hướng tiêu cực)
+N2,bakari ka,not only... but also; as well as ~,không chỉ... mà còn; cũng như ~
+N2,bakari ni,simply because; on account of~ (negative result),"đơn giản là vì; nhân tiện, vì ~ (kết quả âm tính)"
+N2,chinamini,by the way; in this connection; incidentally; (conjunction),Nhân tiện; trong mối liên hệ này; tình cờ ; (liên từ)
+N2,chitto mo~nai,(not) at all; (not) in the least ~,(không có gì; (không) ít nhất là ~
+N2,dake atte,being the case; precisely because; as expected from ~,là trường hợp; chính xác là vì; đúng như mong đợi từ ~
+N2,dake mashi da,it’s better than; one should feel grateful for ~,nó tốt hơn; người ta nên cảm thấy biết ơn vì ~
+N2,dake ni,being the case; precisely because; as one would expect,là trường hợp; chính xác là vì; như người ta mong đợi
+N2,dake no koto wa aru,no wonder; as expected of; not ... for nothing; not ... with nothing to show for it,không có gì lạ; như mong đợi; không... chẳng để làm gì; không ... không có gì để thể hiện
+N2,dake wa,to do all that one can,làm tất cả những điều đó một người có thể
+N2,datte,because; but; after all; even; too,bởi vì; Nhưng; xét cho cùng; thậm chí; too
+N2,de shika nai,merely; nothing but; no more than; there is only ~,chỉ đơn thuần là ; không có gì ngoài; không nhiều hơn; chỉ có ~
+N2,dokoro dewa nai,not the time for; not the place for; far from; anything but ~,không phải lúc; không phải là nơi dành cho; xa khỏi; bất cứ điều gì ngoại trừ ~
+N2,dokoro ka,far from; anything but; let alone; not to mention; much less ~,xa khỏi; bất cứ điều gì nhưng; huống chi ; chưa kể; ít hơn nhiều ~
+N2,dou yara,possibly; apparently; seems like; somehow; barely ~,có thể; rõ ràng; có vẻ như; bằng cách nào đó; dù sao thì cũng chỉ ~
+N2,douse,anyhow; in any case; at any rate; after all; no matter what,dù sao đi nữa; trong mọi trường hợp; bằng mọi giá; xét cho cùng; dù thế nào đi nữa
+N2,enai,得ない（えない）unable to; cannot; it is not possible to ~,得ない（えない)không thể; không thể; không thể ~
+N2,eru / uru,can; to be able to; is possible to ~,Có thể; có thể ; có thể ~
+N2,futatabi,again; once more,lại; một lần nữa
+N2,fuu ni,this way; that way; in such a way; how,theo cách này; theo cách đó; theo cách như vậy; How
+N2,ga kikkake de / o kikkake ni,with… as a start; as a result of; taking advantage of ~,với… như một sự khởi đầu; bởi vì; lợi dụng ~
+N2,ge,looks like; seems like; appears to ~,trông giống như; có vẻ như; có vẻ như ~
+N2,gyaku ni,conversely; on the contrary ~,ngược lại; ngược lại ~
+N2,hanmen,"while, although; on the other hand~","trong khi, mặc dù; mặt khác~"
+N2,hatashite,as was expected; sure enough; really; actually ~,như đã được mong đợi; chắc chắn rồi; Thực ra; thực ra là ~
+N2,ichiou,more or less; pretty much; roughly; tentatively ~,nhiều hay ít; khá nhiều; đại khái ; tạm thời ~
+N2,igai,with the exception of; excepting ~,ngoại trừ; ngoại trừ ~
+N2,ijou ni,more than; not less than; beyond ~,hơn ; không ít hơn; vượt quá ~
+N2,ijou wa,because; since; seeing that ~,bởi vì; từ; chợt thấy ~
+N2,ikinari,abruptly; suddenly; all of a sudden; without warning,đột ngột; đột nhiên; đột nhiên; không báo trước
+N2,ikki ni,in one go; without stopping; all at once; immediately; instantly; right away ~,trong một lần; không dừng lại; tất cả cùng một lúc; ngay lập tức; ngay lập tức; ngay lập tức ~
+N2,ippou de,"on one hand, on the other hand; although ~","một mặt, mặt khác; mặc dù ~"
+N2,iwayuru,what is called; as it is called; the so-called; so to speak​,cái gì được gọi là; như nó được gọi; cái gọi là; có thể nói như vậy​
+N2,iyoiyo,at last; finally; beyond doubt,cuối cùng; Cuối cùng; không còn nghi ngờ gì nữa
+N2,jou,for the sake of; from the standpoint of; as a matter of; in terms of ~,vì lợi ích của ; từ quan điểm của; như là một vấn đề; về mặt ~
+N2,ka no you ni,as if; just like ~,như thể ; giống như ~
+N2,ka to omottara,just when; no sooner than ~,đúng lúc; không sớm hơn ~
+N2,ka~nai ka no uchi ni,just as; right after; as soon as ~,giống như ; ngay sau đó; ngay khi ~
+N2,kaette,on the contrary; rather; all the more; surprisingly ~,ngược lại; hơn là; hơn thế nữa; thật ngạc nhiên ~
+N2,kagiri,as long as; while… is the case; as far as; while ~,chừng nào ; trong khi… là trường hợp đó; xa như ; trong khi ~
+N2,kai ga aru,it’s worth one’s efforts to do something,nỗ lực của một người để làm điều gì đó là xứng đáng
+N2,kanenai,(someone) might do something; something might happen,(ai đó) có thể làm điều gì đó; điều gì đó có thể xảy ra
+N2,kaneru,unable to do something; can’t do something,không thể làm điều gì đó; không thể làm gì đó
+N2,kara iu to,in terms of; from the point of view of ~,về mặt ; từ quan điểm của ~
+N2,kara koso,precisely because ~,chính xác là vì ~
+N2,kara miru to,from the point of view of; by the look of; judging from ~,từ quan điểm của; bởi cái nhìn của; đánh giá từ ~
+N2,kara niwa,now that; since; so long as; because ~,bây giờ đó; từ; miễn là; bởi vì ~
+N2,kara shite,judging from; based on; since; from; even ~,đánh giá từ ; dựa vào; từ; từ; thậm chí ~
+N2,kara suru to / kara sureba,judging from; considering; by the look of ~,đánh giá từ ; xem xét; bởi cái nhìn từ ~
+N2,kara to itte,just because; even if; even though ~,chỉ vì ; ngay cả khi; mặc dù ~
+N2,kkonai,no chance of; … is definitely not possible,không có cơ hội; … chắc chắn là không thể
+N2,koto da,should do~ (used for suggestions or giving advice),nên làm~ (dùng để gợi ý hoặc đưa ra lời khuyên)
+N2,koto dakara,because; since ~,bởi vì; kể từ ~
+N2,koto ka,how…!; what…!,Làm sao…!; cái gì…!
+N2,koto naku,without doing something even once,không làm điều gì dù chỉ một lần
+N2,koto ni,emphasize speaker's feelings; to my (surprise/etc),nhấn mạnh cảm xúc của người nói; với (ngạc nhiên/vv)
+N2,koto niwa naranai,just because… doesn’t mean ~,chỉ vì… không có nghĩa là ~
+N2,kuse shite,although; despite the fact that; even though ~,mặc dù; mặc dù thực tế là vậy; mặc dù ~
+N2,madashimo,rather; better​ ~,hơn là; tốt hơn​ ~
+N2,mai,will not; will probably not; intend not to; must not ~,sẽ không; có lẽ sẽ không; có ý định không; không được ~
+N2,mama ni,"as, to do as ~","như, làm như ~"
+N2,mattaku~nai,not at all ~,không hề ~
+N2,mo kamawazu,without caring; without worrying about ~,không quan tâm; không cần lo lắng về ~
+N2,mo touzen da,it’s only natural; no wonder; might as well ~,nó chỉ là tự nhiên thôi; không có gì lạ; cũng có thể ~
+N2,mono / mon,because; indicates reason/ excuse/ dissatisfaction,bởi vì; biểu thị lý do/ lý do/ không hài lòng
+N2,mono da,describe feeling; express memories; state fact,mô tả cảm giác; bày tỏ kỷ niệm; trạng thái thực tế
+N2,mono dakara,so; therefore; the reason for something,Vì thế; Vì vậy; lý do của việc gì đó
+N2,mono dewa nai,shouldn’t do something; it’s impossible to ~,không nên làm điều gì đó; ~
+N2,mono ga aru,there is such a thing; to be the case that​; feels like ~,có một điều như vậy; có lẽ như vậy​; cảm giác như ~
+N2,mono ka / mon ka,as if (something untrue were actually true); there's no way ~,như thể (điều gì đó không đúng sự thật lại thực sự đúng); không đời nào ~
+N2,mono nara,"if I/we could; if [A] is possible, then [B]; if one can do something, then ~",nếu tôi/chúng tôi có thể; nếu [A] có thể thì [B]; nếu một người có thể làm điều gì đó thì ~
+N2,monono,but; although; even though ~,Nhưng; mặc dù; mặc dù ~
+N2,motto mo,but then; although; though ~,nhưng sau đó; mặc dù; mặc dù ~
+N2,mou sukoshi de,"almost; nearly, close to ~","hầu hết; gần, gần ~"
+N2,nai dewa irarenai,can’t help but feel; can’t help but do ~,không thể không cảm thấy; không thể không làm ~
+N2,nai koto niwa~nai,unless you ~,trừ khi bạn ~
+N2,naka o / naka dewa,in; on; in the midst of; when; while ~,TRONG; TRÊN; ở giữa ; khi; trong khi ~
+N2,naku wa nai / naku mo nai,it’s not that; I may (double negative),không phải vậy; Tôi có thể (phủ định kép)
+N2,nakute sumu,get by without doing ~,sống qua ngày mà không cần làm gì cả ~
+N2,nani mo~nai,nothing; (not) ~ at all; there’s no need to ~,Không có gì; (không) ~ không hề; không cần phải ~
+N2,nao,still; yet​; furthermore; in addition ~,vẫn; chưa​; hơn nữa; ngoài ra ~
+N2,neba naranai,have to do; must; should ~,phải làm; phải; nên ~
+N2,ni atatte,at the time; on the occasion of ~,vào thời điểm đó; nhân dịp ~
+N2,ni hoka naranai,nothing but; none other than ~,không có gì ngoài; không ai khác ngoài ~
+N2,ni kagirazu,not just; not only... but also ~,không chỉ; không chỉ... mà còn ~
+N2,ni kagiru,is best; nothing is better than ~,là tốt nhất; không có gì tốt hơn chỉ ~
+N2,ni kagitte,only; in particular ~,chỉ một; đặc biệt là ~
+N2,ni kakawarazu,in spite of; regardless of ~,mặc dù; bất kể ~
+N2,ni kakawaru,to relate to; to have to do with; relating to ~,liên quan đến ; phải làm với; chắc chắn liên quan đến ~
+N2,ni kimatte iru,certainly; I’m sure/certain that; it must be the case that ~,chắc chắn; Tôi chắc chắn/chắc chắn rằng; chắc là như thế ~
+N2,ni koshita koto wa nai,"it’s best that, there’s nothing better than ~",tốt nhất là không có gì tốt hơn ~
+N2,ni kotaete,in response to ~,để đáp lại ~
+N2,ni kuwaete,in addition ~,ngoài ra ~
+N2,ni motozuite,based on; on the basis of ~,dựa vào; trên cơ sở ~
+N2,ni mukatte,to face; to go towards; to head to ~,đối mặt; đi tới; hướng tới ~
+N2,ni oujite,depending on; in accordance with ~,tùy thuộc vào ; theo ~
+N2,ni saishite,on the occasion of; at the time of ~,nhân dịp; vào thời điểm ~
+N2,ni sakidachi,before; prior to ~,trước; trước ~
+N2,ni seyo/ ni shiro,even if; regardless; whether... or ~,ngay cả khi; bất kể; dù... hay ~
+N2,ni shiro~ni shiro,whether… or ~,dù… hay ~
+N2,ni shitara / ni sureba,from one’s perspective; from the point of view of ~,từ quan điểm của một người; từ quan điểm của ~
+N2,ni shitemo~ni shitemo,regardless of whether ~,bất kể có ~
+N2,ni sotte,along with; in accordance with ~,cùng với ; phù hợp với ~
+N2,ni soui nai,without a doubt; certain; sure,không nghi ngờ gì nữa; chắc chắn; chắc chắn
+N2,ni suginai,no more than; just; merely; only ~,không nhiều hơn; chỉ; chỉ đơn thuần là ; chỉ ~
+N2,ni tomonatte,as; due to; with; along with; following; accordingly ~,BẰNG; bởi vì; với; cùng với ; tiếp theo; tương ứng ~
+N2,ni tsuke,every time; whenever; as; whether; in (either case)​,mọi lúc; bất cứ khi nào; BẰNG; liệu; trong (cả hai trường hợp)​
+N2,ni tsuki,due to; because of; per; each,bởi vì; vì ; mỗi; mỗi
+N2,ni watatte,throughout; over a period of ~,khắp; trong khoảng thời gian ~
+N2,nimo kakawarazu,despite; in spite of; nevertheless; although ~,cho dù; mặc dù; tuy nhiên; mặc dù ~
+N2,nite,"in, at, with, by (formal particle)","trong, tại, với, bởi (gia từ trang trọng)"
+N2,no mo motto mo da,no wonder; …is only natural,không có gì lạ; …chỉ là tự nhiên
+N2,no moto de,under; with ~,dưới; với ~
+N2,no ue de wa,according to; from the viewpoint of ~,theo ; chỉ từ quan điểm của ~
+N2,nomi,only; nothing but​,chỉ một; không có gì ngoài​
+N2,nominarazu,not only; besides; as well as ~,không chỉ; bên cạnh đó; cũng như cách chia động từ phủ định ~
+N2,nu,negative verb conjugation; traditional version of ない,cách chia động từ phủ định; phiên bản truyền thống của ない
+N2,nuki ni shite / nuki de,without; leaving out; cutting out ~,không có; rời đi; cắt ra ~
+N2,nuku,"to do something from beginning to end; completely, extremely ~","làm điều gì đó từ đầu đến cuối; hoàn toàn, cực kỳ ~"
+N2,o keiki ni,as a good opportunity/chance to; as a result of; make the best of ~,như một cơ hội/cơ hội tốt để; bởi vì; tận dụng tối đa ~
+N2,o megutte,concerning; in regard to ~,liên quan đến; liên quan đến ~
+N2,o moto ni,based on; derived from; building on; beginning with ~,dựa vào; bắt nguồn từ ; xây dựng trên; bắt đầu bằng ~
+N2,o nozoite,except; with the exception of; excluding ~,ngoại trừ; ngoại trừ; không bao gồm ~
+N2,o towazu,regardless of; irrespective of; no matter,bất kể ; bất kể ; không có vấn đề
+N2,o~negau,please do; could you please…; I ask of you to ~,xin vui lòng làm; bạn có thể vui lòng…; Tôi yêu cầu bạn ~
+N2,omake ni,to make matters worse; besides; what's more; in addition; on top of that​,làm cho vấn đề trở nên tồi tệ hơn; bên cạnh đó; còn gì nữa; Ngoài ra; trên hết có lẽ là
+N2,osoraku,perhaps; likely; probably; I dare say ~,có lẽ; rất có thể; có lẽ; Tôi dám nói ~
+N2,osore ga aru,it is feared that; to be in danger of; to be liable to ~,người ta sợ rằng; gặp nguy hiểm; chịu trách nhiệm trước ~
+N2,oyobi,and; as well as ~,Và; cũng như ~
+N2,roku ni~nai,not well; not enough; improperly; insufficiently; unsatisfactorily​ ~,không ổn; không đủ; không đúng cách; không đủ; không hài lòng​ ~
+N2,saiwai na koto ni,fortunately; luckily; thankfully ~,may mắn thay; may mắn thay; may mắn thay ~
+N2,sei ka,perhaps because ~,có lẽ vì đặc biệt là ~
+N2,sekkaku,"especially; (thank you for) troubling to, going to great pains for ~","đặc biệt; (cảm ơn bạn vì) gặp rắc rối, phải chịu đựng nhiều đau đớn ít nhất là ~"
+N2,semete,at least; at most ~,ít nhất; nhiều nhất là ~
+N2,shidai,"as soon as, dependent upon","ngay khi, phụ thuộc vào"
+N2,shidai de,depending on; so ~,tùy thuộc vào ; vì vậy ~
+N2,shidai ni,gradually (progress into a state); in sequence; in order,dần dần (tiến tới một trạng thái); theo trình tự; theo thứ tự
+N2,shikamo,moreover; furthermore; and yet; what’s more ~,Hơn thế nữa; hơn nữa; và chưa; còn gì nữa ~
+N2,sono ue,besides; in addition; furthermore ~,bên cạnh đó; Ngoài ra; hơn nữa ~
+N2,sore na noni,and yet; despite this; but even so ~,và chưa; bất chấp điều này; nhưng dù vậy ~
+N2,sore nara,if that’s the case; if so ~,nếu đúng như vậy; nếu vậy thì ~
+N2,sore ni shitemo,nevertheless; at any rate; even so; be that as it may ~,tuy nhiên; bằng mọi giá; thậm chí như vậy; có thể là như vậy ~
+N2,sou ieba,come to think of it; now that you mention it ~,hãy nghĩ về nó; bây giờ bạn đề cập đến nó ~
+N2,sou suru to,having done that; if that is done; if it is done in that way,đã làm điều đó; nếu điều đó được thực hiện; nếu nó được thực hiện theo cách đó
+N2,sue ni,finally; after; following; at the end/ conclusion of ~,Cuối cùng; sau đó; tiếp theo; ở phần cuối/kết thúc của ~
+N2,sukoshi mo~nai,not one bit; not even a little ~,không một chút nào; thậm chí không một chút ~
+N2,sukunaku tomo,at least ~,ít nhất ~
+N2,tadachi ni,at once; immediately; directly; in person; automatically ~,cùng một lúc; ngay lập tức; trực tiếp; trực tiếp; tự động ~
+N2,tamae,do~; order somebody to do something,làm~; ra lệnh cho ai đó làm gì đó
+N2,te bakari wa irarenai,can’t keep doing ~,không thể tiếp tục làm ~
+N2,te demo,even if I have to; by all means ~,ngay cả khi tôi phải làm vậy; bằng mọi cách ~
+N2,te irai,since; henceforth ~,từ; từ nay về sau ~
+N2,te ite wa,if one keeps doing ~,nếu một người tiếp tục làm ~
+N2,te koso,now that; since (something happened),bây giờ đó; vì (có chuyện gì đó đã xảy ra)
+N2,te made,even; will go far so as to ~,thậm chí; sẽ tiến xa đến mức ~
+N2,te naranai,can't help but; dying to; extremely ~,không thể không; sắp chết ; cực kỳ ~
+N2,te tamaranai,can't help but; dying to; extremely ~,không thể không; sắp chết ; cực kỳ ~
+N2,te touzen da,natural; as a matter of course,tự nhiên; như một lẽ đương nhiên
+N2,tewa / dewa,whenever; if; when~; repetitive action,bất cứ khi nào; nếu như; khi nào~; hành động lặp đi lặp lại
+N2,tewa irarenai,can’t afford to; unable to ~,không đủ khả năng; không thể ~
+N2,tewa naranai,must not; cannot; should not ~,không được; không thể; không nên ~
+N2,tewa~tewa,repetitive situations/actions,các tình huống/hành động lặp đi lặp lại
+N2,to douji ni,at the same time as; while; simultaneously ~,đồng thời với; trong khi; đồng thời ~
+N2,to itta,like; such as ~,giống; chẳng hạn như ~
+N2,to iu fuu ni,in such a way that ~,theo cách mà ~
+N2,to iu koto wa,that is to say; so that means; in other words ~,nghĩa là; vậy điều đó có nghĩa là; nói cách khác ~
+N2,to iu mono da,something like; something called ~,một cái gì đó như; thứ gọi là ~
+N2,to iu mono dewa nai,there is no guarantee that…; not necessarily ~,không có gì đảm bảo rằng…; không nhất thiết phải ~
+N2,to kangaerareru,one can think that; it is conceivable that; considered ~,người ta có thể nghĩ như vậy; có thể hình dung được điều đó; đã cân nhắc ~
+N2,toka (de),I heard that ~,Tôi đã nghe điều đó ~
+N2,tokku ni,long ago; already; a long time ago,từ lâu rồi; đã; cách đây đã lâu
+N2,tokoro datta,was just about to do something; something almost happened,vừa định làm điều gì đó; có điều gì đó gần như đã xảy ra
+N2,tokoro ni,at the time; just as I was ~,vào thời điểm đó; giống như tôi ~
+N2,tokoro o miru to,judging from; seeing that ~,đánh giá từ ; nhìn thấy điều đó ~
+N2,tomo,"even if; no matter (who, what, when, where, why, how); though ~","ngay cả khi; bất kể (ai, cái gì, khi nào, ở đâu, tại sao, như thế nào); mặc dù ~"
+N2,toshite~nai,not at all; there is not even one,không có gì; thậm chí không có một giả định nào
+N2,toshitemo,assuming; even if ~,giả sử ; ngay cả khi ~
+N2,tsutsu,while; even though; despite ~,trong khi; mặc dù; mặc dù ~
+N2,tsutsu aru,to be doing; to be in the process of doing ~,đang làm ; đang trong quá trình thực hiện ~
+N2,ue wa,now that; since; as long as ~,bây giờ đó; từ; miễn là ~
+N2,wa moto yori,also; let alone; from the beginning,Mà còn; huống chi ; ngay từ đầu
+N2,wa tomokaku,anyhow; anyway; regardless; in any case; whether or not ~,dù sao đi nữa; Dẫu sao thì; bất kể; trong mọi trường hợp; có hay không ~
+N2,wazuka ni,slightly; only; barely; narrowly ~,nhẹ nhàng; chỉ một; vừa đủ; trong gang tấc ~
+N2,yagate,before long; soon; almost; eventually ~,chẳng bao lâu nữa; sớm; hầu hết; cuối cùng ~
+N2,yara~yara,such things as A and B; A and B and so on ~,"những thứ như A và B; A và B, v.v. ~"
+N2,yohodo / yoppodo,very; greatly; much; to a large extent,rất; rất nhiều; nhiều; ở một mức độ lớn
+N2,yori,"from~ (a time, place, or person)","từ~ (thời gian, địa điểm hoặc người)"
+N2,yori hoka nai,to have no choice but ~,không có lựa chọn nào khác ngoài ~
+N2,you dewa,if ~ (bad result),nếu ~ (kết quả tồi)
+N2,you dewa nai ka,let’s do (something); why don’t we ~,hãy làm (điều gì đó); tại sao chúng ta không ~
+N2,you ka~mai ka,whether or not; considering options,có hay không; đang xem xét các lựa chọn
+N2,you suru ni,in short; in a word; to sum up; to put it simply ~,tóm lại; trong một từ; tóm lại; nói một cách đơn giản ~
+N2,zaru o enai,cannot help (doing); have no choice but to ~,không thể giúp được (làm); không còn lựa chọn nào khác ngoài ~
+N2,zu ni sumu,get by without doing ~,vượt qua mà không làm gì ~
+N1,aete,dare to; daringly; deliberately; purposely ~,dám ; táo bạo ; cố ý; cố tình ~
+N1,akumade mo,to the end; persistently; absolutely; is still very ~,đến cùng; kiên trì; tuyệt đối; vẫn rất ~
+N1,an no jou,just as one thought; as usual; sure enough,đúng như một ý nghĩ; như thường lệ; chắc chắn rồi
+N1,arakajime,beforehand; in advance; previously​,trước đó; trước; trước đây​
+N1,atte no,which can exist solely due to the presence of; which owes everything to,có thể tồn tại chỉ nhờ sự hiện diện của; nợ tất cả mọi thứ với
+N1,ba koso,only because ~,chỉ vì ~
+N1,ba sore made da / tara sore made da,if… then it’s over,nếu… thì đó là over
+N1,bekarazu / bekarazaru,must not; should not; do not ~,không được; không nên; đừng ~
+N1,beku,in order to; for the purpose of ~,để; vì mục đích ~
+N1,beku mo nai,cannot possibly be ~,không thể nào là ~
+N1,beku shite,as it is bound to (happen); following the natural course,vì nó chắc chắn sẽ (xảy ra); theo quy trình tự nhiên
+N1,biru / bite / bita,to seem to be; to appear; to behave as ~,dường như là vậy; xuất hiện; hành xử theo phong cách ~
+N1,buri / ppuri,style; manner; way​,phong cách; thái độ; way​
+N1,buru / butte / butta,assuming the air of; behaving like; to pretend / act like ~,giả sử không khí của; cư xử như thế; giả vờ / hành động như ~
+N1,dani / dani shinai,even; not even ~,thậm chí; thậm chí không ~
+N1,dano~dano,and; and the like; and so forth ~,Và; và những thứ tương tự; vân vân ~
+N1,darou ni,"(1) surely..., but ~; although... is likely, ~ (2) should have (regret); might / must have been ~","(1) chắc chắn..., nhưng ~; mặc dù... có khả năng, ~ (2) nên có (hối tiếc); có thể / chắc phải là ~"
+N1,de are / de arou to,whoever; whatever; however; even ~,bất cứ ai; bất cứ điều gì; Tuy nhiên; thậm chí ~
+N1,de are~de are,whether [A] or [B],dù [A] hay [B]
+N1,demo ari~demo aru,でもあり～でもあるto also be; both… and ~,でもあり～でもある cũng được; cả hai… và ~
+N1,demo nan demo nai / kumo nan tomo nai,not in the least; nothing like that,không hề chút nào; không có gì giống thế
+N1,denakute nan darou,must be; is definitely ~,phải thế; chắc chắn là ~
+N1,dewa arumai ka,isn't it; I wonder if it’s not ~,phải không; Tôi tự hỏi có phải không ~
+N1,dewa arumai shi,it’s not like; it isn’t as if ~,nó không giống như vậy; không phải như thể ~
+N1,dewa sumanai,it doesn’t end with just ~; it will take more than ~,nó không kết thúc chỉ bằng ~; nó sẽ mất nhiều hơn ~
+N1,dou nimo~nai,"not … by any means; no matter how hard one tries, cannot ~",không… bằng bất cứ cách nào; dù có cố gắng thế nào cũng không thể sớm hơn được; ngay khi ~
+N1,ga hayai ka,no sooner than; as soon as ~,không sớm hơn; ngay khi ~
+N1,"ga/mo~nara, ~mo~da",negative connection/comparison (like father like son),kết nối/so sánh tiêu cực (cha nào con nấy)
+N1,gamashii,look like; sound like; approximate; similar to; somewhat like ~,trông giống như; nghe như; gần đúng; tương tự như; hơi giống ~
+N1,gatera,while; on the same occasion; at the same time; coincidentally ~,trong khi; trong cùng một dịp; đồng thời; tình cờ ~
+N1,gotoki / gotoku / gotoshi,like; as if; the same as ~,giống; như thể ; giống như ~
+N1,gurumi,together (with); -wide,cùng (với); -wide
+N1,hame ni naru,to get stuck with; to end up with (something unpleasant),bị mắc kẹt với; kết thúc với (điều gì đó khó chịu)
+N1,hodo no koto dewa nai,it's not worth; no need to ~,nó không có giá trị; không cần ~
+N1,hou ga mashi da,better than; would rather ~,tốt hơn ; thà ~
+N1,houdai,doing as one pleases; to one's heart's content; leaving uncontrolled,làm theo ý mình; theo ý muốn của một người; rời khỏi không kiểm soát
+N1,ikan da / ikan dewa / ikan ni yotte wa,in accordance with; depending on; whether or not ~,phù hợp với; tùy thuộc vào ; có hay không ~
+N1,ikan ni kakawarazu / ikan ni yorazu / ikan o towazu,regardless of; whether or not; doesn't matter whether ~,bất kể ; có hay không; không quan trọng ~
+N1,ikanaru,any kind of; every; whatsoever; whatever,bất kỳ loại nào; mọi; bất cứ điều gì; sao cũng được
+N1,ikani,how; in what way; how much; to what extent,Làm sao; bằng cách nào; bao nhiêu; đến mức độ nào
+N1,ikani mo,indeed; really; truly; just (like); very; extremely ~,thực vậy; Thực ra; thực sự ; chỉ (như); rất; cực kỳ ~
+N1,izure ni shitemo / izure ni shiro / izure ni seyo,anyhow; anyway; either way; in any case ~,dù sao đi nữa; Dẫu sao thì; dù thế nào đi nữa; trong mọi trường hợp ~
+N1,jimita,to become; to appear like; to look like; tainted with ~,trở thành; trông giống như; trông như thế nào; bị nhiễm độc ~
+N1,ka ina ka,whether or not ~,có hay không ~
+N1,ka to omoikiya,"contrary to expectations; or so we thought, but ~","trái với mong đợi; hoặc là chúng tôi nghĩ vậy, nhưng ~"
+N1,kagiri da,to feel strongly,cảm thấy mạnh mẽ
+N1,kai mo naku,despite; even though ~,cho dù; mặc dù ~
+N1,kanousei ga aru,may/might; there’s a possibility that ~,có thể/có thể; có khả năng là ít nhất ~
+N1,kara aru / kara suru / kara no,at least; as much as; as many as ~,ít nhất; nhiều như ; sớm hay muộn cũng sẽ có ~
+N1,kare~kare,sooner or later; more or less,sớm hay muộn; ít nhiều
+N1,katagata,while; at the same time; incidentally; for the purpose of ~,trong khi; đồng thời; tình cờ ; với mục đích ~
+N1,katawara,while; besides; at the same time; in addition,trong khi; bên cạnh đó; đồng thời; ngoài ra
+N1,katsute,once; before; formerly; ever; former; ex-,một lần; trước; trước đây; bao giờ; trước; ex-
+N1,kirai ga aru,bad habit; to have a tendency to ~,thói quen xấu; có xu hướng ~
+N1,kiri ga nai,endless; boundless; going on forever​; there’s no end to ~,vô tận; vô biên; tiếp tục mãi mãi​; không có kết thúc cho ~
+N1,kitte no,the most / greatest … of all,nhất / vĩ đại nhất … trong số tất cả
+N1,kiwamaru / kiwamarinai,extremely; very ~,vô cùng; mặc dù rất ~
+N1,koso are,although; even though ~,mặc dù; mặc dù ~
+N1,koso sure,and; although; but ~,Và; mặc dù; nhưng ~
+N1,koso~ga/keredo,but; although (emphasis),Nhưng; mặc dù (nhấn mạnh)
+N1,koto gotoku,altogether; entirely; completely ~,toàn bộ; toàn bộ; hoàn toàn ~
+N1,koto kono ue nai / kono ue nai / kono ue naku,the most of all; the best; nothing is more ... than ~,trên hết; tốt nhất; không có gì hơn ... hơn ~
+N1,koto mo atte,partly because; also because of; plus the reason for ~,một phần vì; cũng vì ; cộng với lý do ~
+N1,koto nashi ni,without doing something,không làm gì đó
+N1,koto no nai you ni,so as not to; to not ~,để không; không ~
+N1,koto tote,because; since ~,bởi vì; kể từ ~
+N1,kurai nara,rather than (do ...)​,thay vì (do ...)​
+N1,kurai no mono da,only (emphasis),chỉ (nhấn mạnh)
+N1,made da / made no koto da,only; just; nothing else,chỉ một; chỉ; không có gì khác
+N1,made mo nai / made mo naku,there's no need to; it’s not necessary to ~,không cần phải làm vậy; không cần thiết phải ~
+N1,majiki,should not; must not ~,không nên; không được ~
+N1,makuru,to do over and over again; to do relentlessly,làm đi làm lại nhiều lần; làm không ngừng
+N1,mamire,covered with; stained; smeared with ~,được bao phủ bởi; bị ố màu; bôi ~
+N1,marukkiri,completely; absolutely; totally; (not) at all​ ~,hoàn toàn; tuyệt đối; hoàn toàn; (không) chút nào​ ~
+N1,meku,seems; show signs of; to have the appearance of ~,có vẻ ; có dấu hiệu; có ngoại hình ~
+N1,mo douzen da,just like; same as ~,giống như; giống như ~
+N1,mo saru koto nagara,"one may well say so, but~; not only... but also ~","người ta có thể nói như vậy, nhưng~; không chỉ... mà còn ~"
+N1,mo shinai de,without even doing ~,thậm chí còn không làm ~
+N1,mohaya,already; now; no longer; not anymore,đã; Hiện nay; không còn nữa; không còn nữa
+N1,mono de,because; for that reason,bởi vì; vì lý do đó
+N1,mono o,if only; I wish; I'm sorry it's not actually (regret),"giá như ; tôi ước gì; Tôi xin lỗi, thực ra nó không phải là (hối tiếc)"
+N1,mono to omowareru / mono to mirareru,to think; to suppose; it is believed/expected that ~,suy nghĩ ; cho là ; người ta tin rằng/mong đợi rằng ~
+N1,mono to suru,shall; to assume; understood as ~,nên; giả định ; được hiểu là ~
+N1,mono toshite,to assume; to suppose; on the presumption that ~,giả định ; cho là ; dựa trên giả định rằng ~
+N1,moshikuwa,or; otherwise,hoặc; nếu không
+N1,n bakari ni,as if; as though ~,như thể ; như thể ~
+N1,n ga tame ni,in order to ~,để ~
+N1,nagara ni / nagara no,while; during; without change; performed in this condition,trong khi; trong lúc; không thay đổi; thực hiện trong điều kiện này
+N1,nai made mo,not to say; although it does not reach the level of ~,không được nói; mặc dù nó không đạt tới mức ~
+N1,nai mono demo nai,is not entirely impossible,không hẳn là không thể
+N1,nai mono ka / nai mono darou ka,isn't there; can’t we…?; can’t I…?,không có ở đó; chúng ta không thể…?; tôi có thể không…?
+N1,nai tomo kagiranai,not necessarily; I can't say that; maybe; might ~,không nhất thiết; Tôi không thể nói điều đó; Có lẽ; có thể ~
+N1,nakushite wa,cannot do without ~,không thể thiếu ~
+N1,nami,average; ordinary; same level as; equal to; on par with ~,trung bình; bình thường; cùng cấp độ với; bằng ; ngang bằng ~
+N1,nan to iu / nanto / nante,"how (beautiful, etc.); what a ~","thế nào (đẹp, v.v.); dù sao đi nữa thì thật là ~"
+N1,nani shiro,at any rate; after all; anyhow; anyway; in any case; because; as you know ~,bằng mọi giá; xét cho cùng; dù sao đi nữa; Dẫu sao thì; trong mọi trường hợp; bởi vì; như bạn biết ~
+N1,nara dewa,distinctive of; uniquely applying to; special to ~,đặc biệt của; áp dụng duy nhất cho; đặc biệt dành cho ~
+N1,nara iza shirazu / wa iza shirazu,I don't know about ... but; it may be possible for ... but ~,Tôi không biết về... nhưng; có thể là ... nhưng ~
+N1,nari,as soon as; right after ~,càng sớm càng; ngay sau ~
+N1,nari ni / nari no,suitable; in one's own way/style,thích hợp; ít nhất là theo cách/phong cách riêng của mình
+N1,nari tomo,at least; even just a little (adverbial particle),ít nhất; thậm chí chỉ là một chút (trạng từ)
+N1,nari~nari,[A] or [B] or something; for instance ~,[A] hay [B] hay gì đó; ví dụ ~
+N1,nashi ni / nashi de,without; without doing ~,không có; không làm ~
+N1,ni,and; in addition to; the combination of ~,Và; ngoài ra; sự kết hợp của ~
+N1,ni atai suru,to be worth; to be worthy of; to deserve; to merit​ ~,có giá trị; xứng đáng với; xứng đáng ; đáng khen​ ~
+N1,ni atte,at; on; during; in the condition of​ ~,Tại; TRÊN; trong lúc; trong điều kiện​ ~
+N1,ni hikikae,compared to; in contrast to; unlike; while; whereas ~,so sánh với ; trái ngược với ; không giống ; trong khi; trong khi ~
+N1,ni itaru / ni itatta,leads to; come to a conclusion,dẫn đến ; đi đến kết luận
+N1,ni itaru made,as far as; up until; everything from ... to ~,xa như ; cho đến khi ; mọi thứ từ ... đến ~
+N1,ni itattemo,even if; even though; although something reached the point ~,ngay cả khi; mặc dù; mặc dù có điều gì đó đã đến mức ~
+N1,ni ittate wa,when it comes to; as for ~,khi nói đến; đối với ~
+N1,ni iwasereba,if you ask; if one may say ~,nếu bạn hỏi; nếu ai đó có thể nói ~
+N1,ni kagitta koto dewa nai,not limited to only ~,không giới hạn chỉ ~
+N1,ni kakatte wa / ni kakattara / ni kakaru to / kakareba,"when handled by (N), becomes a completely different result","khi được xử lý bởi (N), sẽ trở thành một kết quả hoàn toàn khác"
+N1,ni kakatteiru,depending on; to depend on; whether or not,tùy thuộc vào ; phụ thuộc vào; có hay không
+N1,ni kako tsukete,to use as a pretext; to use as an excuse,dùng làm cớ; lấy cớ
+N1,ni kamakete,to be too busy; to focus / concentrate only on ~,quá bận rộn; tập trung / chỉ tập trung vào ~
+N1,ni katakunai,"easy to do; it’s not hard to (imagine, understand, guess)","dễ làm; không khó để (tưởng tượng, hiểu, đoán)"
+N1,ni matsuwaru,to be related to; to concern; associated with ~,có liên quan đến; quan tâm; được liên kết với ~
+N1,ni nottotte,based on; according to; in accordance with ~,dựa vào; theo ; theo ~
+N1,ni sakigakete,prior to; to be the first (pioneer); being ahead of ~,trước ; là người đầu tiên (người tiên phong); đi trước ~
+N1,ni shinobinai,cannot bring oneself (to do); unable to bear ~,không thể tự mình làm được; không thể chịu nổi ~
+N1,ni shita tokoro de / to shita tokoro de,even if; even supposing that ~,ngay cả khi; thậm chí giả sử rằng ~
+N1,ni shite,"at / on / under certain conditions (time, position, age, number of times)","tại / trên / trong những điều kiện nhất định (thời gian, vị trí, tuổi, số lần)"
+N1,ni sokushite,according to; in keeping with; to be based on ~,theo ; phù hợp với; dựa trên ~
+N1,ni taeru / ni taenai,worth doing; can do; cannot bear doing ~,đáng làm; có thể làm được; không chịu được việc làm ~
+N1,ni taranai / ni tarinai,cannot; not worthy; not worth doing ~,không thể; không xứng đáng; không đáng làm ~
+N1,ni taru / ni tariru,can do; worthy; worth doing,có thể làm được; xứng đáng; đáng làm
+N1,ni terashite,according to; in view of; in light of ~,theo ; theo quan điểm của ; dựa trên ~
+N1,ni todomarazu,not limited to; not only… but also ~,không giới hạn; không chỉ… mà còn ~
+N1,ni wa muri ga aru,difficult to do; is unreasonable / unrealistic / impossible,khó thực hiện; là không hợp lý / không thực tế / không thể
+N1,ni yorazu,regardless of ~,bất kể ~
+N1,ni~o kasanete,"success after continuous (effort, work, adjustments, etc.)","thành công sau khi liên tục (nỗ lực, công việc, điều chỉnh, v.v.)"
+N1,nimo hodo ga aru,there is a limit to what is acceptable; to go too far,có giới hạn cho những gì có thể chấp nhận được; đi quá xa
+N1,nimo mashite,more than…; above ~,hơn…; trên ~
+N1,niwa ataranai,it’s not worth; there’s no need to; does not correspond to ~,nó không có giá trị; không cần thiết; không tương ứng với ~
+N1,niwa oyobanai,there is no need to; unnecessary; no match for ~,không cần phải làm vậy; không cần thiết; không sánh được với ~
+N1,no itari,utmost; extremely ~,tối đa; cực kỳ ~
+N1,no kiwami,utmost; extremely ~,tối đa; cực kỳ ~
+N1,no nan notte,extremely ~ (cannot be expressed in words),cực kỳ ~ (không thể diễn tả bằng lời)
+N1,no yara / mono yara / koto yara,I wonder...; unsure; I don’t know ~,Tôi tự hỏi...; không chắc chắn; Tôi không biết ~
+N1,no yara~no yara,or ~ (I don't know),hoặc ~ (tôi không biết)
+N1,o fumaete,to be based on; to take into account ~,dựa vào; có tính đến ~
+N1,o hete,through; by way of; after; via ~,bởi vì; bằng cách ; sau đó; qua ~
+N1,o hikaete,to be soon; the time has come to; nearby; ahead of ~,sắp có ; thời điểm đã đến; gần đó; trước ~
+N1,o ii koto ni,to take advantage of ~,để tận dụng ~
+N1,o kaerimizu / mo kaerimizu,despite; without considering; not worrying about; regardless of ~,cho dù; không cân nhắc; không lo lắng về; bất kể ~
+N1,o kagiri ni,starting from; the last time (ending a continued action),bắt đầu từ ; lần cuối cùng (kết thúc một hành động đang tiếp diễn)
+N1,o kanete,also for the purpose of ~,cũng vì mục đích ~
+N1,o kawakiri ni,one after another; starting with ~,cái này đến cái khác; bắt đầu với ~
+N1,o ki ni,as an opportunity/chance to ~,như một cơ hội/cơ hội để ~
+N1,o kinji enai,can’t help but; can’t refrain from ~,không thể không; không thể kiềm chế ~
+N1,o mono tomo sezuni,in defiance of; not losing to / afraid / worrying about ~,bất chấp ; không thua / sợ / lo lắng về ~
+N1,o motte / o mochimashite,by means of; with; on / at / as of (time)​,bằng cách; với; on / at / as of (thời gian)​
+N1,o oite~nai,"only; can only be; there is no alternative, only ~","chỉ một; chỉ có thể được; không có lựa chọn nào khác, chỉ có ~"
+N1,o oshite / o oshikitte,to overcome (opposition); to push past ~,vượt qua (sự phản đối); vượt qua ~
+N1,o sakai ni,since ~ (indicates a large change before & after),vì ~ (biểu thị sự thay đổi lớn trước và sau)
+N1,o yogi naku sareru,to be forced to do something because one has no other choice,bị buộc phải làm điều gì đó vì không còn lựa chọn nào khác
+N1,o yoso ni,despite; without regards to ~,cho dù; không liên quan đến ~
+N1,o zentei toshite,with the intention to; on the condition / assumption ~,với ý định; về điều kiện/giả định ~
+N1,omoi o suru,to think; to feel ~,suy nghĩ ; cảm thấy ~
+N1,ori ni,when; at the time; on the occasion ~,khi; vào thời điểm đó; nhân dịp này ~
+N1,oyoso,about; roughly; generally; approximately; completely​ ~,Về; đại khái ; nói chung là; khoảng; hoàn toàn​ ~
+N1,sa,ending particle; indicates assertion,hạt kết thúc; biểu thị khẳng định
+N1,samo,"really (seem, appear, etc.); truly; as if ~","thực sự (dường như, xuất hiện, v.v.); thực sự ; như thể ~"
+N1,samonaito,otherwise; or else; if not ~,nếu không thì; hoặc cách khác; nếu không thì chắc chắn là ~
+N1,sazo,surely; certainly; no doubt; indeed​ ~,chắc chắn ; chắc chắn; không còn nghi ngờ gì nữa; quả thực ~
+N1,shimatsu da,end up; in the end; as a result (negative),kết thúc ; cuối cùng; kết quả là (tiêu cực)
+N1,soba kara,as soon as; right after​ ~,càng sớm càng; ngay sau​ ~
+N1,sobireru,to miss a chance; to fail to do ~,bỏ lỡ một cơ hội; không làm được ~
+N1,sokonau / sokoneru / sonjiru,to do something wrong; by mistake; to miss a chance; to fail to ~,làm điều gì sai trái; do nhầm lẫn; bỏ lỡ một cơ hội; thất bại ~
+N1,sube ga nai,there is no way / means; cannot do ~,không có cách nào/phương tiện; không thể làm được ~
+N1,sura / de sura,even ~ (with emphasis),thậm chí ~ (có nhấn mạnh)
+N1,ta hazumi ni / ta hyoushi ni,"the moment [A], unintentionally / inadvertently caused something to happen","khoảnh khắc [A], vô tình/ vô tình gây ra chuyện gì đó"
+N1,ta koto ni suru / ta koto ni naru,pretend to; see things as untrue; contrary to the truth ~,giả vờ ; xem mọi thứ là không đúng sự thật; trái ngược với sự thật ~
+N1,ta tokoro de,"even if; no matter (who, what, when, where, why, how)","ngay cả khi; bất kể (ai, cái gì, khi nào, ở đâu, tại sao, thế nào)"
+N1,ta tsumori wa nai,have no intention to / didn't mean to ~,không có ý định / không cố ý ~
+N1,tada~nomi da,all we can do is; can do nothing but; only ~,tất cả những gì chúng ta có thể làm là; không thể làm gì khác ngoài; chỉ có ~
+N1,tameshi ga nai,is never the case; has never happened; I have never seen or heard of ~,không bao giờ như vậy; chưa bao giờ xảy ra; Tôi chưa bao giờ thấy hay nghe đến ~
+N1,tara saigo / taga saigo,if you do... negative result,nếu bạn làm vậy... phủ định result
+N1,tara~tade,if / in the case... of course / should ~,nếu / trong trường hợp... tất nhiên / nên ~
+N1,tara~tokoro da,"if... (counterfactual condition), then would be ~","nếu... (điều kiện phản thực), thì sẽ là ~"
+N1,tari tomo,not even; not any ~,thậm chí không; không có ~
+N1,taru mono / taru,(those) who are; (that) which is; in the capacity of ... should ~,(những) ai; (cái đó) đó là; trong khả năng của ... nên ~
+N1,te kanawanai,can't bear to; unable to; troublesome to; can’t stand to ~,không thể chịu được; không thể ; rắc rối ; không thể chịu được ~
+N1,te kara to iu mono,ever since ~,kể từ ~
+N1,te miseru,I’ll do my best; I'll definitely do; I'll show you ~,Tôi sẽ cố gắng hết sức; Tôi chắc chắn sẽ làm được; Tôi sẽ cho bạn xem ~
+N1,te shikaru beki da,should; appropriate; it is natural to do ~,nên; phù hợp; việc làm ~
+N1,te sumu koto dewa nai,~ is not enough to solve the problem; cannot be resolved by ~,~ không đủ để giải quyết vấn đề; không thể giải quyết được bằng ~
+N1,te yamanai,always; never stop; can’t help but ~,luôn luôn; không bao giờ dừng lại; không thể không ~
+N1,temae,considering; before; in front of; one’s standpoint,xem xét; trước; ở phía trước; quan điểm của một người
+N1,temo dou ni mo naranai,it's no use; can't do anything,nó không có ích gì; không thể làm gì được
+N1,temo sashitsukaenai,can ~; it’s okay if ~ (indicates permission or compromise),có thể ~; sẽ ổn thôi nếu ~ (biểu thị sự cho phép hoặc thỏa hiệp)
+N1,temo shiranai,if (you) continue... you'll end up / I don't care about it,nếu (bạn) tiếp tục... bạn sẽ kết thúc / Tôi không quan tâm đến điều đó
+N1,to aimatte,"together with..., more; because of the influence of..., more ~","cùng với..., thêm; vì ảnh hưởng của..., thêm ~"
+N1,to areba,if it is the case that; if ~,nếu đúng như vậy; if ~
+N1,to atte,due to the fact that; because of ~,vì thực tế là; bởi vì ~
+N1,to bakari ni,as if to say; as though~,như muốn nói; như thể~
+N1,to ie domo,even if; even though; despite ~,ngay cả khi; mặc dù; mặc dù ~
+N1,to ienaku mo nai,one can even say that; it can also be said that ~,người ta thậm chí có thể nói như vậy; cũng có thể nói như vậy ~
+N1,to ii~to ii,both ... and; not only ... also; whether it be ... or ~,cả ... và; không chỉ ... còn; cho dù đó là ... hay ~
+N1,to ittara nai,extremely; very; nothing more ... than this; as ... as it could possibly be,vô cùng; rất; không có gì hơn ... ngoài điều này; như ... vì nó có thể là
+N1,to iu,all; every single ~ (no exceptions),tất cả; mỗi ~ (không có ngoại lệ)
+N1,to iu ka~to iu ka,or rather; or perhaps I should say; I mean ~,hay đúng hơn là; hoặc có lẽ tôi nên nói; Ý tôi là ~
+N1,to iu mono,during; for; since; over a period of time,trong lúc; vì; từ; trong một khoảng thời gian
+N1,to iu tokoro da / to itta tokoro da,at the most; no more than​; at best; roughly; about ~,nhiều nhất; không nhiều hơn; tốt nhất là; đại khái ; khoảng ~
+N1,to iu wake da,that's why; no wonder; this means; it is the case that ~,đó là lý do tại sao; không có gì lạ; điều này có nghĩa là; đó là trường hợp ~
+N1,to iu wake dewa nai,it’s not that; it doesn’t mean that ~,không phải vậy; nó không có nghĩa là ~
+N1,to iwazu~to iwazu,"both; not only A or B, but (overall) ~","cả hai; không chỉ A hoặc B, mà (tổng thể) ~"
+N1,to kiteiru,because of ~,bởi vì ~
+N1,to miru to,"as soon as one realizes ..., then ~","ngay khi người ta nhận ra ..., thì ~"
+N1,to miru ya,at the sight of; upon seeing; after confirming ~,khi nhìn thấy; khi nhìn thấy; sau khi xác nhận ~
+N1,to naru to / to nareba,when it comes to; in such a case; if that happens,khi nói đến; trong trường hợp như vậy; nếu điều đó xảy ra
+N1,to sareru,is considered to; it is said that ~,được coi là; người ta nói rằng ~
+N1,tokitara,when it comes to; concerning ~,khi nói đến; liên quan đến ~
+N1,tokoro o,although (it is a certain time/condition); even though normally,mặc dù (đó là thời gian/điều kiện nhất định); mặc dù bình thường
+N1,tomo arou mono ga,of all people (expression showing surprise at a high standing person's misbehavior),của tất cả mọi người (biểu hiện ngạc nhiên trước hành vi sai trái của một người có địa vị cao)
+N1,tomo naku / tomo nashi ni,somehow; without knowing; without thinking; unconsciously​ ~,bằng cách nào đó; mà không biết; không suy nghĩ; một cách vô thức​ ~
+N1,tomo sureba,apt to (do); tend to; liable to; prone to ~,thích (làm); có xu hướng ; chịu trách nhiệm ; thiên về ~
+N1,tomo~tomo,unable to draw a conclusion; unable to judge,không thể đưa ra kết luận; đặc biệt là không thể đánh giá
+N1,toriwake,especially; above all ~,đặc biệt; trên hết ~
+N1,toshita koto ga,"of all people, who would have thought?","trong số tất cả mọi người, ai có thể nghĩ tới?"
+N1,tossa ni,at once; right away; promptly,cùng một lúc; ngay lập tức; kịp thời
+N1,tote,even; even if/though ~,thậm chí; ngay cả khi/mặc dù ~
+N1,towa,I didn't know; I was surprised that; the fact that ~,Tôi không biết; Tôi rất ngạc nhiên về điều đó; thực tế là ~
+N1,towa ie,though; although; be that as it may; nonetheless,mặc dù; mặc dù; có thể như vậy; dù sao
+N1,towa kurabemono ni naranai,can't compare with ~,không thể so sánh với ~
+N1,towa utte kawatte / to wa utte kawari,unlike; totally different; very different from ~,không giống ; hoàn toàn khác; rất khác với ~
+N1,tsu~tsu,and ~ (indicates two contrasting actions),và ~ (biểu thị hai hành động tương phản)
+N1,tsukusu,to use up (completely without anything remaining); to exhaust; to run out of ~,sử dụng hết (hoàn toàn không còn gì); kiệt sức; hết ~
+N1,tteba / ttara,speaking of; I told you already; come on (annoyance / dissatisfaction),nói về ; Tôi đã nói với bạn rồi; thôi nào (khó chịu / không hài lòng)
+N1,uchi ni hairanai,not really; can't be regarded as ~,"không thực sự; tuy nhiên, không thể coi là ~"
+N1,wa,feminine sentence ending particle,"Tuy nhiên, trợ từ kết thúc câu giống cái"
+N1,wa dou de are,however; whatever​ ~,Tuy nhiên; sao cũng được ~
+N1,wa oroka,let alone; not to mention; needless to say ~,huống chi ; chưa kể; không cần phải nói ~
+N1,wa sateoki,setting aside ~,dành ~
+N1,wa socchinoke de / o socchinoke de,ignoring (one thing) for (another)​​; instead of ~,phớt lờ (điều này) vì (điều khác); thay vì ~
+N1,wa~wade,and (listing negative things happening at the same time),và (liệt kê những điều tiêu cực xảy ra cùng lúc)
+N1,ya ina ya,as soon as; the moment ~,càng sớm càng; thời điểm ~
+N1,ya shinai,"should do, but don't; absolutely not; there's no way ~","nên làm, nhưng không; hoàn toàn không; không có cách nào ~"
+N1,yare~yare,pattern to give two representative examples (usually negative),mẫu đưa ra hai ví dụ tiêu biểu (thường phủ định)
+N1,you ga / you to,even if; no matter how/what ~,ngay cả khi; dù thế nào/có chuyện gì ~
+N1,you ga~you ga / you to~you to,no matter; whether; even if [A] or [B],không vấn đề gì; liệu; ngay cả khi [A] hoặc [B]
+N1,you ni yotte wa / you dewa,depending on the way; depending on how; according to how ~,tùy theo cách; tùy theo cách thức; theo như thế nào ~
+N1,you nimo~nai,even if I wanted to… I couldn’t ~,ngay cả khi tôi muốn… tôi cũng không thể ~
+N1,you to~mai to / you ga~mai ga,whether or not; regardless,có hay không; bất chấp
+N1,yue ni,therefore; consequently​; because of; due to ~,Vì vậy; do đó​; vì ; do ~
+N1,zo / ze,ending particle; adds force or indicates command,hạt kết thúc; thêm lực lượng hoặc ra lệnh
+N1,zu jimai,ended up not doing ~,cuối cùng lại không làm gì ~
+N1,zu niwa okanai / nai dewa okanai,will definitely/certainly do something; cannot not ~,chắc chắn/chắc chắn sẽ làm điều gì đó; không thể không ~
+N1,zu niwa sumanai / nai dewa sumanai,must; will definitely; can’t help but to ~,phải; chắc chắn sẽ ; không thể không ~
+N1,zu tomo,even without doing; even without being​ ~,ngay cả khi không làm; ngay cả khi không có​ ~
+N1,zukume,completely; entirely; nothing but ~,hoàn toàn; toàn bộ; không có gì ngoài ~

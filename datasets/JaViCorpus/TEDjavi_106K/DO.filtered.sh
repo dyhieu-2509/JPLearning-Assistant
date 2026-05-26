@@ -1,8 +1,8 @@
 #!/bin/bash
 
-### Filter TED corpus ###
+## Filter TED corpus ##
 
-### Remove HTML tags
+## Remove HTML tags
 sed 's|\& amp ; amp ;|\&|g' train.ja-vi.ja | sed 's|\& amp ; lt ;|\<|g' | sed 's|\& amp ; gt ;|\>|g' > train.ja-vi.1.ja
 mv train.ja-vi.1.ja train.ja-vi.ja
 sed 's|\& amp ; amp ;|\&|g' train.ja-vi.tok.true.vi | sed 's|\& amp ; lt ;|\<|g' | sed 's|\& amp ; gt ;|\>|g' > train.ja-vi.vi 
@@ -15,7 +15,7 @@ sed 's|\& amp ; amp ;|\&|g' tst2010.ja-vi.clean.vi | sed 's|\& amp ; lt ;|\<|g' 
 
 
 
-### Standardize unicode
+## Standardize unicode
 python ../tools/vietnameseNormUniStd.py train.ja-vi.vi train.ja-vi.unicode.vi
 mv train.ja-vi.unicode.vi train.ja-vi.vi
 

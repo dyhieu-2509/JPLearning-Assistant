@@ -1,0 +1,28 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: jplearning-assistant-backend
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/jpassistant}
+    username: ${POSTGRES_USER:jpassistant}
+    password: ${POSTGRES_PASSWORD:jpassistant123}
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+  neo4j:
+    uri: ${SPRING_NEO4J_URI:bolt://localhost:7687}
+    authentication:
+      username: ${NEO4J_USER:neo4j}
+      password: ${NEO4J_PASSWORD:neo4jpassword}
+
+jpassistant:
+  ai-service:
+    base-url: ${AI_SERVICE_URL:http://localhost:8000}
+    timeout: ${AI_SERVICE_TIMEOUT:12s}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

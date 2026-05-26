@@ -9,6 +9,27 @@ venv/
 .venv/
 env.bak/
 venv.bak/
+.pytest_cache/
+
+# Java / Maven
+backend/target/
+*.jar
+*.class
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/settings.json
+
+# Environment
+.env
+!.env.example
+
+# Docker
+postgres_data/
+neo4j_data/
+qdrant_data/
 
 # OS
 .DS_Store
