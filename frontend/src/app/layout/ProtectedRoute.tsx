@@ -1,5 +1,5 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { useAuth } from "../auth";
+import { useAuth } from "../providers/AuthProvider";
 
 export function ProtectedRoute() {
   const location = useLocation();

@@ -435,6 +435,7 @@ services:
 12. **MVP execution cadence** — timeline triển khai theo mốc thesis từ `19/05/2026` đến hết `27/05/2026`, chia thành các chức năng/task nhỏ có thể test/demo độc lập. Mục tiêu khoảng 5 task-level commit/ngày; nghĩa là trong mỗi ngày phải có nhiều commit nhỏ theo file/chức năng, không gom thành 1 commit lớn theo ngày. Mỗi commit chỉ chứa một chức năng, bug fix, refactor hoặc docs update rõ ràng.
 13. **Commit & push per task, not batched** — sau khi hoàn tất từng chức năng/task, cập nhật `claude.md` nếu contract/trạng thái thay đổi, commit đúng các file thuộc task đó, rồi push ngay lên remote branch hiện tại trước khi chuyển sang task tiếp theo. Không tích nhiều commit local để push một lượt cuối ngày/cuối phase, và không commit lẫn thay đổi ngoài phạm vi task vừa làm.
 14. **No invented product rules** — `claude.md` chỉ được cập nhật bằng yêu cầu từ SRS, Thesis Proposal, quyết định đã được user xác nhận, hoặc contract kỹ thuật đã implement và verify. Nếu cần thêm rule mới ảnh hưởng nghiệp vụ/cá nhân hóa, phải làm rõ trước.
+15. **Frontend architecture** — React frontend dùng feature-based structure tham khảo các product repository lớn/Bulletproof React: `app` cho route/provider/layout, `features` cho từng domain, `shared` cho API client, models, reusable components/assets, và `pages` chỉ là route entry mỏng. Không code business/API logic trong `pages`; không tạo button/card/panel/chip/form controls dùng chung trong page hoặc feature nếu có thể đặt ở `shared/components`.
 
 ### Commit convention
 

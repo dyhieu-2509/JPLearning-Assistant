@@ -810,6 +810,160 @@ progress::-webkit-progress-value {
   color: var(--white);
 }
 
+.learning-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 360px) minmax(0, 1.6fr) minmax(260px, 0.9fr);
+  gap: 16px;
+}
+
+.focus-panel {
+  grid-column: span 1;
+}
+
+.profile-form.single {
+  grid-template-columns: 1fr;
+}
+
+.profile-form textarea {
+  min-height: 90px;
+  resize: vertical;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--white);
+  padding: 10px;
+  outline: 0;
+}
+
+.flashcard-study {
+  display: grid;
+  gap: 14px;
+}
+
+.flashcard-card {
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  min-height: 260px;
+  padding: 22px;
+  border: 1px solid var(--sky-200);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(255, 255, 255, 0.72)),
+    var(--white);
+  color: var(--blue-950);
+  text-align: center;
+}
+
+.flashcard-card span {
+  font-size: 34px;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.flashcard-card small {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.rating-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.rating-row button {
+  min-height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--sky-700);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.question-stack,
+.result-stack,
+.plan-stack {
+  display: grid;
+  gap: 12px;
+}
+
+.question-block {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--sky-50);
+}
+
+.question-block legend {
+  padding: 0 4px;
+  color: var(--blue-950);
+  font-weight: 900;
+}
+
+.question-block label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 36px;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.result-row,
+.plan-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--white);
+}
+
+.result-row svg {
+  color: var(--green);
+}
+
+.result-row svg + span {
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.plan-progress {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+}
+
+.plan-progress strong {
+  color: var(--sky-700);
+  font-size: 22px;
+}
+
+.plan-item {
+  grid-template-columns: minmax(0, 1fr) 42px;
+}
+
+.plan-item.done {
+  background: #f0fdf4;
+}
+
+.plan-item strong,
+.plan-item span {
+  display: block;
+}
+
+.plan-item span {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
 .mobile-only {
   display: none;
 }
@@ -867,7 +1021,8 @@ progress::-webkit-progress-value {
   }
 
   .dashboard-grid,
-  .chat-layout {
+  .chat-layout,
+  .learning-grid {
     grid-template-columns: 1fr;
   }
 

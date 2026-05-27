@@ -11,9 +11,8 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
-import { useAuth } from "../auth";
-
-const logoUrl = new URL("../../vaja_logo.png", import.meta.url).href;
+import { useAuth } from "../providers/AuthProvider";
+import { logoUrl } from "../../shared/assets";
 
 const navItems = [
   { to: "/", label: "Dashboard", icon: BarChart3 },

@@ -4,14 +4,15 @@ Web-based virtual assistant for Japanese learning, focused on JLPT N5/N4 for Vie
 
 ## Current Phase
 
-Timeline status on 25/05/2026: **Phase 3 — Backend & Graph RAG**.
+Timeline status on 28/05/2026: **Frontend MVP integration** after Phase 3 backend/RAG.
 
-Implemented scaffold:
+Implemented:
 
 - Spring Boot backend under `backend/`
 - FastAPI AI service under `ai-service/`
+- React/Vite frontend under `frontend/`
 - Neo4j/PostgreSQL/Qdrant Docker Compose services
-- REST endpoints for health, knowledge lookup, tutor chat, planner, and assessment scaffold
+- REST endpoints for auth, knowledge lookup, tutor chat, personalization dashboard, flashcards, assessment, and planner
 
 ## Run Infrastructure
 
@@ -61,3 +62,73 @@ docker compose up --build
 ```
 
 Backend is exposed at `http://localhost:8080`. The AI service is internal to Docker Compose and is called by the backend through `http://ai-service:8000`.
+
+## Run Frontend Locally
+
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend runs at `http://localhost:3000` and proxies `/api` to `http://localhost:8080`.
+
+Build check:
+
+```powershell
+cd frontend
+npm run build
+```
+
+## Frontend Architecture
+
+The frontend follows a feature-based structure inspired by large React product repositories and Bulletproof React-style boundaries:
+
+```text
+frontend/src/
+├── app/                 # app routes, providers, protected layout
+├── features/            # feature-owned views and feature logic
+│   ├── auth/
+│   ├── dashboard/
+│   ├── chat/
+│   ├── flashcards/
+│   ├── assessment/
+│   └── planner/
+├── pages/               # thin route entry files only; no business logic
+└── shared/
+    ├── api.ts           # API request client only
+    ├── models.ts        # shared API/domain models
+    ├── components.tsx   # reusable UI primitives
+    └── assets.ts        # shared asset imports
+```
+
+Rules:
+
+- Page files in `src/pages` only re-export feature views.
+- Reusable UI such as buttons, panels, page headers, empty states, metric tiles, chips, and shared cards lives in `src/shared/components.tsx`.
+- API DTO/domain types live in `src/shared/models.ts`, not inside page files.
+- Feature folders may own feature-specific behavior, but shared UI and cross-feature helpers must move to `shared`.
+
+## Google OAuth2 Local Setup
+
+Google OAuth2 is configured through environment variables. Do not commit the downloaded Google `client_secret_*.json`; it is ignored by `.gitignore`.
+
+When a Google OAuth client JSON is present locally, copy these values into `.env`:
+
+```env
+SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_ID=<client_id>
+SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_SECRET=<client_secret>
+FRONTEND_AUTH_REDIRECT_URL=http://localhost:3000/auth/callback
+```
+
+The Google redirect URI must include:
+
+```text
+http://localhost:8080/login/oauth2/code/google
+```
+
+Frontend Google login starts at:
+
+```text
+http://localhost:8080/oauth2/authorization/google
+```

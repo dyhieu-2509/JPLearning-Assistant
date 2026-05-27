@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
-import { apiRequest, AuthResponse, UserResponse } from "./api";
+import { apiRequest } from "../../shared/api";
+import type { AuthResponse, UserResponse } from "../../shared/models";
 
 type StoredAuth = {
   accessToken: string;
@@ -14,6 +15,8 @@ type AuthContextValue = {
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (displayName: string, email: string, password: string) => Promise<void>;
+  completeOAuth: (accessToken: string, refreshToken: string) => void;
+  linkGoogleAccount: (linkToken: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 };
 
@@ -63,6 +66,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [applyAuth]
   );
 
+  const completeOAuth = useCallback((accessToken: string, refreshToken: string) => {
+    const claims = decodeJwt(accessToken);
+    const next = {
+      accessToken,
+      refreshToken,
+      user: {
+        id: String(claims.sub ?? "google-user"),
+        email: String(claims.email ?? "google-user"),
+        displayName: String(claims.email ?? "Google learner"),
+        avatarUrl: null,
+        role: String(claims.role ?? "STUDENT"),
+        status: "ACTIVE"
+      }
+    };
+    persistAuth(next);
+    setAuth(next);
+  }, []);
+
+  const linkGoogleAccount = useCallback(
+    async (linkToken: string, password: string) => {
+      const response = await apiRequest<AuthResponse>("/auth/google/link", {
+        method: "POST",
+        body: { linkToken, password }
+      });
+      applyAuth(response);
+    },
+    [applyAuth]
+  );
+
   const register = useCallback(
     async (displayName: string, email: string, password: string) => {
       const response = await apiRequest<AuthResponse>("/auth/register", {
@@ -101,12 +133,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isAuthenticated: Boolean(auth?.accessToken),
       login,
       register,
+      completeOAuth,
+      linkGoogleAccount,
       logout
     }),
-    [auth, login, logout, register]
+    [auth, completeOAuth, linkGoogleAccount, login, logout, register]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+function decodeJwt(token: string): Record<string, unknown> {
+  try {
+    const [, payload] = token.split(".");
+    const normalized = payload.replace(/-/g, "+").replace(/_/g, "/");
+    return JSON.parse(window.atob(normalized)) as Record<string, unknown>;
+  } catch {
+    return {};
+  }
 }
 
 export function useAuth() {
