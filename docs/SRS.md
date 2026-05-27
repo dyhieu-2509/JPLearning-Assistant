@@ -298,24 +298,23 @@ sequenceDiagram
     participant N4J as Neo4j
 
     S->>FE: Bắt đầu Placement Test
-    FE->>SB: POST /api/v1/assessment/placement {userId}
-    SB->>AI: POST /api/v1/assessment/generate-placement
+    FE->>SB: POST /api/v1/assessment/sessions {level, category, questionCount}
+    SB->>AI: POST /api/v1/assessment/generate
 
     AI->>N4J: Query N5/N4 grammar + vocab nodes
     N4J-->>AI: Question pool
 
     AI->>AI: Select 10-15 questions (mixed N5/N4)
-    AI-->>SB: {questions: [...]}
-    SB-->>FE: Hiển thị câu hỏi
+    AI-->>SB: {questions: [..., answer, explanation]}
+    SB->>SB: Save assessment session + server-side answer key
+    SB-->>FE: Public questions only, without answer key
 
     S->>FE: Submit câu trả lời
-    FE->>SB: POST /api/v1/assessment/submit {answers}
-    SB->>AI: POST /api/v1/assessment/evaluate {answers}
-    AI->>AI: Score + classify (N5 / N4)
-    AI-->>SB: {score, level, weakAreas}
+    FE->>SB: POST /api/v1/assessment/sessions/{sessionId}/submit {answers}
+    SB->>SB: Grade with stored answer key
 
-    SB->>SB: Save result (PostgreSQL)
-    SB-->>FE: {level: "N5", score: 72, weakAreas: [...]}
+    SB->>SB: Save result + emit ASSESSMENT learning signals
+    SB-->>FE: {score, total, weakAreas, results, progress}
     FE-->>S: Hiển thị kết quả + gợi ý
 ```
 
@@ -375,7 +374,10 @@ erDiagram
         string topic_type
         string topic_id
         string status
+        float mastery_score
+        int exposure_count
         int review_count
+        timestamp last_exposed
         timestamp last_reviewed
     }
 
@@ -510,21 +512,30 @@ graph LR
 |---|---|---|
 | POST | `/api/v1/auth/register` | Đăng ký |
 | POST | `/api/v1/auth/login` | Đăng nhập → JWT |
-| GET | `/api/v1/users/me` | Lấy profile |
-| PUT | `/api/v1/users/me` | Cập nhật profile |
+| POST | `/api/v1/auth/google/link` | Xác nhận link Google vào tài khoản system bằng `linkToken + password` |
+| GET | `/api/v1/personalization/me/profile` | Lấy learner profile từ JWT user |
+| PUT | `/api/v1/personalization/me/profile` | Cập nhật learner profile |
 | GET | `/api/v1/knowledge/vocabulary?q=...&level=N5` | Tra từ vựng |
 | GET | `/api/v1/knowledge/grammar?q=...&level=N5` | Tra ngữ pháp |
 | GET | `/api/v1/knowledge/kanji?q=...&level=N5` | Tra kanji |
 | POST | `/api/v1/chat` | Chat với Tutor AI |
-| GET | `/api/v1/chat/history` | Lịch sử chat |
-| POST | `/api/v1/assessment/placement` | Bắt đầu placement test |
-| POST | `/api/v1/assessment/submit` | Submit quiz answers |
-| GET | `/api/v1/progress` | Xem learning progress |
+| GET | `/api/v1/chat/sessions` | Danh sách phiên chat |
+| GET | `/api/v1/chat/sessions/{sessionId}/messages` | Tin nhắn trong phiên chat |
+| POST | `/api/v1/assessment/sessions` | Start quiz/placement session; backend stores server-side answer key |
+| POST | `/api/v1/assessment/sessions/{sessionId}/submit` | Submit answers; backend grades server-side and records ASSESSMENT learning signals |
+| POST | `/api/v1/planner/recommend` | Sinh study plan từ profile, weak progress, due flashcards, chat topics, assessment result |
+| GET | `/api/v1/planner/plans` | Lịch sử study plan đã lưu của learner |
+| GET | `/api/v1/planner/plans/{planId}` | Chi tiết study plan và trạng thái từng task |
+| POST | `/api/v1/planner/plans/{planId}/items/{itemId}/complete` | Đánh dấu task trong plan đã hoàn thành |
+| GET | `/api/v1/personalization/me/dashboard` | Tổng hợp learner dashboard: progress, due cards, assessment, chat activity |
+| GET | `/api/v1/personalization/me/progress` | Xem learning progress |
+| POST | `/api/v1/personalization/me/progress/exposures` | Ghi nhận exposure từ chatbot/RAG, không tăng mastery |
+| POST | `/api/v1/personalization/me/progress/signals` | Ghi nhận learning signal từ quiz/assessment/flashcard để cập nhật mastery |
 | GET | `/api/v1/flashcards/decks` | List decks |
-| POST | `/api/v1/flashcards/decks` | Tạo deck (hoặc auto-generate từ KG) |
-| GET | `/api/v1/flashcards/decks/{id}/cards` | Lấy cards trong deck |
+| POST | `/api/v1/flashcards/decks` | Tạo deck; có thể auto-generate cards từ KG theo `level + category` |
+| GET | `/api/v1/flashcards/decks/{deckId}/cards` | Lấy cards trong deck của learner hiện tại |
 | GET | `/api/v1/flashcards/review/due` | Lấy cards cần review hôm nay |
-| POST | `/api/v1/flashcards/review` | Submit review result (SM-2 update) |
+| POST | `/api/v1/flashcards/review` | Submit `cardId + rating`; cập nhật SM-2 card schedule và mastery signal |
 | GET | `/api/v1/flashcards/stats` | Thống kê flashcard |
 
 ### Spring Boot — Admin API (role ADMIN required)
@@ -558,7 +569,7 @@ graph LR
 | POST | `/api/v1/tutor/chat` | RAG-based Q&A |
 | POST | `/api/v1/planner/recommend` | Gợi ý study plan |
 | POST | `/api/v1/assessment/generate` | Sinh câu hỏi quiz |
-| POST | `/api/v1/assessment/evaluate` | Chấm điểm + phân tích |
+| POST | `/api/v1/assessment/evaluate` | Optional AI analysis; Spring Boot MVP grades with stored answer key |
 
 ---
 
