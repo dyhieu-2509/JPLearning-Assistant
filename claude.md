@@ -436,6 +436,53 @@ services:
 13. **Commit & push per task, not batched** — sau khi hoàn tất từng chức năng/task, cập nhật `claude.md` nếu contract/trạng thái thay đổi, commit đúng các file thuộc task đó, rồi push ngay lên remote branch hiện tại trước khi chuyển sang task tiếp theo. Không tích nhiều commit local để push một lượt cuối ngày/cuối phase, và không commit lẫn thay đổi ngoài phạm vi task vừa làm.
 14. **No invented product rules** — `claude.md` chỉ được cập nhật bằng yêu cầu từ SRS, Thesis Proposal, quyết định đã được user xác nhận, hoặc contract kỹ thuật đã implement và verify. Nếu cần thêm rule mới ảnh hưởng nghiệp vụ/cá nhân hóa, phải làm rõ trước.
 
+### Commit convention
+
+Commit message dùng convention kiểu Conventional Commits/Angular để dễ grep log, sinh changelog và review theo từng loại thay đổi.
+
+Format bắt buộc:
+
+```text
+<type>(<scope>): <summary>
+```
+
+Quy tắc:
+
+- `type` bắt buộc, viết thường.
+- `scope` nên có khi commit thuộc module rõ ràng: `backend`, `ai`, `auth`, `chat`, `personalization`, `assessment`, `flashcard`, `planner`, `dashboard`, `frontend`, `docs`, `infra`, `test`.
+- `summary` dùng tiếng Anh ngắn gọn, dạng imperative, không viết hoa chữ đầu nếu không cần, không chấm cuối câu.
+- Mỗi commit chỉ chứa một task nhỏ có thể review độc lập.
+- Breaking change dùng `!`: `feat(auth)!: change token contract`, và mô tả thêm footer `BREAKING CHANGE: ...`.
+- Hotfix chỉ dùng khi sửa lỗi khẩn cấp ảnh hưởng demo/runtime; bug bình thường dùng `fix`.
+
+Allowed commit types:
+
+| Type | Khi dùng | Ví dụ |
+|---|---|---|
+| `feat` | Thêm chức năng/API/flow mới | `feat(chat): persist RAG sources` |
+| `fix` | Sửa bug thông thường | `fix(planner): avoid duplicate weak items` |
+| `hotfix` | Sửa lỗi khẩn cấp cần đẩy ngay | `hotfix(auth): reject expired refresh tokens` |
+| `refactor` | Đổi cấu trúc code không đổi behavior | `refactor(backend): move DTOs into response package` |
+| `perf` | Cải thiện hiệu năng | `perf(knowledge): limit Neo4j traversal depth` |
+| `test` | Thêm/sửa test | `test(assessment): cover resubmission rejection` |
+| `docs` | Sửa tài liệu | `docs(srs): align MVP endpoints` |
+| `style` | Format/code style, không đổi logic | `style(backend): format controller imports` |
+| `chore` | Bảo trì repo/tooling nhỏ | `chore(repo): update gitignore entries` |
+| `build` | Build system/dependencies | `build(backend): add H2 test dependency` |
+| `ci` | CI/CD workflow | `ci(github): add backend test workflow` |
+| `revert` | Revert commit trước đó | `revert: revert feat(planner): add saved plans` |
+| `security` | Vá lỗ hổng/bảo mật không phù hợp `fix` | `security(auth): rotate weak JWT secret default` |
+
+Các lệnh check nhanh:
+
+```bash
+git log --oneline --grep='^feat'
+git log --oneline --grep='^hotfix'
+git log --oneline --grep='^fix'
+git log --pretty=format:'%ad %h %s' --date=short
+git log --pretty=format:'%ad %s' --date=short | sort
+```
+
 ### MVP delivery plan (19/05/2026 - 27/05/2026)
 
 | Ngày | Trọng tâm | Task-level commit mục tiêu |
