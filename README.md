@@ -109,6 +109,10 @@ Rules:
 - API DTO/domain types live in `src/shared/models.ts`, not inside page files.
 - Feature folders may own feature-specific behavior, but shared UI and cross-feature helpers must move to `shared`.
 
+Reference:
+
+- https://github.com/alan2207/bulletproof-react/blob/master/docs/project-structure.md
+
 ## Google OAuth2 Local Setup
 
 Google OAuth2 is configured through environment variables. Do not commit the downloaded Google `client_secret_*.json`; it is ignored by `.gitignore`.
