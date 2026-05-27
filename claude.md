@@ -60,6 +60,13 @@ Sử dụng Multi-Agent + Knowledge Graph + RAG.
 | **Vector DB** | Qdrant | Embeddings cho semantic search / RAG |
 | **Frontend** | Streamlit (prototype) → React (production) | UI |
 
+Qdrant indexing:
+
+- Use `ai-service/index_qdrant.py` to build `jp_learning_knowledge`.
+- For MVP retrieval quality, index with the same embedding provider used by `ai-service`.
+- Current local target: Ollama `bge-m3`, `EMBEDDING_VECTOR_SIZE=1024`.
+- On Windows/local Docker, prefer `--prefer-grpc` for indexing to avoid large HTTP/zstd response memory issues.
+
 ### Giao tiếp giữa 2 services
 
 - Spring Boot gọi Python AI Service qua **REST HTTP** (internal network).
@@ -78,9 +85,11 @@ Sử dụng Multi-Agent + Knowledge Graph + RAG.
 | `spring-boot-starter-data-jpa` | PostgreSQL ORM |
 | `spring-boot-starter-data-neo4j` | Neo4j integration |
 | `spring-boot-starter-security` | Authentication |
+| `spring-boot-starter-oauth2-client` | Google OAuth2 login |
+| `jjwt` or `nimbus-jose-jwt` | JWT access/refresh token handling |
 | `spring-boot-starter-validation` | Request validation |
 | `springdoc-openapi` | Swagger/OpenAPI docs |
-| `lombok` | Reduce boilerplate |
+| `lombok` | Reduce getter/setter/constructor boilerplate in Java entities |
 | `mapstruct` | DTO ↔ Entity mapping |
 
 ### Python FastAPI (AI Service)
@@ -105,6 +114,95 @@ Sử dụng Multi-Agent + Knowledge Graph + RAG.
 - **Controller KHÔNG có logic** — chỉ nhận request → gọi service → trả response.
 - **Service là Interface** — `ServiceImpl` chứa business logic.
 - **Clean Architecture** — dependency hướng vào domain.
+- **DTO tách request/response** — request DTO nằm trong `application.dto.request`, response DTO nằm trong `application.dto.response`.
+- **Exception handling tách riêng** — `@RestControllerAdvice` nằm trong `api.v1.handler`, controller nằm trong `api.v1.controller`.
+- **Application port tách riêng** — outbound port nằm trong `application.port.out`, implementation adapter nằm trong `infrastructure`.
+- **Application exception tách riêng** — exception nghiệp vụ/application nằm trong `application.exception`, không đặt trong `service`.
+- **Auth thống nhất** — hỗ trợ cả system login (`email/password`) và Google login; cả hai đều map vào cùng `User` trong database và backend phát JWT thống nhất.
+- **Lombok cho entity** — dùng `@Getter`, `@Setter` theo field cần update, `@NoArgsConstructor(access = AccessLevel.PROTECTED)` cho JPA entity. Không dùng `@Setter` toàn class nếu entity có `id`, audit fields hoặc invariant nghiệp vụ.
+
+### Auth/JWT/Database
+
+Auth phải được thiết kế ngay từ đầu để hỗ trợ 2 luồng đăng nhập:
+
+1. **System login**: user đăng ký/đăng nhập bằng `email + password`.
+2. **Google login**: user đăng nhập bằng Google OAuth2.
+
+Quy tắc bắt buộc:
+
+- Backend dùng **Spring Security stateless JWT** cho API protection.
+- Cả local login và Google OAuth2 login đều trả về cùng format token: `accessToken`, `refreshToken`, `expiresIn`, `user`.
+- Không tách user Google và user local thành 2 bảng user khác nhau. Dùng một bảng user chính, ví dụ `users`.
+- Tài khoản đăng nhập qua provider được lưu ở bảng liên kết, ví dụ `user_auth_providers`.
+- Password local phải hash bằng `BCryptPasswordEncoder`, không lưu plain text.
+- Google OAuth2 chỉ lưu provider metadata cần thiết: `provider`, `providerUserId`, `email`, `displayName`, `avatarUrl`.
+- Nếu Google email trùng user local đã tồn tại, xử lý bằng account linking có kiểm soát; không tạo user trùng.
+- Account linking behavior:
+  - `GOOGLE + sub` đã tồn tại: login thẳng vào user đã linked.
+  - Email Google trùng user local và `email_verified=true`: yêu cầu xác nhận link bằng password local hoặc OTP, sau đó thêm provider `GOOGLE`.
+  - Khi OAuth Google bắt buộc link, backend phát signed `linkToken` ngắn hạn qua redirect; endpoint link chỉ nhận `linkToken + password local`, không tin `providerUserId` thô từ client.
+  - Email trùng nhưng local user chưa verified hoặc trạng thái bất thường: không auto-link, trả lỗi cần xác minh.
+  - Email chưa tồn tại: tạo user mới với provider `GOOGLE`, `password_hash=null`.
+- Sau khi link Google thành công, có thể dùng `picture` từ Google để cập nhật `users.avatar_url` và `student_profiles.avatar_url` nếu user chưa tự đặt avatar.
+- Refresh token nên lưu hash trong database hoặc bảng session riêng để có thể revoke/logout.
+- JWT secret, Google client id/secret, token TTL phải đọc từ env/config, không hardcode.
+- API public tối thiểu: register, login, refresh, logout, OAuth2 callback/success endpoint, health.
+- API link Google: `POST /api/v1/auth/google/link` với `linkToken + password`, trả cùng `AuthResponse` JWT nếu xác nhận thành công.
+- API còn lại mặc định yêu cầu JWT, trừ endpoint được whitelist rõ trong `SecurityConfig`.
+
+### Personalization Data Contract
+
+Personalization phải dựa trên dữ liệu có thể kiểm chứng, không suy luận mơ hồ:
+
+- Chatbot data phải lưu theo `chat_sessions` và `chat_messages`.
+- Mỗi message assistant phải lưu `sources`, `confidence`, `contextTopic`, `sessionId`, `userId`.
+- `sources` từ RAG/KG được ghi vào progress như **exposure**; không được tự tăng mastery như câu trả lời đúng.
+- Exposure từ chatbot/knowledge browsing chỉ được tăng `exposureCount` và `lastExposedAt`; không cho phép client tự set `masteryScore`.
+- Mastery chỉ tăng/giảm khi có tín hiệu đánh giá rõ: quiz answer, flashcard review, placement/assessment result, hoặc explicit feedback.
+- Learning signal phải đi qua API có cấu trúc `source` + `result`: `QUIZ/ASSESSMENT` chỉ nhận `CORRECT|WRONG`, `FLASHCARD` chỉ nhận `AGAIN|HARD|GOOD|EASY`.
+- Assessment/quiz session phải lưu answer key ở backend (`assessment_sessions.questions_json`); response start session không được trả field `answer`.
+- Assessment submit dùng `/api/v1/assessment/sessions/{sessionId}/submit`, chấm bằng answer key đã lưu và chỉ sau đó mới ghi `ASSESSMENT` learning signal.
+- Flashcard review dùng `cardId + rating` khi có card trong deck; backend cập nhật SRS schedule (`easinessFactor`, `intervalDays`, `repetitions`, `nextReviewAt`) và đồng thời ghi `FLASHCARD` learning signal.
+- Planner endpoint `/api/v1/planner/recommend` phải tổng hợp context thật từ profile, weak progress, due flashcards, recent chat topics, latest assessment rồi mới gọi/merge Python planner result.
+- Planner recommendations phải persist thành `study_plans` + `study_plan_items`; learner có thể list plan, xem chi tiết, và mark item completed bằng JWT user.
+- Dashboard endpoint `/api/v1/personalization/me/dashboard` chỉ đọc dữ liệu cá nhân hóa server-side: profile, progress, due flashcards, assessment summary, chat activity; không được mutate mastery/schedule.
+- Planner/roadmap phải ưu tiên: learner profile, weak progress, recent chat topics, quiz/flashcard history.
+- Không dùng `request.userId` từ client để cá nhân hóa khi đã có JWT; user id phải lấy từ authenticated principal.
+- Learner personalization REST API dùng `/api/v1/personalization/me/...`; không dùng `/users/{userId}` cho luồng learner thông thường.
+
+Database auth target:
+
+```text
+users
+- id
+- email
+- display_name
+- avatar_url
+- password_hash nullable
+- role
+- status
+- created_at
+- updated_at
+
+user_auth_providers
+- id
+- user_id
+- provider              # LOCAL, GOOGLE
+- provider_user_id      # local email or Google sub
+- email
+- display_name
+- avatar_url
+- created_at
+- updated_at
+
+refresh_tokens
+- id
+- user_id
+- token_hash
+- expires_at
+- revoked_at nullable
+- created_at
+```
 
 ### Cấu trúc Spring Boot
 
@@ -112,46 +210,128 @@ Sử dụng Multi-Agent + Knowledge Graph + RAG.
 backend/
 ├── src/main/java/com/jpassistant/
 │   ├── JpAssistantApplication.java
-│   ├── config/                        # Security, WebClient, Neo4j config
+│   ├── config/                        # Security, JWT, OAuth2, WebClient, Neo4j config
 │   ├── domain/                        # Entities, Value Objects
-│   │   ├── user/
-│   │   │   ├── User.java              # Entity
-│   │   │   ├── UserRepository.java    # Interface (Spring Data)
-│   │   │   └── LearningGoal.java      # Value Object
+│   │   ├── auth/
+│   │   │   ├── User.java
+│   │   │   ├── UserAuthProvider.java
+│   │   │   ├── RefreshToken.java
+│   │   │   └── AuthProvider.java
 │   │   ├── knowledge/
-│   │   │   ├── Vocabulary.java
-│   │   │   ├── GrammarPoint.java
-│   │   │   ├── Kanji.java
+│   │   │   ├── KnowledgeItem.java
 │   │   │   └── KnowledgeGraphRepository.java
-│   │   └── progress/
-│   │       ├── LearningProgress.java
-│   │       └── QuizResult.java
-│   ├── application/                   # Service interfaces + impls
+│   │   ├── personalization/
+│   │   │   ├── StudentProfile.java    # JPA entity, includes avatarUrl
+│   │   │   └── KnowledgeProgress.java # JPA entity, custom mastery setter
+│   │   ├── assessment/
+│   │   │   └── AssessmentSession.java # JPA entity, stores server-side answer key
+│   │   ├── planner/
+│   │   │   ├── StudyPlan.java
+│   │   │   └── StudyPlanItem.java
+│   │   └── flashcard/
+│   │       ├── FlashcardDeck.java
+│   │       └── FlashcardCard.java     # JPA entity, stores SRS schedule
+│   ├── application/
 │   │   ├── service/
-│   │   │   ├── UserService.java       # Interface
-│   │   │   ├── UserServiceImpl.java   # Business logic
-│   │   │   ├── KnowledgeService.java
-│   │   │   ├── KnowledgeServiceImpl.java
-│   │   │   └── AiServiceClient.java   # Calls Python AI Service
+│   │   │   ├── AuthService.java
+│   │   │   ├── ChatService.java       # Interface
+│   │   │   ├── KnowledgeService.java  # Interface
+│   │   │   ├── AssessmentService.java
+│   │   │   ├── FlashcardService.java
+│   │   │   ├── PlannerService.java
+│   │   │   ├── DashboardService.java
+│   │   │   ├── PersonalizationService.java
+│   │   │   └── impl/
+│   │   │       ├── AuthServiceImpl.java
+│   │   │       ├── ChatServiceImpl.java
+│   │   │       ├── KnowledgeServiceImpl.java
+│   │   │       ├── AssessmentServiceImpl.java
+│   │   │       ├── FlashcardServiceImpl.java
+│   │   │       ├── PlannerServiceImpl.java
+│   │   │       ├── DashboardServiceImpl.java
+│   │   │       └── PersonalizationServiceImpl.java
+│   │   ├── port/
+│   │   │   └── out/
+│   │   │       └── AiServiceClient.java  # Outbound port to Python AI Service
+│   │   ├── exception/
+│   │   │   └── InvalidRequestException.java
 │   │   ├── dto/
-│   │   │   ├── UserDTO.java
-│   │   │   ├── ChatRequestDTO.java
-│   │   │   └── AssessmentDTO.java
+│   │   │   ├── request/
+│   │   │   │   ├── LoginRequest.java
+│   │   │   │   ├── RegisterRequest.java
+│   │   │   │   ├── RefreshTokenRequest.java
+│   │   │   │   ├── ChatRequest.java
+│   │   │   │   ├── AiTutorChatRequest.java
+│   │   │   │   ├── AiPlannerRequest.java
+│   │   │   │   ├── StudentProfileRequest.java
+│   │   │   │   ├── PlannerRecommendRequest.java
+│   │   │   │   ├── AssessmentStartRequest.java
+│   │   │   │   ├── AssessmentSubmitRequest.java
+│   │   │   │   ├── FlashcardDeckCreateRequest.java
+│   │   │   │   ├── FlashcardCardCreateRequest.java
+│   │   │   │   ├── FlashcardReviewRequest.java
+│   │   │   │   ├── KnowledgeProgressRequest.java
+│   │   │   │   ├── KnowledgeReviewRequest.java
+│   │   │   │   └── LearningSignalRequest.java
+│   │   │   └── response/
+│   │   │       ├── AuthResponse.java
+│   │   │       ├── UserResponse.java
+│   │   │       ├── ChatResponse.java
+│   │   │       ├── SourceResponse.java
+│   │   │       ├── ApiErrorResponse.java
+│   │   │       ├── AiPlannerResponse.java
+│   │   │       ├── PlannerRecommendationResponse.java
+│   │   │       ├── PlannerContextResponse.java
+│   │   │       ├── SavedStudyPlanResponse.java
+│   │   │       ├── SavedStudyPlanItemResponse.java
+│   │   │       ├── LearnerDashboardResponse.java
+│   │   │       ├── AssessmentStartResponse.java
+│   │   │       ├── AssessmentSubmitResponse.java
+│   │   │       ├── FlashcardDeckResponse.java
+│   │   │       ├── FlashcardCardResponse.java
+│   │   │       ├── FlashcardReviewResponse.java
+│   │   │       ├── KnowledgeItemResponse.java
+│   │   │       ├── StudentProfileResponse.java
+│   │   │       └── KnowledgeProgressResponse.java
 │   │   └── mapper/
 │   │       └── UserMapper.java        # MapStruct
 │   ├── infrastructure/                # External adapters
 │   │   ├── persistence/
-│   │   │   ├── JpaUserRepository.java
-│   │   │   └── Neo4jKnowledgeRepository.java
+│   │   │   ├── jpa/
+│   │   │   │   ├── UserJpaRepository.java
+│   │   │   │   ├── UserAuthProviderJpaRepository.java
+│   │   │   │   ├── RefreshTokenJpaRepository.java
+│   │   │   │   ├── ChatSessionJpaRepository.java
+│   │   │   │   ├── ChatMessageJpaRepository.java
+│   │   │   │   ├── StudentProfileJpaRepository.java
+│   │   │   │   ├── KnowledgeProgressJpaRepository.java
+│   │   │   │   ├── AssessmentSessionJpaRepository.java
+│   │   │   │   ├── FlashcardDeckJpaRepository.java
+│   │   │   │   ├── FlashcardCardJpaRepository.java
+│   │   │   │   ├── StudyPlanJpaRepository.java
+│   │   │   │   └── StudyPlanItemJpaRepository.java
+│   │   │   └── neo4j/
+│   │   │       └── Neo4jKnowledgeRepository.java
+│   │   ├── security/
+│   │   │   ├── JwtTokenProvider.java
+│   │   │   ├── JwtAuthenticationFilter.java
+│   │   │   └── GoogleOAuth2SuccessHandler.java
 │   │   └── external/
 │   │       └── AiServiceClientImpl.java  # WebClient → Python
-│   └── api/                           # Controllers (thin!)
+│   └── api/
 │       └── v1/
-│           ├── AuthController.java
-│           ├── UserController.java
-│           ├── ChatController.java
-│           ├── KnowledgeController.java
-│           └── AssessmentController.java
+│           ├── controller/            # Thin REST controllers
+│           │   ├── AuthController.java
+│           │   ├── ChatController.java
+│           │   ├── KnowledgeController.java
+│           │   ├── AssessmentController.java
+│           │   ├── FlashcardController.java
+│           │   ├── PlannerController.java
+│           │   ├── DashboardController.java
+│           │   ├── PersonalizationController.java
+│           │   └── HealthController.java
+│           └── handler/
+│               └── GlobalExceptionHandler.java
 ├── src/main/resources/
 │   ├── application.yml
 │   └── db/migration/                  # Flyway migrations
@@ -236,14 +416,39 @@ services:
 
 ## Quy tắc làm việc
 
+0. **Nguồn sự thật khi implement** — trước khi code phải đọc và đối chiếu đồng thời:
+   - `docs/SRS.md`: yêu cầu hệ thống, actor, use case, functional/non-functional requirements.
+   - `Thesis_Proposal_BuiDuyHieu.md`: mục tiêu luận văn, phạm vi nghiên cứu, timeline, tiêu chí đánh giá.
+   - `claude.md`: kiến trúc, coding standards, package conventions, auth/account-linking rules.
+   Nếu 3 tài liệu có điểm lệch nhau, ưu tiên làm rõ để giữ MVP nhất quán thay vì implement theo một file đơn lẻ.
 1. **Mọi thay đổi phải có test** — unit test cho service, integration test cho API.
 2. **Type safety** — Java: no raw types. Python: type hints bắt buộc.
 3. **Docstrings/Javadoc** — tất cả public methods.
-4. **Error handling** — custom exceptions, xử lý tập trung (`@ControllerAdvice` / `error_handlers.py`).
+4. **Error handling** — custom exceptions, xử lý tập trung (`api/v1/handler` / `error_handlers.py`).
 5. **Environment variables** — không hardcode secrets. Dùng `application.yml` + `.env`.
 6. **DB migrations** — Flyway (Java), Alembic (Python nếu cần).
 7. **Git commits** — conventional commits (`feat:`, `fix:`, `refactor:`, `docs:`).
 8. **API versioning** — tất cả endpoints bắt đầu bằng `/api/v1/`.
+9. **Lombok** — dùng để giảm boilerplate entity, nhưng setter phải có chủ đích; giữ setter thủ công khi field có validation/invariant như `KnowledgeProgress.setMasteryScore`.
+10. **MVP 100% mindset** — khi chọn task tiếp theo, ưu tiên luồng end-to-end có thể demo được theo SRS và Thesis Proposal: auth → personalization → knowledge retrieval → tutor chat/RAG → progress tracking → assessment/planner. Không tối ưu cục bộ làm lệch khỏi MVP.
+11. **Persistence package split** — JPA repositories nằm trong `infrastructure.persistence.jpa`, Neo4j adapter nằm trong `infrastructure.persistence.neo4j`. Vì không dùng Spring Data Neo4j repositories, exclude `Neo4jRepositoriesAutoConfiguration` và `Neo4jReactiveRepositoriesAutoConfiguration`; chỉ dùng `Neo4jClient`.
+12. **MVP execution cadence** — timeline triển khai theo mốc thesis từ `19/05/2026` đến hết `27/05/2026`, chia thành các chức năng/task nhỏ có thể test/demo độc lập. Mục tiêu khoảng 5 task-level commit/ngày; mỗi commit chỉ chứa một chức năng, bug fix, refactor hoặc docs update rõ ràng.
+13. **Commit & push per task, not batched** — sau khi hoàn tất từng chức năng/task, cập nhật `claude.md` nếu contract/trạng thái thay đổi, commit đúng các file thuộc task đó, rồi push ngay lên remote branch hiện tại trước khi chuyển sang task tiếp theo. Không tích nhiều commit local để push một lượt cuối ngày/cuối phase, và không commit lẫn thay đổi ngoài phạm vi task vừa làm.
+14. **No invented product rules** — `claude.md` chỉ được cập nhật bằng yêu cầu từ SRS, Thesis Proposal, quyết định đã được user xác nhận, hoặc contract kỹ thuật đã implement và verify. Nếu cần thêm rule mới ảnh hưởng nghiệp vụ/cá nhân hóa, phải làm rõ trước.
+
+### MVP delivery plan (19/05/2026 - 27/05/2026)
+
+| Ngày | Trọng tâm | Task-level commit mục tiêu |
+|---|---|---|
+| 19/05/2026 | Audit backend MVP, chuẩn hóa package/API contract | backend fixes, tests, docs |
+| 20/05/2026 | Auth/JWT, Google linking, user/profile foundation | auth flow, profile persistence, tests |
+| 21/05/2026 | Knowledge retrieval, Neo4j/Qdrant indexing, RAG smoke | KG fixes, vector smoke, docs |
+| 22/05/2026 | Chat personalization: sessions, messages, sources, exposure | chat persistence, learning exposure, tests |
+| 23/05/2026 | Progress/signals, dashboard summary, personalization APIs | progress APIs, dashboard read model, tests |
+| 24/05/2026 | Flashcards: deck, due review, SRS feedback | flashcard API/UI task, review flow, tests |
+| 25/05/2026 | Assessment: start session, submit, result, progress signal | assessment flow, grading tests |
+| 26/05/2026 | Planner: recommend, saved plans, complete item, personalized context | planner persistence, plan history, tests |
+| 27/05/2026 | MVP hardening: frontend/demo flow, seed data, end-to-end smoke | smoke, bug fixes, final docs |
 
 ---
 
