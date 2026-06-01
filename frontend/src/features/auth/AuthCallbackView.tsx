@@ -3,11 +3,12 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import { Navigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../app/providers/AuthProvider";
 import { ApiError } from "../../shared/api";
+import { homePathForUser } from "../../shared/auth";
 import { IconTextButton } from "../../shared/components";
 
 export function AuthCallbackView() {
   const [params] = useSearchParams();
-  const { completeOAuth, isAuthenticated, linkGoogleAccount } = useAuth();
+  const { completeOAuth, isAuthenticated, linkGoogleAccount, user } = useAuth();
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(params.get("error"));
   const [loading, setLoading] = useState(false);
@@ -32,7 +33,7 @@ export function AuthCallbackView() {
   }, [email, needsLink]);
 
   if (isAuthenticated) {
-    return <Navigate replace to="/" />;
+    return <Navigate replace to={homePathForUser(user)} />;
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {

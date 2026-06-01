@@ -104,6 +104,9 @@ frontend/src/
 
 Rules:
 
+- Learner app lives under `/learner`; admin console lives under `/admin`.
+- Admin and learner routes must use separate layouts and navigation. Do not mix admin tools into learner pages.
+- Admin routes must be protected by role checks before admin APIs are added.
 - Page files in `src/pages` only re-export feature views.
 - Reusable UI such as buttons, panels, page headers, empty states, metric tiles, chips, and shared cards lives in `src/shared/components.tsx`.
 - API DTO/domain types live in `src/shared/models.ts`, not inside page files.

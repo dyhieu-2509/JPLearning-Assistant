@@ -5,6 +5,7 @@ import {
   CalendarCheck,
   ClipboardCheck,
   Layers3,
+  LayoutDashboard,
   LogOut,
   Menu,
   X
@@ -13,37 +14,38 @@ import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../providers/AuthProvider";
 import { logoUrl } from "../../shared/assets";
+import { isAdminRole } from "../../shared/auth";
 
 const navItems = [
-  { to: "/", label: "Dashboard", icon: BarChart3 },
-  { to: "/chat", label: "AI Tutor", icon: Bot },
-  { to: "/flashcards", label: "Flashcards", icon: Layers3 },
-  { to: "/assessment", label: "Assessment", icon: ClipboardCheck },
-  { to: "/planner", label: "Planner", icon: CalendarCheck }
+  { to: "/learner", label: "Dashboard", icon: BarChart3 },
+  { to: "/learner/chat", label: "AI Tutor", icon: Bot },
+  { to: "/learner/flashcards", label: "Flashcards", icon: Layers3 },
+  { to: "/learner/assessment", label: "Assessment", icon: ClipboardCheck },
+  { to: "/learner/planner", label: "Planner", icon: CalendarCheck }
 ];
 
-export function AppLayout() {
+export function LearnerLayout() {
   const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="app-shell">
+    <div className="app-shell learner-shell">
       <aside className={`sidebar ${open ? "open" : ""}`}>
         <div className="brand-block">
           <img src={logoUrl} alt="VAJA logo" />
           <div>
             <strong>VAJA</strong>
-            <span>JLPT learning</span>
+            <span>Learner workspace</span>
           </div>
         </div>
-        <nav className="nav-list" aria-label="Primary navigation">
+        <nav className="nav-list" aria-label="Learner navigation">
           {navItems.map((item) => {
             const Icon = item.icon;
             return (
               <NavLink
                 key={item.to}
                 to={item.to}
-                end={item.to === "/"}
+                end={item.to === "/learner"}
                 className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
                 onClick={() => setOpen(false)}
               >
@@ -52,6 +54,12 @@ export function AppLayout() {
               </NavLink>
             );
           })}
+          {isAdminRole(user?.role) && (
+            <NavLink className="nav-link portal-link" to="/admin" onClick={() => setOpen(false)}>
+              <LayoutDashboard size={19} />
+              <span>Admin Console</span>
+            </NavLink>
+          )}
         </nav>
         <div className="sidebar-footer">
           <div className="mini-profile">

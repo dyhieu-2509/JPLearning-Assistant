@@ -245,6 +245,12 @@ a {
     #f7fbff;
 }
 
+.admin-shell {
+  background:
+    linear-gradient(180deg, rgba(3, 105, 161, 0.1), transparent 300px),
+    #f8fbff;
+}
+
 .sidebar {
   position: sticky;
   top: 0;
@@ -255,6 +261,10 @@ a {
   padding: 18px;
   border-right: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.92);
+}
+
+.admin-sidebar {
+  border-right-color: #cbd5e1;
 }
 
 .brand-block {
@@ -310,6 +320,12 @@ a {
   color: var(--sky-700);
 }
 
+.portal-link {
+  margin-top: 8px;
+  border: 1px solid var(--line);
+  background: var(--white);
+}
+
 .sidebar-footer {
   display: grid;
   gap: 12px;
@@ -333,6 +349,10 @@ a {
   background: linear-gradient(135deg, var(--sky-600), #22c55e);
   color: var(--white);
   font-weight: 900;
+}
+
+.admin-avatar {
+  background: linear-gradient(135deg, var(--blue-950), var(--sky-600));
 }
 
 .app-main {
@@ -363,6 +383,11 @@ a {
   background: var(--white);
   color: var(--sky-700);
   font-weight: 800;
+}
+
+.admin-eyebrow,
+.admin-status-chip {
+  color: var(--blue-950);
 }
 
 .page-section {
@@ -613,6 +638,61 @@ progress::-webkit-progress-value {
   color: var(--muted);
   font-size: 12px;
   font-weight: 800;
+}
+
+.admin-overview-panel {
+  grid-column: 1 / -1;
+}
+
+.admin-boundary {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--sky-50);
+}
+
+.admin-boundary svg {
+  color: var(--sky-700);
+}
+
+.admin-boundary strong {
+  display: block;
+  color: var(--blue-950);
+  margin-bottom: 4px;
+}
+
+.admin-workstream-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.admin-workstream {
+  display: grid;
+  gap: 8px;
+  min-height: 164px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--white);
+}
+
+.admin-workstream svg {
+  color: var(--sky-700);
+}
+
+.admin-workstream strong {
+  color: var(--blue-950);
+}
+
+.admin-workstream p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
 }
 
 .chip-row,
@@ -1022,7 +1102,8 @@ progress::-webkit-progress-value {
 
   .dashboard-grid,
   .chat-layout,
-  .learning-grid {
+  .learning-grid,
+  .admin-workstream-grid {
     grid-template-columns: 1fr;
   }
 

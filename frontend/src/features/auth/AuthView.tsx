@@ -6,9 +6,10 @@ import { ApiError } from "../../shared/api";
 import { IconTextButton, PrimaryButton } from "../../shared/components";
 import { logoUrl } from "../../shared/assets";
 import { googleOAuthStartUrl } from "../../shared/config";
+import { homePathForUser } from "../../shared/auth";
 
 export function AuthView() {
-  const { isAuthenticated, login, register } = useAuth();
+  const { isAuthenticated, login, register, user } = useAuth();
   const location = useLocation();
   const [mode, setMode] = useState<"login" | "register">("login");
   const [displayName, setDisplayName] = useState("VAJA Learner");
@@ -18,7 +19,7 @@ export function AuthView() {
   const [loading, setLoading] = useState(false);
 
   if (isAuthenticated) {
-    const target = (location.state as { from?: { pathname?: string } } | null)?.from?.pathname ?? "/";
+    const target = (location.state as { from?: { pathname?: string } } | null)?.from?.pathname ?? homePathForUser(user);
     return <Navigate replace to={target} />;
   }
 
