@@ -7,4 +7,5 @@ vite.config.d.ts
 .env.*.local
 npm-debug.log*
 vite.log
+vite.out.log
 vite.err.log

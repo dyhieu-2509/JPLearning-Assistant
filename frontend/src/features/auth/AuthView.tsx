@@ -5,8 +5,7 @@ import { useAuth } from "../../app/providers/AuthProvider";
 import { ApiError } from "../../shared/api";
 import { IconTextButton, PrimaryButton } from "../../shared/components";
 import { logoUrl } from "../../shared/assets";
-
-const oauthBaseUrl = import.meta.env.VITE_BACKEND_BASE_URL ?? "";
+import { googleOAuthStartUrl } from "../../shared/config";
 
 export function AuthView() {
   const { isAuthenticated, login, register } = useAuth();
@@ -42,7 +41,7 @@ export function AuthView() {
   }
 
   function startGoogleLogin() {
-    window.location.assign(`${oauthBaseUrl}/oauth2/authorization/google`);
+    window.location.assign(googleOAuthStartUrl);
   }
 
   return (

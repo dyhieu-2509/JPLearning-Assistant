@@ -16,14 +16,13 @@ export type {
   StudentProfileResponse,
   UserResponse
 } from "./models";
+import { apiBaseUrl } from "./config";
 
 type RequestOptions = {
   method?: "GET" | "POST" | "PUT" | "DELETE";
   token?: string | null;
   body?: unknown;
 };
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "/api/v1";
 
 export class ApiError extends Error {
   readonly status: number;
@@ -46,7 +45,7 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
     headers.set("Authorization", `Bearer ${options.token}`);
   }
 
-  const response = await fetch(`${API_BASE}${path}`, {
+  const response = await fetch(`${apiBaseUrl}${path}`, {
     method: options.method ?? "GET",
     headers,
     body: options.body === undefined ? undefined : JSON.stringify(options.body)

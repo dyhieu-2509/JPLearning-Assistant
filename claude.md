@@ -146,6 +146,7 @@ Quy tắc bắt buộc:
 - Sau khi link Google thành công, có thể dùng `picture` từ Google để cập nhật `users.avatar_url` và `student_profiles.avatar_url` nếu user chưa tự đặt avatar.
 - Refresh token nên lưu hash trong database hoặc bảng session riêng để có thể revoke/logout.
 - JWT secret, Google client id/secret, token TTL phải đọc từ env/config, không hardcode.
+- Local Google OAuth phải bắt đầu trực tiếp ở backend origin, ví dụ `http://localhost:8080/oauth2/authorization/google`; không start qua Vite proxy vì OAuth `state` nằm trong backend session cookie và callback cũng về backend.
 - API public tối thiểu: register, login, refresh, logout, OAuth2 callback/success endpoint, health.
 - API link Google: `POST /api/v1/auth/google/link` với `linkToken + password`, trả cùng `AuthResponse` JWT nếu xác nhận thành công.
 - API còn lại mặc định yêu cầu JWT, trừ endpoint được whitelist rõ trong `SecurityConfig`.

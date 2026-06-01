@@ -125,6 +125,8 @@ SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_SECRET=<client_secret>
 FRONTEND_AUTH_REDIRECT_URL=http://localhost:3000/auth/callback
 ```
 
+For frontend-only overrides, use `frontend/.env.local`. In local dev, `VITE_OAUTH_BASE_URL` defaults to `http://localhost:8080`, so it is optional.
+
 The Google redirect URI must include:
 
 ```text
@@ -143,4 +145,4 @@ Frontend Google login starts at:
 http://localhost:8080/oauth2/authorization/google
 ```
 
-In Vite dev mode, `/oauth2/**` and `/login/oauth2/**` are proxied to the backend, so the frontend button can also start the flow through `http://localhost:3000/oauth2/authorization/google`.
+Do not start the OAuth authorization request through the Vite dev proxy. Spring Security stores the OAuth `state` in a backend session cookie, so the start URL and callback URL must stay on the backend origin (`localhost:8080`) during local development.
