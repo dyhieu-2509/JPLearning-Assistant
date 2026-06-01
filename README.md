@@ -102,14 +102,19 @@ frontend/src/
     └── assets.ts        # shared asset imports
 ```
 
+Current top-level feature/page namespaces are `public`, `auth`, `learner`, and `admin`.
+
 Rules:
 
 - Learner app lives under `/learner`; admin console lives under `/admin`.
-- Learner-owned features live under `src/features/learner/**`; admin-owned features live under `src/features/admin/**`; auth remains under `src/features/auth`.
-- Learner route entries live under `src/pages/learner/**`; admin route entries live under `src/pages/admin/**`; auth route entries live under `src/pages/auth/**`.
+- Public entry lives at `/`: `Get Started` offers `New Learner` or `Current Learner`.
+- `New Learner` goes to `/onboarding`, completes the 8-question profile setup before authentication, stores the profile draft locally, then continues to register/login.
+- `Current Learner` goes straight to `/login?mode=login`.
+- Public features live under `src/features/public/**`; learner-owned features live under `src/features/learner/**`; admin-owned features live under `src/features/admin/**`; auth remains under `src/features/auth`.
+- Public route entries live under `src/pages/public/**`; learner route entries live under `src/pages/learner/**`; admin route entries live under `src/pages/admin/**`; auth route entries live under `src/pages/auth/**`.
 - Admin and learner routes must use separate layouts and navigation. Do not mix admin tools into learner pages.
 - Admin routes must be protected by role checks before admin APIs are added.
-- New learners start with `/learner/onboarding`, an 8-question profile setup that saves level, JLPT target, goal, daily study time, weak skills, explanation style, and romaji preference through `/api/v1/personalization/me/profile`.
+- Authenticated learners can rerun `/learner/onboarding`; both pre-auth and in-app onboarding save level, JLPT target, goal, daily study time, weak skills, explanation style, and romaji preference through `/api/v1/personalization/me/profile` once a JWT is available.
 - Page files in `src/pages` only re-export feature views.
 - Reusable UI such as buttons, panels, page headers, empty states, metric tiles, chips, and shared cards lives in `src/shared/components.tsx`.
 - API DTO/domain types live in `src/shared/models.ts`, not inside page files.

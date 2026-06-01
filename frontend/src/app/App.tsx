@@ -12,6 +12,8 @@ import { DashboardPage } from "../pages/learner/DashboardPage";
 import { FlashcardsPage } from "../pages/learner/FlashcardsPage";
 import { OnboardingPage } from "../pages/learner/OnboardingPage";
 import { PlannerPage } from "../pages/learner/PlannerPage";
+import { LandingPage } from "../pages/public/LandingPage";
+import { PreAuthOnboardingPage } from "../pages/public/PreAuthOnboardingPage";
 
 export default function App() {
   return (
@@ -19,7 +21,8 @@ export default function App() {
       <Routes>
         <Route path="/login" element={<AuthPage />} />
         <Route path="/auth/callback" element={<AuthCallbackPage />} />
-        <Route index element={<Navigate replace to="/learner" />} />
+        <Route path="/onboarding" element={<PreAuthOnboardingPage />} />
+        <Route index element={<LandingPage />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/learner" element={<LearnerLayout />}>
             <Route index element={<DashboardPage />} />
@@ -36,7 +39,7 @@ export default function App() {
             <Route path="*" element={<AdminDashboardPage />} />
           </Route>
         </Route>
-        <Route path="*" element={<Navigate replace to="/learner" />} />
+        <Route path="*" element={<Navigate replace to="/" />} />
       </Routes>
     </AuthProvider>
   );

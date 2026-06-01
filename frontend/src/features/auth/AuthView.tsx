@@ -1,22 +1,30 @@
 import { Chrome, Loader2, LockKeyhole, Mail, UserRound } from "lucide-react";
-import { FormEvent, useState } from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { FormEvent, useEffect, useState } from "react";
+import { Navigate, useLocation, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../app/providers/AuthProvider";
 import { ApiError } from "../../shared/api";
 import { IconTextButton, PrimaryButton } from "../../shared/components";
 import { logoUrl } from "../../shared/assets";
 import { googleOAuthStartUrl } from "../../shared/config";
 import { homePathForUser } from "../../shared/auth";
+import { hasOnboardingDraft } from "../../shared/onboardingDraft";
 
 export function AuthView() {
   const { isAuthenticated, login, register, user } = useAuth();
   const location = useLocation();
-  const [mode, setMode] = useState<"login" | "register">("login");
+  const [params] = useSearchParams();
+  const requestedMode = params.get("mode") === "register" ? "register" : "login";
+  const [mode, setMode] = useState<"login" | "register">(requestedMode);
   const [displayName, setDisplayName] = useState("VAJA Learner");
   const [email, setEmail] = useState("learner@example.com");
   const [password, setPassword] = useState("password123");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const hasDraft = params.get("onboarding") === "1" || hasOnboardingDraft();
+
+  useEffect(() => {
+    setMode(requestedMode);
+  }, [requestedMode]);
 
   if (isAuthenticated) {
     const target = (location.state as { from?: { pathname?: string } } | null)?.from?.pathname ?? homePathForUser(user);
@@ -111,6 +119,11 @@ export function AuthView() {
           </label>
 
           {error && <p className="form-error">{error}</p>}
+          {hasDraft && (
+            <p className="form-success">
+              Onboarding answers are saved. They will be linked to your profile after authentication.
+            </p>
+          )}
 
           <PrimaryButton type="submit" disabled={loading}>
             {loading && <Loader2 className="spin" size={18} />}

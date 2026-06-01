@@ -21,7 +21,7 @@ export function AuthCallbackView() {
 
   useEffect(() => {
     if (accessToken && refreshToken) {
-      completeOAuth(accessToken, refreshToken);
+      void completeOAuth(accessToken, refreshToken);
     }
   }, [accessToken, completeOAuth, refreshToken]);
 

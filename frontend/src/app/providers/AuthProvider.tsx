@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
 import { apiRequest } from "../../shared/api";
 import type { AuthResponse, UserResponse } from "../../shared/models";
+import { syncOnboardingDraft } from "../../shared/onboardingDraft";
 
 type StoredAuth = {
   accessToken: string;
@@ -15,7 +16,7 @@ type AuthContextValue = {
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (displayName: string, email: string, password: string) => Promise<void>;
-  completeOAuth: (accessToken: string, refreshToken: string) => void;
+  completeOAuth: (accessToken: string, refreshToken: string) => Promise<void>;
   linkGoogleAccount: (linkToken: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 };
@@ -45,12 +46,13 @@ function persistAuth(auth: StoredAuth | null) {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [auth, setAuth] = useState<StoredAuth | null>(() => readStoredAuth());
 
-  const applyAuth = useCallback((response: AuthResponse) => {
+  const applyAuth = useCallback(async (response: AuthResponse) => {
     const next = {
       accessToken: response.accessToken,
       refreshToken: response.refreshToken,
       user: response.user
     };
+    await syncOnboardingDraft(response.accessToken);
     persistAuth(next);
     setAuth(next);
   }, []);
@@ -61,12 +63,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         method: "POST",
         body: { email, password }
       });
-      applyAuth(response);
+      await applyAuth(response);
     },
     [applyAuth]
   );
 
-  const completeOAuth = useCallback((accessToken: string, refreshToken: string) => {
+  const completeOAuth = useCallback(async (accessToken: string, refreshToken: string) => {
     const claims = decodeJwt(accessToken);
     const next = {
       accessToken,
@@ -80,6 +82,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         status: "ACTIVE"
       }
     };
+    await syncOnboardingDraft(accessToken);
     persistAuth(next);
     setAuth(next);
   }, []);
@@ -90,7 +93,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         method: "POST",
         body: { linkToken, password }
       });
-      applyAuth(response);
+      await applyAuth(response);
     },
     [applyAuth]
   );
@@ -101,7 +104,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         method: "POST",
         body: { displayName, email, password }
       });
-      applyAuth(response);
+      await applyAuth(response);
     },
     [applyAuth]
   );
