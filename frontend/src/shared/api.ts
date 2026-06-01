@@ -13,6 +13,7 @@ export type {
   PlannerRecommendationResponse,
   SavedStudyPlanResponse,
   SourceResponse,
+  StudentProfileRequest,
   StudentProfileResponse,
   UserResponse
 } from "./models";

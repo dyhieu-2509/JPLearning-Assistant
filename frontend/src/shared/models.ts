@@ -46,6 +46,17 @@ export type StudentProfileResponse = {
   weakSkills: string[];
 };
 
+export type StudentProfileRequest = {
+  currentLevel?: string | null;
+  targetLevel?: string | null;
+  avatarUrl?: string | null;
+  goal?: string | null;
+  dailyStudyMinutes?: number | null;
+  explanationStyle?: string | null;
+  romajiEnabled?: boolean | null;
+  weakSkills?: string[];
+};
+
 export type FlashcardCardResponse = {
   id: string;
   deckId: string;

@@ -10,6 +10,7 @@ import { AssessmentPage } from "../pages/learner/AssessmentPage";
 import { ChatPage } from "../pages/learner/ChatPage";
 import { DashboardPage } from "../pages/learner/DashboardPage";
 import { FlashcardsPage } from "../pages/learner/FlashcardsPage";
+import { OnboardingPage } from "../pages/learner/OnboardingPage";
 import { PlannerPage } from "../pages/learner/PlannerPage";
 
 export default function App() {
@@ -22,6 +23,7 @@ export default function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/learner" element={<LearnerLayout />}>
             <Route index element={<DashboardPage />} />
+            <Route path="onboarding" element={<OnboardingPage />} />
             <Route path="chat" element={<ChatPage />} />
             <Route path="flashcards" element={<FlashcardsPage />} />
             <Route path="assessment" element={<AssessmentPage />} />

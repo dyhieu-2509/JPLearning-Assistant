@@ -46,6 +46,20 @@ export function LoadingPanel({ children }: { children: ReactNode }) {
   return <div className="loading-panel">{children}</div>;
 }
 
+export function ProgressMeter({ current, total }: { current: number; total: number }) {
+  const percentage = total <= 0 ? 0 : Math.round((current / total) * 100);
+
+  return (
+    <div className="progress-meter" aria-label={`Step ${current} of ${total}`}>
+      <div>
+        <span>{current}</span>
+        <small>/ {total}</small>
+      </div>
+      <progress max={100} value={percentage} />
+    </div>
+  );
+}
+
 export function PrimaryButton({
   children,
   disabled = false,
@@ -139,4 +153,28 @@ export function MetricTile({
 
 export function TopicChip({ children }: { children: ReactNode }) {
   return <span className="topic-chip">{children}</span>;
+}
+
+export function ChoiceCard({
+  label,
+  description,
+  selected,
+  onClick,
+  icon
+}: {
+  label: string;
+  description?: string;
+  selected: boolean;
+  onClick: () => void;
+  icon?: ReactNode;
+}) {
+  return (
+    <button className={`choice-card ${selected ? "selected" : ""}`.trim()} type="button" onClick={onClick}>
+      {icon && <span className="choice-card-icon">{icon}</span>}
+      <span>
+        <strong>{label}</strong>
+        {description && <small>{description}</small>}
+      </span>
+    </button>
+  );
 }

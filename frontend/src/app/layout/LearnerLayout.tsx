@@ -8,16 +8,22 @@ import {
   LayoutDashboard,
   LogOut,
   Menu,
+  SlidersHorizontal,
   X
 } from "lucide-react";
-import { useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Navigate, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../providers/AuthProvider";
 import { logoUrl } from "../../shared/assets";
 import { isAdminRole } from "../../shared/auth";
+import { apiRequest } from "../../shared/api";
+import { LoadingPanel } from "../../shared/components";
+import type { StudentProfileResponse } from "../../shared/models";
+import { needsLearnerOnboarding } from "../../shared/profile";
 
 const navItems = [
   { to: "/learner", label: "Dashboard", icon: BarChart3 },
+  { to: "/learner/onboarding", label: "Profile setup", icon: SlidersHorizontal },
   { to: "/learner/chat", label: "AI Tutor", icon: Bot },
   { to: "/learner/flashcards", label: "Flashcards", icon: Layers3 },
   { to: "/learner/assessment", label: "Assessment", icon: ClipboardCheck },
@@ -25,8 +31,43 @@ const navItems = [
 ];
 
 export function LearnerLayout() {
-  const { user, logout } = useAuth();
+  const { accessToken, user, logout } = useAuth();
+  const location = useLocation();
   const [open, setOpen] = useState(false);
+  const [checkingProfile, setCheckingProfile] = useState(false);
+  const [needsOnboarding, setNeedsOnboarding] = useState(false);
+  const onboardingPath = "/learner/onboarding";
+
+  useEffect(() => {
+    if (!accessToken || location.pathname === onboardingPath) {
+      setCheckingProfile(false);
+      setNeedsOnboarding(false);
+      return;
+    }
+
+    let active = true;
+    setCheckingProfile(true);
+    apiRequest<StudentProfileResponse>("/personalization/me/profile", { token: accessToken })
+      .then((profile) => {
+        if (active) {
+          setNeedsOnboarding(needsLearnerOnboarding(profile));
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setNeedsOnboarding(false);
+        }
+      })
+      .finally(() => {
+        if (active) {
+          setCheckingProfile(false);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [accessToken, location.pathname]);
 
   return (
     <div className="app-shell learner-shell">
@@ -90,7 +131,13 @@ export function LearnerLayout() {
             RAG + Knowledge Graph
           </div>
         </header>
-        <Outlet />
+        {needsOnboarding ? (
+          <Navigate replace to={onboardingPath} />
+        ) : checkingProfile ? (
+          <LoadingPanel>Preparing learner profile...</LoadingPanel>
+        ) : (
+          <Outlet />
+        )}
       </div>
     </div>
   );

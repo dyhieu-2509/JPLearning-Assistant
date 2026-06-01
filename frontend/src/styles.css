@@ -432,6 +432,26 @@ a {
   min-height: 90px;
 }
 
+.progress-meter {
+  display: grid;
+  grid-template-columns: 68px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+}
+
+.progress-meter > div {
+  color: var(--sky-700);
+  font-weight: 900;
+}
+
+.progress-meter span {
+  font-size: 22px;
+}
+
+.progress-meter small {
+  color: var(--muted);
+}
+
 .full-span {
   grid-column: 1 / -1;
 }
@@ -715,6 +735,125 @@ progress::-webkit-progress-value {
   color: var(--sky-700);
   font-size: 13px;
   font-weight: 800;
+}
+
+.choice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.choice-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 11px;
+  min-height: 82px;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--ink);
+  text-align: left;
+}
+
+.choice-card:hover,
+.choice-card.selected {
+  border-color: var(--sky-500);
+  background: var(--sky-50);
+  box-shadow: 0 12px 28px rgba(14, 165, 233, 0.1);
+}
+
+.choice-card-icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--sky-600);
+  color: var(--white);
+}
+
+.choice-card strong,
+.choice-card small {
+  display: block;
+}
+
+.choice-card strong {
+  color: var(--blue-950);
+}
+
+.choice-card small {
+  margin-top: 4px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.onboarding-shell {
+  display: grid;
+  grid-template-columns: minmax(260px, 360px) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.onboarding-hero {
+  position: sticky;
+  top: 24px;
+  display: grid;
+  gap: 14px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(14, 165, 233, 0.11), rgba(255, 255, 255, 0.84)),
+    var(--white);
+}
+
+.onboarding-hero h2 {
+  margin: 0;
+  color: var(--blue-950);
+  font-size: 30px;
+  line-height: 1.12;
+}
+
+.onboarding-hero p:not(.eyebrow) {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.onboarding-panel {
+  gap: 18px;
+}
+
+.onboarding-question {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.onboarding-icon {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 8px;
+  background: var(--sky-100);
+  color: var(--sky-700);
+}
+
+.onboarding-question h3 {
+  margin: 0 0 7px;
+  color: var(--blue-950);
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+.onboarding-actions {
+  display: grid;
+  grid-template-columns: 160px minmax(180px, 1fr);
+  gap: 10px;
 }
 
 .big-number {
@@ -1103,7 +1242,17 @@ progress::-webkit-progress-value {
   .dashboard-grid,
   .chat-layout,
   .learning-grid,
-  .admin-workstream-grid {
+  .admin-workstream-grid,
+  .onboarding-shell,
+  .choice-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .onboarding-hero {
+    position: static;
+  }
+
+  .onboarding-actions {
     grid-template-columns: 1fr;
   }
 
