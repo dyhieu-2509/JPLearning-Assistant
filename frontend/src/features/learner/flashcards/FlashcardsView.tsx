@@ -1,8 +1,8 @@
 import { Layers3, Plus, RotateCcw } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
-import { useAuth } from "../../app/providers/AuthProvider";
-import { apiRequest, ApiError } from "../../shared/api";
-import type { FlashcardCardResponse, FlashcardDeckResponse, FlashcardReviewResponse } from "../../shared/models";
+import { useAuth } from "../../../app/providers/AuthProvider";
+import { apiRequest, ApiError } from "../../../shared/api";
+import type { FlashcardCardResponse, FlashcardDeckResponse, FlashcardReviewResponse } from "../../../shared/models";
 
 const ratings = ["AGAIN", "HARD", "GOOD", "EASY"] as const;
 

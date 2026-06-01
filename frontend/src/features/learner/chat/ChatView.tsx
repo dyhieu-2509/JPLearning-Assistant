@@ -1,8 +1,8 @@
 import { Bot, Loader2, MessageSquarePlus, Send, Sparkles } from "lucide-react";
 import { FormEvent, useEffect, useRef, useState } from "react";
-import { useAuth } from "../../app/providers/AuthProvider";
-import { apiRequest, ApiError } from "../../shared/api";
-import type { ChatMessageResponse, ChatResponse, ChatSessionResponse, SourceResponse } from "../../shared/models";
+import { useAuth } from "../../../app/providers/AuthProvider";
+import { apiRequest, ApiError } from "../../../shared/api";
+import type { ChatMessageResponse, ChatResponse, ChatSessionResponse, SourceResponse } from "../../../shared/models";
 
 const suggestions = [
   "食べます khác 食べる như thế nào?",

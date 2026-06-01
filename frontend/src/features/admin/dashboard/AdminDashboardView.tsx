@@ -1,5 +1,5 @@
 import { Activity, BookOpenCheck, Bot, DatabaseZap, ShieldCheck, UsersRound } from "lucide-react";
-import { EmptyState, MetricTile, PageHeader, Panel, TopicChip } from "../../shared/components";
+import { EmptyState, MetricTile, PageHeader, Panel, TopicChip } from "../../../shared/components";
 
 const adminFocusAreas = [
   "Learner profile quality",

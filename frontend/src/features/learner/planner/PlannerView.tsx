@@ -1,8 +1,8 @@
 import { CalendarCheck, CheckCircle2, ListChecks, WandSparkles } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
-import { useAuth } from "../../app/providers/AuthProvider";
-import { apiRequest, ApiError } from "../../shared/api";
-import type { PlannerRecommendationResponse, SavedStudyPlanResponse } from "../../shared/models";
+import { useAuth } from "../../../app/providers/AuthProvider";
+import { apiRequest, ApiError } from "../../../shared/api";
+import type { PlannerRecommendationResponse, SavedStudyPlanResponse } from "../../../shared/models";
 
 export function PlannerView() {
   const { accessToken } = useAuth();

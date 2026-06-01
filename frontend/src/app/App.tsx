@@ -3,14 +3,14 @@ import { AdminLayout } from "./layout/AdminLayout";
 import { LearnerLayout } from "./layout/LearnerLayout";
 import { ProtectedRoute } from "./layout/ProtectedRoute";
 import { AuthProvider } from "./providers/AuthProvider";
-import { AdminDashboardPage } from "../pages/AdminDashboardPage";
-import { AuthCallbackPage } from "../pages/AuthCallbackPage";
-import { AssessmentPage } from "../pages/AssessmentPage";
-import { AuthPage } from "../pages/AuthPage";
-import { ChatPage } from "../pages/ChatPage";
-import { DashboardPage } from "../pages/DashboardPage";
-import { FlashcardsPage } from "../pages/FlashcardsPage";
-import { PlannerPage } from "../pages/PlannerPage";
+import { AdminDashboardPage } from "../pages/admin/AdminDashboardPage";
+import { AuthCallbackPage } from "../pages/auth/AuthCallbackPage";
+import { AuthPage } from "../pages/auth/AuthPage";
+import { AssessmentPage } from "../pages/learner/AssessmentPage";
+import { ChatPage } from "../pages/learner/ChatPage";
+import { DashboardPage } from "../pages/learner/DashboardPage";
+import { FlashcardsPage } from "../pages/learner/FlashcardsPage";
+import { PlannerPage } from "../pages/learner/PlannerPage";
 
 export default function App() {
   return (

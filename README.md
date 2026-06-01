@@ -105,6 +105,8 @@ frontend/src/
 Rules:
 
 - Learner app lives under `/learner`; admin console lives under `/admin`.
+- Learner-owned features live under `src/features/learner/**`; admin-owned features live under `src/features/admin/**`; auth remains under `src/features/auth`.
+- Learner route entries live under `src/pages/learner/**`; admin route entries live under `src/pages/admin/**`; auth route entries live under `src/pages/auth/**`.
 - Admin and learner routes must use separate layouts and navigation. Do not mix admin tools into learner pages.
 - Admin routes must be protected by role checks before admin APIs are added.
 - Page files in `src/pages` only re-export feature views.

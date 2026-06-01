@@ -1,8 +1,8 @@
 import { CheckCircle2, ClipboardCheck, Play, XCircle } from "lucide-react";
 import { FormEvent, useState } from "react";
-import { useAuth } from "../../app/providers/AuthProvider";
-import { apiRequest, ApiError } from "../../shared/api";
-import type { AssessmentStartResponse, AssessmentSubmitResponse } from "../../shared/models";
+import { useAuth } from "../../../app/providers/AuthProvider";
+import { apiRequest, ApiError } from "../../../shared/api";
+import type { AssessmentStartResponse, AssessmentSubmitResponse } from "../../../shared/models";
 
 export function AssessmentView() {
   const { accessToken } = useAuth();
