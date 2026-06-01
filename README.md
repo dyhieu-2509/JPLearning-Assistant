@@ -131,8 +131,16 @@ The Google redirect URI must include:
 http://localhost:8080/login/oauth2/code/google
 ```
 
+For local frontend development, add this JavaScript origin if Google asks for browser origins:
+
+```text
+http://localhost:3000
+```
+
 Frontend Google login starts at:
 
 ```text
 http://localhost:8080/oauth2/authorization/google
 ```
+
+In Vite dev mode, `/oauth2/**` and `/login/oauth2/**` are proxied to the backend, so the frontend button can also start the flow through `http://localhost:3000/oauth2/authorization/google`.
