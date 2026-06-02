@@ -120,7 +120,7 @@ export function LandingView() {
         </section>
       )}
 
-      <section className="landing-preview-section" aria-label="Product preview">
+      <section id="about" className="landing-preview-section" aria-label="Product preview">
         <div className="landing-preview-copy">
           <p className="eyebrow">Learner workspace</p>
           <h2>Everything after onboarding uses the same profile.</h2>

@@ -21,6 +21,13 @@
   --amber: #f59e0b;
   --rose: #e11d48;
   --shadow: 0 24px 60px rgba(2, 132, 199, 0.14);
+  --headbar-height: 64px;
+}
+
+html {
+  min-height: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--headbar-height) + 16px);
 }
 
 * {
@@ -30,7 +37,11 @@
 body {
   margin: 0;
   min-width: 320px;
-  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+#root {
+  min-height: 100dvh;
 }
 
 button,
@@ -53,6 +64,60 @@ a {
   color: inherit;
 }
 
+.app-viewport {
+  min-height: 100dvh;
+  background: #f7fbff;
+}
+
+.headbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--headbar-height);
+  padding: 0 clamp(16px, 4vw, 32px);
+  border-bottom: 1px solid rgba(216, 232, 248, 0.9);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
+}
+
+.headbar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--blue-950);
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.headbar-brand img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.headbar-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.headbar-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--sky-700);
+  font-weight: 900;
+  text-decoration: none;
+}
+
 .eyebrow {
   margin: 0 0 6px;
   color: var(--sky-700);
@@ -66,7 +131,7 @@ a {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(340px, 440px);
   gap: 32px;
-  min-height: 100vh;
+  min-height: calc(100dvh - var(--headbar-height));
   padding: 32px;
   background:
     linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(255, 255, 255, 0) 42%),
@@ -74,7 +139,7 @@ a {
 }
 
 .landing-screen {
-  min-height: 100vh;
+  min-height: calc(100dvh - var(--headbar-height));
   padding: 22px;
   background:
     linear-gradient(135deg, rgba(14, 165, 233, 0.16), rgba(255, 255, 255, 0) 44%),
@@ -85,7 +150,7 @@ a {
   position: relative;
   display: flex;
   align-items: center;
-  min-height: min(760px, calc(100vh - 150px));
+  min-height: min(760px, calc(100dvh - var(--headbar-height) - 150px));
   overflow: hidden;
   max-width: 1240px;
   margin: 0 auto;
@@ -304,7 +369,7 @@ a {
 }
 
 .public-onboarding-screen {
-  min-height: 100vh;
+  min-height: calc(100dvh - var(--headbar-height));
   padding: 28px;
   background:
     linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(255, 255, 255, 0) 45%),
@@ -317,7 +382,7 @@ a {
   align-items: center;
   justify-content: center;
   gap: 36px;
-  min-height: calc(100vh - 64px);
+  min-height: calc(100dvh - var(--headbar-height) - 64px);
 }
 
 .auth-visual img {
@@ -487,7 +552,7 @@ a {
 .app-shell {
   display: grid;
   grid-template-columns: 276px minmax(0, 1fr);
-  min-height: 100vh;
+  min-height: calc(100dvh - var(--headbar-height));
   background:
     linear-gradient(180deg, rgba(14, 165, 233, 0.08), transparent 300px),
     #f7fbff;
@@ -501,11 +566,11 @@ a {
 
 .sidebar {
   position: sticky;
-  top: 0;
+  top: var(--headbar-height);
   display: flex;
   flex-direction: column;
   gap: 22px;
-  height: 100vh;
+  height: calc(100dvh - var(--headbar-height));
   padding: 18px;
   border-right: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.92);
@@ -1152,7 +1217,7 @@ progress::-webkit-progress-value {
   display: grid;
   grid-template-columns: 300px minmax(0, 1fr);
   gap: 16px;
-  min-height: calc(100vh - 126px);
+  min-height: calc(100dvh - var(--headbar-height) - 126px);
 }
 
 .chat-sidebar,
@@ -1207,7 +1272,7 @@ progress::-webkit-progress-value {
   align-content: start;
   gap: 12px;
   min-height: 360px;
-  max-height: calc(100vh - 310px);
+  max-height: calc(100dvh - var(--headbar-height) - 310px);
   overflow: auto;
   padding: 4px;
 }

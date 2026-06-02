@@ -1,4 +1,19 @@
 import { ReactNode } from "react";
+import { logoUrl } from "./assets";
+
+export function Headbar() {
+  return (
+    <header className="headbar">
+      <a className="headbar-brand" href="/" aria-label="VAJA home">
+        <img src={logoUrl} alt="VAJA logo" />
+        <span>VAJA</span>
+      </a>
+      <nav className="headbar-nav" aria-label="Global navigation">
+        <a href="/#about">About</a>
+      </nav>
+    </header>
+  );
+}
 
 export function PageHeader({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
