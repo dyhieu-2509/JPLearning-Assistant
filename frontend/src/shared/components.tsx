@@ -155,6 +155,24 @@ export function TopicChip({ children }: { children: ReactNode }) {
   return <span className="topic-chip">{children}</span>;
 }
 
+export function InfoCard({
+  icon,
+  title,
+  description
+}: {
+  icon: ReactNode;
+  title: string;
+  description: string;
+}) {
+  return (
+    <article className="info-card">
+      <span>{icon}</span>
+      <strong>{title}</strong>
+      <p>{description}</p>
+    </article>
+  );
+}
+
 export function ChoiceCard({
   label,
   description,

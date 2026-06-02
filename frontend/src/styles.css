@@ -75,32 +75,46 @@ a {
 
 .landing-screen {
   min-height: 100vh;
-  padding: 32px;
+  padding: 22px;
   background:
-    linear-gradient(135deg, rgba(14, 165, 233, 0.12), rgba(255, 255, 255, 0) 46%),
+    linear-gradient(135deg, rgba(14, 165, 233, 0.16), rgba(255, 255, 255, 0) 44%),
     linear-gradient(180deg, #ffffff 0%, #eef8ff 100%);
 }
 
 .landing-hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(280px, 420px);
-  gap: 34px;
+  position: relative;
+  display: flex;
   align-items: center;
-  min-height: calc(100vh - 190px);
-  max-width: 1180px;
+  min-height: min(760px, calc(100vh - 150px));
+  overflow: hidden;
+  max-width: 1240px;
   margin: 0 auto;
+  padding: clamp(42px, 7vw, 88px);
+}
+
+.landing-hero-mark {
+  position: absolute;
+  right: clamp(22px, 5vw, 82px);
+  bottom: clamp(22px, 5vw, 70px);
+  width: min(42vw, 430px);
+  opacity: 0.17;
+  filter: saturate(1.08);
+  pointer-events: none;
 }
 
 .landing-copy {
+  position: relative;
+  z-index: 1;
   display: grid;
   gap: 18px;
+  max-width: 760px;
 }
 
 .landing-copy h1 {
   max-width: 780px;
   margin: 0;
   color: var(--blue-950);
-  font-size: 52px;
+  font-size: clamp(42px, 7vw, 76px);
   line-height: 1.04;
   letter-spacing: 0;
 }
@@ -120,25 +134,43 @@ a {
   max-width: 460px;
 }
 
-.landing-logo-panel {
-  padding: 18px;
+.landing-proof-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.landing-proof-row span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 0 10px;
   border: 1px solid var(--line);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.84);
-  box-shadow: var(--shadow);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.76);
+  color: var(--blue-950);
+  font-size: 13px;
+  font-weight: 800;
 }
 
-.landing-logo-panel img {
-  display: block;
-  width: 100%;
-  border-radius: 8px;
+.landing-proof-row svg {
+  color: var(--green);
 }
 
-.landing-choice-panel {
+.landing-conversion-band,
+.landing-preview-section,
+.landing-highlight-grid {
+  max-width: 1180px;
+  margin: 18px auto 0;
+}
+
+.landing-conversion-band {
   display: grid;
-  gap: 16px;
-  max-width: 960px;
-  margin: -38px auto 0;
+  grid-template-columns: minmax(260px, 0.78fr) minmax(0, 1.22fr);
+  align-items: center;
+  gap: 18px;
   padding: 18px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -146,10 +178,129 @@ a {
   box-shadow: 0 14px 34px rgba(2, 132, 199, 0.08);
 }
 
-.landing-choice-panel h2 {
+.landing-choice-copy h2,
+.landing-preview-copy h2 {
   margin: 0;
   color: var(--blue-950);
-  font-size: 24px;
+  font-size: 28px;
+  line-height: 1.18;
+}
+
+.landing-choice-copy p:not(.eyebrow),
+.landing-preview-copy p:not(.eyebrow) {
+  margin: 8px 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.landing-path-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.landing-preview-section {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.82fr) minmax(0, 1.18fr);
+  gap: 18px;
+  align-items: center;
+  padding: 24px 0 4px;
+}
+
+.landing-preview-copy {
+  display: grid;
+  gap: 10px;
+}
+
+.landing-product-preview {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 18px 44px rgba(2, 132, 199, 0.12);
+}
+
+.preview-topbar {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 11px;
+  align-items: center;
+}
+
+.preview-topbar img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.preview-topbar strong,
+.preview-topbar span {
+  display: block;
+}
+
+.preview-topbar strong {
+  color: var(--blue-950);
+}
+
+.preview-topbar span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.preview-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.preview-metric {
+  display: grid;
+  gap: 7px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--sky-50);
+}
+
+.preview-metric span {
+  color: var(--sky-700);
+}
+
+.preview-metric strong,
+.preview-metric small {
+  display: block;
+}
+
+.preview-metric strong {
+  color: var(--blue-950);
+  font-size: 20px;
+}
+
+.preview-metric small {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.preview-chat {
+  padding: 14px;
+  border-radius: 8px;
+  background: var(--sky-600);
+  color: var(--white);
+  font-weight: 800;
+  line-height: 1.6;
+}
+
+.preview-chat p {
+  margin: 0;
+}
+
+.landing-highlight-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  padding-bottom: 20px;
 }
 
 .public-onboarding-screen {
@@ -834,6 +985,38 @@ progress::-webkit-progress-value {
   font-weight: 800;
 }
 
+.info-card {
+  display: grid;
+  gap: 10px;
+  min-height: 184px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 14px 34px rgba(2, 132, 199, 0.08);
+}
+
+.info-card > span {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  background: var(--sky-100);
+  color: var(--sky-700);
+}
+
+.info-card strong {
+  color: var(--blue-950);
+  font-size: 18px;
+}
+
+.info-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.58;
+}
+
 .choice-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1286,8 +1469,7 @@ progress::-webkit-progress-value {
 
 @media (max-width: 940px) {
   .auth-screen,
-  .auth-visual,
-  .landing-hero {
+  .auth-visual {
     grid-template-columns: 1fr;
   }
 
@@ -1312,13 +1494,28 @@ progress::-webkit-progress-value {
     font-size: 34px;
   }
 
+  .landing-hero {
+    min-height: auto;
+    padding: 28px;
+  }
+
+  .landing-hero-mark {
+    right: 14px;
+    bottom: 14px;
+    width: 58vw;
+  }
+
   .landing-actions {
     grid-template-columns: 1fr;
     max-width: none;
   }
 
-  .landing-choice-panel {
-    margin-top: 18px;
+  .landing-conversion-band,
+  .landing-preview-section,
+  .landing-highlight-grid,
+  .landing-path-grid,
+  .preview-metrics {
+    grid-template-columns: 1fr;
   }
 
   .app-shell {
@@ -1360,6 +1557,7 @@ progress::-webkit-progress-value {
   .learning-grid,
   .admin-workstream-grid,
   .onboarding-shell,
+  .landing-highlight-grid,
   .choice-grid {
     grid-template-columns: 1fr;
   }
