@@ -101,7 +101,7 @@ export function FlashcardsView() {
         <div className="panel-heading">
           <div>
             <p className="eyebrow">Tạo bộ thẻ</p>
-            <h3>Tự tạo từ đồ thị kiến thức</h3>
+            <h3>Chọn phần muốn nhớ</h3>
           </div>
           <Plus size={21} />
         </div>

@@ -91,7 +91,7 @@ export function FloatingTutor({ token, contextTopic, suggestions }: FloatingTuto
   if (!open) {
     return (
       <section className="floating-tutor" aria-label="Trợ lý AI nổi">
-        <button className="floating-tutor-bar" type="button" onClick={() => setOpen(true)}>
+        <button className="floating-tutor-bar" type="button" aria-label="Mở trợ lý VAJA" onClick={() => setOpen(true)}>
           <span className="floating-tutor-icon">
             <Bot size={20} />
           </span>
@@ -135,14 +135,14 @@ export function FloatingTutor({ token, contextTopic, suggestions }: FloatingTuto
             <div className="floating-empty-state">
               <Bot size={30} />
               <strong>VAJA sẽ trả lời bằng tiếng Việt.</strong>
-              <span>Nguồn RAG/KG được lưu làm exposure, không tự tăng mastery.</span>
+              <span>Hỏi khi bạn bí từ, bí ngữ pháp hoặc muốn có ví dụ dễ nhớ.</span>
             </div>
           )}
           {sending && (
             <div className="floating-message-row assistant">
               <div className="floating-message-bubble">
                 <Loader2 className="spin" size={17} />
-                Đang suy luận với dữ liệu học của bạn...
+                Đang tìm cách giải thích dễ hiểu...
               </div>
             </div>
           )}

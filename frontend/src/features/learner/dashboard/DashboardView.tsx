@@ -1,11 +1,11 @@
-import { BookOpenCheck, Brain, Clock3, Layers3, RefreshCw, Save, Target } from "lucide-react";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { BookOpenCheck, Brain, CalendarCheck, ClipboardCheck, Layers3, MessageCircle, Search, Target } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../app/providers/AuthProvider";
 import { apiRequest, ApiError } from "../../../shared/api";
-import type { LearnerDashboardResponse, StudentProfileResponse } from "../../../shared/models";
-import { EmptyState, IconButton, IconTextButton, LoadingPanel, MetricTile, PageHeader, Panel, TopicChip } from "../../../shared/components";
+import type { LearnerDashboardResponse } from "../../../shared/models";
+import { EmptyState, LoadingPanel, MetricTile, PageHeader, Panel, PrimaryButton, TopicChip } from "../../../shared/components";
 
-const levelOptions = ["N5", "N4", "N3", "N2", "N1"];
 const skillLabels: Record<string, string> = {
   vocabulary: "Từ vựng",
   grammar: "Ngữ pháp",
@@ -15,27 +15,11 @@ const skillLabels: Record<string, string> = {
   speaking: "Nói"
 };
 
-const explanationStyleLabels: Record<string, string> = {
-  concise: "Ngắn gọn",
-  "step-by-step": "Từng bước",
-  "example-first": "Ví dụ trước"
-};
-
-type ProfileForm = {
-  currentLevel: string;
-  targetLevel: string;
-  goal: string;
-  dailyStudyMinutes: number;
-  explanationStyle: string;
-  romajiEnabled: boolean;
-};
-
 export function DashboardView() {
   const { accessToken } = useAuth();
+  const navigate = useNavigate();
   const [dashboard, setDashboard] = useState<LearnerDashboardResponse | null>(null);
-  const [profileForm, setProfileForm] = useState<ProfileForm | null>(null);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const token = accessToken ?? "";
@@ -46,9 +30,8 @@ export function DashboardView() {
     try {
       const data = await apiRequest<LearnerDashboardResponse>("/personalization/me/dashboard", { token });
       setDashboard(data);
-      setProfileForm(toProfileForm(data.profile));
     } catch (caught) {
-      setError(caught instanceof ApiError ? caught.message : "Không thể tải bảng học tập");
+      setError(caught instanceof ApiError ? caught.message : "Chưa kết nối được dữ liệu học mới nhất");
     } finally {
       setLoading(false);
     }
@@ -64,50 +47,85 @@ export function DashboardView() {
     return Math.round(score * 100);
   }, [dashboard]);
 
-  async function saveProfile(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!profileForm) {
-      return;
-    }
-
-    setSaving(true);
-    setError(null);
-    try {
-      const profile = await apiRequest<StudentProfileResponse>("/personalization/me/profile", {
-        method: "PUT",
-        token,
-        body: {
-          currentLevel: profileForm.currentLevel,
-          targetLevel: profileForm.targetLevel,
-          goal: profileForm.goal,
-          dailyStudyMinutes: Number(profileForm.dailyStudyMinutes),
-          explanationStyle: profileForm.explanationStyle,
-          romajiEnabled: profileForm.romajiEnabled,
-          weakSkills: dashboard?.profile.weakSkills ?? []
-        }
-      });
-      setDashboard((current) => (current ? { ...current, profile } : current));
-      setProfileForm(toProfileForm(profile));
-    } catch (caught) {
-      setError(caught instanceof ApiError ? caught.message : "Không thể lưu hồ sơ");
-    } finally {
-      setSaving(false);
-    }
-  }
-
   if (loading) {
     return <LoadingPanel>Đang tải không gian học...</LoadingPanel>;
   }
 
+  const dueCards = dashboard?.flashcards.dueCards ?? 0;
+  const weakItems = dashboard?.progress.weakItems ?? 0;
+  const dailyMinutes = dashboard?.profile.dailyStudyMinutes ?? 15;
+  const currentLevel = dashboard?.profile.currentLevel ?? "N5";
+  const targetLevel = dashboard?.profile.targetLevel ?? "N4";
+  const studySteps = [
+    {
+      icon: <ClipboardCheck size={20} />,
+      label: "Đánh giá 5 câu",
+      text: "Bắt đầu bằng bài ngắn để VAJA biết hôm nay bạn đang yếu phần nào.",
+      to: "/learner/assessment",
+      status: weakItems ? `${weakItems} điểm cần luyện` : "Nên làm trước"
+    },
+    {
+      icon: <Layers3 size={20} />,
+      label: "Ôn thẻ đến hạn",
+      text: "Lật thẻ, tự chấm khó/dễ, VAJA tự lên lịch ôn tiếp.",
+      to: "/learner/flashcards",
+      status: dueCards ? `${dueCards} thẻ` : "Có thể tạo bộ mới"
+    },
+    {
+      icon: <Search size={20} />,
+      label: "Tra cứu nhanh",
+      text: "Tìm từ vựng, ngữ pháp, kanji N5/N4 khi gặp điểm chưa hiểu.",
+      to: "/learner/knowledge",
+      status: "N5/N4"
+    },
+    {
+      icon: <MessageCircle size={20} />,
+      label: "Hỏi VAJA",
+      text: "Hỏi bằng tiếng Việt khi cần ví dụ, so sánh mẫu câu hoặc sửa lỗi.",
+      to: "/learner/chat",
+      status: "AI 先生"
+    }
+  ];
+
   return (
     <section className="dashboard-grid">
-      <PageHeader eyebrow="今日の学習" title="Tín hiệu học hôm nay" />
+      <PageHeader eyebrow="今日の学習" title="Hôm nay học gì?" />
 
-      {error && <div className="form-error full-span">{error}</div>}
+      {error && <div className="learning-note full-span">{error}. Bạn vẫn có thể bắt đầu bằng kiểm tra hoặc ôn thẻ.</div>}
+
+      <section className="today-learning-panel full-span">
+        <div className="today-copy">
+          <p className="eyebrow">Bài học hôm nay</p>
+          <h2>Đi theo 4 bước nhỏ, học khoảng {dailyMinutes} phút.</h2>
+          <p>
+            VAJA sẽ dùng bài kiểm tra, thẻ nhớ, câu hỏi và lộ trình để điều chỉnh phần bạn cần ôn tiếp theo.
+          </p>
+          <div className="chip-row">
+            <TopicChip>{currentLevel} → {targetLevel}</TopicChip>
+            <TopicChip>{masteryPercent}% nắm vững</TopicChip>
+            <TopicChip>{dueCards} thẻ cần ôn</TopicChip>
+          </div>
+          <PrimaryButton type="button" onClick={() => navigate("/learner/assessment")}>
+            <ClipboardCheck size={18} />
+            Bắt đầu bằng kiểm tra
+          </PrimaryButton>
+        </div>
+        <div className="today-path" aria-label="Lộ trình học hôm nay">
+          {studySteps.map((step, index) => (
+            <button className="study-step-card" key={step.label} type="button" onClick={() => navigate(step.to)}>
+              <span className="study-step-index">{index + 1}</span>
+              <span className="study-step-icon">{step.icon}</span>
+              <strong>{step.label}</strong>
+              <small>{step.text}</small>
+              <em>{step.status}</em>
+            </button>
+          ))}
+        </div>
+      </section>
 
       <MetricTile
         icon={<Brain size={22} />}
-        label="Mức nắm vững"
+        label="Đã nắm"
         value={`${masteryPercent}%`}
         accent="sky"
       />
@@ -125,93 +143,12 @@ export function DashboardView() {
       />
       <MetricTile
         icon={<BookOpenCheck size={22} />}
-        label="Bài kiểm tra"
+        label="Lượt kiểm tra"
         value={String(dashboard?.assessments.completedSessions ?? 0)}
         accent="green"
       />
 
-      <Panel
-        className="profile-panel"
-        eyebrow="Hồ sơ"
-        title="Điều chỉnh cá nhân hóa"
-        action={
-          <IconButton onClick={loadDashboard} title="Làm mới bảng học tập">
-            <RefreshCw size={18} />
-          </IconButton>
-        }
-      >
-
-        {profileForm && (
-          <form className="profile-form" onSubmit={saveProfile}>
-            <label>
-              Hiện tại
-              <select
-                value={profileForm.currentLevel}
-                onChange={(event) => setProfileForm({ ...profileForm, currentLevel: event.target.value })}
-              >
-                {levelOptions.map((level) => (
-                  <option key={level}>{level}</option>
-                ))}
-              </select>
-            </label>
-            <label>
-              Mục tiêu
-              <select
-                value={profileForm.targetLevel}
-                onChange={(event) => setProfileForm({ ...profileForm, targetLevel: event.target.value })}
-              >
-                {levelOptions.map((level) => (
-                  <option key={level}>{level}</option>
-                ))}
-              </select>
-            </label>
-            <label>
-              Phút mỗi ngày
-              <input
-                min={5}
-                max={480}
-                type="number"
-                value={profileForm.dailyStudyMinutes}
-                onChange={(event) =>
-                  setProfileForm({ ...profileForm, dailyStudyMinutes: Number(event.target.value) })
-                }
-              />
-            </label>
-            <label className="wide-field">
-              Lý do học
-              <input
-                value={profileForm.goal}
-                onChange={(event) => setProfileForm({ ...profileForm, goal: event.target.value })}
-              />
-            </label>
-            <label>
-              Cách giải thích
-              <select
-                value={profileForm.explanationStyle}
-                onChange={(event) => setProfileForm({ ...profileForm, explanationStyle: event.target.value })}
-              >
-                <option value="concise">Ngắn gọn</option>
-                <option value="step-by-step">Từng bước</option>
-                <option value="example-first">Ví dụ trước</option>
-              </select>
-            </label>
-            <label className="check-row">
-              <input
-                type="checkbox"
-                checked={profileForm.romajiEnabled}
-                onChange={(event) => setProfileForm({ ...profileForm, romajiEnabled: event.target.checked })}
-              />
-              Gợi ý romaji
-            </label>
-            <IconTextButton className="wide-field" type="submit" disabled={saving}>
-              <Save size={18} />
-              Lưu hồ sơ
-            </IconTextButton>
-          </form>
-        )}
-      </Panel>
-
-      <Panel eyebrow="知識レビュー" title="Phần cần ôn tiếp theo">
+      <Panel className="profile-panel" eyebrow="復習" title="Phần nên ôn tiếp">
         <div className="stack-list">
           {dashboard?.progress.weakestItems.length ? (
             dashboard.progress.weakestItems.map((item) => (
@@ -231,7 +168,7 @@ export function DashboardView() {
         </div>
       </Panel>
 
-      <Panel eyebrow="Ngữ cảnh gần đây" title="Tín hiệu từ chat và kiểm tra">
+      <Panel eyebrow="Gần đây" title="Bạn đã học gì?">
         <div className="signal-grid">
           <SignalBlock label="Buổi chat" value={String(dashboard?.chat.sessionCount ?? 0)} />
           <SignalBlock label="Tin nhắn" value={String(dashboard?.chat.messageCount ?? 0)} />
@@ -249,27 +186,20 @@ export function DashboardView() {
         </div>
       </Panel>
 
-      <Panel eyebrow="学習時間" title="Mục tiêu mỗi ngày" action={<Clock3 size={22} />}>
-        <div className="big-number">{dashboard?.profile.dailyStudyMinutes ?? 0} phút</div>
-        <p className="muted-copy">{dashboard?.profile.goal || "Đặt mục tiêu JLPT để VAJA gợi ý lộ trình tốt hơn."}</p>
+      <Panel eyebrow="学習計画" title="Lộ trình tuần này" action={<CalendarCheck size={22} />}>
+        <div className="big-number">{dailyMinutes} phút</div>
+        <p className="muted-copy">{dashboard?.profile.goal || "Làm bài kiểm tra để VAJA đề xuất lộ trình phù hợp hơn."}</p>
+        <PrimaryButton type="button" onClick={() => navigate("/learner/planner")}>
+          <CalendarCheck size={18} />
+          Xem lộ trình
+        </PrimaryButton>
       </Panel>
     </section>
   );
 }
 
-function toProfileForm(profile: StudentProfileResponse): ProfileForm {
-  return {
-    currentLevel: profile.currentLevel ?? "N5",
-    targetLevel: profile.targetLevel ?? "N4",
-    goal: profile.goal ?? "Thi JLPT N4",
-    dailyStudyMinutes: profile.dailyStudyMinutes || 30,
-    explanationStyle: profile.explanationStyle ?? "concise",
-    romajiEnabled: profile.romajiEnabled
-  };
-}
-
 function displaySkill(value: string): string {
-  return skillLabels[value.toLowerCase()] ?? explanationStyleLabels[value] ?? value;
+  return skillLabels[value.toLowerCase()] ?? value;
 }
 
 function SignalBlock({ label, value }: { label: string; value: string }) {

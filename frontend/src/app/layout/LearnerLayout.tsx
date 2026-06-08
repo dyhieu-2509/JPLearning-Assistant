@@ -1,7 +1,7 @@
 import {
   BarChart3,
   Bot,
-  Brain,
+  Flame,
   CalendarCheck,
   ClipboardCheck,
   BookOpenText,
@@ -43,6 +43,7 @@ export function LearnerLayout() {
     Boolean(accessToken) &&
     !checkingProfile &&
     !needsOnboarding &&
+    location.pathname !== "/learner" &&
     location.pathname !== onboardingPath &&
     location.pathname !== "/learner/chat";
 
@@ -131,12 +132,12 @@ export function LearnerLayout() {
             {open ? <X size={22} /> : <Menu size={22} />}
           </button>
           <div>
-            <p className="eyebrow">Trợ lý tiếng Nhật cá nhân hóa</p>
-            <h1>今日の学習</h1>
+            <p className="eyebrow">VAJA 日本語</p>
+            <h1>Tự học tiếng Nhật</h1>
           </div>
           <div className="status-chip">
-            <Brain size={17} />
-            RAG + đồ thị kiến thức
+            <Flame size={17} />
+            Học một chút mỗi ngày
           </div>
         </header>
         {needsOnboarding ? (

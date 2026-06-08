@@ -172,7 +172,7 @@ export function ChatView() {
         <div className="panel-heading">
           <div>
             <p className="eyebrow">AI 先生</p>
-            <h3>Hỏi với ngữ cảnh đồ thị kiến thức</h3>
+            <h3>Hỏi điều bạn chưa hiểu</h3>
           </div>
           <label className="context-select">
             Chủ đề
@@ -204,14 +204,14 @@ export function ChatView() {
             <div className="empty-chat">
               <Bot size={34} />
               <strong>Bắt đầu bằng một câu hỏi tiếng Nhật.</strong>
-              <span>VAJA sẽ lưu nguồn tham khảo và tín hiệu học để cá nhân hóa.</span>
+              <span>Ví dụ: hỏi nghĩa từ, so sánh ngữ pháp, hoặc nhờ đặt câu mẫu.</span>
             </div>
           )}
           {sending && (
             <div className="message-row assistant">
               <div className="message-bubble">
                 <Loader2 className="spin" size={18} />
-                Đang suy luận với ngữ cảnh đồ thị kiến thức...
+                Đang tìm cách giải thích dễ hiểu...
               </div>
             </div>
           )}

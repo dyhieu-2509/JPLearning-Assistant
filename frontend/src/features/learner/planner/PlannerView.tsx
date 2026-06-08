@@ -70,7 +70,7 @@ export function PlannerView() {
     <section className="learning-grid">
       <div className="section-heading full-span">
         <p className="eyebrow">学習計画</p>
-        <h2>Lộ trình học</h2>
+        <h2>Kế hoạch tự học</h2>
       </div>
       {error && <div className="form-error full-span">{error}</div>}
 
@@ -78,7 +78,7 @@ export function PlannerView() {
         <div className="panel-heading">
           <div>
             <p className="eyebrow">Gợi ý</p>
-            <h3>Tạo lộ trình</h3>
+            <h3>Tuần này học gì?</h3>
           </div>
           <WandSparkles size={21} />
         </div>
@@ -172,7 +172,7 @@ export function PlannerView() {
             ))}
           </div>
         ) : (
-          <div className="empty-state compact">Tạo lộ trình từ tiến độ hiện tại của bạn.</div>
+          <div className="empty-state compact">Bấm gợi ý lộ trình để VAJA chia nhỏ việc học trong tuần.</div>
         )}
       </section>
 
