@@ -1476,6 +1476,212 @@ progress::-webkit-progress-value {
   color: var(--white);
 }
 
+.learner-shell .learner-main {
+  padding-bottom: 112px;
+}
+
+.floating-tutor {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 32;
+  width: min(430px, calc(100vw - 48px));
+}
+
+.floating-tutor-bar {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 28px;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 66px;
+  padding: 10px 14px;
+  border: 1px solid var(--sky-200);
+  border-radius: 8px;
+  background: var(--white);
+  box-shadow: 0 18px 46px rgba(2, 132, 199, 0.2);
+  color: var(--blue-950);
+  text-align: left;
+}
+
+.floating-tutor-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: var(--sky-600);
+  color: var(--white);
+}
+
+.floating-tutor-bar strong,
+.floating-tutor-bar small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.floating-tutor-bar strong {
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.floating-tutor-bar small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.floating-tutor-panel {
+  display: grid;
+  gap: 12px;
+  max-height: min(680px, calc(100dvh - var(--headbar-height) - 48px));
+  padding: 14px;
+  border: 1px solid var(--sky-200);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 22px 58px rgba(2, 132, 199, 0.2);
+}
+
+.floating-tutor-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.floating-tutor-header h2 {
+  margin: 0;
+  color: var(--blue-950);
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+.floating-tutor-header span {
+  display: inline-flex;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.floating-suggestion-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.floating-suggestion-row button {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  max-width: 220px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--sky-50);
+  color: var(--sky-700);
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.floating-message-list {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-height: 190px;
+  max-height: 330px;
+  overflow: auto;
+  padding: 3px;
+}
+
+.floating-empty-state {
+  display: grid;
+  place-items: center;
+  gap: 7px;
+  min-height: 178px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.floating-empty-state svg {
+  color: var(--sky-600);
+}
+
+.floating-empty-state strong {
+  color: var(--blue-950);
+}
+
+.floating-empty-state span {
+  max-width: 290px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.floating-message-row {
+  display: flex;
+}
+
+.floating-message-row.user {
+  justify-content: flex-end;
+}
+
+.floating-message-bubble {
+  max-width: 88%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.floating-message-row.user .floating-message-bubble {
+  background: var(--sky-600);
+  color: var(--white);
+}
+
+.floating-message-row.assistant .floating-message-bubble {
+  border: 1px solid var(--line);
+  background: var(--white);
+  color: var(--ink);
+}
+
+.floating-message-bubble p {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.floating-source-block {
+  display: grid;
+  gap: 7px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.floating-composer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 46px;
+  gap: 8px;
+}
+
+.floating-composer input {
+  min-height: 46px;
+  min-width: 0;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--white);
+  outline: 0;
+}
+
 .learning-grid {
   display: grid;
   grid-template-columns: minmax(280px, 360px) minmax(0, 1.6fr) minmax(260px, 0.9fr);
@@ -1756,5 +1962,24 @@ progress::-webkit-progress-value {
 
   .message-list {
     max-height: none;
+  }
+
+  .learner-shell .learner-main {
+    padding-bottom: 96px;
+  }
+
+  .floating-tutor {
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+    width: auto;
+  }
+
+  .floating-tutor-panel {
+    max-height: calc(100dvh - var(--headbar-height) - 24px);
+  }
+
+  .floating-message-list {
+    max-height: 280px;
   }
 }

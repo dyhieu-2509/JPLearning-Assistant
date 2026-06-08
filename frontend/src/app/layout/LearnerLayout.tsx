@@ -20,6 +20,7 @@ import { apiRequest } from "../../shared/api";
 import { LoadingPanel } from "../../shared/components";
 import type { StudentProfileResponse } from "../../shared/models";
 import { needsLearnerOnboarding } from "../../shared/profile";
+import { FloatingTutor } from "../../features/learner/tutor/FloatingTutor";
 
 const navItems = [
   { to: "/learner", label: "Trang học", icon: BarChart3 },
@@ -37,6 +38,13 @@ export function LearnerLayout() {
   const [checkingProfile, setCheckingProfile] = useState(false);
   const [needsOnboarding, setNeedsOnboarding] = useState(false);
   const onboardingPath = "/learner/onboarding";
+  const tutorContext = getTutorContext(location.pathname);
+  const showFloatingTutor =
+    Boolean(accessToken) &&
+    !checkingProfile &&
+    !needsOnboarding &&
+    location.pathname !== onboardingPath &&
+    location.pathname !== "/learner/chat";
 
   useEffect(() => {
     if (!accessToken || location.pathname === onboardingPath) {
@@ -117,7 +125,7 @@ export function LearnerLayout() {
         </div>
       </aside>
 
-      <div className="app-main">
+      <div className="app-main learner-main">
         <header className="topbar">
           <button className="icon-button mobile-only" type="button" onClick={() => setOpen((next) => !next)}>
             {open ? <X size={22} /> : <Menu size={22} />}
@@ -138,7 +146,42 @@ export function LearnerLayout() {
         ) : (
           <Outlet />
         )}
+        {showFloatingTutor && (
+          <FloatingTutor
+            token={accessToken ?? ""}
+            contextTopic={tutorContext.topic}
+            suggestions={tutorContext.suggestions}
+          />
+        )}
       </div>
     </div>
   );
+}
+
+function getTutorContext(pathname: string): { topic: string; suggestions: string[] } {
+  if (pathname.includes("/flashcards")) {
+    return {
+      topic: "flashcards",
+      suggestions: ["Thẻ này nên nhớ bằng mẹo nào?", "Tạo ví dụ với từ vừa ôn", "Khi nào dùng kanji này?"]
+    };
+  }
+
+  if (pathname.includes("/assessment")) {
+    return {
+      topic: "assessment",
+      suggestions: ["Giải thích lỗi sai gần đây", "Ôn nhanh ngữ pháp N5", "Cho tôi một câu tương tự"]
+    };
+  }
+
+  if (pathname.includes("/planner")) {
+    return {
+      topic: "planner",
+      suggestions: ["Hôm nay nên học gì?", "Rút gọn lộ trình tuần này", "Ưu tiên phần yếu nhất"]
+    };
+  }
+
+  return {
+    topic: "dashboard",
+    suggestions: ["Tôi nên ôn gì hôm nay?", "Giải thích は và が", "Tạo ví dụ N5 với です"]
+  };
 }
