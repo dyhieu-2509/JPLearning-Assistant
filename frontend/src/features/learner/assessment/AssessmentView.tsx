@@ -60,7 +60,7 @@ export function AssessmentView() {
     <section className="learning-grid">
       <div className="section-heading full-span">
         <p className="eyebrow">確認テスト</p>
-        <h2>Kiểm tra nhanh</h2>
+        <h2>Đánh giá lại cá nhân hóa</h2>
       </div>
       {error && <div className="form-error full-span">{error}</div>}
 
@@ -68,7 +68,7 @@ export function AssessmentView() {
         <div className="panel-heading">
           <div>
             <p className="eyebrow">Bắt đầu</p>
-            <h3>Bài kiểm tra ngắn</h3>
+            <h3>Bài kiểm tra cá nhân hóa</h3>
           </div>
           <ClipboardCheck size={21} />
         </div>
@@ -143,7 +143,7 @@ export function AssessmentView() {
             </button>
           </div>
         ) : (
-          <div className="empty-state compact">Bắt đầu kiểm tra để tạo câu hỏi.</div>
+          <div className="empty-state compact">Làm bài kiểm tra để VAJA cập nhật tín hiệu cá nhân hóa.</div>
         )}
       </section>
 
@@ -151,7 +151,7 @@ export function AssessmentView() {
         <div className="panel-heading">
           <div>
             <p className="eyebrow">Kết quả</p>
-            <h3>Tín hiệu tiến bộ</h3>
+            <h3>Tín hiệu cá nhân hóa</h3>
           </div>
         </div>
         {result ? (
@@ -174,7 +174,7 @@ export function AssessmentView() {
             ))}
           </div>
         ) : (
-          <div className="empty-state compact">Kết quả kiểm tra sẽ hiển thị tại đây.</div>
+          <div className="empty-state compact">Kết quả sẽ được dùng làm tín hiệu cá nhân hóa đáng tin cậy hơn.</div>
         )}
       </section>
     </section>
