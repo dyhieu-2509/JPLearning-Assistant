@@ -10,6 +10,7 @@ import { AssessmentPage } from "../pages/learner/AssessmentPage";
 import { ChatPage } from "../pages/learner/ChatPage";
 import { DashboardPage } from "../pages/learner/DashboardPage";
 import { FlashcardsPage } from "../pages/learner/FlashcardsPage";
+import { KnowledgePage } from "../pages/learner/KnowledgePage";
 import { OnboardingPage } from "../pages/learner/OnboardingPage";
 import { PlannerPage } from "../pages/learner/PlannerPage";
 import { LandingPage } from "../pages/public/LandingPage";
@@ -31,6 +32,7 @@ export default function App() {
               <Route index element={<DashboardPage />} />
               <Route path="onboarding" element={<OnboardingPage />} />
               <Route path="chat" element={<ChatPage />} />
+              <Route path="knowledge" element={<KnowledgePage />} />
               <Route path="flashcards" element={<FlashcardsPage />} />
               <Route path="assessment" element={<AssessmentPage />} />
               <Route path="planner" element={<PlannerPage />} />

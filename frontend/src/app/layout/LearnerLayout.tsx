@@ -4,6 +4,7 @@ import {
   Brain,
   CalendarCheck,
   ClipboardCheck,
+  BookOpenText,
   Layers3,
   LayoutDashboard,
   LogOut,
@@ -26,6 +27,7 @@ const navItems = [
   { to: "/learner", label: "Trang học", icon: BarChart3 },
   { to: "/learner/onboarding", label: "Thiết lập", icon: SlidersHorizontal },
   { to: "/learner/chat", label: "Trợ lý AI", icon: Bot },
+  { to: "/learner/knowledge", label: "Tra cứu", icon: BookOpenText },
   { to: "/learner/flashcards", label: "Thẻ nhớ", icon: Layers3 },
   { to: "/learner/assessment", label: "Kiểm tra", icon: ClipboardCheck },
   { to: "/learner/planner", label: "Lộ trình", icon: CalendarCheck }
@@ -163,6 +165,13 @@ function getTutorContext(pathname: string): { topic: string; suggestions: string
     return {
       topic: "flashcards",
       suggestions: ["Thẻ này nên nhớ bằng mẹo nào?", "Tạo ví dụ với từ vừa ôn", "Khi nào dùng kanji này?"]
+    };
+  }
+
+  if (pathname.includes("/knowledge")) {
+    return {
+      topic: "knowledge",
+      suggestions: ["Giải thích mục này bằng tiếng Việt", "Cho ví dụ N5 dễ nhớ", "So sánh với mẫu gần giống"]
     };
   }
 

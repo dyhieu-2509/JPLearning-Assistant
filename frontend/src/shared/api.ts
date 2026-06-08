@@ -8,6 +8,7 @@ export type {
   FlashcardCardResponse,
   FlashcardDeckResponse,
   FlashcardReviewResponse,
+  KnowledgeItemResponse,
   KnowledgeProgressResponse,
   LearnerDashboardResponse,
   PlannerRecommendationResponse,

@@ -34,6 +34,17 @@ export type KnowledgeProgressResponse = {
   updatedAt?: string | null;
 };
 
+export type KnowledgeItemResponse = {
+  type: string;
+  id: string;
+  title: string;
+  reading?: string | null;
+  meaningVi?: string | null;
+  meaningEn?: string | null;
+  level?: string | null;
+  source?: string | null;
+};
+
 export type StudentProfileResponse = {
   id: string;
   currentLevel?: string | null;
