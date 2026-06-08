@@ -4,12 +4,12 @@ import { logoUrl } from "./assets";
 export function Headbar() {
   return (
     <header className="headbar">
-      <a className="headbar-brand" href="/" aria-label="VAJA home">
+      <a className="headbar-brand" href="/" aria-label="Trang chủ VAJA">
         <img src={logoUrl} alt="VAJA logo" />
         <span>VAJA</span>
       </a>
-      <nav className="headbar-nav" aria-label="Global navigation">
-        <a href="/#about">About</a>
+      <nav className="headbar-nav" aria-label="Điều hướng chính">
+        <a href="/#about">Giới thiệu</a>
       </nav>
     </header>
   );
@@ -65,7 +65,7 @@ export function ProgressMeter({ current, total }: { current: number; total: numb
   const percentage = total <= 0 ? 0 : Math.round((current / total) * 100);
 
   return (
-    <div className="progress-meter" aria-label={`Step ${current} of ${total}`}>
+    <div className="progress-meter" aria-label={`Bước ${current} trên ${total}`}>
       <div>
         <span>{current}</span>
         <small>/ {total}</small>

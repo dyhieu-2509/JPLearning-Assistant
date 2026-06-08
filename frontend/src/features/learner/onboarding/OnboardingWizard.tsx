@@ -54,7 +54,7 @@ export function OnboardingWizard({
     try {
       await onComplete(toProfileRequest(answers));
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Cannot save onboarding profile");
+      setError(caught instanceof Error ? caught.message : "Không thể lưu hồ sơ học");
     } finally {
       setSaving(false);
     }
@@ -117,11 +117,11 @@ export function OnboardingWizard({
             onClick={() => setStep((current) => Math.max(0, current - 1))}
           >
             <ArrowLeft size={18} />
-            Back
+            Quay lại
           </IconTextButton>
           <PrimaryButton type="button" disabled={saving} onClick={next}>
             {saving ? <Loader2 className="spin" size={18} /> : <ArrowRight size={18} />}
-            {lastStep ? completeLabel : "Next"}
+            {lastStep ? completeLabel : "Tiếp tục"}
           </PrimaryButton>
         </div>
       </Panel>

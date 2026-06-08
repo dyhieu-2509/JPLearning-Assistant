@@ -224,6 +224,108 @@ a {
   color: var(--green);
 }
 
+.landing-path-preview {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 18px;
+  width: min(360px, 100%);
+  margin-left: auto;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.93);
+  box-shadow: 0 18px 44px rgba(2, 132, 199, 0.13);
+}
+
+.path-preview-top,
+.path-xp-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.path-preview-top strong {
+  color: var(--blue-950);
+  font-size: 18px;
+}
+
+.path-preview-top span,
+.path-xp-row span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: var(--sky-50);
+  color: var(--sky-700);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.lesson-path {
+  display: grid;
+  gap: 16px;
+  padding-left: 22px;
+}
+
+.lesson-node {
+  position: relative;
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+}
+
+.lesson-node > span {
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  border: 2px solid var(--sky-200);
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--sky-700);
+  font-size: 18px;
+  font-weight: 900;
+  box-shadow: 0 8px 0 rgba(186, 230, 253, 0.82);
+}
+
+.lesson-node.done > span {
+  border-color: rgba(22, 163, 74, 0.36);
+  background: #f0fdf4;
+  color: var(--green);
+  box-shadow: 0 8px 0 rgba(187, 247, 208, 0.9);
+}
+
+.lesson-node.active > span {
+  background: var(--sky-600);
+  color: var(--white);
+  box-shadow: 0 8px 0 var(--sky-200);
+}
+
+.lesson-node.locked > span {
+  background: #f8fafc;
+  color: #94a3b8;
+  box-shadow: 0 8px 0 #e2e8f0;
+}
+
+.lesson-node small {
+  color: var(--blue-950);
+  font-weight: 900;
+}
+
+.lesson-node i {
+  position: absolute;
+  left: 30px;
+  top: 68px;
+  width: 3px;
+  height: 16px;
+  border-radius: 999px;
+  background: var(--sky-200);
+}
+
 .landing-conversion-band,
 .landing-preview-section,
 .landing-highlight-grid {
@@ -1562,6 +1664,8 @@ progress::-webkit-progress-value {
   .landing-hero {
     min-height: auto;
     padding: 28px;
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .landing-hero-mark {
@@ -1573,6 +1677,11 @@ progress::-webkit-progress-value {
   .landing-actions {
     grid-template-columns: 1fr;
     max-width: none;
+  }
+
+  .landing-path-preview {
+    width: 100%;
+    margin-left: 0;
   }
 
   .landing-conversion-band,

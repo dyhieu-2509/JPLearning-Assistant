@@ -14,8 +14,8 @@ export type OnboardingAnswers = {
 export const initialOnboardingAnswers: OnboardingAnswers = {
   currentLevel: "N5",
   targetLevel: "N4",
-  goal: "Pass JLPT",
-  deadline: "in 3 months",
+  goal: "Thi JLPT",
+  deadline: "trong 3 tháng",
   dailyStudyMinutes: "30",
   weakSkills: ["vocabulary"],
   explanationStyle: "step-by-step",

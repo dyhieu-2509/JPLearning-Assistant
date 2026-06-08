@@ -11,6 +11,14 @@ const suggestions = [
   "Tôi yếu ngữ pháp nào?"
 ];
 
+const contextLabels: Record<string, string> = {
+  Vocabulary: "Từ vựng",
+  Grammar: "Ngữ pháp",
+  Kanji: "Kanji",
+  "Assessment review": "Ôn lỗi kiểm tra",
+  Japanese: "Tiếng Nhật"
+};
+
 export function ChatView() {
   const { accessToken } = useAuth();
   const token = accessToken ?? "";
@@ -33,7 +41,7 @@ export function ChatView() {
         setActiveSessionId(data[0].id);
       }
     } catch (caught) {
-      setError(caught instanceof ApiError ? caught.message : "Cannot load chat sessions");
+      setError(caught instanceof ApiError ? caught.message : "Không thể tải buổi chat");
     } finally {
       setLoading(false);
     }
@@ -47,7 +55,7 @@ export function ChatView() {
       });
       setMessages(data);
     } catch (caught) {
-      setError(caught instanceof ApiError ? caught.message : "Cannot load messages");
+      setError(caught instanceof ApiError ? caught.message : "Không thể tải tin nhắn");
     }
   }
 
@@ -113,7 +121,7 @@ export function ChatView() {
       setMessages((current) => [...current, assistant]);
       await loadSessions();
     } catch (caught) {
-      setError(caught instanceof ApiError ? caught.message : "Cannot send message");
+      setError(caught instanceof ApiError ? caught.message : "Không thể gửi tin nhắn");
     } finally {
       setSending(false);
     }
@@ -124,13 +132,13 @@ export function ChatView() {
       <aside className="workspace-panel chat-sidebar">
         <div className="panel-heading">
           <div>
-            <p className="eyebrow">Tutor memory</p>
-            <h3>Sessions</h3>
+            <p className="eyebrow">記憶</p>
+            <h3>Buổi học</h3>
           </div>
           <button
             className="icon-button"
             type="button"
-            title="New chat"
+            title="Tạo buổi chat mới"
             onClick={() => {
               setActiveSessionId(null);
               setMessages([]);
@@ -141,7 +149,7 @@ export function ChatView() {
         </div>
         <div className="session-list">
           {loading ? (
-            <div className="loading-inline">Loading sessions...</div>
+            <div className="loading-inline">Đang tải buổi học...</div>
           ) : sessions.length ? (
             sessions.map((session) => (
               <button
@@ -150,12 +158,12 @@ export function ChatView() {
                 type="button"
                 onClick={() => setActiveSessionId(session.id)}
               >
-                <strong>{session.title || "Tutor chat"}</strong>
-                <span>{session.contextTopic || "Japanese"}</span>
+                <strong>{session.title || "Buổi học với VAJA"}</strong>
+                <span>{displayContext(session.contextTopic || "Japanese")}</span>
               </button>
             ))
           ) : (
-            <div className="empty-state compact">No sessions yet.</div>
+            <div className="empty-state compact">Chưa có buổi học nào.</div>
           )}
         </div>
       </aside>
@@ -163,17 +171,17 @@ export function ChatView() {
       <section className="workspace-panel chat-panel">
         <div className="panel-heading">
           <div>
-            <p className="eyebrow">AI Tutor</p>
-            <h3>Ask with KG/RAG context</h3>
+            <p className="eyebrow">AI 先生</p>
+            <h3>Hỏi với ngữ cảnh đồ thị kiến thức</h3>
           </div>
           <label className="context-select">
-            Context
+            Chủ đề
             <select value={contextTopic} onChange={(event) => setContextTopic(event.target.value)}>
               <option>JLPT N5</option>
-              <option>Vocabulary</option>
-              <option>Grammar</option>
-              <option>Kanji</option>
-              <option>Assessment review</option>
+              <option value="Vocabulary">Từ vựng</option>
+              <option value="Grammar">Ngữ pháp</option>
+              <option value="Kanji">Kanji</option>
+              <option value="Assessment review">Ôn lỗi kiểm tra</option>
             </select>
           </label>
         </div>
@@ -195,15 +203,15 @@ export function ChatView() {
           ) : (
             <div className="empty-chat">
               <Bot size={34} />
-              <strong>Start with a Japanese question.</strong>
-              <span>VAJA will keep sources and exposure signals for personalization.</span>
+              <strong>Bắt đầu bằng một câu hỏi tiếng Nhật.</strong>
+              <span>VAJA sẽ lưu nguồn tham khảo và tín hiệu học để cá nhân hóa.</span>
             </div>
           )}
           {sending && (
             <div className="message-row assistant">
               <div className="message-bubble">
                 <Loader2 className="spin" size={18} />
-                Thinking with Knowledge Graph context...
+                Đang suy luận với ngữ cảnh đồ thị kiến thức...
               </div>
             </div>
           )}
@@ -233,7 +241,7 @@ function MessageBubble({ message }: { message: ChatMessageResponse }) {
         <p>{message.content}</p>
         {assistant && (
           <div className="source-block">
-            <span>Confidence {Math.round((message.confidence ?? 0) * 100)}%</span>
+            <span>Độ tin cậy {Math.round((message.confidence ?? 0) * 100)}%</span>
             <SourceList sources={message.sources ?? []} />
           </div>
         )}
@@ -244,16 +252,29 @@ function MessageBubble({ message }: { message: ChatMessageResponse }) {
 
 function SourceList({ sources }: { sources: SourceResponse[] }) {
   if (!sources.length) {
-    return <span>No sources returned</span>;
+    return <span>Chưa có nguồn tham khảo</span>;
   }
 
   return (
     <div className="source-list">
       {sources.slice(0, 4).map((source) => (
         <span key={`${source.type}-${source.id}`}>
-          {source.type}: {source.title || source.id}
+          {displaySourceType(source.type)}: {source.title || source.id}
         </span>
       ))}
     </div>
   );
+}
+
+function displayContext(value: string): string {
+  return contextLabels[value] ?? value;
+}
+
+function displaySourceType(value: string): string {
+  const labels: Record<string, string> = {
+    graph: "Đồ thị",
+    vector: "Vector",
+    knowledge: "Kiến thức"
+  };
+  return labels[value.toLowerCase()] ?? value;
 }

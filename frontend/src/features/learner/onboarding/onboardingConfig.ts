@@ -39,23 +39,23 @@ export type OnboardingQuestion = {
 export const onboardingQuestions: OnboardingQuestion[] = [
   {
     id: "currentLevel",
-    eyebrow: "Level",
+    eyebrow: "Trình độ",
     title: "Trình độ hiện tại của bạn?",
-    subtitle: "VAJA dùng level này để chọn độ khó khi chat, quiz và flashcard.",
+    subtitle: "VAJA dùng trình độ này để chọn độ khó khi trò chuyện, kiểm tra nhanh và ôn thẻ nhớ.",
     icon: GraduationCap,
     options: [
       { value: "N5", label: "Mới bắt đầu / N5", description: "Hiragana, katakana, mẫu câu cơ bản" },
       { value: "N4", label: "N4", description: "Đã biết câu cơ bản và muốn tăng tốc" },
       { value: "N3", label: "N3", description: "Đọc hiểu trung cấp, cần luyện đều" },
-      { value: "N2", label: "N2", description: "Tập trung đọc, nghe và business Japanese" },
+      { value: "N2", label: "N2", description: "Tập trung đọc, nghe và tiếng Nhật công việc" },
       { value: "N1", label: "N1", description: "Nâng độ chính xác và tốc độ xử lý" }
     ]
   },
   {
     id: "targetLevel",
-    eyebrow: "Target",
+    eyebrow: "Mục tiêu",
     title: "Bạn muốn đạt mục tiêu nào?",
-    subtitle: "Target level giúp planner tạo roadmap sát với kỳ vọng.",
+    subtitle: "Mục tiêu JLPT giúp VAJA tạo lộ trình học sát với kỳ vọng.",
     icon: Target,
     options: [
       { value: "N5", label: "N5", description: "Nền tảng nhập môn" },
@@ -67,36 +67,36 @@ export const onboardingQuestions: OnboardingQuestion[] = [
   },
   {
     id: "goal",
-    eyebrow: "Goal",
+    eyebrow: "Lý do học",
     title: "Mục tiêu học chính là gì?",
-    subtitle: "Mục tiêu này sẽ được đưa vào profile và prompt cá nhân hóa.",
+    subtitle: "Mục tiêu này sẽ được đưa vào hồ sơ và ngữ cảnh cá nhân hóa của trợ lý.",
     icon: BookOpenCheck,
     options: [
-      { value: "Pass JLPT", label: "Thi JLPT", description: "Ưu tiên ngữ pháp, từ vựng, đọc hiểu" },
-      { value: "Improve conversation", label: "Giao tiếp", description: "Ưu tiên ví dụ hội thoại và phản xạ" },
-      { value: "Study abroad preparation", label: "Du học", description: "Từ vựng trường học, đời sống, thủ tục" },
-      { value: "Work in Japanese", label: "Công việc", description: "Keigo, email, business vocabulary" },
-      { value: "Read Japanese content", label: "Đọc hiểu", description: "Manga, tin tức, tài liệu Nhật" }
+      { value: "Thi JLPT", label: "Thi JLPT", description: "Ưu tiên ngữ pháp, từ vựng, đọc hiểu" },
+      { value: "Luyện giao tiếp", label: "Giao tiếp", description: "Ưu tiên ví dụ hội thoại và phản xạ" },
+      { value: "Chuẩn bị du học", label: "Du học", description: "Từ vựng trường học, đời sống, thủ tục" },
+      { value: "Dùng tiếng Nhật trong công việc", label: "Công việc", description: "Kính ngữ, email, từ vựng công việc" },
+      { value: "Đọc nội dung tiếng Nhật", label: "Đọc hiểu", description: "Manga, tin tức, tài liệu Nhật" }
     ]
   },
   {
     id: "deadline",
-    eyebrow: "Timeline",
+    eyebrow: "Thời gian",
     title: "Bạn muốn thấy tiến bộ trong bao lâu?",
-    subtitle: "Timeline giúp VAJA chọn nhịp học và mức độ ôn tập.",
+    subtitle: "Mốc thời gian giúp VAJA chọn nhịp học và mức độ ôn tập.",
     icon: CalendarClock,
     options: [
-      { value: "in 1 month", label: "1 tháng", description: "Cường độ cao, ôn tập dày" },
-      { value: "in 3 months", label: "3 tháng", description: "Nhịp học đều, phù hợp MVP demo" },
-      { value: "in 6 months", label: "6 tháng", description: "Lộ trình bền, ít quá tải" },
-      { value: "without a fixed deadline", label: "Không gấp", description: "Tập trung hiểu chắc" }
+      { value: "trong 1 tháng", label: "1 tháng", description: "Cường độ cao, ôn tập dày" },
+      { value: "trong 3 tháng", label: "3 tháng", description: "Nhịp học đều, phù hợp tiến độ ổn định" },
+      { value: "trong 6 tháng", label: "6 tháng", description: "Lộ trình bền, ít quá tải" },
+      { value: "không giới hạn thời gian", label: "Không gấp", description: "Tập trung hiểu chắc" }
     ]
   },
   {
     id: "dailyStudyMinutes",
-    eyebrow: "Habit",
+    eyebrow: "Thói quen",
     title: "Mỗi ngày bạn học được bao lâu?",
-    subtitle: "Daily target sẽ được dùng trong dashboard và study plan.",
+    subtitle: "Mục tiêu hằng ngày sẽ được dùng trong bảng học tập và lộ trình ôn tập.",
     icon: Sparkles,
     options: [
       { value: "10", label: "10 phút", description: "Ôn nhanh hằng ngày" },
@@ -107,7 +107,7 @@ export const onboardingQuestions: OnboardingQuestion[] = [
   },
   {
     id: "weakSkills",
-    eyebrow: "Weakness",
+    eyebrow: "Cần luyện",
     title: "Bạn thấy yếu phần nào nhất?",
     subtitle: "Có thể chọn nhiều kỹ năng để VAJA ưu tiên khi cá nhân hóa.",
     multi: true,
@@ -123,9 +123,9 @@ export const onboardingQuestions: OnboardingQuestion[] = [
   },
   {
     id: "explanationStyle",
-    eyebrow: "Tutor style",
+    eyebrow: "Cách giải thích",
     title: "Bạn muốn VAJA giải thích kiểu nào?",
-    subtitle: "Chatbot sẽ dùng style này khi giải thích câu trả lời.",
+    subtitle: "Trợ lý sẽ dùng cách này khi giải thích câu trả lời.",
     icon: MessageCircle,
     options: [
       { value: "concise", label: "Ngắn gọn", description: "Trả lời nhanh, ít lý thuyết" },
@@ -135,7 +135,7 @@ export const onboardingQuestions: OnboardingQuestion[] = [
   },
   {
     id: "romajiEnabled",
-    eyebrow: "Reading aid",
+    eyebrow: "Gợi ý đọc",
     title: "Bạn có muốn bật romaji gợi ý không?",
     subtitle: "Người mới học nên bật, người đã vững kana có thể tắt.",
     icon: Languages,

@@ -15,7 +15,7 @@ export function AuthView() {
   const [params] = useSearchParams();
   const requestedMode = params.get("mode") === "register" ? "register" : "login";
   const [mode, setMode] = useState<"login" | "register">(requestedMode);
-  const [displayName, setDisplayName] = useState("VAJA Learner");
+  const [displayName, setDisplayName] = useState("Người học VAJA");
   const [email, setEmail] = useState("learner@example.com");
   const [password, setPassword] = useState("password123");
   const [error, setError] = useState<string | null>(null);
@@ -43,7 +43,7 @@ export function AuthView() {
         await register(displayName, email, password);
       }
     } catch (caught) {
-      setError(caught instanceof ApiError ? caught.message : "Authentication failed");
+      setError(caught instanceof ApiError ? caught.message : "Không thể xác thực tài khoản");
     } finally {
       setLoading(false);
     }
@@ -59,32 +59,31 @@ export function AuthView() {
         <img src={logoUrl} alt="VAJA logo" />
         <div>
           <p className="eyebrow">VAJA</p>
-          <h1>Learn Japanese with a tutor that remembers your progress.</h1>
+          <h1>続けよう - tiếp tục học tiếng Nhật hôm nay.</h1>
           <p>
-            Chat with context, review weak cards, take short assessments, and let the planner choose the next
-            focused study block.
+            Đăng nhập để VAJA nối lại lộ trình, thẻ nhớ, bài kiểm tra nhanh và phần kiến thức bạn đang cần ôn.
           </p>
         </div>
       </section>
 
-      <section className="auth-panel" aria-label="Authentication">
+      <section className="auth-panel" aria-label="Đăng nhập VAJA">
         <div className="segmented-control">
           <button className={mode === "login" ? "active" : ""} type="button" onClick={() => setMode("login")}>
-            Login
+            Đăng nhập
           </button>
           <button
             className={mode === "register" ? "active" : ""}
             type="button"
             onClick={() => setMode("register")}
           >
-            Register
+            Tạo tài khoản
           </button>
         </div>
 
         <form onSubmit={submit} className="form-stack">
           {mode === "register" && (
             <label>
-              Display name
+              Tên hiển thị
               <span className="input-shell">
                 <UserRound size={18} />
                 <input value={displayName} onChange={(event) => setDisplayName(event.target.value)} />
@@ -106,7 +105,7 @@ export function AuthView() {
           </label>
 
           <label>
-            Password
+            Mật khẩu
             <span className="input-shell">
               <LockKeyhole size={18} />
               <input
@@ -121,17 +120,17 @@ export function AuthView() {
           {error && <p className="form-error">{error}</p>}
           {hasDraft && (
             <p className="form-success">
-              Onboarding answers are saved. They will be linked to your profile after authentication.
+              Câu trả lời cá nhân hóa đã được lưu tạm. VAJA sẽ gắn vào hồ sơ sau khi bạn đăng nhập.
             </p>
           )}
 
           <PrimaryButton type="submit" disabled={loading}>
             {loading && <Loader2 className="spin" size={18} />}
-            {mode === "login" ? "Login" : "Create account"}
+            {mode === "login" ? "Đăng nhập" : "Tạo tài khoản"}
           </PrimaryButton>
           <IconTextButton type="button" variant="ghost" onClick={startGoogleLogin}>
             <Chrome size={18} />
-            Continue with Google
+            Tiếp tục với Google
           </IconTextButton>
         </form>
       </section>

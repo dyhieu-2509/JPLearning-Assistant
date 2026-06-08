@@ -20,10 +20,10 @@ export function PreAuthOnboardingView() {
   return (
     <div className="public-onboarding-screen">
       <OnboardingWizard
-        eyebrow="New learner setup"
+        eyebrow="Người học mới"
         title="Trả lời 8 câu trước khi đăng nhập"
-        description="Các lựa chọn này được lưu tạm trên trình duyệt. Sau khi bạn đăng nhập hoặc tạo tài khoản, VAJA sẽ đồng bộ vào learner profile."
-        completeLabel="Continue to login"
+        description="Các lựa chọn này được lưu tạm trên trình duyệt. Sau khi bạn đăng nhập hoặc tạo tài khoản, VAJA sẽ đồng bộ vào hồ sơ học."
+        completeLabel="Tiếp tục đăng nhập"
         onComplete={saveDraft}
       />
     </div>

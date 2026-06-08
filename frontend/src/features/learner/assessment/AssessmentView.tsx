@@ -30,7 +30,7 @@ export function AssessmentView() {
       });
       setSession(data);
     } catch (caught) {
-      setError(caught instanceof ApiError ? caught.message : "Cannot start assessment");
+      setError(caught instanceof ApiError ? caught.message : "Không thể bắt đầu bài kiểm tra");
     } finally {
       setLoading(false);
     }
@@ -50,7 +50,7 @@ export function AssessmentView() {
       });
       setResult(data);
     } catch (caught) {
-      setError(caught instanceof ApiError ? caught.message : "Cannot submit assessment");
+      setError(caught instanceof ApiError ? caught.message : "Không thể nộp bài kiểm tra");
     } finally {
       setLoading(false);
     }
@@ -59,22 +59,22 @@ export function AssessmentView() {
   return (
     <section className="learning-grid">
       <div className="section-heading full-span">
-        <p className="eyebrow">Knowledge check</p>
-        <h2>Assessment</h2>
+        <p className="eyebrow">確認テスト</p>
+        <h2>Kiểm tra nhanh</h2>
       </div>
       {error && <div className="form-error full-span">{error}</div>}
 
       <section className="workspace-panel">
         <div className="panel-heading">
           <div>
-            <p className="eyebrow">Start</p>
-            <h3>Short adaptive quiz</h3>
+            <p className="eyebrow">Bắt đầu</p>
+            <h3>Bài kiểm tra ngắn</h3>
           </div>
           <ClipboardCheck size={21} />
         </div>
         <form className="profile-form single" onSubmit={start}>
           <label>
-            Level
+            Trình độ
             <select value={level} onChange={(event) => setLevel(event.target.value)}>
               <option>N5</option>
               <option>N4</option>
@@ -82,15 +82,15 @@ export function AssessmentView() {
             </select>
           </label>
           <label>
-            Category
+            Nhóm kiến thức
             <select value={category} onChange={(event) => setCategory(event.target.value)}>
-              <option value="vocabulary">vocabulary</option>
-              <option value="grammar">grammar</option>
-              <option value="kanji">kanji</option>
+              <option value="vocabulary">Từ vựng</option>
+              <option value="grammar">Ngữ pháp</option>
+              <option value="kanji">Kanji</option>
             </select>
           </label>
           <label>
-            Questions
+            Số câu
             <input
               min={1}
               max={20}
@@ -101,7 +101,7 @@ export function AssessmentView() {
           </label>
           <button className="icon-text-button" type="submit" disabled={loading}>
             <Play size={18} />
-            Start assessment
+            Bắt đầu kiểm tra
           </button>
         </form>
       </section>
@@ -109,8 +109,8 @@ export function AssessmentView() {
       <section className="workspace-panel focus-panel">
         <div className="panel-heading">
           <div>
-            <p className="eyebrow">Questions</p>
-            <h3>{session ? `${session.level} · ${session.category}` : "No active session"}</h3>
+            <p className="eyebrow">Câu hỏi</p>
+            <h3>{session ? `${session.level} · ${displayCategory(session.category)}` : "Chưa có lượt kiểm tra"}</h3>
           </div>
         </div>
         {session ? (
@@ -139,19 +139,19 @@ export function AssessmentView() {
               disabled={loading || Object.keys(answers).length === 0}
               onClick={() => void submit()}
             >
-              Submit answers
+              Nộp bài
             </button>
           </div>
         ) : (
-          <div className="empty-state compact">Start a quiz to generate questions.</div>
+          <div className="empty-state compact">Bắt đầu kiểm tra để tạo câu hỏi.</div>
         )}
       </section>
 
       <section className="workspace-panel">
         <div className="panel-heading">
           <div>
-            <p className="eyebrow">Result</p>
-            <h3>Progress signal</h3>
+            <p className="eyebrow">Kết quả</p>
+            <h3>Tín hiệu tiến bộ</h3>
           </div>
         </div>
         {result ? (
@@ -174,9 +174,18 @@ export function AssessmentView() {
             ))}
           </div>
         ) : (
-          <div className="empty-state compact">Assessment result will appear here.</div>
+          <div className="empty-state compact">Kết quả kiểm tra sẽ hiển thị tại đây.</div>
         )}
       </section>
     </section>
   );
+}
+
+function displayCategory(value: string): string {
+  const labels: Record<string, string> = {
+    vocabulary: "Từ vựng",
+    grammar: "Ngữ pháp",
+    kanji: "Kanji"
+  };
+  return labels[value.toLowerCase()] ?? value;
 }

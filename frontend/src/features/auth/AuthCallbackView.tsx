@@ -27,9 +27,9 @@ export function AuthCallbackView() {
 
   const message = useMemo(() => {
     if (needsLink) {
-      return `Google email ${email ?? ""} already has a system account.`;
+      return `Email Google ${email ?? ""} đã có tài khoản hệ thống.`;
     }
-    return "Finishing Google login...";
+    return "Đang hoàn tất đăng nhập Google...";
   }, [email, needsLink]);
 
   if (isAuthenticated) {
@@ -46,7 +46,7 @@ export function AuthCallbackView() {
     try {
       await linkGoogleAccount(linkToken, password);
     } catch (caught) {
-      setError(caught instanceof ApiError ? caught.message : "Cannot link Google account");
+      setError(caught instanceof ApiError ? caught.message : "Không thể liên kết Google");
     } finally {
       setLoading(false);
     }
@@ -54,14 +54,14 @@ export function AuthCallbackView() {
 
   return (
     <main className="auth-screen compact-auth">
-      <section className="auth-panel" aria-label="Google OAuth callback">
+      <section className="auth-panel" aria-label="Hoàn tất Google OAuth">
         <p className="eyebrow">Google OAuth2</p>
-        <h1>{needsLink ? "Link your account" : "Signing in"}</h1>
+        <h1>{needsLink ? "Liên kết tài khoản" : "Đang đăng nhập"}</h1>
         <p className="muted-copy">{message}</p>
         {needsLink ? (
           <form className="form-stack" onSubmit={submit}>
             <label>
-              System password
+              Mật khẩu hệ thống
               <span className="input-shell">
                 <LockKeyhole size={18} />
                 <input
@@ -75,7 +75,7 @@ export function AuthCallbackView() {
             {error && <p className="form-error">{error}</p>}
             <IconTextButton type="submit" disabled={loading}>
               {loading && <Loader2 className="spin" size={18} />}
-              Link Google
+              Liên kết Google
             </IconTextButton>
           </form>
         ) : (

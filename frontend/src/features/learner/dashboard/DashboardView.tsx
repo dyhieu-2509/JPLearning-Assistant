@@ -6,6 +6,20 @@ import type { LearnerDashboardResponse, StudentProfileResponse } from "../../../
 import { EmptyState, IconButton, IconTextButton, LoadingPanel, MetricTile, PageHeader, Panel, TopicChip } from "../../../shared/components";
 
 const levelOptions = ["N5", "N4", "N3", "N2", "N1"];
+const skillLabels: Record<string, string> = {
+  vocabulary: "Từ vựng",
+  grammar: "Ngữ pháp",
+  kanji: "Kanji",
+  listening: "Nghe",
+  reading: "Đọc",
+  speaking: "Nói"
+};
+
+const explanationStyleLabels: Record<string, string> = {
+  concise: "Ngắn gọn",
+  "step-by-step": "Từng bước",
+  "example-first": "Ví dụ trước"
+};
 
 type ProfileForm = {
   currentLevel: string;
@@ -34,7 +48,7 @@ export function DashboardView() {
       setDashboard(data);
       setProfileForm(toProfileForm(data.profile));
     } catch (caught) {
-      setError(caught instanceof ApiError ? caught.message : "Cannot load dashboard");
+      setError(caught instanceof ApiError ? caught.message : "Không thể tải bảng học tập");
     } finally {
       setLoading(false);
     }
@@ -75,53 +89,53 @@ export function DashboardView() {
       setDashboard((current) => (current ? { ...current, profile } : current));
       setProfileForm(toProfileForm(profile));
     } catch (caught) {
-      setError(caught instanceof ApiError ? caught.message : "Cannot save profile");
+      setError(caught instanceof ApiError ? caught.message : "Không thể lưu hồ sơ");
     } finally {
       setSaving(false);
     }
   }
 
   if (loading) {
-    return <LoadingPanel>Loading learner workspace...</LoadingPanel>;
+    return <LoadingPanel>Đang tải không gian học...</LoadingPanel>;
   }
 
   return (
     <section className="dashboard-grid">
-      <PageHeader eyebrow="Learner dashboard" title="Today’s study signal" />
+      <PageHeader eyebrow="今日の学習" title="Tín hiệu học hôm nay" />
 
       {error && <div className="form-error full-span">{error}</div>}
 
       <MetricTile
         icon={<Brain size={22} />}
-        label="Average mastery"
+        label="Mức nắm vững"
         value={`${masteryPercent}%`}
         accent="sky"
       />
       <MetricTile
         icon={<Target size={22} />}
-        label="Weak items"
+        label="Điểm yếu"
         value={String(dashboard?.progress.weakItems ?? 0)}
         accent="rose"
       />
       <MetricTile
         icon={<Layers3 size={22} />}
-        label="Cards due"
+        label="Thẻ cần ôn"
         value={String(dashboard?.flashcards.dueCards ?? 0)}
         accent="amber"
       />
       <MetricTile
         icon={<BookOpenCheck size={22} />}
-        label="Assessments"
+        label="Bài kiểm tra"
         value={String(dashboard?.assessments.completedSessions ?? 0)}
         accent="green"
       />
 
       <Panel
         className="profile-panel"
-        eyebrow="Profile"
-        title="Personalization controls"
+        eyebrow="Hồ sơ"
+        title="Điều chỉnh cá nhân hóa"
         action={
-          <IconButton onClick={loadDashboard} title="Refresh dashboard">
+          <IconButton onClick={loadDashboard} title="Làm mới bảng học tập">
             <RefreshCw size={18} />
           </IconButton>
         }
@@ -130,7 +144,7 @@ export function DashboardView() {
         {profileForm && (
           <form className="profile-form" onSubmit={saveProfile}>
             <label>
-              Current
+              Hiện tại
               <select
                 value={profileForm.currentLevel}
                 onChange={(event) => setProfileForm({ ...profileForm, currentLevel: event.target.value })}
@@ -141,7 +155,7 @@ export function DashboardView() {
               </select>
             </label>
             <label>
-              Target
+              Mục tiêu
               <select
                 value={profileForm.targetLevel}
                 onChange={(event) => setProfileForm({ ...profileForm, targetLevel: event.target.value })}
@@ -152,7 +166,7 @@ export function DashboardView() {
               </select>
             </label>
             <label>
-              Daily minutes
+              Phút mỗi ngày
               <input
                 min={5}
                 max={480}
@@ -164,21 +178,21 @@ export function DashboardView() {
               />
             </label>
             <label className="wide-field">
-              Goal
+              Lý do học
               <input
                 value={profileForm.goal}
                 onChange={(event) => setProfileForm({ ...profileForm, goal: event.target.value })}
               />
             </label>
             <label>
-              Explain style
+              Cách giải thích
               <select
                 value={profileForm.explanationStyle}
                 onChange={(event) => setProfileForm({ ...profileForm, explanationStyle: event.target.value })}
               >
-                <option value="concise">concise</option>
-                <option value="step-by-step">step-by-step</option>
-                <option value="example-first">example-first</option>
+                <option value="concise">Ngắn gọn</option>
+                <option value="step-by-step">Từng bước</option>
+                <option value="example-first">Ví dụ trước</option>
               </select>
             </label>
             <label className="check-row">
@@ -187,17 +201,17 @@ export function DashboardView() {
                 checked={profileForm.romajiEnabled}
                 onChange={(event) => setProfileForm({ ...profileForm, romajiEnabled: event.target.checked })}
               />
-              Romaji hints
+              Gợi ý romaji
             </label>
             <IconTextButton className="wide-field" type="submit" disabled={saving}>
               <Save size={18} />
-              Save profile
+              Lưu hồ sơ
             </IconTextButton>
           </form>
         )}
       </Panel>
 
-      <Panel eyebrow="Weak knowledge" title="Next review targets">
+      <Panel eyebrow="知識レビュー" title="Phần cần ôn tiếp theo">
         <div className="stack-list">
           {dashboard?.progress.weakestItems.length ? (
             dashboard.progress.weakestItems.map((item) => (
@@ -205,39 +219,39 @@ export function DashboardView() {
                 <div>
                   <strong>{item.title || item.knowledgeId}</strong>
                   <span>
-                    {item.knowledgeType} · {item.level || "JLPT"}
+                    {displaySkill(item.knowledgeType)} · {item.level || "JLPT"}
                   </span>
                 </div>
                 <progress max={1} value={item.masteryScore} />
               </div>
             ))
           ) : (
-            <EmptyState compact>No weak items recorded yet.</EmptyState>
+            <EmptyState compact>Chưa có điểm yếu nào được ghi nhận.</EmptyState>
           )}
         </div>
       </Panel>
 
-      <Panel eyebrow="Recent context" title="Chat and assessment signals">
+      <Panel eyebrow="Ngữ cảnh gần đây" title="Tín hiệu từ chat và kiểm tra">
         <div className="signal-grid">
-          <SignalBlock label="Chat sessions" value={String(dashboard?.chat.sessionCount ?? 0)} />
-          <SignalBlock label="Messages" value={String(dashboard?.chat.messageCount ?? 0)} />
+          <SignalBlock label="Buổi chat" value={String(dashboard?.chat.sessionCount ?? 0)} />
+          <SignalBlock label="Tin nhắn" value={String(dashboard?.chat.messageCount ?? 0)} />
           <SignalBlock
-            label="Avg score"
+            label="Điểm TB"
             value={`${Math.round(dashboard?.assessments.averageScorePercent ?? 0)}%`}
           />
         </div>
         <div className="chip-row">
           {(dashboard?.chat.recentTopics.length ? dashboard.chat.recentTopics : ["grammar", "vocabulary"]).map(
             (topic) => (
-              <TopicChip key={topic}>{topic}</TopicChip>
+              <TopicChip key={topic}>{displaySkill(topic)}</TopicChip>
             )
           )}
         </div>
       </Panel>
 
-      <Panel eyebrow="Study time" title="Daily target" action={<Clock3 size={22} />}>
-        <div className="big-number">{dashboard?.profile.dailyStudyMinutes ?? 0} min</div>
-        <p className="muted-copy">{dashboard?.profile.goal || "Set a JLPT goal to improve planner quality."}</p>
+      <Panel eyebrow="学習時間" title="Mục tiêu mỗi ngày" action={<Clock3 size={22} />}>
+        <div className="big-number">{dashboard?.profile.dailyStudyMinutes ?? 0} phút</div>
+        <p className="muted-copy">{dashboard?.profile.goal || "Đặt mục tiêu JLPT để VAJA gợi ý lộ trình tốt hơn."}</p>
       </Panel>
     </section>
   );
@@ -247,11 +261,15 @@ function toProfileForm(profile: StudentProfileResponse): ProfileForm {
   return {
     currentLevel: profile.currentLevel ?? "N5",
     targetLevel: profile.targetLevel ?? "N4",
-    goal: profile.goal ?? "Pass JLPT N4",
+    goal: profile.goal ?? "Thi JLPT N4",
     dailyStudyMinutes: profile.dailyStudyMinutes || 30,
     explanationStyle: profile.explanationStyle ?? "concise",
     romajiEnabled: profile.romajiEnabled
   };
+}
+
+function displaySkill(value: string): string {
+  return skillLabels[value.toLowerCase()] ?? explanationStyleLabels[value] ?? value;
 }
 
 function SignalBlock({ label, value }: { label: string; value: string }) {

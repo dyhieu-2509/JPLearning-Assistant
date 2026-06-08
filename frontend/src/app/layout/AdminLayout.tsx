@@ -5,11 +5,11 @@ import { useAuth } from "../providers/AuthProvider";
 import { logoUrl } from "../../shared/assets";
 
 const adminNavItems = [
-  { to: "/admin", label: "Overview", icon: BarChart3 },
-  { to: "/admin/learners", label: "Learners", icon: UsersRound },
-  { to: "/admin/knowledge", label: "Knowledge Base", icon: DatabaseZap },
-  { to: "/admin/content", label: "Learning Content", icon: BookOpenCheck },
-  { to: "/admin/tutor", label: "Tutor Quality", icon: Bot }
+  { to: "/admin", label: "Tổng quan", icon: BarChart3 },
+  { to: "/admin/learners", label: "Người học", icon: UsersRound },
+  { to: "/admin/knowledge", label: "Kho kiến thức", icon: DatabaseZap },
+  { to: "/admin/content", label: "Nội dung học", icon: BookOpenCheck },
+  { to: "/admin/tutor", label: "Chất lượng trợ lý", icon: Bot }
 ];
 
 export function AdminLayout() {
@@ -22,11 +22,11 @@ export function AdminLayout() {
         <div className="brand-block">
           <img src={logoUrl} alt="VAJA logo" />
           <div>
-            <strong>VAJA Admin</strong>
-            <span>Operations console</span>
+            <strong>VAJA Quản trị</strong>
+            <span>Bảng vận hành</span>
           </div>
         </div>
-        <nav className="nav-list" aria-label="Admin navigation">
+        <nav className="nav-list" aria-label="Điều hướng quản trị">
           {adminNavItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -44,20 +44,20 @@ export function AdminLayout() {
           })}
           <NavLink className="nav-link portal-link" to="/learner" onClick={() => setOpen(false)}>
             <ShieldCheck size={19} />
-            <span>Learner App</span>
+            <span>Trang học</span>
           </NavLink>
         </nav>
         <div className="sidebar-footer">
           <div className="mini-profile">
             <div className="avatar admin-avatar">{user?.displayName?.slice(0, 1).toUpperCase() ?? "A"}</div>
             <div>
-              <strong>{user?.displayName ?? "Admin"}</strong>
+              <strong>{user?.displayName ?? "Quản trị"}</strong>
               <span>{user?.email}</span>
             </div>
           </div>
           <button className="icon-text-button ghost" type="button" onClick={logout}>
             <LogOut size={18} />
-            Logout
+            Đăng xuất
           </button>
         </div>
       </aside>
@@ -68,12 +68,12 @@ export function AdminLayout() {
             {open ? <X size={22} /> : <Menu size={22} />}
           </button>
           <div>
-            <p className="eyebrow admin-eyebrow">Administration</p>
-            <h1>Control center</h1>
+            <p className="eyebrow admin-eyebrow">Quản trị</p>
+            <h1>Trung tâm điều phối</h1>
           </div>
           <div className="status-chip admin-status-chip">
             <ShieldCheck size={17} />
-            Admin only
+            Chỉ quản trị
           </div>
         </header>
         <Outlet />

@@ -19,10 +19,10 @@ export function OnboardingView() {
 
   return (
     <OnboardingWizard
-      eyebrow="Learner setup"
+      eyebrow="Thiết lập học tập"
       title="Thiết lập cá nhân hóa ban đầu"
       description="VAJA cần vài tín hiệu học tập để chọn độ khó, cách giải thích và lộ trình ôn tập phù hợp ngay từ buổi đầu."
-      completeLabel="Save setup"
+      completeLabel="Lưu hồ sơ"
       onComplete={saveProfile}
     />
   );
