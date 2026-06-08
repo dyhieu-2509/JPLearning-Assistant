@@ -19,10 +19,10 @@ export function OnboardingView() {
 
   return (
     <OnboardingWizard
-      eyebrow="Thiết lập học tập"
-      title="Thiết lập cá nhân hóa ban đầu"
-      description="VAJA cần vài tín hiệu học tập để chọn độ khó, cách giải thích và lộ trình ôn tập phù hợp ngay từ buổi đầu."
-      completeLabel="Lưu hồ sơ"
+      eyebrow="Hồ sơ học"
+      title="Cập nhật cá nhân hóa"
+      description="Khi trình độ, mục tiêu hoặc thói quen học thay đổi, cập nhật hồ sơ để VAJA điều chỉnh trợ lý, thẻ nhớ, kiểm tra và lộ trình."
+      completeLabel="Lưu thay đổi"
       onComplete={saveProfile}
     />
   );

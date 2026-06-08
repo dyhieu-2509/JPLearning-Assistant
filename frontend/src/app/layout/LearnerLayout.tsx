@@ -25,7 +25,7 @@ import { FloatingTutor } from "../../features/learner/tutor/FloatingTutor";
 
 const navItems = [
   { to: "/learner", label: "Trang học", icon: BarChart3 },
-  { to: "/learner/onboarding", label: "Thiết lập", icon: SlidersHorizontal },
+  { to: "/learner/onboarding", label: "Hồ sơ học", icon: SlidersHorizontal },
   { to: "/learner/chat", label: "Trợ lý AI", icon: Bot },
   { to: "/learner/knowledge", label: "Tra cứu", icon: BookOpenText },
   { to: "/learner/flashcards", label: "Thẻ nhớ", icon: Layers3 },
