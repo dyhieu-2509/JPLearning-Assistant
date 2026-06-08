@@ -10,7 +10,7 @@ import {
   Sparkles,
   UserPlus
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../app/providers/AuthProvider";
 import { homePathForUser } from "../../../shared/auth";
@@ -52,6 +52,26 @@ export function LandingView() {
   const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
   const [choosingPath, setChoosingPath] = useState(false);
+  const choiceSectionRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!choosingPath) {
+      return;
+    }
+
+    window.requestAnimationFrame(() => {
+      choiceSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }, [choosingPath]);
+
+  function showLearnerChoices() {
+    if (choosingPath) {
+      choiceSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+
+    setChoosingPath(true);
+  }
 
   if (isAuthenticated) {
     return <Navigate replace to={homePathForUser(user)} />;
@@ -75,7 +95,7 @@ export function LandingView() {
             <TopicChip>Cá nhân hóa</TopicChip>
           </div>
           <div className="landing-actions">
-            <PrimaryButton type="button" onClick={() => setChoosingPath(true)}>
+            <PrimaryButton type="button" onClick={showLearnerChoices}>
               <Sparkles size={18} />
               Bắt đầu học
             </PrimaryButton>
@@ -121,7 +141,7 @@ export function LandingView() {
       </section>
 
       {choosingPath && (
-        <section className="landing-conversion-band" aria-label="Chọn cách bắt đầu">
+        <section id="start" ref={choiceSectionRef} className="landing-conversion-band" aria-label="Chọn cách bắt đầu">
           <div className="landing-choice-copy">
             <p className="eyebrow">始めよう</p>
             <h2>Bạn muốn bắt đầu theo cách nào?</h2>
