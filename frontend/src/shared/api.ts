@@ -60,7 +60,7 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
   const payload = contentType?.includes("application/json") ? await response.json() : await response.text();
 
   if (!response.ok) {
-    const message = typeof payload === "object" && payload?.message ? payload.message : "Request failed";
+    const message = typeof payload === "object" && payload?.message ? payload.message : "Không thể kết nối API";
     throw new ApiError(response.status, message);
   }
 
