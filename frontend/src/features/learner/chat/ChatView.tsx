@@ -1,5 +1,6 @@
 import { Bot, Loader2, MessageSquarePlus, Send, Sparkles } from "lucide-react";
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useAuth } from "../../../app/providers/AuthProvider";
 import { apiRequest, ApiError } from "../../../shared/api";
 import type { ChatMessageResponse, ChatResponse, ChatSessionResponse, SourceResponse } from "../../../shared/models";
@@ -21,6 +22,7 @@ const contextLabels: Record<string, string> = {
 
 export function ChatView() {
   const { accessToken } = useAuth();
+  const [searchParams] = useSearchParams();
   const token = accessToken ?? "";
   const [sessions, setSessions] = useState<ChatSessionResponse[]>([]);
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
@@ -31,6 +33,7 @@ export function ChatView() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const endRef = useRef<HTMLDivElement | null>(null);
+  const promptAppliedRef = useRef(false);
 
   async function loadSessions() {
     setError(null);
@@ -76,6 +79,24 @@ export function ChatView() {
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages]);
+
+  useEffect(() => {
+    if (promptAppliedRef.current) {
+      return;
+    }
+
+    const prompt = searchParams.get("prompt")?.trim();
+    if (!prompt) {
+      return;
+    }
+
+    const nextTopic = normalizeContextTopic(searchParams.get("topic"));
+    if (nextTopic) {
+      setContextTopic(nextTopic);
+    }
+    setInput(prompt);
+    promptAppliedRef.current = true;
+  }, [searchParams]);
 
   async function sendMessage(event?: FormEvent<HTMLFormElement>, text = input) {
     event?.preventDefault();
@@ -268,6 +289,15 @@ function SourceList({ sources }: { sources: SourceResponse[] }) {
 
 function displayContext(value: string): string {
   return contextLabels[value] ?? value;
+}
+
+function normalizeContextTopic(value: string | null): string | null {
+  if (!value) {
+    return null;
+  }
+
+  const allowedTopics = new Set(["Vocabulary", "Grammar", "Kanji", "Assessment review", "JLPT N5"]);
+  return allowedTopics.has(value) ? value : null;
 }
 
 function displaySourceType(value: string): string {

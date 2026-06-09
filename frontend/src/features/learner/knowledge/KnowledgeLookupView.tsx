@@ -1,5 +1,6 @@
-import { BookOpenText, DatabaseZap, Search, Sparkles } from "lucide-react";
+import { BookOpenText, Bot, DatabaseZap, Search, Sparkles } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ApiError, apiRequest } from "../../../shared/api";
 import { IconTextButton, LoadingPanel, Panel, TopicChip } from "../../../shared/components";
 import type { KnowledgeItemResponse } from "../../../shared/models";
@@ -15,6 +16,7 @@ const categoryOptions: Array<{ value: KnowledgeCategory; label: string; descript
 const quickQueries = ["食べる", "です", "行く", "日", "は", "学校"];
 
 export function KnowledgeLookupView() {
+  const navigate = useNavigate();
   const [category, setCategory] = useState<KnowledgeCategory>("vocabulary");
   const [level, setLevel] = useState("N5");
   const [query, setQuery] = useState("");
@@ -56,6 +58,14 @@ export function KnowledgeLookupView() {
   function chooseQuickQuery(value: string) {
     setQuery(value);
     setSubmittedQuery(value);
+  }
+
+  function askTutor(item: KnowledgeItemResponse) {
+    const params = new URLSearchParams({
+      topic: tutorTopicFor(item),
+      prompt: buildTutorPrompt(item)
+    });
+    navigate(`/learner/chat?${params.toString()}`);
   }
 
   return (
@@ -125,7 +135,7 @@ export function KnowledgeLookupView() {
         ) : items.length ? (
           <div className="knowledge-result-grid">
             {items.map((item) => (
-              <KnowledgeCard item={item} key={`${item.type}-${item.id}`} />
+              <KnowledgeCard item={item} key={`${item.type}-${item.id}`} onAskTutor={askTutor} />
             ))}
           </div>
         ) : (
@@ -136,7 +146,7 @@ export function KnowledgeLookupView() {
   );
 }
 
-function KnowledgeCard({ item }: { item: KnowledgeItemResponse }) {
+function KnowledgeCard({ item, onAskTutor }: { item: KnowledgeItemResponse; onAskTutor: (item: KnowledgeItemResponse) => void }) {
   return (
     <article className="knowledge-card">
       <div>
@@ -152,6 +162,12 @@ function KnowledgeCard({ item }: { item: KnowledgeItemResponse }) {
           {item.source}
         </small>
       )}
+      <div className="knowledge-card-actions">
+        <IconTextButton type="button" variant="ghost" onClick={() => onAskTutor(item)}>
+          <Bot size={16} />
+          Hỏi VAJA
+        </IconTextButton>
+      </div>
     </article>
   );
 }
@@ -172,4 +188,26 @@ function displayType(value: string): string {
   };
 
   return labels[value] ?? value;
+}
+
+function tutorTopicFor(item: KnowledgeItemResponse): string {
+  const type = item.type.toLowerCase();
+  if (type.includes("vocab")) {
+    return "Vocabulary";
+  }
+  if (type.includes("grammar")) {
+    return "Grammar";
+  }
+  if (type.includes("kanji")) {
+    return "Kanji";
+  }
+  return "JLPT N5";
+}
+
+function buildTutorPrompt(item: KnowledgeItemResponse): string {
+  const title = item.title || item.id;
+  const reading = item.reading ? ` (${item.reading})` : "";
+  const meaning = item.meaningVi || item.meaningEn;
+  const meaningPart = meaning ? `, nghĩa là "${meaning}"` : "";
+  return `Giải thích ${title}${reading}${meaningPart} bằng tiếng Việt. Cho 2 ví dụ JLPT N5/N4, cách dùng tự nhiên và mẹo nhớ ngắn.`;
 }
