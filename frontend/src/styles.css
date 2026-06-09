@@ -2019,6 +2019,137 @@ progress::-webkit-progress-value {
   gap: 12px;
 }
 
+.assessment-workspace .progress-meter {
+  min-width: 150px;
+}
+
+.assessment-setup-card {
+  align-content: start;
+}
+
+.assessment-status-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.assessment-status-list span {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--sky-50);
+  color: var(--blue-950);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.assessment-status-list svg {
+  flex: 0 0 auto;
+  color: var(--green-600);
+}
+
+.quiz-shell {
+  min-height: 520px;
+}
+
+.quiz-question-card {
+  display: grid;
+  gap: 18px;
+}
+
+.quiz-question-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.quiz-question-card h3 {
+  margin: 0;
+  color: var(--blue-950);
+  font-size: 26px;
+  line-height: 1.35;
+}
+
+.quiz-option-list {
+  display: grid;
+  gap: 10px;
+}
+
+.quiz-option {
+  display: flex;
+  align-items: center;
+  min-height: 54px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--ink);
+  text-align: left;
+  font-weight: 850;
+  line-height: 1.4;
+}
+
+.quiz-option:hover {
+  border-color: var(--sky-200);
+  background: var(--sky-50);
+}
+
+.quiz-option.selected {
+  border-color: var(--sky-600);
+  background: var(--sky-600);
+  color: var(--white);
+  box-shadow: 0 10px 22px rgba(2, 132, 199, 0.16);
+}
+
+.quiz-nav {
+  display: grid;
+  grid-template-columns: minmax(120px, 0.35fr) minmax(180px, 0.65fr);
+  gap: 10px;
+}
+
+.assessment-result-stack {
+  align-content: start;
+}
+
+.assessment-score-card {
+  display: grid;
+  gap: 4px;
+  padding: 16px;
+  border: 1px solid var(--sky-200);
+  border-radius: 8px;
+  background: var(--sky-50);
+}
+
+.assessment-score-card span,
+.assessment-score-card small {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.assessment-score-card strong {
+  color: var(--sky-700);
+  font-size: 38px;
+  line-height: 1;
+}
+
+.result-row.correct svg {
+  color: var(--green-600);
+}
+
+.result-row.wrong svg {
+  color: var(--rose-600);
+}
+
+.next-action-grid {
+  display: grid;
+  gap: 10px;
+}
+
 .question-block {
   display: grid;
   gap: 10px;
