@@ -35,6 +35,8 @@ export function AssessmentView() {
   const selectedAnswer = currentQuestion ? answers[currentQuestion.id] : "";
   const hasStarted = Boolean(session);
   const hasAnsweredAll = Boolean(session && answeredCount === session.questions.length);
+  const scorePercent = result ? Math.round((result.score / Math.max(result.total, 1)) * 100) : 0;
+  const needsReview = Boolean(result && (result.score < result.total || result.weakAreas.length > 0));
 
   async function start(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -89,6 +91,14 @@ export function AssessmentView() {
     setAnswers({});
     setActiveIndex(0);
     setError(null);
+  }
+
+  function prepareNextChallenge() {
+    resetSession();
+    setQuestionCount((current) => Math.min(10, current + 2));
+    if (level === "N5") {
+      setLevel("N4");
+    }
   }
 
   return (
@@ -210,16 +220,25 @@ export function AssessmentView() {
         )}
       </Panel>
 
-      <Panel eyebrow="Kết quả" title={result ? "VAJA đã cập nhật tín hiệu" : "Sau khi nộp bài"} action={<CheckCircle2 size={21} />}>
+      <Panel
+        eyebrow="Kết quả"
+        title={result ? (needsReview ? "Cần ôn lại phần sai" : "Bạn có thể tăng độ khó") : "Sau khi nộp bài"}
+        action={<CheckCircle2 size={21} />}
+      >
         {result ? (
           <div className="result-stack assessment-result-stack">
-            <div className="assessment-score-card">
+            <div className={needsReview ? "assessment-score-card review" : "assessment-score-card success"}>
               <span>Điểm</span>
               <strong>
                 {result.score}/{result.total}
               </strong>
-              <small>{Math.round((result.score / Math.max(result.total, 1)) * 100)}% chính xác</small>
+              <small>{scorePercent}% chính xác</small>
             </div>
+            <p className="assessment-result-guidance">
+              {needsReview
+                ? "VAJA sẽ ưu tiên các phần sai vào thẻ nhớ và lộ trình ôn tập. Đây là tín hiệu mastery đáng tin cậy."
+                : "Bạn chưa tạo điểm yếu mới ở lượt này. Không cần đổi lộ trình ôn; nên tăng độ khó hoặc học tiếp bài mới."}
+            </p>
             <div className="chip-row">
               {result.weakAreas.length ? (
                 result.weakAreas.map((area) => <TopicChip key={area}>{area}</TopicChip>)
@@ -235,20 +254,37 @@ export function AssessmentView() {
                 </span>
               </div>
             ))}
-            <div className="next-action-grid">
-              <IconTextButton type="button" onClick={() => navigate("/learner/flashcards")}>
-                <Layers3 size={18} />
-                Ôn bằng thẻ
-              </IconTextButton>
-              <IconTextButton type="button" variant="ghost" onClick={() => navigate("/learner/planner")}>
-                <CalendarCheck size={18} />
-                Xem lộ trình
-              </IconTextButton>
-              <IconTextButton type="button" variant="ghost" onClick={resetSession}>
-                <RotateCcw size={18} />
-                Làm lượt khác
-              </IconTextButton>
-            </div>
+            {needsReview ? (
+              <div className="next-action-grid">
+                <IconTextButton type="button" onClick={() => navigate("/learner/flashcards")}>
+                  <Layers3 size={18} />
+                  Ôn phần sai bằng thẻ
+                </IconTextButton>
+                <IconTextButton type="button" variant="ghost" onClick={() => navigate("/learner/planner")}>
+                  <CalendarCheck size={18} />
+                  Cập nhật lộ trình ôn
+                </IconTextButton>
+                <IconTextButton type="button" variant="ghost" onClick={resetSession}>
+                  <RotateCcw size={18} />
+                  Làm lượt khác
+                </IconTextButton>
+              </div>
+            ) : (
+              <div className="next-action-grid">
+                <IconTextButton type="button" onClick={prepareNextChallenge}>
+                  <ArrowRight size={18} />
+                  Tăng độ khó
+                </IconTextButton>
+                <IconTextButton type="button" variant="ghost" onClick={() => navigate("/learner")}>
+                  <CheckCircle2 size={18} />
+                  Về trang học
+                </IconTextButton>
+                <IconTextButton type="button" variant="ghost" onClick={resetSession}>
+                  <RotateCcw size={18} />
+                  Làm lượt khác
+                </IconTextButton>
+              </div>
+            )}
           </div>
         ) : (
           <EmptyState compact>
