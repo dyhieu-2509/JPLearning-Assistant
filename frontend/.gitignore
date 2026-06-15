@@ -9,3 +9,5 @@ npm-debug.log*
 vite.log
 vite.out.log
 vite.err.log
+playwright-report
+test-results
