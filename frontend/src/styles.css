@@ -18,7 +18,10 @@
   --line: #d8e8f8;
   --white: #ffffff;
   --green: #16a34a;
+  --mint-50: #ecfdf5;
+  --mint-600: #059669;
   --amber: #f59e0b;
+  --sun-50: #fffbeb;
   --rose: #e11d48;
   --shadow: 0 24px 60px rgba(2, 132, 199, 0.14);
   --headbar-height: 64px;
@@ -66,7 +69,8 @@ a {
 
 .app-viewport {
   min-height: 100dvh;
-  background: #f7fbff;
+  background:
+    linear-gradient(180deg, #f8fcff 0%, #eef8ff 52%, #f6fbff 100%);
 }
 
 .headbar {
@@ -383,7 +387,7 @@ a {
   padding: 18px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.96);
   box-shadow: 0 18px 44px rgba(2, 132, 199, 0.12);
 }
 
@@ -731,7 +735,7 @@ a {
 
 .nav-link.active,
 .nav-link:hover {
-  background: var(--sky-100);
+  background: linear-gradient(135deg, var(--sky-100), var(--mint-50));
   color: var(--sky-700);
 }
 
@@ -781,6 +785,10 @@ a {
   justify-content: space-between;
   gap: 18px;
   margin-bottom: 22px;
+  padding: 14px 16px;
+  border: 1px solid rgba(216, 232, 248, 0.75);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.72);
 }
 
 .topbar h1 {
@@ -793,11 +801,11 @@ a {
   gap: 8px;
   min-height: 38px;
   padding: 0 12px;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(245, 158, 11, 0.35);
   border-radius: 8px;
-  background: var(--white);
-  color: var(--sky-700);
-  font-weight: 800;
+  background: var(--sun-50);
+  color: #92400e;
+  font-weight: 900;
 }
 
 .admin-eyebrow,
@@ -934,15 +942,15 @@ a {
   padding: 14px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.95);
   color: var(--ink);
   text-align: left;
 }
 
 .study-step-card:hover {
-  border-color: var(--sky-200);
-  background: var(--white);
-  box-shadow: 0 12px 26px rgba(2, 132, 199, 0.12);
+  border-color: rgba(5, 150, 105, 0.32);
+  background: linear-gradient(180deg, var(--white), var(--mint-50));
+  box-shadow: 0 12px 26px rgba(5, 150, 105, 0.1);
 }
 
 .study-step-index,
@@ -968,7 +976,7 @@ a {
   width: 42px;
   height: 42px;
   border-radius: 8px;
-  background: var(--sky-600);
+  background: linear-gradient(135deg, var(--sky-600), var(--mint-600));
   color: var(--white);
 }
 
@@ -994,8 +1002,8 @@ a {
 .workspace-panel {
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 14px 34px rgba(2, 132, 199, 0.08);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 12px 28px rgba(2, 132, 199, 0.07);
 }
 
 .metric-tile {

@@ -147,7 +147,7 @@ export function AssessmentView() {
         <div className="assessment-status-list" aria-label="Cách VAJA dùng bài kiểm tra">
           <span>
             <CheckCircle2 size={17} />
-            Kết quả đúng/sai mới được tính vào mastery.
+            Kết quả đúng/sai giúp VAJA xếp lại bài ôn.
           </span>
           <span>
             <CheckCircle2 size={17} />
@@ -222,7 +222,7 @@ export function AssessmentView() {
 
       <Panel
         eyebrow="Kết quả"
-        title={result ? (needsReview ? "Cần ôn lại phần sai" : "Bạn có thể tăng độ khó") : "Sau khi nộp bài"}
+        title={result ? (needsReview ? "Mình nên ôn lại phần sai" : "Bạn có thể tăng độ khó") : "Sau khi nộp bài"}
         action={<CheckCircle2 size={21} />}
       >
         {result ? (
@@ -236,7 +236,7 @@ export function AssessmentView() {
             </div>
             <p className="assessment-result-guidance">
               {needsReview
-                ? "VAJA sẽ ưu tiên các phần sai vào thẻ nhớ và lộ trình ôn tập. Đây là tín hiệu mastery đáng tin cậy."
+                ? "Các phần sai sẽ được đưa vào thẻ nhớ và kế hoạch ôn gần nhất."
                 : "Bạn chưa tạo điểm yếu mới ở lượt này. Không cần đổi lộ trình ôn; nên tăng độ khó hoặc học tiếp bài mới."}
             </p>
             <div className="chip-row">
@@ -288,7 +288,7 @@ export function AssessmentView() {
           </div>
         ) : (
           <EmptyState compact>
-            Điểm kiểm tra là tín hiệu đáng tin cậy nhất để cá nhân hóa. Chat và tra cứu chỉ ghi nhận là đã tiếp xúc kiến thức.
+            Điểm kiểm tra giúp VAJA chọn bài ôn chính xác hơn. Chat và tra cứu chỉ dùng để gợi ý thêm khi cần.
           </EmptyState>
         )}
       </Panel>

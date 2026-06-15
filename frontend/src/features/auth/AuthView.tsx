@@ -61,7 +61,7 @@ export function AuthView() {
           <p className="eyebrow">VAJA</p>
           <h1>続けよう - tiếp tục học tiếng Nhật hôm nay.</h1>
           <p>
-            Đăng nhập để VAJA nối lại lộ trình, thẻ nhớ, bài kiểm tra nhanh và phần kiến thức bạn đang cần ôn.
+            Đăng nhập để mở lại bài học hôm nay, thẻ nhớ, bài thử nhanh và những phần bạn đang cần ôn.
           </p>
         </div>
       </section>
@@ -120,7 +120,7 @@ export function AuthView() {
           {error && <p className="form-error">{error}</p>}
           {hasDraft && (
             <p className="form-success">
-              Câu trả lời cá nhân hóa đã được lưu tạm. VAJA sẽ gắn vào hồ sơ sau khi bạn đăng nhập.
+              8 câu làm quen đã được lưu tạm. VAJA sẽ đưa vào góc học sau khi bạn đăng nhập.
             </p>
           )}
 

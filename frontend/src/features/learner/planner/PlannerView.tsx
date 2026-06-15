@@ -73,7 +73,7 @@ export function PlannerView() {
       const results = await Promise.allSettled([loadPlans(), loadDashboard()]);
       const rejected = results.find((result) => result.status === "rejected");
       if (rejected) {
-        setError("Không thể tải đủ dữ liệu cá nhân hóa. Bạn vẫn có thể tạo lộ trình từ thông tin hiện có.");
+        setError("Chưa tải đủ lịch sử học. Bạn vẫn có thể tạo kế hoạch từ thông tin hiện có.");
       }
     } catch (caught) {
       setError(caught instanceof ApiError ? caught.message : "Không thể tải lộ trình");
@@ -122,7 +122,7 @@ export function PlannerView() {
     <section className="learning-grid planner-workspace">
       <div className="section-heading full-span">
         <p className="eyebrow">学習計画</p>
-        <h2>Lộ trình dựa trên dữ liệu học thật</h2>
+        <h2>Kế hoạch học vừa sức tuần này</h2>
       </div>
       {error && <div className="form-error full-span">{error}</div>}
 
@@ -158,10 +158,10 @@ export function PlannerView() {
             Lý do học
             <textarea value={goal} onChange={(event) => setGoal(event.target.value)} />
           </label>
-          <IconTextButton type="submit" disabled={loading}>
-            <CalendarCheck size={18} />
-            {loading ? "Đang tạo..." : "Tạo lộ trình cá nhân"}
-          </IconTextButton>
+            <IconTextButton type="submit" disabled={loading}>
+              <CalendarCheck size={18} />
+            {loading ? "Đang xếp bài..." : "Xếp kế hoạch học"}
+            </IconTextButton>
         </form>
       </Panel>
 
@@ -213,11 +213,11 @@ export function PlannerView() {
             ))}
           </div>
         ) : (
-          <EmptyState compact>Bấm tạo lộ trình để VAJA chia nhỏ việc học dựa trên tiến độ thật.</EmptyState>
+          <EmptyState compact>Bấm xếp kế hoạch để VAJA chia nhỏ việc học trong tuần.</EmptyState>
         )}
       </Panel>
 
-      <Panel eyebrow="Căn cứ" title={context ? "Backend đã dùng dữ liệu này" : "Dữ liệu hiện có"} action={<Brain size={21} />}>
+      <Panel eyebrow="Căn cứ" title={context ? "VAJA đã xem các phần này" : "Thông tin hiện có"} action={<Brain size={21} />}>
         <div className="planner-signal-grid">
           {signalSummary.map((signal) => (
             <div className="planner-signal-card" key={signal.label}>
@@ -235,7 +235,7 @@ export function PlannerView() {
           {!context && dashboard?.assessments.recentWeakAreas.slice(0, 3).map((area) => <TopicChip key={area}>{area}</TopicChip>)}
         </div>
         <p className="muted-copy">
-          Planner ưu tiên thẻ đến hạn, điểm yếu mastery, lỗi assessment gần nhất và chủ đề chat gần đây trước khi thêm bài mới.
+          VAJA ưu tiên thẻ đến hạn, phần hay quên, lỗi bài thử gần nhất và câu hỏi bạn vừa hỏi trước khi thêm bài mới.
         </p>
       </Panel>
 

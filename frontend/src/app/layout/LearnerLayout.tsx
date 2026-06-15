@@ -23,8 +23,8 @@ import { needsLearnerOnboarding } from "../../shared/profile";
 import { FloatingTutor } from "../../features/learner/tutor/FloatingTutor";
 
 const navItems = [
-  { to: "/learner", label: "Trang học", icon: BarChart3 },
-  { to: "/learner/chat", label: "Trợ lý AI", icon: Bot },
+  { to: "/learner", label: "Hôm nay", icon: BarChart3 },
+  { to: "/learner/chat", label: "Hỏi bài", icon: Bot },
   { to: "/learner/knowledge", label: "Tra cứu", icon: BookOpenText },
   { to: "/learner/flashcards", label: "Thẻ nhớ", icon: Layers3 },
   { to: "/learner/assessment", label: "Kiểm tra", icon: ClipboardCheck },
@@ -88,7 +88,7 @@ export function LearnerLayout() {
           <img src={logoUrl} alt="VAJA logo" />
           <div>
             <strong>VAJA</strong>
-            <span>Không gian học</span>
+            <span>Góc học tiếng Nhật</span>
           </div>
         </div>
         <nav className="nav-list" aria-label="Điều hướng người học">
@@ -136,17 +136,17 @@ export function LearnerLayout() {
           </button>
           <div>
             <p className="eyebrow">VAJA 日本語</p>
-            <h1>Tự học tiếng Nhật</h1>
+            <h1>Học tiếng Nhật cùng VAJA</h1>
           </div>
           <div className="status-chip">
             <Flame size={17} />
-            Học một chút mỗi ngày
+            Mỗi ngày một bài nhỏ
           </div>
         </header>
         {needsOnboarding ? (
           <Navigate replace to={onboardingPath} />
         ) : checkingProfile ? (
-          <LoadingPanel>Đang chuẩn bị hồ sơ học...</LoadingPanel>
+          <LoadingPanel>Đang chuẩn bị góc học của bạn...</LoadingPanel>
         ) : (
           <Outlet />
         )}
@@ -173,21 +173,21 @@ function getTutorContext(pathname: string): { topic: string; suggestions: string
   if (pathname.includes("/knowledge")) {
     return {
       topic: "knowledge",
-      suggestions: ["Giải thích mục này bằng tiếng Việt", "Cho ví dụ N5 dễ nhớ", "So sánh với mẫu gần giống"]
+      suggestions: ["Giải thích dễ hiểu bằng tiếng Việt", "Cho ví dụ N5 dễ nhớ", "So sánh với mẫu gần giống"]
     };
   }
 
   if (pathname.includes("/assessment")) {
     return {
       topic: "assessment",
-      suggestions: ["Giải thích lỗi sai gần đây", "Ôn nhanh ngữ pháp N5", "Cho tôi một câu tương tự"]
+      suggestions: ["Giải thích câu tôi sai", "Ôn nhanh ngữ pháp N5", "Cho tôi một câu tương tự"]
     };
   }
 
   if (pathname.includes("/planner")) {
     return {
       topic: "planner",
-      suggestions: ["Hôm nay nên học gì?", "Rút gọn lộ trình tuần này", "Ưu tiên phần yếu nhất"]
+      suggestions: ["Hôm nay nên học gì?", "Rút gọn bài tuần này", "Ôn phần tôi hay quên"]
     };
   }
 

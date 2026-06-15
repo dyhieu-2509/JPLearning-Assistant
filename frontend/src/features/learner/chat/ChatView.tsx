@@ -154,7 +154,7 @@ export function ChatView() {
         <div className="panel-heading">
           <div>
             <p className="eyebrow">記憶</p>
-            <h3>Buổi học</h3>
+            <h3>Sổ hỏi bài</h3>
           </div>
           <button
             className="icon-button"
@@ -170,7 +170,7 @@ export function ChatView() {
         </div>
         <div className="session-list">
           {loading ? (
-            <div className="loading-inline">Đang tải buổi học...</div>
+            <div className="loading-inline">Đang mở sổ hỏi bài...</div>
           ) : sessions.length ? (
             sessions.map((session) => (
               <button
@@ -179,12 +179,12 @@ export function ChatView() {
                 type="button"
                 onClick={() => setActiveSessionId(session.id)}
               >
-                <strong>{session.title || "Buổi học với VAJA"}</strong>
+                <strong>{session.title || "Hỏi bài với VAJA"}</strong>
                 <span>{displayContext(session.contextTopic || "Japanese")}</span>
               </button>
             ))
           ) : (
-            <div className="empty-state compact">Chưa có buổi học nào.</div>
+            <div className="empty-state compact">Chưa có câu hỏi nào.</div>
           )}
         </div>
       </aside>
@@ -192,11 +192,11 @@ export function ChatView() {
       <section className="workspace-panel chat-panel">
         <div className="panel-heading">
           <div>
-            <p className="eyebrow">AI 先生</p>
-            <h3>Hỏi điều bạn chưa hiểu</h3>
+            <p className="eyebrow">質問</p>
+            <h3>Hỏi khi bạn chưa hiểu</h3>
           </div>
           <label className="context-select">
-            Chủ đề
+            Chủ đề học
             <select value={contextTopic} onChange={(event) => setContextTopic(event.target.value)}>
               <option>JLPT N5</option>
               <option value="Vocabulary">Từ vựng</option>
@@ -224,15 +224,15 @@ export function ChatView() {
           ) : (
             <div className="empty-chat">
               <Bot size={34} />
-              <strong>Bắt đầu bằng một câu hỏi tiếng Nhật.</strong>
-              <span>Ví dụ: hỏi nghĩa từ, so sánh ngữ pháp, hoặc nhờ đặt câu mẫu.</span>
+              <strong>Gõ câu hỏi như đang hỏi bạn học.</strong>
+              <span>Ví dụ: hỏi nghĩa từ, so sánh ngữ pháp, hoặc nhờ đặt câu mẫu dễ nhớ.</span>
             </div>
           )}
           {sending && (
             <div className="message-row assistant">
               <div className="message-bubble">
                 <Loader2 className="spin" size={18} />
-                Đang tìm cách giải thích dễ hiểu...
+                Đang chuẩn bị lời giải thích dễ hiểu...
               </div>
             </div>
           )}
@@ -241,7 +241,7 @@ export function ChatView() {
 
         <form className="chat-composer" onSubmit={sendMessage}>
           <input
-            placeholder="Hỏi gì đó về tiếng Nhật..."
+            placeholder="Ví dụ: は và が khác nhau thế nào?"
             value={input}
             onChange={(event) => setInput(event.target.value)}
           />
@@ -262,7 +262,7 @@ function MessageBubble({ message }: { message: ChatMessageResponse }) {
         <p>{message.content}</p>
         {assistant && (
           <div className="source-block">
-            <span>Độ tin cậy {Math.round((message.confidence ?? 0) * 100)}%</span>
+            <span>Nguồn tham khảo {Math.round((message.confidence ?? 0) * 100)}%</span>
             <SourceList sources={message.sources ?? []} />
           </div>
         )}

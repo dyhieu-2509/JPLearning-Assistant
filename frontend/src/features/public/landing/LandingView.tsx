@@ -20,23 +20,23 @@ import { ChoiceCard, IconTextButton, InfoCard, PrimaryButton, TopicChip } from "
 const productHighlights = [
   {
     icon: <Bot size={22} />,
-    title: "Trợ lý nhớ ngữ cảnh",
-    description: "Nội dung chat, nguồn tham khảo, kỹ năng yếu và chủ đề gần đây đều được đưa vào hồ sơ học."
+    title: "Hỏi bài bằng tiếng Việt",
+    description: "Khi bí từ vựng hay ngữ pháp, bạn có thể hỏi VAJA như hỏi một bạn học biết tiếng Nhật."
   },
   {
     icon: <Layers3 size={22} />,
-    title: "Ôn tập theo ngày",
-    description: "Thẻ nhớ và tín hiệu tiến độ ưu tiên đúng phần từ vựng, ngữ pháp, kanji cần luyện lại."
+    title: "Ôn lại đúng lúc",
+    description: "Thẻ nhớ giúp những từ, mẫu câu và kanji hay quên xuất hiện lại đúng thời điểm."
   },
   {
     icon: <CalendarCheck size={22} />,
-    title: "Lộ trình có căn cứ",
-    description: "Kế hoạch học dựa trên onboarding, bài kiểm tra, chat và điểm nắm vững thay vì lộ trình chung chung."
+    title: "Kế hoạch vừa sức",
+    description: "Mỗi tuần có vài việc nhỏ: làm thử, ôn thẻ, tra cứu và hỏi bài khi cần."
   }
 ];
 
 const previewRows = [
-  { label: "Cá nhân hóa", value: "8 câu hỏi", icon: <Sparkles size={18} /> },
+  { label: "Bắt đầu", value: "8 câu hỏi", icon: <Sparkles size={18} /> },
   { label: "Trọng tâm JLPT", value: "N5-N4", icon: <ClipboardCheck size={18} /> },
   { label: "Gợi ý hôm nay", value: "Lộ trình", icon: <BarChart3 size={18} /> }
 ];
@@ -83,16 +83,16 @@ export function LandingView() {
         <img className="landing-hero-mark" src={logoUrl} alt="" aria-hidden="true" />
         <div className="landing-copy">
           <p className="eyebrow">VAJA 日本語</p>
-          <h1>Học tiếng Nhật mỗi ngày như một hành trình nhỏ.</h1>
+          <h1>Học tiếng Nhật mỗi ngày bằng những bài nhỏ dễ theo.</h1>
           <p>
-            Làm vài câu cá nhân hóa trước, rồi VAJA sẽ mở lộ trình học tiếng Nhật bằng tiếng Việt: chat, thẻ nhớ,
-            kiểm tra nhanh và kế hoạch ôn tập trong cùng một không gian.
+            Trả lời vài câu để VAJA hiểu mục tiêu của bạn, rồi bắt đầu học bằng tiếng Việt: làm thử, ôn thẻ,
+            tra cứu nhanh và hỏi bài trong cùng một góc học.
           </p>
           <div className="chip-row">
             <TopicChip>JLPT N5-N4</TopicChip>
             <TopicChip>こんにちは</TopicChip>
             <TopicChip>かな・漢字</TopicChip>
-            <TopicChip>Cá nhân hóa</TopicChip>
+            <TopicChip>Dễ bắt đầu</TopicChip>
           </div>
           <div className="landing-actions">
             <PrimaryButton type="button" onClick={showLearnerChoices}>
@@ -104,10 +104,10 @@ export function LandingView() {
               Tôi đã có tài khoản
             </IconTextButton>
           </div>
-          <div className="landing-proof-row" aria-label="Tín hiệu sản phẩm">
+          <div className="landing-proof-row" aria-label="Điểm nổi bật">
             <span>
               <CheckCircle2 size={17} />
-              Cá nhân hóa trước đăng nhập
+              Làm quen trước khi đăng nhập
             </span>
             <span>
               <CheckCircle2 size={17} />
@@ -145,12 +145,12 @@ export function LandingView() {
           <div className="landing-choice-copy">
             <p className="eyebrow">始めよう</p>
             <h2>Bạn muốn bắt đầu theo cách nào?</h2>
-            <p>Người mới làm 8 câu cá nhân hóa trước. Người đang học đi thẳng vào đăng nhập.</p>
+            <p>Người mới trả lời 8 câu làm quen trước. Người đang học đi thẳng vào đăng nhập.</p>
           </div>
           <div className="choice-grid landing-path-grid">
             <ChoiceCard
               label="Người học mới"
-              description="Trả lời 8 câu để VAJA chọn trình độ, mục tiêu và cách giải thích phù hợp."
+              description="Trả lời 8 câu để VAJA biết trình độ, mục tiêu và cách giải thích bạn thích."
               selected={false}
               onClick={() => navigate("/onboarding")}
               icon={<UserPlus size={18} />}
@@ -169,10 +169,10 @@ export function LandingView() {
       <section id="about" className="landing-preview-section" aria-label="Giới thiệu sản phẩm">
         <div className="landing-preview-copy">
           <p className="eyebrow">Học bằng tiếng Việt</p>
-          <h2>Mọi hoạt động đều dùng chung hồ sơ cá nhân.</h2>
+          <h2>Mỗi phần học đều nối tiếp nhau.</h2>
           <p>
-            8 câu đầu không chỉ để trang trí. Chúng trở thành dữ liệu giúp VAJA chọn kiến thức, cách giải thích,
-            lịch ôn tập, bài kiểm tra và đề xuất lộ trình phù hợp.
+            8 câu đầu giúp VAJA biết bạn đang ở đâu. Sau đó bài thử, thẻ nhớ, tra cứu và hỏi bài sẽ cùng giúp
+            kế hoạch học tuần sau vừa sức hơn.
           </p>
         </div>
         <div className="landing-product-preview" aria-label="Xem trước bảng học VAJA">
@@ -180,7 +180,7 @@ export function LandingView() {
             <img src={logoUrl} alt="VAJA logo" />
             <div>
               <strong>VAJA 学習スペース</strong>
-              <span>Trợ lý tiếng Nhật cá nhân hóa</span>
+              <span>Góc học tiếng Nhật của bạn</span>
             </div>
           </div>
           <div className="preview-metrics">

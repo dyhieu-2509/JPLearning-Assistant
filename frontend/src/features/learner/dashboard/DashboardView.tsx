@@ -59,15 +59,15 @@ export function DashboardView() {
   const studySteps = [
     {
       icon: <ClipboardCheck size={20} />,
-      label: "Đánh giá 5 câu",
-      text: "Bắt đầu bằng bài ngắn để VAJA biết hôm nay bạn đang yếu phần nào.",
+      label: "Làm thử 5 câu",
+      text: "Bài ngắn giúp biết hôm nay nên ôn từ vựng, ngữ pháp hay kanji.",
       to: "/learner/assessment",
-      status: weakItems ? `${weakItems} điểm cần luyện` : "Nên làm trước"
+      status: weakItems ? `${weakItems} phần cần luyện` : "Nên làm trước"
     },
     {
       icon: <Layers3 size={20} />,
       label: "Ôn thẻ đến hạn",
-      text: "Lật thẻ, tự chấm khó/dễ, VAJA tự lên lịch ôn tiếp.",
+      text: "Tự nhớ trước, lật đáp án, rồi chọn mức nhớ thật của bạn.",
       to: "/learner/flashcards",
       status: dueCards ? `${dueCards} thẻ` : "Có thể tạo bộ mới"
     },
@@ -80,34 +80,34 @@ export function DashboardView() {
     },
     {
       icon: <MessageCircle size={20} />,
-      label: "Hỏi VAJA",
-      text: "Hỏi bằng tiếng Việt khi cần ví dụ, so sánh mẫu câu hoặc sửa lỗi.",
+      label: "Hỏi khi bí",
+      text: "Hỏi bằng tiếng Việt khi cần ví dụ, so sánh mẫu câu hoặc hiểu lỗi sai.",
       to: "/learner/chat",
-      status: "AI 先生"
+      status: "Giải thích"
     }
   ];
 
   return (
     <section className="dashboard-grid">
-      <PageHeader eyebrow="今日の学習" title="Hôm nay học gì?" />
+      <PageHeader eyebrow="今日の学習" title="Hôm nay mình học gì?" />
 
-      {error && <div className="learning-note full-span">{error}. Bạn vẫn có thể bắt đầu bằng kiểm tra hoặc ôn thẻ.</div>}
+      {error && <div className="learning-note full-span">{error}. Bạn vẫn có thể làm bài thử hoặc ôn thẻ trước.</div>}
 
       <section className="today-learning-panel full-span">
         <div className="today-copy">
           <p className="eyebrow">Bài học hôm nay</p>
-          <h2>Đi theo 4 bước nhỏ, học khoảng {dailyMinutes} phút.</h2>
+          <h2>Học khoảng {dailyMinutes} phút, mỗi lần một việc nhỏ.</h2>
           <p>
-            VAJA sẽ dùng bài kiểm tra, thẻ nhớ, câu hỏi và lộ trình để điều chỉnh phần bạn cần ôn tiếp theo.
+            Bắt đầu bằng bài thử ngắn, ôn phần hay quên, tra cứu khi cần và hỏi VAJA nếu bạn bị kẹt.
           </p>
           <div className="chip-row">
             <TopicChip>{currentLevel} → {targetLevel}</TopicChip>
-            <TopicChip>{masteryPercent}% nắm vững</TopicChip>
+            <TopicChip>{masteryPercent}% mức nhớ</TopicChip>
             <TopicChip>{dueCards} thẻ cần ôn</TopicChip>
           </div>
           <PrimaryButton type="button" onClick={() => navigate("/learner/assessment")}>
             <ClipboardCheck size={18} />
-            Bắt đầu bằng kiểm tra
+            Làm bài thử ngay
           </PrimaryButton>
         </div>
         <div className="today-path" aria-label="Lộ trình học hôm nay">
@@ -125,7 +125,7 @@ export function DashboardView() {
 
       <MetricTile
         icon={<Brain size={22} />}
-        label="Đã nắm"
+        label="Mức nhớ"
         value={`${masteryPercent}%`}
         accent="sky"
       />
@@ -148,7 +148,7 @@ export function DashboardView() {
         accent="green"
       />
 
-      <Panel className="profile-panel" eyebrow="復習" title="Phần nên ôn tiếp">
+      <Panel className="profile-panel" eyebrow="復習" title="Phần nên xem lại">
         <div className="stack-list">
           {dashboard?.progress.weakestItems.length ? (
             dashboard.progress.weakestItems.map((item) => (
@@ -163,12 +163,12 @@ export function DashboardView() {
               </div>
             ))
           ) : (
-            <EmptyState compact>Chưa có điểm yếu nào được ghi nhận.</EmptyState>
+            <EmptyState compact>Chưa thấy phần nào cần ôn lại. Làm bài thử để VAJA xếp bài tốt hơn.</EmptyState>
           )}
         </div>
       </Panel>
 
-      <Panel eyebrow="Gần đây" title="Bạn đã học gì?">
+      <Panel eyebrow="Gần đây" title="Bạn vừa học gì?">
         <div className="signal-grid">
           <SignalBlock label="Buổi chat" value={String(dashboard?.chat.sessionCount ?? 0)} />
           <SignalBlock label="Tin nhắn" value={String(dashboard?.chat.messageCount ?? 0)} />
@@ -186,9 +186,9 @@ export function DashboardView() {
         </div>
       </Panel>
 
-      <Panel eyebrow="学習計画" title="Lộ trình tuần này" action={<CalendarCheck size={22} />}>
+      <Panel eyebrow="学習計画" title="Kế hoạch tuần này" action={<CalendarCheck size={22} />}>
         <div className="big-number">{dailyMinutes} phút</div>
-        <p className="muted-copy">{dashboard?.profile.goal || "Làm bài kiểm tra để VAJA đề xuất lộ trình phù hợp hơn."}</p>
+        <p className="muted-copy">{dashboard?.profile.goal || "Làm bài thử để có kế hoạch học vừa sức hơn."}</p>
         <PrimaryButton type="button" onClick={() => navigate("/learner/planner")}>
           <CalendarCheck size={18} />
           Xem lộ trình

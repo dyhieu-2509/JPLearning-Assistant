@@ -90,14 +90,14 @@ export function FloatingTutor({ token, contextTopic, suggestions }: FloatingTuto
 
   if (!open) {
     return (
-      <section className="floating-tutor" aria-label="Trợ lý AI nổi">
-        <button className="floating-tutor-bar" type="button" aria-label="Mở trợ lý VAJA" onClick={() => setOpen(true)}>
+      <section className="floating-tutor" aria-label="Hỏi VAJA nhanh">
+        <button className="floating-tutor-bar" type="button" aria-label="Mở hỏi VAJA" onClick={() => setOpen(true)}>
           <span className="floating-tutor-icon">
             <Bot size={20} />
           </span>
           <span>
-            <strong>AI 先生</strong>
-            <small>Hỏi gì đó về {displayContext(contextTopic)}</small>
+            <strong>Hỏi VAJA</strong>
+            <small>Đang bí về {displayContext(contextTopic)}</small>
           </span>
           <Sparkles size={18} />
         </button>
@@ -106,15 +106,15 @@ export function FloatingTutor({ token, contextTopic, suggestions }: FloatingTuto
   }
 
   return (
-    <section className="floating-tutor open" aria-label="Trợ lý AI nổi">
+    <section className="floating-tutor open" aria-label="Hỏi VAJA nhanh">
       <div className="floating-tutor-panel">
         <header className="floating-tutor-header">
           <div>
-            <p className="eyebrow">AI 先生</p>
-            <h2>Hỏi nhanh theo ngữ cảnh</h2>
+            <p className="eyebrow">質問</p>
+            <h2>Hỏi nhanh VAJA</h2>
             <span>{displayContext(contextTopic)}</span>
           </div>
-          <button className="icon-button" type="button" title="Thu gọn trợ lý" onClick={() => setOpen(false)}>
+          <button className="icon-button" type="button" title="Thu gọn" onClick={() => setOpen(false)}>
             <X size={19} />
           </button>
         </header>
@@ -134,7 +134,7 @@ export function FloatingTutor({ token, contextTopic, suggestions }: FloatingTuto
           ) : (
             <div className="floating-empty-state">
               <Bot size={30} />
-              <strong>VAJA sẽ trả lời bằng tiếng Việt.</strong>
+              <strong>VAJA trả lời bằng tiếng Việt.</strong>
               <span>Hỏi khi bạn bí từ, bí ngữ pháp hoặc muốn có ví dụ dễ nhớ.</span>
             </div>
           )}
@@ -142,7 +142,7 @@ export function FloatingTutor({ token, contextTopic, suggestions }: FloatingTuto
             <div className="floating-message-row assistant">
               <div className="floating-message-bubble">
                 <Loader2 className="spin" size={17} />
-                Đang tìm cách giải thích dễ hiểu...
+                Đang chuẩn bị lời giải thích dễ hiểu...
               </div>
             </div>
           )}

@@ -58,19 +58,19 @@ export function OnboardingView() {
   }
 
   if (checkingProfile) {
-    return <LoadingPanel>Đang kiểm tra hồ sơ cá nhân hóa...</LoadingPanel>;
+    return <LoadingPanel>Đang kiểm tra góc học của bạn...</LoadingPanel>;
   }
 
   if (!allowInitialPersonalization) {
-    return <LoadingPanel>Đang chuyển sang bài kiểm tra cá nhân hóa...</LoadingPanel>;
+    return <LoadingPanel>Đang chuyển sang bài kiểm tra nhanh...</LoadingPanel>;
   }
 
   return (
     <OnboardingWizard
-      eyebrow="Cá nhân hóa ban đầu"
-      title="Hoàn tất hồ sơ học lần đầu"
-      description="VAJA chỉ dùng bước này khi chưa có đủ tín hiệu ban đầu. Sau đó, cá nhân hóa lại sẽ dựa trên bài kiểm tra và lịch sử học."
-      completeLabel="Lưu cá nhân hóa"
+      eyebrow="Bắt đầu"
+      title="Làm quen với cách học của bạn"
+      description="VAJA chỉ hỏi bước này khi bạn mới bắt đầu. Sau đó, bài thử và lịch sử ôn sẽ giúp kế hoạch học ngày càng vừa sức hơn."
+      completeLabel="Vào góc học"
       onComplete={saveProfile}
     />
   );

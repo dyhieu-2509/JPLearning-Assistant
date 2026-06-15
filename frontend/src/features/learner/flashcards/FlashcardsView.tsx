@@ -18,7 +18,7 @@ type ReviewRating = (typeof ratings)[number];
 const ratingLabels: Record<ReviewRating, { label: string; description: string }> = {
   AGAIN: {
     label: "Chưa nhớ",
-    description: "Giảm mastery, ôn lại rất sớm"
+    description: "Sẽ gặp lại rất sớm"
   },
   HARD: {
     label: "Khó",
@@ -26,7 +26,7 @@ const ratingLabels: Record<ReviewRating, { label: string; description: string }>
   },
   GOOD: {
     label: "Nhớ được",
-    description: "Tăng mastery và giãn lịch ôn"
+    description: "Giãn lịch ôn ra xa hơn"
   },
   EASY: {
     label: "Dễ",
@@ -184,18 +184,18 @@ export function FlashcardsView() {
             Tạo bộ thẻ
           </IconTextButton>
         </form>
-        <div className="flashcard-rule-list" aria-label="Quy tắc cá nhân hóa flashcard">
+        <div className="flashcard-rule-list" aria-label="Cách ôn thẻ nhớ">
           <span>
             <CheckCircle2 size={17} />
             Chỉ chấm sau khi tự nhớ và lật đáp án.
           </span>
           <span>
             <CheckCircle2 size={17} />
-            Rating GOOD/EASY tăng mastery, AGAIN/HARD ưu tiên ôn lại.
+            Chọn đúng cảm giác nhớ để lịch ôn vừa sức hơn.
           </span>
           <span>
             <CheckCircle2 size={17} />
-            Lịch ôn tiếp theo do backend SRS tính, không nhập tay.
+            Lịch ôn tiếp theo được tự xếp, bạn không cần nhập tay.
           </span>
         </div>
       </Panel>
@@ -248,7 +248,7 @@ export function FlashcardsView() {
         )}
       </Panel>
 
-      <Panel eyebrow="Lịch ôn" title="Tín hiệu cá nhân hóa" action={<CalendarClock size={21} />}>
+      <Panel eyebrow="Lịch ôn" title="Tiến độ thẻ nhớ" action={<CalendarClock size={21} />}>
         <div className="flashcard-schedule-summary">
           <div>
             <strong>{dueCards.length}</strong>
@@ -264,7 +264,7 @@ export function FlashcardsView() {
           </div>
         </div>
         <p className="muted-copy">
-          Flashcard là tín hiệu mastery thật: mỗi lượt chấm sẽ cập nhật tiến độ, lịch ôn và dashboard cá nhân hóa.
+          Mỗi lần tự chấm sẽ giúp VAJA biết thẻ nào nên xuất hiện lại sớm hơn trong buổi học sau.
         </p>
       </Panel>
 
@@ -318,7 +318,7 @@ function ReviewFeedbackPanel({ feedback }: { feedback: ReviewFeedback }) {
     <div className="flashcard-feedback">
       <strong>{ratingLabels[feedback.rating].label} đã được lưu</strong>
       <span>
-        {masteryPercent === null ? "Mastery đã cập nhật theo rating." : `Mastery hiện tại: ${masteryPercent}%.`}
+        {masteryPercent === null ? "Mức nhớ đã được cập nhật." : `Mức nhớ hiện tại: ${masteryPercent}%.`}
       </span>
       <span>Ôn lại: {formatDateTime(feedback.nextReviewAt)}</span>
       {feedback.intervalDays !== undefined && <span>Khoảng cách ôn mới: {feedback.intervalDays} ngày.</span>}

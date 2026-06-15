@@ -69,7 +69,7 @@ export const onboardingQuestions: OnboardingQuestion[] = [
     id: "goal",
     eyebrow: "Lý do học",
     title: "Mục tiêu học chính là gì?",
-    subtitle: "Mục tiêu này sẽ được đưa vào hồ sơ và ngữ cảnh cá nhân hóa của trợ lý.",
+    subtitle: "Mục tiêu này giúp VAJA chọn ví dụ, bài ôn và kế hoạch phù hợp hơn.",
     icon: BookOpenCheck,
     options: [
       { value: "Thi JLPT", label: "Thi JLPT", description: "Ưu tiên ngữ pháp, từ vựng, đọc hiểu" },
@@ -109,7 +109,7 @@ export const onboardingQuestions: OnboardingQuestion[] = [
     id: "weakSkills",
     eyebrow: "Cần luyện",
     title: "Bạn thấy yếu phần nào nhất?",
-    subtitle: "Có thể chọn nhiều kỹ năng để VAJA ưu tiên khi cá nhân hóa.",
+    subtitle: "Có thể chọn nhiều phần để VAJA ưu tiên trong các bài ôn đầu tiên.",
     multi: true,
     icon: PencilLine,
     options: [
@@ -125,7 +125,7 @@ export const onboardingQuestions: OnboardingQuestion[] = [
     id: "explanationStyle",
     eyebrow: "Cách giải thích",
     title: "Bạn muốn VAJA giải thích kiểu nào?",
-    subtitle: "Trợ lý sẽ dùng cách này khi giải thích câu trả lời.",
+    subtitle: "VAJA sẽ dùng cách này khi giải thích câu trả lời.",
     icon: MessageCircle,
     options: [
       { value: "concise", label: "Ngắn gọn", description: "Trả lời nhanh, ít lý thuyết" },
