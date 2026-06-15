@@ -1,35 +1,87 @@
-import { CalendarCheck, CheckCircle2, ListChecks, WandSparkles } from "lucide-react";
-import { FormEvent, useEffect, useState } from "react";
+import {
+  Brain,
+  CalendarCheck,
+  CheckCircle2,
+  ClipboardCheck,
+  Layers3,
+  ListChecks,
+  MessageCircle,
+  Target,
+  WandSparkles
+} from "lucide-react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useAuth } from "../../../app/providers/AuthProvider";
 import { apiRequest, ApiError } from "../../../shared/api";
-import type { PlannerRecommendationResponse, SavedStudyPlanResponse } from "../../../shared/models";
+import {
+  EmptyState,
+  IconButton,
+  IconTextButton,
+  Panel,
+  TopicChip
+} from "../../../shared/components";
+import type {
+  LearnerDashboardResponse,
+  PlannerContextResponse,
+  PlannerRecommendationResponse,
+  SavedStudyPlanResponse
+} from "../../../shared/models";
 
 export function PlannerView() {
   const { accessToken } = useAuth();
   const token = accessToken ?? "";
   const [currentLevel, setCurrentLevel] = useState("N5");
   const [targetLevel, setTargetLevel] = useState("N4");
-  const [weeklyStudyHours, setWeeklyStudyHours] = useState(5);
+  const [weeklyStudyHours, setWeeklyStudyHours] = useState(3);
   const [goal, setGoal] = useState("Thi JLPT N4 và nhớ ngữ pháp chắc hơn");
+  const [dashboard, setDashboard] = useState<LearnerDashboardResponse | null>(null);
   const [recommendation, setRecommendation] = useState<PlannerRecommendationResponse | null>(null);
   const [plans, setPlans] = useState<SavedStudyPlanResponse[]>([]);
   const [activePlan, setActivePlan] = useState<SavedStudyPlanResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  async function loadPlans() {
+  const context = recommendation?.context ?? null;
+  const signalSummary = useMemo(() => buildSignalSummary(context, dashboard), [context, dashboard]);
+
+  async function loadPlans(preferredPlanId?: string) {
+    const data = await apiRequest<SavedStudyPlanResponse[]>("/planner/plans?limit=8", { token });
+    setPlans(data);
+    setActivePlan((current) => {
+      const preferred = preferredPlanId ? data.find((plan) => plan.id === preferredPlanId) : null;
+      if (preferred) {
+        return preferred;
+      }
+      if (current) {
+        return data.find((plan) => plan.id === current.id) ?? data[0] ?? null;
+      }
+      return data[0] ?? null;
+    });
+  }
+
+  async function loadDashboard() {
+    const data = await apiRequest<LearnerDashboardResponse>("/personalization/me/dashboard", { token });
+    setDashboard(data);
+    setCurrentLevel(data.profile.currentLevel ?? "N5");
+    setTargetLevel(data.profile.targetLevel ?? "N4");
+    setGoal(data.profile.goal || "Thi JLPT N4 và nhớ ngữ pháp chắc hơn");
+    setWeeklyStudyHours(minutesPerDayToWeeklyHours(data.profile.dailyStudyMinutes));
+  }
+
+  async function loadInitialData() {
     setError(null);
     try {
-      const data = await apiRequest<SavedStudyPlanResponse[]>("/planner/plans?limit=8", { token });
-      setPlans(data);
-      setActivePlan((current) => current ?? data[0] ?? null);
+      const results = await Promise.allSettled([loadPlans(), loadDashboard()]);
+      const rejected = results.find((result) => result.status === "rejected");
+      if (rejected) {
+        setError("Không thể tải đủ dữ liệu cá nhân hóa. Bạn vẫn có thể tạo lộ trình từ thông tin hiện có.");
+      }
     } catch (caught) {
       setError(caught instanceof ApiError ? caught.message : "Không thể tải lộ trình");
     }
   }
 
   useEffect(() => {
-    void loadPlans();
+    void loadInitialData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -44,7 +96,7 @@ export function PlannerView() {
         body: { currentLevel, targetLevel, weeklyStudyHours, goal }
       });
       setRecommendation(data);
-      await loadPlans();
+      await loadPlans(data.planId);
     } catch (caught) {
       setError(caught instanceof ApiError ? caught.message : "Không thể tạo lộ trình");
     } finally {
@@ -60,28 +112,21 @@ export function PlannerView() {
         token
       });
       setActivePlan(updated);
-      await loadPlans();
+      await loadPlans(updated.id);
     } catch (caught) {
       setError(caught instanceof ApiError ? caught.message : "Không thể hoàn thành mục học");
     }
   }
 
   return (
-    <section className="learning-grid">
+    <section className="learning-grid planner-workspace">
       <div className="section-heading full-span">
         <p className="eyebrow">学習計画</p>
-        <h2>Kế hoạch tự học</h2>
+        <h2>Lộ trình dựa trên dữ liệu học thật</h2>
       </div>
       {error && <div className="form-error full-span">{error}</div>}
 
-      <section className="workspace-panel">
-        <div className="panel-heading">
-          <div>
-            <p className="eyebrow">Gợi ý</p>
-            <h3>Tuần này học gì?</h3>
-          </div>
-          <WandSparkles size={21} />
-        </div>
+      <Panel className="planner-form-panel" eyebrow="Gợi ý" title="Tuần này học gì?" action={<WandSparkles size={21} />}>
         <form className="profile-form single" onSubmit={recommend}>
           <label>
             Hiện tại
@@ -113,27 +158,24 @@ export function PlannerView() {
             Lý do học
             <textarea value={goal} onChange={(event) => setGoal(event.target.value)} />
           </label>
-          <button className="icon-text-button" type="submit" disabled={loading}>
+          <IconTextButton type="submit" disabled={loading}>
             <CalendarCheck size={18} />
-            Gợi ý lộ trình
-          </button>
+            {loading ? "Đang tạo..." : "Tạo lộ trình cá nhân"}
+          </IconTextButton>
         </form>
-      </section>
+      </Panel>
 
-      <section className="workspace-panel focus-panel">
-        <div className="panel-heading">
-          <div>
-            <p className="eyebrow">Đang học</p>
-            <h3>{activePlan ? `${activePlan.level} → ${activePlan.targetLevel}` : "Chưa có lộ trình"}</h3>
-          </div>
-          <ListChecks size={21} />
-        </div>
+      <Panel className="focus-panel planner-active-panel" eyebrow="Đang học" title={activePlan ? `${activePlan.level} → ${activePlan.targetLevel}` : "Chưa có lộ trình"} action={<ListChecks size={21} />}>
         {activePlan ? (
           <div className="plan-stack">
-            <div className="plan-progress">
+            <div className="plan-progress planner-progress-card">
               <strong>{Math.round(activePlan.completionRate)}%</strong>
               <progress max={100} value={activePlan.completionRate} />
+              <span>
+                {activePlan.completedItems}/{activePlan.totalItems} mục hoàn thành
+              </span>
             </div>
+            <p className="muted-copy">{activePlan.goal}</p>
             {activePlan.items.map((item) => (
               <div className={item.completed ? "plan-item done" : "plan-item"} key={item.id}>
                 <div>
@@ -144,15 +186,14 @@ export function PlannerView() {
                     {item.objective} · {item.estimatedHours}h
                   </span>
                 </div>
-                <button
-                  className="icon-button"
+                <IconButton
                   type="button"
                   disabled={item.completed}
                   title="Đánh dấu hoàn thành"
                   onClick={() => void complete(activePlan.id, item.id)}
                 >
                   <CheckCircle2 size={18} />
-                </button>
+                </IconButton>
               </div>
             ))}
           </div>
@@ -172,29 +213,91 @@ export function PlannerView() {
             ))}
           </div>
         ) : (
-          <div className="empty-state compact">Bấm gợi ý lộ trình để VAJA chia nhỏ việc học trong tuần.</div>
+          <EmptyState compact>Bấm tạo lộ trình để VAJA chia nhỏ việc học dựa trên tiến độ thật.</EmptyState>
         )}
-      </section>
+      </Panel>
 
-      <section className="workspace-panel">
-        <div className="panel-heading">
-          <div>
-            <p className="eyebrow">Lịch sử</p>
-            <h3>Lộ trình đã lưu</h3>
-          </div>
+      <Panel eyebrow="Căn cứ" title={context ? "Backend đã dùng dữ liệu này" : "Dữ liệu hiện có"} action={<Brain size={21} />}>
+        <div className="planner-signal-grid">
+          {signalSummary.map((signal) => (
+            <div className="planner-signal-card" key={signal.label}>
+              <span>{signal.icon}</span>
+              <strong>{signal.value}</strong>
+              <small>{signal.label}</small>
+            </div>
+          ))}
         </div>
+        <div className="planner-context-list">
+          {context?.weakProgress?.slice(0, 3).map((item) => (
+            <TopicChip key={`${item.knowledgeType}-${item.knowledgeId}`}>{item.title || item.knowledgeId}</TopicChip>
+          ))}
+          {context?.recentChatTopics?.slice(0, 3).map((topic) => <TopicChip key={topic}>{topic}</TopicChip>)}
+          {!context && dashboard?.assessments.recentWeakAreas.slice(0, 3).map((area) => <TopicChip key={area}>{area}</TopicChip>)}
+        </div>
+        <p className="muted-copy">
+          Planner ưu tiên thẻ đến hạn, điểm yếu mastery, lỗi assessment gần nhất và chủ đề chat gần đây trước khi thêm bài mới.
+        </p>
+      </Panel>
+
+      <Panel eyebrow="Lịch sử" title="Lộ trình đã lưu">
         <div className="stack-list">
           {plans.map((plan) => (
-            <button className="session-button" key={plan.id} type="button" onClick={() => setActivePlan(plan)}>
+            <button
+              className={activePlan?.id === plan.id ? "session-button active" : "session-button"}
+              key={plan.id}
+              type="button"
+              onClick={() => setActivePlan(plan)}
+            >
               <strong>{plan.goal}</strong>
               <span>
                 {plan.completedItems}/{plan.totalItems} mục · {Math.round(plan.completionRate)}%
               </span>
             </button>
           ))}
-          {!plans.length && <div className="empty-state compact">Chưa có lộ trình nào.</div>}
+          {!plans.length && <EmptyState compact>Chưa có lộ trình nào.</EmptyState>}
         </div>
-      </section>
+      </Panel>
     </section>
   );
+}
+
+function minutesPerDayToWeeklyHours(minutes?: number | null): number {
+  if (!minutes) {
+    return 3;
+  }
+  return Math.max(1, Math.round((minutes * 7) / 60));
+}
+
+function buildSignalSummary(context: PlannerContextResponse | null, dashboard: LearnerDashboardResponse | null) {
+  return [
+    {
+      icon: <Target size={18} />,
+      label: "Mục tiêu",
+      value: context?.profile?.targetLevel ?? dashboard?.profile.targetLevel ?? "N4"
+    },
+    {
+      icon: <Layers3 size={18} />,
+      label: "Thẻ đến hạn",
+      value: String(context?.dueFlashcards?.length ?? dashboard?.flashcards.dueCards ?? 0)
+    },
+    {
+      icon: <Brain size={18} />,
+      label: "Điểm yếu",
+      value: String(context?.weakProgress?.length ?? dashboard?.progress.weakItems ?? 0)
+    },
+    {
+      icon: <ClipboardCheck size={18} />,
+      label: "Assessment",
+      value: context?.recentAssessment
+        ? `${context.recentAssessment.score}/${context.recentAssessment.total}`
+        : dashboard?.assessments.latest
+          ? `${dashboard.assessments.latest.score}/${dashboard.assessments.latest.total}`
+          : "Chưa có"
+    },
+    {
+      icon: <MessageCircle size={18} />,
+      label: "Chủ đề chat",
+      value: String(context?.recentChatTopics?.length ?? dashboard?.chat.recentTopics.length ?? 0)
+    }
+  ];
 }

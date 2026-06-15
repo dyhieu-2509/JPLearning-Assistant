@@ -2364,6 +2364,61 @@ progress::-webkit-progress-value {
   font-size: 22px;
 }
 
+.planner-form-panel,
+.planner-active-panel {
+  align-content: start;
+}
+
+.planner-progress-card {
+  grid-template-columns: 64px minmax(0, 1fr);
+  padding: 12px;
+  border: 1px solid var(--sky-200);
+  border-radius: 8px;
+  background: var(--sky-50);
+}
+
+.planner-progress-card span {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.planner-signal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.planner-signal-card {
+  display: grid;
+  gap: 5px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--sky-50);
+}
+
+.planner-signal-card span {
+  color: var(--sky-700);
+}
+
+.planner-signal-card strong {
+  color: var(--blue-950);
+  font-size: 20px;
+}
+
+.planner-signal-card small {
+  color: var(--muted);
+  font-weight: 850;
+}
+
+.planner-context-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .plan-item {
   grid-template-columns: minmax(0, 1fr) 42px;
 }

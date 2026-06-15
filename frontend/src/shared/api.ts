@@ -11,6 +11,7 @@ export type {
   KnowledgeItemResponse,
   KnowledgeProgressResponse,
   LearnerDashboardResponse,
+  PlannerContextResponse,
   PlannerRecommendationResponse,
   SavedStudyPlanResponse,
   SourceResponse,

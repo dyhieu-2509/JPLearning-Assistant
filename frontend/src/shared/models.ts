@@ -195,6 +195,14 @@ export type StudyPlanItemResponse = {
   estimatedHours: number;
 };
 
+export type PlannerContextResponse = {
+  profile: StudentProfileResponse;
+  weakProgress: KnowledgeProgressResponse[];
+  dueFlashcards: FlashcardCardResponse[];
+  recentChatTopics: string[];
+  recentAssessment?: AssessmentSummaryResponse | null;
+};
+
 export type PlannerRecommendationResponse = {
   planId: string;
   level: string;
@@ -202,6 +210,7 @@ export type PlannerRecommendationResponse = {
   goal: string;
   weeklyStudyHours: number;
   items: StudyPlanItemResponse[];
+  context?: PlannerContextResponse | null;
 };
 
 export type SavedStudyPlanResponse = {
