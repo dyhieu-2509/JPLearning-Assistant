@@ -105,7 +105,7 @@ export function AssessmentView() {
     <section className="learning-grid assessment-workspace">
       <div className="section-heading full-span">
         <p className="eyebrow">確認テスト</p>
-        <h2>Kiểm tra ngắn để VAJA chỉnh bài học</h2>
+        <h2>Kiểm tra ngắn để xếp bài ôn</h2>
       </div>
       {error && <div className="form-error full-span">{error}</div>}
 
@@ -147,7 +147,7 @@ export function AssessmentView() {
         <div className="assessment-status-list" aria-label="Cách VAJA dùng bài kiểm tra">
           <span>
             <CheckCircle2 size={17} />
-            Kết quả đúng/sai giúp VAJA xếp lại bài ôn.
+            Kết quả đúng/sai giúp VAJA xếp bài ôn gần nhất.
           </span>
           <span>
             <CheckCircle2 size={17} />
@@ -163,10 +163,41 @@ export function AssessmentView() {
       <Panel
         className="focus-panel quiz-shell"
         eyebrow="Bài làm"
-        title={session ? `${session.level} · ${displayCategory(session.category)}` : "Chưa có lượt kiểm tra"}
+        title={result ? "Bài đã nộp" : session ? `${session.level} · ${displayCategory(session.category)}` : "Chưa có lượt kiểm tra"}
         action={session ? <ProgressMeter current={answeredCount} total={session.questions.length} /> : undefined}
       >
-        {currentQuestion ? (
+        {result ? (
+          <div className="quiz-complete-card">
+            <CheckCircle2 size={34} />
+            <h3>Đã xong lượt kiểm tra này.</h3>
+            <p>
+              Bạn đạt {result.score}/{result.total}. Xem phần bên phải để biết nên ôn lại bằng thẻ hay cập nhật lộ trình.
+            </p>
+            <div className="next-action-grid">
+              {needsReview ? (
+                <>
+                  <IconTextButton type="button" onClick={() => navigate("/learner/flashcards")}>
+                    <Layers3 size={18} />
+                    Ôn phần sai bằng thẻ
+                  </IconTextButton>
+                  <IconTextButton type="button" variant="ghost" onClick={() => navigate("/learner/planner")}>
+                    <CalendarCheck size={18} />
+                    Xem lộ trình ôn
+                  </IconTextButton>
+                </>
+              ) : (
+                <IconTextButton type="button" onClick={prepareNextChallenge}>
+                  <ArrowRight size={18} />
+                  Tăng độ khó
+                </IconTextButton>
+              )}
+              <IconTextButton type="button" variant="ghost" onClick={resetSession}>
+                <RotateCcw size={18} />
+                Làm lượt khác
+              </IconTextButton>
+            </div>
+          </div>
+        ) : currentQuestion ? (
           <div className="quiz-question-card">
             <div className="quiz-question-meta">
               <TopicChip>Câu {activeIndex + 1}/{session?.questions.length ?? 0}</TopicChip>

@@ -217,7 +217,7 @@ export function PlannerView() {
         )}
       </Panel>
 
-      <Panel eyebrow="Căn cứ" title={context ? "VAJA đã xem các phần này" : "Thông tin hiện có"} action={<Brain size={21} />}>
+      <Panel eyebrow="Gợi ý ôn" title={context ? "Dựa vào bài bạn vừa học" : "Dựa vào nhịp học hiện tại"} action={<Brain size={21} />}>
         <div className="planner-signal-grid">
           {signalSummary.map((signal) => (
             <div className="planner-signal-card" key={signal.label}>
@@ -235,7 +235,7 @@ export function PlannerView() {
           {!context && dashboard?.assessments.recentWeakAreas.slice(0, 3).map((area) => <TopicChip key={area}>{area}</TopicChip>)}
         </div>
         <p className="muted-copy">
-          VAJA ưu tiên thẻ đến hạn, phần hay quên, lỗi bài thử gần nhất và câu hỏi bạn vừa hỏi trước khi thêm bài mới.
+          VAJA xếp bài từ thẻ cần ôn, phần hay quên, bài thử gần nhất và câu hỏi bạn vừa hỏi. Bạn chỉ cần làm từng mục trong tuần.
         </p>
       </Panel>
 
@@ -282,21 +282,21 @@ function buildSignalSummary(context: PlannerContextResponse | null, dashboard: L
     },
     {
       icon: <Brain size={18} />,
-      label: "Điểm yếu",
+      label: "Phần cần ôn",
       value: String(context?.weakProgress?.length ?? dashboard?.progress.weakItems ?? 0)
     },
     {
       icon: <ClipboardCheck size={18} />,
-      label: "Assessment",
+      label: "Bài thử gần đây",
       value: context?.recentAssessment
         ? `${context.recentAssessment.score}/${context.recentAssessment.total}`
         : dashboard?.assessments.latest
           ? `${dashboard.assessments.latest.score}/${dashboard.assessments.latest.total}`
-          : "Chưa có"
+          : "Chưa làm"
     },
     {
       icon: <MessageCircle size={18} />,
-      label: "Chủ đề chat",
+      label: "Chủ đề đã hỏi",
       value: String(context?.recentChatTopics?.length ?? dashboard?.chat.recentTopics.length ?? 0)
     }
   ];
