@@ -1,15 +1,44 @@
-import { Layers3, Plus, RotateCcw } from "lucide-react";
-import { FormEvent, useEffect, useState } from "react";
+import { CalendarClock, CheckCircle2, Eye, Layers3, Plus, RotateCcw, Sparkles } from "lucide-react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useAuth } from "../../../app/providers/AuthProvider";
 import { apiRequest, ApiError } from "../../../shared/api";
+import {
+  EmptyState,
+  IconButton,
+  IconTextButton,
+  Panel,
+  PrimaryButton,
+  TopicChip
+} from "../../../shared/components";
 import type { FlashcardCardResponse, FlashcardDeckResponse, FlashcardReviewResponse } from "../../../shared/models";
 
 const ratings = ["AGAIN", "HARD", "GOOD", "EASY"] as const;
-const ratingLabels: Record<(typeof ratings)[number], string> = {
-  AGAIN: "Lại lần nữa",
-  HARD: "Khó",
-  GOOD: "Ổn",
-  EASY: "Dễ"
+type ReviewRating = (typeof ratings)[number];
+
+const ratingLabels: Record<ReviewRating, { label: string; description: string }> = {
+  AGAIN: {
+    label: "Chưa nhớ",
+    description: "Giảm mastery, ôn lại rất sớm"
+  },
+  HARD: {
+    label: "Khó",
+    description: "Tăng nhẹ, vẫn ưu tiên ôn sớm"
+  },
+  GOOD: {
+    label: "Nhớ được",
+    description: "Tăng mastery và giãn lịch ôn"
+  },
+  EASY: {
+    label: "Dễ",
+    description: "Tăng mạnh hơn, ôn lại muộn hơn"
+  }
+};
+
+type ReviewFeedback = {
+  rating: ReviewRating;
+  masteryScore?: number;
+  nextReviewAt?: string | null;
+  intervalDays?: number;
 };
 
 export function FlashcardsView() {
@@ -20,11 +49,21 @@ export function FlashcardsView() {
   const [cards, setCards] = useState<FlashcardCardResponse[]>([]);
   const [dueCards, setDueCards] = useState<FlashcardCardResponse[]>([]);
   const [flipped, setFlipped] = useState<string | null>(null);
+  const [reviewFeedback, setReviewFeedback] = useState<ReviewFeedback | null>(null);
   const [title, setTitle] = useState("Tăng tốc từ vựng N5");
   const [level, setLevel] = useState("N5");
   const [category, setCategory] = useState("vocabulary");
   const [loading, setLoading] = useState(true);
+  const [reviewing, setReviewing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const selectedDeck = useMemo(
+    () => decks.find((deck) => deck.id === selectedDeckId) ?? null,
+    [decks, selectedDeckId]
+  );
+  const activeCard = dueCards[0] ?? cards[0] ?? null;
+  const isFlipped = Boolean(activeCard && flipped === activeCard.id);
+  const studyMode = dueCards.length ? "Đến hạn" : "Luyện tự do";
 
   async function loadFlashcards(deckId = selectedDeckId) {
     setError(null);
@@ -60,6 +99,8 @@ export function FlashcardsView() {
   async function createDeck(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
+    setReviewFeedback(null);
+    setFlipped(null);
     try {
       const deck = await apiRequest<FlashcardDeckResponse>("/flashcards/decks", {
         method: "POST",
@@ -72,39 +113,51 @@ export function FlashcardsView() {
     }
   }
 
-  async function review(card: FlashcardCardResponse, rating: (typeof ratings)[number]) {
+  async function review(card: FlashcardCardResponse, rating: ReviewRating) {
     setError(null);
+    setReviewing(true);
     try {
-      await apiRequest<FlashcardReviewResponse>("/flashcards/review", {
+      const response = await apiRequest<FlashcardReviewResponse>("/flashcards/review", {
         method: "POST",
         token,
         body: { cardId: card.id, rating }
+      });
+      setReviewFeedback({
+        rating,
+        masteryScore: response.masteryScore ?? response.progress?.masteryScore,
+        nextReviewAt: response.card?.nextReviewAt ?? response.progress?.nextReviewAt,
+        intervalDays: response.card?.intervalDays
       });
       setFlipped(null);
       await loadFlashcards(selectedDeckId);
     } catch (caught) {
       setError(caught instanceof ApiError ? caught.message : "Không thể lưu lượt ôn");
+    } finally {
+      setReviewing(false);
     }
   }
 
-  const activeCard = dueCards[0] ?? cards[0] ?? null;
+  function selectDeck(deckId: string) {
+    setReviewFeedback(null);
+    setFlipped(null);
+    void loadFlashcards(deckId);
+  }
+
+  function refresh() {
+    setReviewFeedback(null);
+    setFlipped(null);
+    void loadFlashcards();
+  }
 
   return (
-    <section className="learning-grid">
+    <section className="learning-grid flashcard-workspace">
       <div className="section-heading full-span">
         <p className="eyebrow">間隔反復</p>
-        <h2>Thẻ nhớ</h2>
+        <h2>Ôn thẻ theo trí nhớ thật</h2>
       </div>
       {error && <div className="form-error full-span">{error}</div>}
 
-      <section className="workspace-panel">
-        <div className="panel-heading">
-          <div>
-            <p className="eyebrow">Tạo bộ thẻ</p>
-            <h3>Chọn phần muốn nhớ</h3>
-          </div>
-          <Plus size={21} />
-        </div>
+      <Panel className="flashcard-create-panel" eyebrow="Tạo bộ thẻ" title="Chọn phần muốn nhớ" action={<Plus size={21} />}>
         <form className="profile-form single" onSubmit={createDeck}>
           <label>
             Tên bộ thẻ
@@ -126,58 +179,103 @@ export function FlashcardsView() {
               <option value="kanji">Kanji</option>
             </select>
           </label>
-          <button className="icon-text-button" type="submit">
+          <IconTextButton type="submit">
             <Layers3 size={18} />
             Tạo bộ thẻ
-          </button>
+          </IconTextButton>
         </form>
-      </section>
-
-      <section className="workspace-panel focus-panel">
-        <div className="panel-heading">
-          <div>
-            <p className="eyebrow">Ôn ngay</p>
-            <h3>{dueCards.length} thẻ cần ôn</h3>
-          </div>
-          <button className="icon-button" type="button" onClick={() => void loadFlashcards()} title="Làm mới">
-            <RotateCcw size={18} />
-          </button>
+        <div className="flashcard-rule-list" aria-label="Quy tắc cá nhân hóa flashcard">
+          <span>
+            <CheckCircle2 size={17} />
+            Chỉ chấm sau khi tự nhớ và lật đáp án.
+          </span>
+          <span>
+            <CheckCircle2 size={17} />
+            Rating GOOD/EASY tăng mastery, AGAIN/HARD ưu tiên ôn lại.
+          </span>
+          <span>
+            <CheckCircle2 size={17} />
+            Lịch ôn tiếp theo do backend SRS tính, không nhập tay.
+          </span>
         </div>
+      </Panel>
+
+      <Panel
+        className="focus-panel flashcard-study-panel"
+        eyebrow="Ôn ngay"
+        title={activeCard ? `${studyMode}: ${activeCard.level || selectedDeck?.level || "JLPT"}` : "Chưa có thẻ để ôn"}
+        action={
+          <IconButton type="button" onClick={refresh} title="Làm mới thẻ nhớ">
+            <RotateCcw size={18} />
+          </IconButton>
+        }
+      >
         {loading ? (
           <div className="loading-inline">Đang tải thẻ...</div>
         ) : activeCard ? (
           <div className="flashcard-study">
-            <button className="flashcard-card" type="button" onClick={() => setFlipped(activeCard.id)}>
-              <span>{flipped === activeCard.id ? activeCard.backText : activeCard.frontText}</span>
-              <small>{flipped === activeCard.id ? activeCard.reading || "nghĩa" : "chạm để lật"}</small>
-            </button>
-            <div className="rating-row">
-              {ratings.map((rating) => (
-                <button key={rating} type="button" onClick={() => void review(activeCard, rating)}>
-                  {ratingLabels[rating]}
-                </button>
-              ))}
+            <div className="flashcard-study-meta">
+              <TopicChip>{dueCards.length ? `${dueCards.length} thẻ đến hạn` : "Không có thẻ đến hạn"}</TopicChip>
+              <TopicChip>{activeCard.repetitions} lượt ôn</TopicChip>
+              <TopicChip>{activeCard.intervalDays} ngày giãn cách</TopicChip>
             </div>
+
+            <button className={isFlipped ? "flashcard-card flipped" : "flashcard-card"} type="button" onClick={() => setFlipped(activeCard.id)}>
+              <span>{isFlipped ? activeCard.backText : activeCard.frontText}</span>
+              <small>{isFlipped ? activeCard.reading || "Tự chấm theo mức độ nhớ" : "Tự nhớ trước, rồi lật đáp án"}</small>
+            </button>
+
+            {!isFlipped ? (
+              <PrimaryButton type="button" onClick={() => setFlipped(activeCard.id)}>
+                <Eye size={18} />
+                Lật đáp án
+              </PrimaryButton>
+            ) : (
+              <div className="rating-row srs-rating-row" aria-label="Chấm mức độ nhớ">
+                {ratings.map((rating) => (
+                  <button key={rating} type="button" disabled={reviewing} onClick={() => void review(activeCard, rating)}>
+                    <strong>{ratingLabels[rating].label}</strong>
+                    <small>{ratingLabels[rating].description}</small>
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {reviewFeedback && <ReviewFeedbackPanel feedback={reviewFeedback} />}
           </div>
         ) : (
-          <div className="empty-state compact">Tạo bộ thẻ để bắt đầu ôn.</div>
+          <EmptyState compact>Tạo bộ thẻ hoặc làm bài kiểm tra để VAJA đưa phần yếu vào lịch ôn.</EmptyState>
         )}
-      </section>
+      </Panel>
 
-      <section className="workspace-panel">
-        <div className="panel-heading">
+      <Panel eyebrow="Lịch ôn" title="Tín hiệu cá nhân hóa" action={<CalendarClock size={21} />}>
+        <div className="flashcard-schedule-summary">
           <div>
-            <p className="eyebrow">Bộ thẻ</p>
-            <h3>Thư viện</h3>
+            <strong>{dueCards.length}</strong>
+            <span>Thẻ đến hạn</span>
+          </div>
+          <div>
+            <strong>{cards.length}</strong>
+            <span>Thẻ trong bộ</span>
+          </div>
+          <div>
+            <strong>{decks.length}</strong>
+            <span>Bộ đã tạo</span>
           </div>
         </div>
+        <p className="muted-copy">
+          Flashcard là tín hiệu mastery thật: mỗi lượt chấm sẽ cập nhật tiến độ, lịch ôn và dashboard cá nhân hóa.
+        </p>
+      </Panel>
+
+      <Panel eyebrow="Bộ thẻ" title="Thư viện">
         <div className="stack-list">
           {decks.map((deck) => (
             <button
               className={deck.id === selectedDeckId ? "session-button active" : "session-button"}
               key={deck.id}
               type="button"
-              onClick={() => void loadFlashcards(deck.id)}
+              onClick={() => selectDeck(deck.id)}
             >
               <strong>{deck.title}</strong>
               <span>
@@ -185,31 +283,46 @@ export function FlashcardsView() {
               </span>
             </button>
           ))}
-          {!decks.length && <div className="empty-state compact">Chưa có bộ thẻ nào.</div>}
+          {!decks.length && <EmptyState compact>Chưa có bộ thẻ nào.</EmptyState>}
         </div>
-      </section>
+      </Panel>
 
-      <section className="workspace-panel">
-        <div className="panel-heading">
-          <div>
-            <p className="eyebrow">カード</p>
-            <h3>Bộ thẻ đang chọn</h3>
-          </div>
-        </div>
-        <div className="stack-list">
+      <Panel className="full-span" eyebrow="カード" title="Bộ thẻ đang chọn">
+        <div className="knowledge-result-grid flashcard-card-list">
           {cards.slice(0, 8).map((card) => (
-            <div className="knowledge-row" key={card.id}>
+            <article className="knowledge-card" key={card.id}>
               <div>
-                <strong>{card.frontText}</strong>
-                <span>{card.backText}</span>
+                <TopicChip>{card.level || "JLPT"}</TopicChip>
+                <TopicChip>{card.repetitions} lượt</TopicChip>
               </div>
-              <span className="topic-chip">{card.level || "JLPT"}</span>
-            </div>
+              <h3>{card.frontText}</h3>
+              {card.reading && <span className="knowledge-reading">{card.reading}</span>}
+              <p>{card.backText}</p>
+              <small>
+                <Sparkles size={14} />
+                Ôn lại: {formatDateTime(card.nextReviewAt)}
+              </small>
+            </article>
           ))}
-          {!cards.length && <div className="empty-state compact">Chọn hoặc tạo một bộ thẻ.</div>}
+          {!cards.length && <EmptyState compact>Chọn hoặc tạo một bộ thẻ.</EmptyState>}
         </div>
-      </section>
+      </Panel>
     </section>
+  );
+}
+
+function ReviewFeedbackPanel({ feedback }: { feedback: ReviewFeedback }) {
+  const masteryPercent = feedback.masteryScore === undefined ? null : Math.round(feedback.masteryScore * 100);
+
+  return (
+    <div className="flashcard-feedback">
+      <strong>{ratingLabels[feedback.rating].label} đã được lưu</strong>
+      <span>
+        {masteryPercent === null ? "Mastery đã cập nhật theo rating." : `Mastery hiện tại: ${masteryPercent}%.`}
+      </span>
+      <span>Ôn lại: {formatDateTime(feedback.nextReviewAt)}</span>
+      {feedback.intervalDays !== undefined && <span>Khoảng cách ôn mới: {feedback.intervalDays} ngày.</span>}
+    </div>
   );
 }
 
@@ -224,4 +337,20 @@ function displayCategory(value?: string | null): string {
     kanji: "Kanji"
   };
   return labels[value.toLowerCase()] ?? value;
+}
+
+function formatDateTime(value?: string | null): string {
+  if (!value) {
+    return "chưa có lịch";
+  }
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return new Intl.DateTimeFormat("vi-VN", {
+    dateStyle: "short",
+    timeStyle: "short"
+  }).format(date);
 }

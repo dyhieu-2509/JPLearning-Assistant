@@ -46,6 +46,7 @@ export function LearnerLayout() {
     location.pathname !== "/learner" &&
     location.pathname !== onboardingPath &&
     location.pathname !== "/learner/assessment" &&
+    location.pathname !== "/learner/flashcards" &&
     location.pathname !== "/learner/chat";
 
   useEffect(() => {
