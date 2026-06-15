@@ -85,9 +85,18 @@ Build the backend foundation for the thesis timeline phase **23/05 → 05/06**:
   - `GET /api/v1/personalization/me/dashboard` requires JWT.
   - Summarizes profile, progress totals, mastered/weak counts, average mastery, due cards, assessment scores/weak areas, and chat activity.
   - Uses server-side repositories only; dashboard reads personalization state without mutating mastery or learning schedules.
+- Added React learner MVP flow:
+  - Public landing page with New Learner onboarding and Current Learner login split.
+  - Learner/admin route and layout split with thin pages and feature-based source tree.
+  - Learner dashboard now guides a self-study loop: assessment, due flashcards, knowledge lookup, tutor chat, and planner.
+  - Assessment UI is a one-question-at-a-time study quiz; wrong results route to review, perfect results route to higher difficulty/new study.
+  - Knowledge lookup can send a selected vocab/grammar/kanji item directly into tutor chat with a prepared prompt.
+  - Flashcard UI follows SRS behavior: learner must flip before rating, rating explains mastery/schedule impact, and review feedback shows next review data.
+  - Planner UI exposes personalization context from backend: profile, weak progress, due flashcards, recent assessment, and recent chat topics.
 
 ## Next Work
 
-1. Add frontend MVP screens for auth, chat, dashboard, flashcards, assessment, and planner.
+1. Run a full end-to-end demo smoke with backend + AI service + frontend: onboarding/login -> dashboard -> assessment -> flashcard review -> planner -> chat exposure.
 2. Add admin/question-bank APIs after learner MVP loop is stable.
 3. Add export/demo seed script for a reproducible thesis MVP scenario.
+4. Harden frontend error/loading states against real backend failure modes and document demo credentials/environment setup.
