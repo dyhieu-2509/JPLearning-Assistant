@@ -14,6 +14,14 @@ import type { FlashcardCardResponse, FlashcardDeckResponse, FlashcardReviewRespo
 
 const ratings = ["AGAIN", "HARD", "GOOD", "EASY"] as const;
 type ReviewRating = (typeof ratings)[number];
+type CategoryFilter = "all" | "vocabulary" | "grammar" | "kanji";
+
+const categoryFilters: Array<{ value: CategoryFilter; label: string }> = [
+  { value: "all", label: "Tất cả" },
+  { value: "kanji", label: "Kanji" },
+  { value: "vocabulary", label: "Từ vựng" },
+  { value: "grammar", label: "Ngữ pháp" }
+];
 
 const ratingLabels: Record<ReviewRating, { label: string; description: string }> = {
   AGAIN: {
@@ -53,6 +61,8 @@ export function FlashcardsView() {
   const [title, setTitle] = useState("Tăng tốc từ vựng N5");
   const [level, setLevel] = useState("N5");
   const [category, setCategory] = useState("vocabulary");
+  const [selectedLevel, setSelectedLevel] = useState("N5");
+  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("all");
   const [loading, setLoading] = useState(true);
   const [reviewing, setReviewing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -61,9 +71,21 @@ export function FlashcardsView() {
     () => decks.find((deck) => deck.id === selectedDeckId) ?? null,
     [decks, selectedDeckId]
   );
-  const activeCard = dueCards[0] ?? cards[0] ?? null;
+  const availableLevels = useMemo(() => {
+    const levels = Array.from(new Set(decks.map((deck) => deck.level || "JLPT")));
+    return levels.length ? levels.sort(compareJlptLevels) : ["N5", "N4"];
+  }, [decks]);
+  const visibleDecks = useMemo(
+    () => decks.filter((deck) => deckMatchesFilter(deck, selectedLevel, categoryFilter)),
+    [categoryFilter, decks, selectedLevel]
+  );
+  const visibleDueCards = useMemo(
+    () => dueCards.filter((card) => cardMatchesFilter(card, selectedLevel, categoryFilter)),
+    [categoryFilter, dueCards, selectedLevel]
+  );
+  const activeCard = visibleDueCards[0] ?? cards[0] ?? null;
   const isFlipped = Boolean(activeCard && flipped === activeCard.id);
-  const studyMode = dueCards.length ? "Đến hạn" : "Luyện tự do";
+  const studyMode = visibleDueCards.length ? "Đến hạn" : "Luyện tự do";
 
   async function loadFlashcards(deckId = selectedDeckId) {
     setError(null);
@@ -75,12 +97,13 @@ export function FlashcardsView() {
       setDecks(deckData);
       setDueCards(dueData);
       const nextDeckId = deckId ?? deckData[0]?.id ?? null;
+      const nextDeck = deckData.find((deck) => deck.id === nextDeckId) ?? deckData[0];
+      if (nextDeck?.level) {
+        setSelectedLevel(nextDeck.level);
+      }
       setSelectedDeckId(nextDeckId);
       if (nextDeckId) {
-        const cardData = await apiRequest<FlashcardCardResponse[]>(`/flashcards/decks/${nextDeckId}/cards`, {
-          token
-        });
-        setCards(cardData);
+        await loadDeckCards(nextDeckId);
       } else {
         setCards([]);
       }
@@ -89,6 +112,13 @@ export function FlashcardsView() {
     } finally {
       setLoading(false);
     }
+  }
+
+  async function loadDeckCards(deckId: string) {
+    const cardData = await apiRequest<FlashcardCardResponse[]>(`/flashcards/decks/${deckId}/cards`, {
+      token
+    });
+    setCards(cardData);
   }
 
   useEffect(() => {
@@ -140,7 +170,31 @@ export function FlashcardsView() {
   function selectDeck(deckId: string) {
     setReviewFeedback(null);
     setFlipped(null);
-    void loadFlashcards(deckId);
+    setSelectedDeckId(deckId);
+    void loadDeckCards(deckId);
+  }
+
+  function selectLevel(nextLevel: string) {
+    setSelectedLevel(nextLevel);
+    selectFirstMatchingDeck(nextLevel, categoryFilter);
+  }
+
+  function selectCategoryFilter(nextCategory: CategoryFilter) {
+    setCategoryFilter(nextCategory);
+    selectFirstMatchingDeck(selectedLevel, nextCategory);
+  }
+
+  function selectFirstMatchingDeck(nextLevel: string, nextCategory: CategoryFilter) {
+    const nextDeck = decks.find((deck) => deckMatchesFilter(deck, nextLevel, nextCategory));
+    setReviewFeedback(null);
+    setFlipped(null);
+    if (nextDeck) {
+      setSelectedDeckId(nextDeck.id);
+      void loadDeckCards(nextDeck.id);
+      return;
+    }
+    setSelectedDeckId(null);
+    setCards([]);
   }
 
   function refresh() {
@@ -157,9 +211,36 @@ export function FlashcardsView() {
     <section className="learning-grid flashcard-workspace">
       <div className="section-heading full-span">
         <p className="eyebrow">間隔反復</p>
-        <h2>Ôn thẻ theo trí nhớ thật</h2>
+        <h2>Thẻ nhớ theo cấp học</h2>
       </div>
       {error && <div className="form-error full-span">{error}</div>}
+
+      <Panel className="flashcard-filter-panel full-span" eyebrow="Cấp học" title="Chọn phạm vi ôn">
+        <div className="flashcard-filter-group" aria-label="Chọn cấp học">
+          {availableLevels.map((item) => (
+            <button
+              className={item === selectedLevel ? "active" : ""}
+              key={item}
+              type="button"
+              onClick={() => selectLevel(item)}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
+        <div className="flashcard-filter-group category" aria-label="Lọc nhóm thẻ">
+          {categoryFilters.map((option) => (
+            <button
+              className={option.value === categoryFilter ? "active" : ""}
+              key={option.value}
+              type="button"
+              onClick={() => selectCategoryFilter(option.value)}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      </Panel>
 
       <Panel className="flashcard-create-panel" eyebrow="Tạo bộ thẻ" title="Chọn phần muốn nhớ" action={<Plus size={21} />}>
         <form className="profile-form single" onSubmit={createDeck}>
@@ -218,7 +299,10 @@ export function FlashcardsView() {
         ) : activeCard ? (
           <div className="flashcard-study">
             <div className="flashcard-study-meta">
-              <TopicChip>{dueCards.length ? `${dueCards.length} thẻ đến hạn` : "Không có thẻ đến hạn"}</TopicChip>
+              <TopicChip>
+                {visibleDueCards.length ? `${visibleDueCards.length} thẻ đến hạn` : "Không có thẻ đến hạn"}
+              </TopicChip>
+              <TopicChip>{displayCategory(activeCard.sourceType)}</TopicChip>
               <TopicChip>{activeCard.repetitions} lượt ôn</TopicChip>
               <TopicChip>{activeCard.intervalDays} ngày giãn cách</TopicChip>
             </div>
@@ -252,14 +336,14 @@ export function FlashcardsView() {
             {reviewFeedback && <ReviewFeedbackPanel feedback={reviewFeedback} />}
           </div>
         ) : (
-          <EmptyState compact>Tạo bộ thẻ hoặc làm bài kiểm tra để VAJA đưa phần yếu vào lịch ôn.</EmptyState>
+          <EmptyState compact>Chưa có thẻ trong phạm vi này. Đổi cấp học, đổi nhóm thẻ hoặc tạo bộ thẻ mới.</EmptyState>
         )}
       </Panel>
 
       <Panel eyebrow="Lịch ôn" title="Tiến độ thẻ nhớ" action={<CalendarClock size={21} />}>
         <div className="flashcard-schedule-summary">
           <div>
-            <strong>{dueCards.length}</strong>
+            <strong>{visibleDueCards.length}</strong>
             <span>Thẻ đến hạn</span>
           </div>
           <div>
@@ -267,8 +351,8 @@ export function FlashcardsView() {
             <span>Thẻ trong bộ</span>
           </div>
           <div>
-            <strong>{decks.length}</strong>
-            <span>Bộ đã tạo</span>
+            <strong>{visibleDecks.length}</strong>
+            <span>Bộ trong cấp này</span>
           </div>
         </div>
         <p className="muted-copy">
@@ -278,7 +362,7 @@ export function FlashcardsView() {
 
       <Panel eyebrow="Bộ thẻ" title="Thư viện">
         <div className="stack-list">
-          {decks.map((deck) => (
+          {visibleDecks.map((deck) => (
             <button
               className={deck.id === selectedDeckId ? "session-button active" : "session-button"}
               key={deck.id}
@@ -291,7 +375,7 @@ export function FlashcardsView() {
               </span>
             </button>
           ))}
-          {!decks.length && <EmptyState compact>Chưa có bộ thẻ nào.</EmptyState>}
+          {!visibleDecks.length && <EmptyState compact>Chưa có bộ thẻ phù hợp với bộ lọc này.</EmptyState>}
         </div>
       </Panel>
 
@@ -339,12 +423,50 @@ function displayCategory(value?: string | null): string {
     return "Kiến thức";
   }
 
-  const labels: Record<string, string> = {
+  const labels: Record<CategoryFilter | "other", string> = {
+    all: "Tất cả",
     vocabulary: "Từ vựng",
     grammar: "Ngữ pháp",
-    kanji: "Kanji"
+    kanji: "Kanji",
+    other: value
   };
-  return labels[value.toLowerCase()] ?? value;
+  return labels[normalizeCategory(value)];
+}
+
+function deckMatchesFilter(deck: FlashcardDeckResponse, selectedLevel: string, filter: CategoryFilter): boolean {
+  return sameLevel(deck.level, selectedLevel) && (filter === "all" || normalizeCategory(deck.category) === filter);
+}
+
+function cardMatchesFilter(card: FlashcardCardResponse, selectedLevel: string, filter: CategoryFilter): boolean {
+  return sameLevel(card.level, selectedLevel) && (filter === "all" || normalizeCategory(card.sourceType) === filter);
+}
+
+function sameLevel(value: string | null | undefined, selectedLevel: string): boolean {
+  return (value || "JLPT").toUpperCase() === selectedLevel.toUpperCase();
+}
+
+function normalizeCategory(value?: string | null): CategoryFilter | "other" {
+  const normalized = (value ?? "").toLowerCase();
+  if (normalized.includes("kanji")) {
+    return "kanji";
+  }
+  if (normalized.includes("grammar")) {
+    return "grammar";
+  }
+  if (normalized.includes("vocab")) {
+    return "vocabulary";
+  }
+  return "other";
+}
+
+function compareJlptLevels(left: string, right: string): number {
+  const order = ["N5", "N4", "N3", "N2", "N1"];
+  const leftIndex = order.indexOf(left.toUpperCase());
+  const rightIndex = order.indexOf(right.toUpperCase());
+  if (leftIndex !== -1 || rightIndex !== -1) {
+    return (leftIndex === -1 ? order.length : leftIndex) - (rightIndex === -1 ? order.length : rightIndex);
+  }
+  return left.localeCompare(right);
 }
 
 function formatDateTime(value?: string | null): string {

@@ -1,6 +1,5 @@
-import { BookOpenText, Bot, DatabaseZap, Search, Sparkles } from "lucide-react";
+import { BookOpenText, DatabaseZap, Search, Sparkles } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { ApiError, apiRequest } from "../../../shared/api";
 import { IconTextButton, LoadingPanel, Panel, TopicChip } from "../../../shared/components";
 import type { KnowledgeItemResponse } from "../../../shared/models";
@@ -16,7 +15,6 @@ const categoryOptions: Array<{ value: KnowledgeCategory; label: string; descript
 const quickQueries = ["食べる", "です", "行く", "日", "は", "学校"];
 
 export function KnowledgeLookupView() {
-  const navigate = useNavigate();
   const [category, setCategory] = useState<KnowledgeCategory>("vocabulary");
   const [level, setLevel] = useState("N5");
   const [query, setQuery] = useState("");
@@ -60,22 +58,14 @@ export function KnowledgeLookupView() {
     setSubmittedQuery(value);
   }
 
-  function askTutor(item: KnowledgeItemResponse) {
-    const params = new URLSearchParams({
-      topic: tutorTopicFor(item),
-      prompt: buildTutorPrompt(item)
-    });
-    navigate(`/learner/chat?${params.toString()}`);
-  }
-
   return (
     <section className="knowledge-lookup-grid">
       <div className="section-heading full-span">
-        <p className="eyebrow">知識検索</p>
-        <h2>Tra cứu tiếng Nhật N5/N4</h2>
+        <p className="eyebrow">辞書</p>
+        <h2>Từ điển Nhật - Việt N5/N4</h2>
       </div>
 
-      <Panel className="knowledge-search-panel" eyebrow="Tìm kiếm" title="Chọn nhóm kiến thức">
+      <Panel className="knowledge-search-panel" eyebrow="Tra cứu" title="Tìm nghĩa và cách dùng">
         <div className="knowledge-category-list" aria-label="Nhóm kiến thức">
           {categoryOptions.map((option) => (
             <button
@@ -102,7 +92,7 @@ export function KnowledgeLookupView() {
             </select>
           </label>
           <label>
-            Từ khóa
+            Từ hoặc mẫu câu
             <span className="input-shell">
               <Search size={18} />
               <input
@@ -131,11 +121,11 @@ export function KnowledgeLookupView() {
       <Panel className="knowledge-results-panel" eyebrow="Kết quả" title={resultTitle(category, level, submittedQuery)}>
         {error && <p className="form-error">{error}</p>}
         {loading ? (
-          <LoadingPanel>Đang tra cứu kiến thức...</LoadingPanel>
+          <LoadingPanel>Đang tra từ điển...</LoadingPanel>
         ) : items.length ? (
           <div className="knowledge-result-grid">
             {items.map((item) => (
-              <KnowledgeCard item={item} key={`${item.type}-${item.id}`} onAskTutor={askTutor} />
+              <KnowledgeCard item={item} key={`${item.type}-${item.id}`} />
             ))}
           </div>
         ) : (
@@ -146,7 +136,7 @@ export function KnowledgeLookupView() {
   );
 }
 
-function KnowledgeCard({ item, onAskTutor }: { item: KnowledgeItemResponse; onAskTutor: (item: KnowledgeItemResponse) => void }) {
+function KnowledgeCard({ item }: { item: KnowledgeItemResponse }) {
   return (
     <article className="knowledge-card">
       <div>
@@ -156,18 +146,16 @@ function KnowledgeCard({ item, onAskTutor }: { item: KnowledgeItemResponse; onAs
       <h3>{item.title || item.id}</h3>
       {item.reading && <span className="knowledge-reading">{item.reading}</span>}
       <p>{item.meaningVi || item.meaningEn || "Chưa có nghĩa tiếng Việt."}</p>
+      <div className="dictionary-usage">
+        <strong>Dùng khi nào?</strong>
+        <span>{usageContext(item)}</span>
+      </div>
       {item.source && (
         <small>
           <BookOpenText size={14} />
           {item.source}
         </small>
       )}
-      <div className="knowledge-card-actions">
-        <IconTextButton type="button" variant="ghost" onClick={() => onAskTutor(item)}>
-          <Bot size={16} />
-          Hỏi VAJA
-        </IconTextButton>
-      </div>
     </article>
   );
 }
@@ -190,24 +178,16 @@ function displayType(value: string): string {
   return labels[value] ?? value;
 }
 
-function tutorTopicFor(item: KnowledgeItemResponse): string {
+function usageContext(item: KnowledgeItemResponse): string {
   const type = item.type.toLowerCase();
   if (type.includes("vocab")) {
-    return "Vocabulary";
+    return "Dùng như một từ trong câu. Hãy xem nghĩa, cách đọc và đặt vào mẫu câu ngắn để nhớ theo ngữ cảnh.";
   }
   if (type.includes("grammar")) {
-    return "Grammar";
+    return "Dùng như một mẫu ngữ pháp. Chú ý vị trí trong câu và sắc thái trước khi áp vào ví dụ riêng.";
   }
   if (type.includes("kanji")) {
-    return "Kanji";
+    return "Dùng để nhận diện từ có kanji này. Nên học kèm âm đọc và một vài từ ghép thường gặp.";
   }
-  return "JLPT N5";
-}
-
-function buildTutorPrompt(item: KnowledgeItemResponse): string {
-  const title = item.title || item.id;
-  const reading = item.reading ? ` (${item.reading})` : "";
-  const meaning = item.meaningVi || item.meaningEn;
-  const meaningPart = meaning ? `, nghĩa là "${meaning}"` : "";
-  return `Giải thích ${title}${reading}${meaningPart} bằng tiếng Việt. Cho 2 ví dụ JLPT N5/N4, cách dùng tự nhiên và mẹo nhớ ngắn.`;
+  return "Dùng để tra nhanh nghĩa và ngữ cảnh cơ bản. Nếu cần hỏi sâu hơn, dùng bong bóng VAJA ở góc màn hình.";
 }

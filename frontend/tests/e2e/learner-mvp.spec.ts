@@ -32,6 +32,38 @@ const card = {
   lastReviewedAt: null
 };
 
+const kanjiCard = {
+  id: "card-kanji-1",
+  deckId: "deck-kanji",
+  frontText: "日",
+  backText: "ngày, mặt trời",
+  reading: "にち / ひ",
+  sourceType: "Kanji",
+  sourceId: "kanji-hi:N5",
+  level: "N5",
+  easinessFactor: 2.5,
+  intervalDays: 0,
+  repetitions: 0,
+  nextReviewAt: "2026-05-20T08:00:00Z",
+  lastReviewedAt: null
+};
+
+const n4Card = {
+  id: "card-n4-1",
+  deckId: "deck-n4",
+  frontText: "便利",
+  backText: "tiện lợi",
+  reading: "べんり",
+  sourceType: "Vocabulary",
+  sourceId: "benri:N4",
+  level: "N4",
+  easinessFactor: 2.5,
+  intervalDays: 0,
+  repetitions: 0,
+  nextReviewAt: "2026-05-20T08:00:00Z",
+  lastReviewedAt: null
+};
+
 const dashboard = {
   profile,
   progress: {
@@ -80,39 +112,6 @@ const dashboard = {
     recentTopics: []
   },
   generatedAt: "2026-05-20T08:00:00Z"
-};
-
-const savedPlan = {
-  id: "plan-1",
-  level: "N5",
-  targetLevel: "N4",
-  goal: "Thi JLPT N4 trong 3 tháng",
-  weeklyStudyHours: 3,
-  completedItems: 0,
-  totalItems: 2,
-  completionRate: 0,
-  items: [
-    {
-      id: "item-1",
-      order: 1,
-      title: "Ôn trợ từ N5",
-      objective: "Làm 5 câu về は và が.",
-      estimatedHours: 1,
-      completed: false,
-      completedAt: null
-    },
-    {
-      id: "item-2",
-      order: 2,
-      title: "Ôn từ vựng ăn uống",
-      objective: "Ôn 10 thẻ N5 liên quan sinh hoạt.",
-      estimatedHours: 1,
-      completed: false,
-      completedAt: null
-    }
-  ],
-  createdAt: "2026-05-20T08:00:00Z",
-  updatedAt: "2026-05-20T08:00:00Z"
 };
 
 test("learner can start a lesson, review flashcards, pass the quiz, and unlock the next lesson", async ({ page }) => {
@@ -181,16 +180,20 @@ test("learner can open supporting tools from the guided study path", async ({ pa
   await mockMvpApi(page);
 
   await page.goto("/learner/study");
-  await page.getByRole("button", { name: /Hỏi VAJA/i }).click();
-  await expect(page.getByRole("heading", { name: /Hỏi khi bạn chưa hiểu/i })).toBeVisible();
+  await page.getByRole("button", { name: /Mở hỏi VAJA/i }).click();
+  await expect(page.getByRole("heading", { name: /Hỏi nhanh VAJA/i })).toBeVisible();
+  await page.getByRole("button", { name: /Giải thích câu quiz sai/i }).click();
+  await expect(
+    page.locator(".floating-message-row.assistant .floating-message-bubble").filter({ hasText: /は dùng để nêu chủ đề/i })
+  ).toBeVisible();
 
   await page.goto("/learner/study");
   await page.getByRole("button", { name: /Tra mẫu câu đang học/i }).click();
-  await expect(page.getByRole("heading", { name: /Tra cứu tiếng Nhật N5\/N4/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Từ điển Nhật - Việt N5\/N4/i })).toBeVisible();
 
   await page.goto("/learner/study");
   await page.getByRole("button", { name: /Xem kho thẻ riêng/i }).click();
-  await expect(page.getByRole("heading", { name: /Ôn thẻ theo trí nhớ thật/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Thẻ nhớ theo cấp học/i })).toBeVisible();
 });
 
 const personalizedPathwayCases = [
@@ -251,6 +254,8 @@ test("learner can understand the MVP study loop", async ({ page }) => {
   await expect(page.getByRole("heading", { name: /hôm nay mình học nhẹ thôi/i })).toBeVisible();
   await expect(page.getByText("JLPT từng bước", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: /Học bài hôm nay/i })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Lộ trình/i })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: /Hỏi bài/i })).toHaveCount(0);
 
   await page.getByRole("link", { name: /Kiểm tra/i }).click();
   await page.getByRole("button", { name: /Bắt đầu kiểm tra/i }).click();
@@ -260,7 +265,13 @@ test("learner can understand the MVP study loop", async ({ page }) => {
   await expect(page.getByRole("heading", { name: /Đã xong lượt kiểm tra/i })).toBeVisible();
 
   await page.getByRole("link", { name: /Thẻ nhớ/i }).click();
-  await expect(page.getByRole("heading", { name: /Ôn thẻ theo trí nhớ thật/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Thẻ nhớ theo cấp học/i })).toBeVisible();
+  await page.getByRole("button", { name: "Kanji", exact: true }).click();
+  await expect(page.getByRole("button", { name: /N5 kanji/i })).toBeVisible();
+  await expect(page.getByRole("button", { name: /N5 vocabulary/i })).toHaveCount(0);
+  await expect(page.locator(".flashcard-study-panel").getByText(kanjiCard.frontText, { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Từ vựng", exact: true }).click();
+  await expect(page.getByRole("button", { name: /N5 vocabulary/i })).toBeVisible();
   const studyPanel = page.locator(".flashcard-study-panel");
   await page.getByRole("button", { name: "Lật đáp án", exact: true }).click();
   await expect(studyPanel.getByText(card.backText, { exact: true })).toBeVisible();
@@ -273,15 +284,14 @@ test("learner can understand the MVP study loop", async ({ page }) => {
   await page.getByRole("link", { name: /Tra cứu/i }).click();
   await page.getByRole("button", { name: "食べる" }).click();
   await expect(page.getByRole("heading", { name: "食べる", exact: true })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Hỏi VAJA", exact: true })).toBeVisible();
+  await expect(page.getByText("Dùng khi nào?")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Hỏi VAJA", exact: true })).toHaveCount(0);
 
-  await page.getByRole("link", { name: /Lộ trình/i }).click();
-  await page.getByRole("button", { name: /Xếp kế hoạch học/i }).click();
-  await expect(page.getByText(/Ôn trợ từ N5/i)).toBeVisible();
-
-  await page.getByRole("link", { name: /Hỏi bài/i }).click();
-  await page.getByRole("button", { name: /Giải thích trợ từ は và が/i }).click();
-  await expect(page.locator(".message-row.assistant .message-bubble").filter({ hasText: /は dùng để nêu chủ đề/i })).toBeVisible();
+  await page.getByRole("button", { name: /Mở hỏi VAJA/i }).click();
+  await page.getByRole("button", { name: /Giải thích dễ hiểu bằng tiếng Việt/i }).click();
+  await expect(
+    page.locator(".floating-message-row.assistant .floating-message-bubble").filter({ hasText: /は dùng để nêu chủ đề/i })
+  ).toBeVisible();
 });
 
 async function walkThroughLessonOneFlashcards(page: Page, includeBackButton = false) {
@@ -424,18 +434,46 @@ async function mockMvpApi(page: Page, profileOverride: Partial<typeof profile> =
           cardCount: 1,
           createdAt: "2026-05-20T08:00:00Z",
           updatedAt: "2026-05-20T08:00:00Z"
+        },
+        {
+          id: "deck-kanji",
+          title: "N5 kanji",
+          level: "N5",
+          category: "kanji",
+          cardCount: 1,
+          createdAt: "2026-05-20T08:00:00Z",
+          updatedAt: "2026-05-20T08:00:00Z"
+        },
+        {
+          id: "deck-n4",
+          title: "N4 vocabulary",
+          level: "N4",
+          category: "vocabulary",
+          cardCount: 1,
+          createdAt: "2026-05-20T08:00:00Z",
+          updatedAt: "2026-05-20T08:00:00Z"
         }
       ]);
       return;
     }
 
     if (method === "GET" && path === "/flashcards/review/due") {
-      await json(route, [card]);
+      await json(route, [card, kanjiCard, n4Card]);
       return;
     }
 
     if (method === "GET" && path === "/flashcards/decks/deck-1/cards") {
       await json(route, [card]);
+      return;
+    }
+
+    if (method === "GET" && path === "/flashcards/decks/deck-kanji/cards") {
+      await json(route, [kanjiCard]);
+      return;
+    }
+
+    if (method === "GET" && path === "/flashcards/decks/deck-n4/cards") {
+      await json(route, [n4Card]);
       return;
     }
 
@@ -457,45 +495,6 @@ async function mockMvpApi(page: Page, profileOverride: Partial<typeof profile> =
         },
         masteryScore: 0.32
       });
-      return;
-    }
-
-    if (method === "GET" && path === "/planner/plans") {
-      await json(route, [savedPlan]);
-      return;
-    }
-
-    if (method === "POST" && path === "/planner/recommend") {
-      await json(route, {
-        planId: "plan-1",
-        level: "N5",
-        targetLevel: "N4",
-        goal: "Thi JLPT N4 trong 3 tháng",
-        weeklyStudyHours: 3,
-        items: savedPlan.items.map(({ order, title, objective, estimatedHours }) => ({
-          order,
-          title,
-          objective,
-          estimatedHours
-        })),
-        context: {
-          profile,
-          weakProgress: dashboard.progress.weakestItems,
-          dueFlashcards: [card],
-          recentChatTopics: [],
-          recentAssessment: dashboard.assessments.latest
-        }
-      });
-      return;
-    }
-
-    if (method === "GET" && path === "/chat/sessions") {
-      await json(route, []);
-      return;
-    }
-
-    if (method === "GET" && path === "/chat/sessions/chat-1/messages") {
-      await json(route, []);
       return;
     }
 

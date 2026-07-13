@@ -6,7 +6,6 @@ import {
   ClipboardCheck,
   Layers3,
   Lock,
-  MessageCircle,
   RotateCcw,
   Trophy
 } from "lucide-react";
@@ -243,10 +242,6 @@ export function StudyView() {
                       <Layers3 size={18} />
                       Học thẻ của bài này
                     </PrimaryButton>
-                    <IconTextButton type="button" variant="ghost" onClick={() => navigate("/learner/chat")}>
-                      <MessageCircle size={18} />
-                      Hỏi VAJA
-                    </IconTextButton>
                   </div>
                 </div>
               )}

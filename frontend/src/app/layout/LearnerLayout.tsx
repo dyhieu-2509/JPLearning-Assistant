@@ -1,8 +1,6 @@
 import {
   BarChart3,
-  Bot,
   Flame,
-  CalendarCheck,
   ClipboardCheck,
   BookOpenCheck,
   BookOpenText,
@@ -26,11 +24,9 @@ import { FloatingTutor } from "../../features/learner/tutor/FloatingTutor";
 const navItems = [
   { to: "/learner", label: "Hôm nay", icon: BarChart3 },
   { to: "/learner/study", label: "Học", icon: BookOpenCheck },
-  { to: "/learner/chat", label: "Hỏi bài", icon: Bot },
   { to: "/learner/knowledge", label: "Tra cứu", icon: BookOpenText },
   { to: "/learner/flashcards", label: "Thẻ nhớ", icon: Layers3 },
-  { to: "/learner/assessment", label: "Kiểm tra", icon: ClipboardCheck },
-  { to: "/learner/planner", label: "Lộ trình", icon: CalendarCheck }
+  { to: "/learner/assessment", label: "Kiểm tra", icon: ClipboardCheck }
 ];
 
 export function LearnerLayout() {
@@ -46,13 +42,7 @@ export function LearnerLayout() {
     Boolean(accessToken) &&
     !checkingProfile &&
     !needsOnboarding &&
-    location.pathname !== "/learner" &&
-    !isOnboardingRoute &&
-    location.pathname !== "/learner/assessment" &&
-    location.pathname !== "/learner/flashcards" &&
-    location.pathname !== "/learner/planner" &&
-    location.pathname !== "/learner/study" &&
-    location.pathname !== "/learner/chat";
+    !isOnboardingRoute;
 
   useEffect(() => {
     if (!accessToken) {
@@ -192,13 +182,6 @@ function getTutorContext(pathname: string): { topic: string; suggestions: string
     return {
       topic: "assessment",
       suggestions: ["Giải thích câu tôi sai", "Ôn nhanh ngữ pháp N5", "Cho tôi một câu tương tự"]
-    };
-  }
-
-  if (pathname.includes("/planner")) {
-    return {
-      topic: "planner",
-      suggestions: ["Hôm nay nên học gì?", "Rút gọn bài tuần này", "Ôn phần tôi hay quên"]
     };
   }
 

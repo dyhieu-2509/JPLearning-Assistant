@@ -7,12 +7,10 @@ import { AdminDashboardPage } from "../pages/admin/AdminDashboardPage";
 import { AuthCallbackPage } from "../pages/auth/AuthCallbackPage";
 import { AuthPage } from "../pages/auth/AuthPage";
 import { AssessmentPage } from "../pages/learner/AssessmentPage";
-import { ChatPage } from "../pages/learner/ChatPage";
 import { DashboardPage } from "../pages/learner/DashboardPage";
 import { FlashcardsPage } from "../pages/learner/FlashcardsPage";
 import { KnowledgePage } from "../pages/learner/KnowledgePage";
 import { OnboardingPage } from "../pages/learner/OnboardingPage";
-import { PlannerPage } from "../pages/learner/PlannerPage";
 import { StudyPage } from "../pages/learner/StudyPage";
 import { LandingPage } from "../pages/public/LandingPage";
 import { PreAuthOnboardingPage } from "../pages/public/PreAuthOnboardingPage";
@@ -32,11 +30,11 @@ export default function App() {
             <Route path="/learner" element={<LearnerLayout />}>
               <Route index element={<DashboardPage />} />
               <Route path="onboarding" element={<OnboardingPage />} />
-              <Route path="chat" element={<ChatPage />} />
+              <Route path="chat" element={<Navigate replace to="/learner/study" />} />
               <Route path="knowledge" element={<KnowledgePage />} />
               <Route path="flashcards" element={<FlashcardsPage />} />
               <Route path="assessment" element={<AssessmentPage />} />
-              <Route path="planner" element={<PlannerPage />} />
+              <Route path="planner" element={<Navigate replace to="/learner/study" />} />
               <Route path="study" element={<StudyPage />} />
             </Route>
           </Route>

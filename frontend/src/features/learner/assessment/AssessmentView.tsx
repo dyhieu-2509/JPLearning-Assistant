@@ -1,4 +1,4 @@
-import { ArrowRight, CalendarCheck, CheckCircle2, ClipboardCheck, Layers3, Play, RotateCcw, XCircle } from "lucide-react";
+import { ArrowRight, BookOpenCheck, CheckCircle2, ClipboardCheck, Layers3, Play, RotateCcw, XCircle } from "lucide-react";
 import { FormEvent, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../app/providers/AuthProvider";
@@ -169,9 +169,7 @@ export function AssessmentView() {
           <div className="quiz-complete-card">
             <CheckCircle2 size={34} />
             <h3>Đã xong lượt kiểm tra này.</h3>
-            <p>
-              Bạn đạt {result.score}/{result.total}. Xem phần bên phải để biết nên ôn lại bằng thẻ hay cập nhật lộ trình.
-            </p>
+            <p>Bạn đạt {result.score}/{result.total}. Xem phần bên phải để biết nên ôn lại bằng thẻ hay quay về bài học chính.</p>
             <div className="next-action-grid">
               {needsReview ? (
                 <>
@@ -179,9 +177,9 @@ export function AssessmentView() {
                     <Layers3 size={18} />
                     Ôn phần sai bằng thẻ
                   </IconTextButton>
-                  <IconTextButton type="button" variant="ghost" onClick={() => navigate("/learner/planner")}>
-                    <CalendarCheck size={18} />
-                    Xem lộ trình ôn
+                  <IconTextButton type="button" variant="ghost" onClick={() => navigate("/learner/study")}>
+                    <BookOpenCheck size={18} />
+                    Về luồng học
                   </IconTextButton>
                 </>
               ) : (
@@ -290,9 +288,9 @@ export function AssessmentView() {
                   <Layers3 size={18} />
                   Ôn phần sai bằng thẻ
                 </IconTextButton>
-                <IconTextButton type="button" variant="ghost" onClick={() => navigate("/learner/planner")}>
-                  <CalendarCheck size={18} />
-                  Cập nhật lộ trình ôn
+                <IconTextButton type="button" variant="ghost" onClick={() => navigate("/learner/study")}>
+                  <BookOpenCheck size={18} />
+                  Về luồng học
                 </IconTextButton>
                 <IconTextButton type="button" variant="ghost" onClick={resetSession}>
                   <RotateCcw size={18} />

@@ -1,4 +1,4 @@
-import { BookOpenCheck, CalendarCheck, Layers3, MessageCircle, Search, Sparkles } from "lucide-react";
+import { BookOpenCheck, Layers3, Search, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../app/providers/AuthProvider";
@@ -56,11 +56,10 @@ export function DashboardView() {
   const pathwayLabel = learningPathwayLabel(dashboard?.profile.learningPathway);
   const completedSessions = dashboard?.assessments.completedSessions ?? 0;
   const averageScore = Math.round(dashboard?.assessments.averageScorePercent ?? 0);
-  const recentTopics = dashboard?.chat.recentTopics.length ? dashboard.chat.recentTopics : ["grammar", "vocabulary"];
   const learnerName = user?.displayName?.trim().split(" ")[0] || "bạn";
   const memoryLabel = masteryPercent >= 70 ? "Khá chắc" : masteryPercent >= 35 ? "Đang quen dần" : "Mới bắt đầu";
   const reviewLabel = dueCards ? `${dueCards} thẻ đang chờ` : "Chưa có thẻ đến hạn";
-  const hasRecentActivity = Boolean((dashboard?.chat.sessionCount ?? 0) || (dashboard?.chat.messageCount ?? 0) || dueCards);
+  const hasRecentActivity = Boolean(completedSessions || dueCards || dashboard?.progress.weakestItems.length);
 
   const studySteps = [
     {
@@ -83,13 +82,6 @@ export function DashboardView() {
       text: "Tìm nhanh mẫu câu, từ vựng hoặc kanji N5/N4 nếu gặp phần chưa hiểu.",
       to: "/learner/knowledge",
       status: `${currentLevel}/${targetLevel}`
-    },
-    {
-      icon: <MessageCircle size={20} />,
-      label: "Hỏi VAJA",
-      text: "Hỏi bằng tiếng Việt khi cần thêm ví dụ hoặc giải thích câu sai.",
-      to: "/learner/chat",
-      status: "Hỏi bài"
     }
   ];
 
@@ -108,8 +100,8 @@ export function DashboardView() {
               <BookOpenCheck size={18} />
               Học bài hôm nay
             </PrimaryButton>
-            <button className="friendly-secondary-action" type="button" onClick={() => navigate("/learner/planner")}>
-              Xem lộ trình tuần
+            <button className="friendly-secondary-action" type="button" onClick={() => navigate("/learner/flashcards")}>
+              Ôn thẻ riêng
             </button>
           </div>
         </div>
@@ -158,7 +150,7 @@ export function DashboardView() {
         </div>
       </section>
 
-      <Panel className="friendly-side-panel" eyebrow="Tuần này" title="Giữ nhịp vừa sức" action={<CalendarCheck size={22} />}>
+      <Panel className="friendly-side-panel" eyebrow="Pathway của bạn" title="Bài học chính của bạn" action={<BookOpenCheck size={22} />}>
         <div className="friendly-mini-stats">
           <MiniStat label="Thời lượng mỗi ngày" value={`${dailyMinutes} phút`} />
           <MiniStat label="Pathway" value={pathwayLabel} />
@@ -166,11 +158,11 @@ export function DashboardView() {
           <MiniStat label="Điểm gần đây" value={completedSessions ? `${averageScore}%` : "Đợi bài đầu tiên"} />
         </div>
         <p className="muted-copy">
-          {dashboard?.profile.goal || "Làm bài thử đầu tiên để VAJA xếp lại bài học cho hợp sức hơn."}
+          {dashboard?.profile.goal || "Bài học tiếp theo đã được xếp theo câu trả lời mở đầu và tiến độ gần nhất của bạn."}
         </p>
-        <PrimaryButton type="button" onClick={() => navigate("/learner/planner")}>
-          <CalendarCheck size={18} />
-          Xem kế hoạch
+        <PrimaryButton type="button" onClick={() => navigate("/learner/study")}>
+          <BookOpenCheck size={18} />
+          Tiếp tục học
         </PrimaryButton>
       </Panel>
 
@@ -198,15 +190,17 @@ export function DashboardView() {
         {hasRecentActivity ? (
           <>
             <div className="friendly-recent-grid">
-              <MiniStat label="Buổi hỏi bài" value={String(dashboard?.chat.sessionCount ?? 0)} />
-              <MiniStat label="Tin nhắn" value={String(dashboard?.chat.messageCount ?? 0)} />
+              <MiniStat label="Bài kiểm tra" value={String(completedSessions)} />
+              <MiniStat label="Mục cần ôn" value={String(dashboard?.progress.weakItems ?? 0)} />
               <MiniStat label="Thẻ cần ôn" value={String(dueCards)} />
             </div>
-            <div className="chip-row">
-              {recentTopics.map((topic) => (
-                <TopicChip key={topic}>{displaySkill(topic)}</TopicChip>
-              ))}
-            </div>
+            {dashboard?.progress.weakestItems.length ? (
+              <div className="chip-row">
+                {dashboard.progress.weakestItems.slice(0, 3).map((item) => (
+                  <TopicChip key={item.id}>{displaySkill(item.knowledgeType)}</TopicChip>
+                ))}
+              </div>
+            ) : null}
           </>
         ) : (
           <EmptyState compact>Sau buổi học đầu tiên, VAJA sẽ ghi lại chủ đề bạn vừa học ở đây.</EmptyState>

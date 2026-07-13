@@ -195,10 +195,10 @@ function FloatingMessageBubble({ message }: { message: TutorMessage }) {
 function displayContext(value: string): string {
   const labels: Record<string, string> = {
     dashboard: "tiến độ hôm nay",
+    study: "bài đang học",
     flashcards: "thẻ nhớ",
     knowledge: "tra cứu kiến thức",
     assessment: "kiểm tra nhanh",
-    planner: "lộ trình học",
     "JLPT N5": "JLPT N5"
   };
 
