@@ -133,6 +133,11 @@ test("learner can understand the MVP study loop", async ({ page }) => {
 
   await page.getByRole("link", { name: /Thẻ nhớ/i }).click();
   await expect(page.getByRole("heading", { name: /Ôn thẻ theo trí nhớ thật/i })).toBeVisible();
+  const studyPanel = page.locator(".flashcard-study-panel");
+  await page.getByRole("button", { name: "Lật đáp án", exact: true }).click();
+  await expect(studyPanel.getByText(card.backText, { exact: true })).toBeVisible();
+  await page.locator(".flashcard-card").click();
+  await expect(studyPanel.getByText(card.frontText, { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Lật đáp án", exact: true }).click();
   await page.getByRole("button", { name: /Nhớ được/i }).click();
   await expect(page.getByText(/Nhớ được đã được lưu/i)).toBeVisible();

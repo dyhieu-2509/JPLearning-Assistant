@@ -149,6 +149,10 @@ export function FlashcardsView() {
     void loadFlashcards();
   }
 
+  function toggleActiveCard(cardId: string) {
+    setFlipped((current) => (current === cardId ? null : cardId));
+  }
+
   return (
     <section className="learning-grid flashcard-workspace">
       <div className="section-heading full-span">
@@ -219,9 +223,14 @@ export function FlashcardsView() {
               <TopicChip>{activeCard.intervalDays} ngày giãn cách</TopicChip>
             </div>
 
-            <button className={isFlipped ? "flashcard-card flipped" : "flashcard-card"} type="button" onClick={() => setFlipped(activeCard.id)}>
+            <button
+              aria-label={isFlipped ? "Xem lại mặt trước" : "Lật thẻ"}
+              className={isFlipped ? "flashcard-card flipped" : "flashcard-card"}
+              type="button"
+              onClick={() => toggleActiveCard(activeCard.id)}
+            >
               <span>{isFlipped ? activeCard.backText : activeCard.frontText}</span>
-              <small>{isFlipped ? activeCard.reading || "Tự chấm theo mức độ nhớ" : "Tự nhớ trước, rồi lật đáp án"}</small>
+              <small>{isFlipped ? activeCard.reading || "Nhấn thẻ để xem lại câu hỏi" : "Tự nhớ trước, rồi lật đáp án"}</small>
             </button>
 
             {!isFlipped ? (
