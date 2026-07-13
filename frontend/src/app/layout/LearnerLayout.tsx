@@ -4,6 +4,7 @@ import {
   Flame,
   CalendarCheck,
   ClipboardCheck,
+  BookOpenCheck,
   BookOpenText,
   Layers3,
   LayoutDashboard,
@@ -24,6 +25,7 @@ import { FloatingTutor } from "../../features/learner/tutor/FloatingTutor";
 
 const navItems = [
   { to: "/learner", label: "Hôm nay", icon: BarChart3 },
+  { to: "/learner/study", label: "Học", icon: BookOpenCheck },
   { to: "/learner/chat", label: "Hỏi bài", icon: Bot },
   { to: "/learner/knowledge", label: "Tra cứu", icon: BookOpenText },
   { to: "/learner/flashcards", label: "Thẻ nhớ", icon: Layers3 },
@@ -38,20 +40,22 @@ export function LearnerLayout() {
   const [checkingProfile, setCheckingProfile] = useState(false);
   const [needsOnboarding, setNeedsOnboarding] = useState(false);
   const onboardingPath = "/learner/onboarding";
+  const isOnboardingRoute = location.pathname === onboardingPath;
   const tutorContext = getTutorContext(location.pathname);
   const showFloatingTutor =
     Boolean(accessToken) &&
     !checkingProfile &&
     !needsOnboarding &&
     location.pathname !== "/learner" &&
-    location.pathname !== onboardingPath &&
+    !isOnboardingRoute &&
     location.pathname !== "/learner/assessment" &&
     location.pathname !== "/learner/flashcards" &&
     location.pathname !== "/learner/planner" &&
+    location.pathname !== "/learner/study" &&
     location.pathname !== "/learner/chat";
 
   useEffect(() => {
-    if (!accessToken || location.pathname === onboardingPath) {
+    if (!accessToken) {
       setCheckingProfile(false);
       setNeedsOnboarding(false);
       return;
@@ -79,7 +83,7 @@ export function LearnerLayout() {
     return () => {
       active = false;
     };
-  }, [accessToken, location.pathname]);
+  }, [accessToken]);
 
   return (
     <div className="app-shell learner-shell">
@@ -143,7 +147,7 @@ export function LearnerLayout() {
             Mỗi ngày một bài nhỏ
           </div>
         </header>
-        {needsOnboarding ? (
+        {needsOnboarding && !isOnboardingRoute ? (
           <Navigate replace to={onboardingPath} />
         ) : checkingProfile ? (
           <LoadingPanel>Đang chuẩn bị góc học của bạn...</LoadingPanel>
@@ -163,6 +167,13 @@ export function LearnerLayout() {
 }
 
 function getTutorContext(pathname: string): { topic: string; suggestions: string[] } {
+  if (pathname.includes("/study")) {
+    return {
+      topic: "study",
+      suggestions: ["Tôi chưa hiểu bài này", "Cho thêm ví dụ giống bài", "Giải thích câu quiz sai"]
+    };
+  }
+
   if (pathname.includes("/flashcards")) {
     return {
       topic: "flashcards",

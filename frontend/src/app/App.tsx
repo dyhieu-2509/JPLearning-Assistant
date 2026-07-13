@@ -13,6 +13,7 @@ import { FlashcardsPage } from "../pages/learner/FlashcardsPage";
 import { KnowledgePage } from "../pages/learner/KnowledgePage";
 import { OnboardingPage } from "../pages/learner/OnboardingPage";
 import { PlannerPage } from "../pages/learner/PlannerPage";
+import { StudyPage } from "../pages/learner/StudyPage";
 import { LandingPage } from "../pages/public/LandingPage";
 import { PreAuthOnboardingPage } from "../pages/public/PreAuthOnboardingPage";
 import { Headbar } from "../shared/components";
@@ -36,6 +37,7 @@ export default function App() {
               <Route path="flashcards" element={<FlashcardsPage />} />
               <Route path="assessment" element={<AssessmentPage />} />
               <Route path="planner" element={<PlannerPage />} />
+              <Route path="study" element={<StudyPage />} />
             </Route>
           </Route>
           <Route element={<ProtectedRoute requireAdmin />}>

@@ -115,6 +115,84 @@ const savedPlan = {
   updatedAt: "2026-05-20T08:00:00Z"
 };
 
+test("learner can start a lesson, review flashcards, pass the quiz, and unlock the next lesson", async ({ page }) => {
+  await seedAuthenticatedLearner(page);
+  await mockMvpApi(page);
+
+  await page.goto("/learner");
+  await page.getByRole("button", { name: /Học bài hôm nay/i }).click();
+
+  await expect(page.getByRole("heading", { name: /Bấm vào là học/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Bài 1: Giới thiệu bản thân/i })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Bài 2: Đi đâu, làm gì/i })).toBeDisabled();
+
+  await walkThroughLessonOneFlashcards(page, true);
+  await answerLessonOneCorrectly(page);
+  await page.getByRole("button", { name: /Nộp quiz cuối bài/i }).click();
+
+  await expect(page.getByRole("heading", { name: /Qua bài rồi/i })).toBeVisible();
+  await expect(page.locator(".study-result > strong")).toHaveText("100%");
+  await expect(page.getByRole("button", { name: /Bài 2: Đi đâu, làm gì/i })).toBeEnabled();
+
+  await page.getByRole("button", { name: /Học bài tiếp theo/i }).click();
+  await expect(page.getByRole("heading", { name: /Bài 2: Đi đâu, làm gì/i })).toBeVisible();
+
+  await page.getByRole("button", { name: /Làm lại pathway/i }).click();
+  await expect(page.getByRole("heading", { name: /Bài 1: Giới thiệu bản thân/i })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Bài 2: Đi đâu, làm gì/i })).toBeDisabled();
+});
+
+test("learner cannot unlock the next lesson below the pass score", async ({ page }) => {
+  await seedAuthenticatedLearner(page);
+  await mockMvpApi(page);
+
+  await page.goto("/learner/study");
+  await walkThroughLessonOneFlashcards(page);
+  await answerLessonOneIncorrectly(page);
+  await page.getByRole("button", { name: /Nộp quiz cuối bài/i }).click();
+
+  await expect(page.getByRole("heading", { name: /Chưa qua bài này/i })).toBeVisible();
+  await expect(page.locator(".study-result > strong")).toHaveText("0%");
+  await expect(page.getByRole("button", { name: /Bài 2: Đi đâu, làm gì/i })).toBeDisabled();
+
+  await page.getByRole("button", { name: /Ôn lại bài này/i }).click();
+  await expect(page.locator(".study-flashcard")).toBeVisible();
+
+  for (let index = 0; index < 4; index += 1) {
+    await page
+      .getByRole("button", { name: index < 3 ? /Thẻ tiếp theo/i : /Làm quiz cuối bài/i })
+      .click();
+  }
+
+  await answerLessonOneIncorrectly(page);
+  await page.getByRole("button", { name: /Nộp quiz cuối bài/i }).click();
+  await expect(page.getByRole("button", { name: /Bài 2: Đi đâu, làm gì/i })).toBeDisabled();
+
+  await page.getByRole("button", { name: /Làm lại quiz/i }).click();
+  await expect(page.getByRole("button", { name: /Nộp quiz cuối bài/i })).toBeDisabled();
+  await answerLessonOneCorrectly(page);
+  await page.getByRole("button", { name: /Nộp quiz cuối bài/i }).click();
+  await expect(page.getByRole("heading", { name: /Qua bài rồi/i })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Bài 2: Đi đâu, làm gì/i })).toBeEnabled();
+});
+
+test("learner can open supporting tools from the guided study path", async ({ page }) => {
+  await seedAuthenticatedLearner(page);
+  await mockMvpApi(page);
+
+  await page.goto("/learner/study");
+  await page.getByRole("button", { name: /Hỏi VAJA/i }).click();
+  await expect(page.getByRole("heading", { name: /Hỏi khi bạn chưa hiểu/i })).toBeVisible();
+
+  await page.goto("/learner/study");
+  await page.getByRole("button", { name: /Tra mẫu câu đang học/i }).click();
+  await expect(page.getByRole("heading", { name: /Tra cứu tiếng Nhật N5\/N4/i })).toBeVisible();
+
+  await page.goto("/learner/study");
+  await page.getByRole("button", { name: /Xem kho thẻ riêng/i }).click();
+  await expect(page.getByRole("heading", { name: /Ôn thẻ theo trí nhớ thật/i })).toBeVisible();
+});
+
 test("learner can understand the MVP study loop", async ({ page }) => {
   await seedAuthenticatedLearner(page);
   await mockMvpApi(page);
@@ -122,7 +200,7 @@ test("learner can understand the MVP study loop", async ({ page }) => {
   await page.goto("/learner");
   await expect(page.getByRole("heading", { name: /hôm nay mình học nhẹ thôi/i })).toBeVisible();
   await expect(page.getByText("JLPT từng bước", { exact: true })).toBeVisible();
-  await expect(page.getByRole("button", { name: /Bắt đầu bài hôm nay/i })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Học bài hôm nay/i })).toBeVisible();
 
   await page.getByRole("link", { name: /Kiểm tra/i }).click();
   await page.getByRole("button", { name: /Bắt đầu kiểm tra/i }).click();
@@ -152,13 +230,48 @@ test("learner can understand the MVP study loop", async ({ page }) => {
   await expect(page.getByText(/Ôn trợ từ N5/i)).toBeVisible();
 
   await page.getByRole("link", { name: /Hỏi bài/i }).click();
-  await page.getByPlaceholder(/は và が khác nhau/i).fill("は và が khác nhau thế nào?");
-  await page.locator(".chat-composer .send-button").click();
-  await expect(page.getByText(/は dùng để nêu chủ đề/i)).toBeVisible();
+  await page.getByRole("button", { name: /Giải thích trợ từ は và が/i }).click();
+  await expect(page.locator(".message-row.assistant .message-bubble").filter({ hasText: /は dùng để nêu chủ đề/i })).toBeVisible();
 });
+
+async function walkThroughLessonOneFlashcards(page: Page, includeBackButton = false) {
+  await page.getByRole("button", { name: /Học thẻ của bài này/i }).click();
+
+  if (includeBackButton) {
+    await page.locator(".study-flashcard").click();
+    await page.getByRole("button", { name: /Thẻ tiếp theo/i }).click();
+    await expect(page.getByText("Thẻ 2/4", { exact: true })).toBeVisible();
+    await page.getByRole("button", { name: /Quay lại/i }).click();
+    await expect(page.getByText("Thẻ 1/4", { exact: true })).toBeVisible();
+  }
+
+  for (let index = 0; index < 4; index += 1) {
+    await page.locator(".study-flashcard").click();
+    await page
+      .getByRole("button", { name: index < 3 ? /Thẻ tiếp theo/i : /Làm quiz cuối bài/i })
+      .click();
+  }
+}
+
+async function answerLessonOneCorrectly(page: Page) {
+  await page.getByRole("button", { name: "わたしは学生です。", exact: true }).click();
+  await page.getByRole("button", { name: "Đánh dấu chủ đề", exact: true }).click();
+  await page.getByRole("button", { name: "Cuối câu", exact: true }).click();
+  await page.getByRole("button", { name: "がくせい", exact: true }).click();
+  await page.getByRole("button", { name: "Tôi là sinh viên", exact: true }).click();
+}
+
+async function answerLessonOneIncorrectly(page: Page) {
+  await page.getByRole("button", { name: "わたしを学生です。", exact: true }).click();
+  await page.getByRole("button", { name: "Đánh dấu tân ngữ", exact: true }).click();
+  await page.getByRole("button", { name: "Đầu câu", exact: true }).click();
+  await page.getByRole("button", { name: "せんせい", exact: true }).click();
+  await page.getByRole("button", { name: "Tôi ăn cơm", exact: true }).click();
+}
 
 async function seedAuthenticatedLearner(page: Page) {
   await page.addInitScript(() => {
+    window.localStorage.removeItem("vaja.studyPathProgress");
     window.localStorage.setItem(
       "vaja.auth",
       JSON.stringify({

@@ -1,4 +1,4 @@
-import { CalendarCheck, ClipboardCheck, Layers3, MessageCircle, Search, Sparkles } from "lucide-react";
+import { BookOpenCheck, CalendarCheck, Layers3, MessageCircle, Search, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../app/providers/AuthProvider";
@@ -50,7 +50,6 @@ export function DashboardView() {
 
   const masteryPercent = Math.round((dashboard?.progress.averageMasteryScore ?? 0) * 100);
   const dueCards = dashboard?.flashcards.dueCards ?? 0;
-  const weakItems = dashboard?.progress.weakItems ?? 0;
   const dailyMinutes = dashboard?.profile.dailyStudyMinutes ?? 15;
   const currentLevel = dashboard?.profile.currentLevel ?? "N5";
   const targetLevel = dashboard?.profile.targetLevel ?? "N4";
@@ -65,30 +64,30 @@ export function DashboardView() {
 
   const studySteps = [
     {
-      icon: <ClipboardCheck size={20} />,
-      label: "Làm thử 5 câu",
-      text: "Khởi động ngắn để biết hôm nay nên ôn từ vựng, ngữ pháp hay kanji.",
-      to: "/learner/assessment",
-      status: weakItems ? `${weakItems} phần cần luyện` : "Nên làm trước"
+      icon: <BookOpenCheck size={20} />,
+      label: "Học một bài trọn vẹn",
+      text: `Bài học gồm giải thích ngắn, flashcard và quiz cuối bài. Đạt từ 85% thì mở bài tiếp theo.`,
+      to: "/learner/study",
+      status: "Luồng chính"
     },
     {
       icon: <Layers3 size={20} />,
-      label: dueCards ? "Ôn thẻ đang chờ" : "Tạo bộ thẻ đầu tiên",
-      text: "Tự nhớ trước, lật đáp án, rồi chọn mức nhớ thật của bạn.",
+      label: dueCards ? "Ôn thẻ riêng" : "Kho thẻ riêng",
+      text: "Dùng khi muốn ôn thêm ngoài bài chính hoặc xem lại các thẻ đã lưu.",
       to: "/learner/flashcards",
       status: reviewLabel
     },
     {
       icon: <Search size={20} />,
       label: "Tra cứu khi bí",
-      text: "Tìm nhanh mẫu câu, từ vựng hoặc kanji N5/N4 khi đang học.",
+      text: "Tìm nhanh mẫu câu, từ vựng hoặc kanji N5/N4 nếu gặp phần chưa hiểu.",
       to: "/learner/knowledge",
       status: `${currentLevel}/${targetLevel}`
     },
     {
       icon: <MessageCircle size={20} />,
       label: "Hỏi VAJA",
-      text: "Hỏi bằng tiếng Việt để được giải thích bằng ví dụ dễ hiểu.",
+      text: "Hỏi bằng tiếng Việt khi cần thêm ví dụ hoặc giải thích câu sai.",
       to: "/learner/chat",
       status: "Hỏi bài"
     }
@@ -101,13 +100,13 @@ export function DashboardView() {
           <p className="eyebrow">今日の学習</p>
           <h2>Chào {learnerName}, hôm nay mình học nhẹ thôi.</h2>
           <p>
-            Dành khoảng {dailyMinutes} phút cho một việc nhỏ: làm thử vài câu, ôn lại phần hay quên,
-            rồi hỏi khi bị kẹt.
+            Dành khoảng {dailyMinutes} phút cho một bài nhỏ: học mẫu câu, lật thẻ nhớ, rồi làm quiz cuối bài.
+            Đạt từ 85% thì bài tiếp theo sẽ mở.
           </p>
           <div className="friendly-hero-actions">
-            <PrimaryButton type="button" onClick={() => navigate("/learner/assessment")}>
-              <ClipboardCheck size={18} />
-              Bắt đầu bài hôm nay
+            <PrimaryButton type="button" onClick={() => navigate("/learner/study")}>
+              <BookOpenCheck size={18} />
+              Học bài hôm nay
             </PrimaryButton>
             <button className="friendly-secondary-action" type="button" onClick={() => navigate("/learner/planner")}>
               Xem lộ trình tuần
@@ -141,8 +140,8 @@ export function DashboardView() {
       <section className="friendly-lesson-card">
         <div className="panel-heading">
           <div>
-            <p className="eyebrow">Bài học hôm nay</p>
-            <h3>Đi từng bước, không cần học quá nhiều.</h3>
+            <p className="eyebrow">Luồng chính</p>
+            <h3>Bấm một chỗ để học, ôn thẻ và làm quiz.</h3>
           </div>
         </div>
         <div className="friendly-step-list" aria-label="Các bước học hôm nay">
