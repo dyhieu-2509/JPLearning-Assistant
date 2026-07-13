@@ -12,8 +12,18 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { IconTextButton, Panel, PrimaryButton, TopicChip } from "../../../shared/components";
-import { passThreshold, studyLessons, type StudyLesson } from "./studyPath";
+import { useAuth } from "../../../app/providers/AuthProvider";
+import { apiRequest } from "../../../shared/api";
+import { IconTextButton, LoadingPanel, Panel, PrimaryButton, TopicChip } from "../../../shared/components";
+import type { StudentProfileResponse } from "../../../shared/models";
+import {
+  buildStudyLessons,
+  passThreshold,
+  studyPathwayIntro,
+  weakSkillSummary,
+  type StudyLesson,
+  type StudyProfile
+} from "./studyPath";
 
 type LessonPhase = "learn" | "flashcards" | "quiz" | "result";
 
@@ -25,12 +35,16 @@ type LessonProgress = {
 
 type StudyProgress = Record<string, LessonProgress>;
 
-const storageKey = "vaja.studyPathProgress";
-
 export function StudyView() {
   const navigate = useNavigate();
-  const [progress, setProgress] = useState<StudyProgress>(() => readProgress());
-  const firstOpenLesson = useMemo(() => firstUnlockedLesson(progress), [progress]);
+  const { accessToken, user } = useAuth();
+  const [profile, setProfile] = useState<StudyProfile | null>(null);
+  const [loadingProfile, setLoadingProfile] = useState(true);
+  const lessons = useMemo(() => buildStudyLessons(profile), [profile]);
+  const intro = useMemo(() => studyPathwayIntro(profile), [profile]);
+  const progressKey = useMemo(() => studyStorageKey(user?.id, profile), [profile, user?.id]);
+  const [progress, setProgress] = useState<StudyProgress>(() => readProgress("vaja.studyPathProgress.default"));
+  const firstOpenLesson = useMemo(() => firstUnlockedLesson(progress, lessons), [lessons, progress]);
   const [activeLessonId, setActiveLessonId] = useState(firstOpenLesson.id);
   const [phase, setPhase] = useState<LessonPhase>("learn");
   const [cardIndex, setCardIndex] = useState(0);
@@ -39,21 +53,66 @@ export function StudyView() {
   const [lastScore, setLastScore] = useState<number | null>(null);
 
   useEffect(() => {
-    writeProgress(progress);
-  }, [progress]);
+    if (!accessToken) {
+      setLoadingProfile(false);
+      return;
+    }
 
-  const activeIndex = studyLessons.findIndex((lesson) => lesson.id === activeLessonId);
-  const lesson = studyLessons[activeIndex] ?? studyLessons[0];
+    let active = true;
+    setLoadingProfile(true);
+    apiRequest<StudentProfileResponse>("/personalization/me/profile", { token: accessToken })
+      .then((data) => {
+        if (active) {
+          setProfile(data);
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setProfile(null);
+        }
+      })
+      .finally(() => {
+        if (active) {
+          setLoadingProfile(false);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [accessToken]);
+
+  useEffect(() => {
+    const nextProgress = readProgress(progressKey);
+    setProgress(nextProgress);
+    setActiveLessonId(firstUnlockedLesson(nextProgress, lessons).id);
+    setPhase("learn");
+    setCardIndex(0);
+    setFlipped(false);
+    setAnswers({});
+    setLastScore(null);
+  }, [lessons, progressKey]);
+
+  useEffect(() => {
+    writeProgress(progressKey, progress);
+  }, [progress, progressKey]);
+
+  const activeIndex = lessons.findIndex((lesson) => lesson.id === activeLessonId);
+  const lesson = lessons[activeIndex] ?? lessons[0];
   const lessonProgress = progress[lesson.id];
-  const unlocked = isLessonUnlocked(activeIndex, progress);
+  const unlocked = isLessonUnlocked(activeIndex, progress, lessons);
   const answeredCount = lesson.questions.filter((question) => answers[question.id]).length;
   const currentCard = lesson.flashcards[cardIndex] ?? lesson.flashcards[0];
   const currentScore = lastScore ?? lessonProgress?.bestScore ?? 0;
-  const nextLesson = studyLessons[activeIndex + 1] ?? null;
+  const nextLesson = lessons[activeIndex + 1] ?? null;
+
+  if (loadingProfile) {
+    return <LoadingPanel>Đang cá nhân hóa pathway học của bạn...</LoadingPanel>;
+  }
 
   function selectLesson(nextLessonId: string) {
-    const nextIndex = studyLessons.findIndex((item) => item.id === nextLessonId);
-    if (!isLessonUnlocked(nextIndex, progress)) {
+    const nextIndex = lessons.findIndex((item) => item.id === nextLessonId);
+    if (!isLessonUnlocked(nextIndex, progress, lessons)) {
       return;
     }
     setActiveLessonId(nextLessonId);
@@ -106,7 +165,7 @@ export function StudyView() {
 
   function resetPath() {
     setProgress({});
-    setActiveLessonId(studyLessons[0].id);
+    setActiveLessonId(lessons[0].id);
     resetLessonState("learn");
   }
 
@@ -114,24 +173,29 @@ export function StudyView() {
     <section className="study-path-page">
       <section className="study-path-hero">
         <div>
-          <p className="eyebrow">Pathway học chính</p>
-          <h2>Bấm vào là học, không phải tự ghép chức năng.</h2>
+          <p className="eyebrow">Pathway học chính · {intro.label}</p>
+          <h2>{intro.title}</h2>
           <p>
-            Mỗi bài gồm phần học ngắn, thẻ nhớ và quiz cuối bài. Đạt từ {passThreshold}% trở lên thì bài kế tiếp mới mở.
+            {intro.description} Mỗi bài gồm phần học ngắn, thẻ nhớ và quiz cuối bài. Đạt từ {passThreshold}% trở lên thì bài kế tiếp mới mở.
           </p>
+          <div className="study-profile-chips">
+            <TopicChip>{profile?.currentLevel ?? "N5"} → {profile?.targetLevel ?? "N4"}</TopicChip>
+            <TopicChip>Trọng tâm: {weakSkillSummary(profile)}</TopicChip>
+            <TopicChip>{profile?.dailyStudyMinutes ?? 30} phút/ngày</TopicChip>
+          </div>
         </div>
         <div className="study-path-score">
           <Trophy size={24} />
           <span>Tiến độ</span>
-          <strong>{completedLessons(progress)}/{studyLessons.length}</strong>
+          <strong>{completedLessons(progress, lessons)}/{lessons.length}</strong>
         </div>
       </section>
 
       <div className="study-path-layout">
         <Panel className="study-lesson-rail" eyebrow="Bài học" title="Đường học">
           <div className="study-lesson-list">
-            {studyLessons.map((item, index) => {
-              const itemUnlocked = isLessonUnlocked(index, progress);
+            {lessons.map((item, index) => {
+              const itemUnlocked = isLessonUnlocked(index, progress, lessons);
               const itemProgress = progress[item.id];
               return (
                 <button
@@ -160,7 +224,7 @@ export function StudyView() {
           action={<LessonPhaseBadge phase={phase} />}
         >
           {!unlocked ? (
-            <LockedLesson previous={studyLessons[activeIndex - 1]} />
+            <LockedLesson previous={lessons[activeIndex - 1]} />
           ) : (
             <>
               {phase === "learn" && (
@@ -327,7 +391,15 @@ function LockedLesson({ previous }: { previous?: StudyLesson }) {
   );
 }
 
-function readProgress(): StudyProgress {
+function studyStorageKey(userId?: string, profile?: StudyProfile | null): string {
+  const weakSkills = profile?.weakSkills?.slice().sort().join("-") || "none";
+  const pathway = profile?.learningPathway ?? "jlpt_foundation";
+  const currentLevel = profile?.currentLevel ?? "N5";
+  const targetLevel = profile?.targetLevel ?? "N4";
+  return `vaja.studyPathProgress.${userId ?? "anonymous"}.${pathway}.${currentLevel}.${targetLevel}.${weakSkills}`;
+}
+
+function readProgress(storageKey: string): StudyProgress {
   try {
     const raw = localStorage.getItem(storageKey);
     return raw ? (JSON.parse(raw) as StudyProgress) : {};
@@ -337,24 +409,24 @@ function readProgress(): StudyProgress {
   }
 }
 
-function writeProgress(progress: StudyProgress) {
+function writeProgress(storageKey: string, progress: StudyProgress) {
   localStorage.setItem(storageKey, JSON.stringify(progress));
 }
 
-function isLessonUnlocked(index: number, progress: StudyProgress): boolean {
+function isLessonUnlocked(index: number, progress: StudyProgress, lessons: StudyLesson[]): boolean {
   if (index <= 0) {
     return true;
   }
-  return Boolean(progress[studyLessons[index - 1]?.id]?.passed);
+  return Boolean(progress[lessons[index - 1]?.id]?.passed);
 }
 
-function firstUnlockedLesson(progress: StudyProgress): StudyLesson {
+function firstUnlockedLesson(progress: StudyProgress, lessons: StudyLesson[]): StudyLesson {
   return (
-    studyLessons.find((lesson, index) => isLessonUnlocked(index, progress) && !progress[lesson.id]?.passed) ??
-    studyLessons[studyLessons.length - 1]
+    lessons.find((lesson, index) => isLessonUnlocked(index, progress, lessons) && !progress[lesson.id]?.passed) ??
+    lessons[lessons.length - 1]
   );
 }
 
-function completedLessons(progress: StudyProgress): number {
-  return studyLessons.filter((lesson) => progress[lesson.id]?.passed).length;
+function completedLessons(progress: StudyProgress, lessons: StudyLesson[]): number {
+  return lessons.filter((lesson) => progress[lesson.id]?.passed).length;
 }

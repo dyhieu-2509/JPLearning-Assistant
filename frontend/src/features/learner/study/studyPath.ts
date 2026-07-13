@@ -25,6 +25,20 @@ export type StudyLesson = {
   questions: StudyQuestion[];
 };
 
+export type StudyProfile = {
+  currentLevel?: string | null;
+  targetLevel?: string | null;
+  learningPathway?: string | null;
+  dailyStudyMinutes?: number | null;
+  weakSkills?: string[];
+};
+
+export type StudyPathwayIntro = {
+  label: string;
+  title: string;
+  description: string;
+};
+
 export const passThreshold = 85;
 
 export const studyLessons: StudyLesson[] = [
@@ -188,3 +202,285 @@ export const studyLessons: StudyLesson[] = [
     ]
   }
 ];
+
+const pathwayLessons: Record<string, StudyLesson> = {
+  jlpt_foundation: studyLessons[0],
+  conversation: {
+    id: "conversation-greetings",
+    level: "N5",
+    title: "Bài 1: Chào hỏi hằng ngày",
+    focus: "hội thoại ngắn",
+    summary: "Tập mở lời, giới thiệu ngắn và đáp lại tự nhiên trong một cuộc nói chuyện cơ bản.",
+    pattern: "はじめまして。A です。よろしくお願いします。",
+    example: "はじめまして。ヒエウです。よろしくお願いします。",
+    translation: "Rất vui được gặp bạn. Tôi là Hiếu. Mong được giúp đỡ.",
+    flashcards: [
+      { front: "はじめまして", back: "rất vui được gặp lần đầu", hint: "Dùng khi mới gặp ai đó" },
+      { front: "よろしくお願いします", back: "mong được giúp đỡ / rất mong được hợp tác", hint: "Câu kết khi tự giới thiệu" },
+      { front: "友だち", back: "bạn bè", hint: "ともだち" },
+      { front: "です", back: "là / dạng lịch sự", hint: "Đặt cuối câu" }
+    ],
+    questions: [
+      {
+        id: "conversation-greetings-q1",
+        prompt: "Câu nào phù hợp khi gặp ai đó lần đầu?",
+        options: ["はじめまして。", "ただいま。", "おやすみ。", "いただきます。"],
+        answer: "はじめまして。",
+        explanation: "はじめまして dùng khi gặp ai đó lần đầu."
+      },
+      {
+        id: "conversation-greetings-q2",
+        prompt: "よろしくお願いします thường đặt ở đâu trong phần tự giới thiệu?",
+        options: ["Cuối phần giới thiệu", "Trước tên", "Giữa trợ từ", "Sau mọi động từ"],
+        answer: "Cuối phần giới thiệu",
+        explanation: "Câu này thường dùng để kết thúc phần tự giới thiệu một cách lịch sự."
+      },
+      {
+        id: "conversation-greetings-q3",
+        prompt: "ヒエウです có nghĩa gần nhất là gì?",
+        options: ["Tôi là Hiếu", "Tôi đi học", "Tôi uống nước", "Tôi không hiểu"],
+        answer: "Tôi là Hiếu",
+        explanation: "Tên + です là cách nói 'tôi là...' lịch sự."
+      },
+      {
+        id: "conversation-greetings-q4",
+        prompt: "友だち đọc là gì?",
+        options: ["ともだち", "せんせい", "がくせい", "かいしゃ"],
+        answer: "ともだち",
+        explanation: "友だち đọc là ともだち, nghĩa là bạn bè."
+      },
+      {
+        id: "conversation-greetings-q5",
+        prompt: "Pathway giao tiếp nên ưu tiên luyện gì trước?",
+        options: ["Câu dùng được ngay", "Kanji hiếm", "Bài đọc dài", "Mẫu email trang trọng"],
+        answer: "Câu dùng được ngay",
+        explanation: "Giao tiếp hằng ngày cần phản xạ với câu ngắn và tự nhiên trước."
+      }
+    ]
+  },
+  school: {
+    id: "school-classroom",
+    level: "N5",
+    title: "Bài 1: Hỏi bài trên lớp",
+    focus: "これは何ですか",
+    summary: "Tập hỏi đồ vật, từ mới và phần chưa hiểu khi đang học trên lớp.",
+    pattern: "これは何ですか。 / もう一度お願いします。",
+    example: "これは何ですか。もう一度お願いします。",
+    translation: "Cái này là gì? Xin thầy/cô nói lại một lần nữa.",
+    flashcards: [
+      { front: "これ", back: "cái này", hint: "Vật gần người nói" },
+      { front: "何", back: "cái gì", hint: "なん / なに" },
+      { front: "もう一度", back: "một lần nữa", hint: "もういちど" },
+      { front: "お願いします", back: "xin vui lòng", hint: "Cách nhờ lịch sự" }
+    ],
+    questions: [
+      {
+        id: "school-classroom-q1",
+        prompt: "Câu nào dùng để hỏi 'Cái này là gì?'",
+        options: ["これは何ですか。", "これは行きますか。", "何を飲みますか。", "学校へ行きます。"],
+        answer: "これは何ですか。",
+        explanation: "これは何ですか dùng để hỏi tên hoặc nghĩa của vật gần người nói."
+      },
+      {
+        id: "school-classroom-q2",
+        prompt: "もう一度お願いします dùng khi nào?",
+        options: ["Muốn nghe lại", "Muốn về nhà", "Muốn ăn cơm", "Muốn ngủ"],
+        answer: "Muốn nghe lại",
+        explanation: "もう一度 nghĩa là một lần nữa, お願いします làm câu nhờ lịch sự hơn."
+      },
+      {
+        id: "school-classroom-q3",
+        prompt: "何 trong これは何ですか nghĩa là gì?",
+        options: ["cái gì", "ở đâu", "khi nào", "ai"],
+        answer: "cái gì",
+        explanation: "何 là từ hỏi cho 'cái gì'."
+      },
+      {
+        id: "school-classroom-q4",
+        prompt: "これは chỉ vật ở vị trí nào?",
+        options: ["Gần người nói", "Gần người nghe", "Xa cả hai", "Không chỉ vật"],
+        answer: "Gần người nói",
+        explanation: "これ dùng cho vật gần người nói."
+      },
+      {
+        id: "school-classroom-q5",
+        prompt: "Pathway bài trên lớp nên ưu tiên gì?",
+        options: ["Từ vựng và mẫu đang học", "Hội thoại công sở", "Bài báo dài", "Kính ngữ nâng cao"],
+        answer: "Từ vựng và mẫu đang học",
+        explanation: "Người học theo lớp cần bám vào bài hiện tại để không đứt mạch."
+      }
+    ]
+  },
+  work: {
+    id: "work-introduction",
+    level: "N4",
+    title: "Bài 1: Tự giới thiệu nơi làm việc",
+    focus: "申します và lịch sự",
+    summary: "Tập nói lịch sự khi giới thiệu tên, bộ phận và mong được hợp tác trong môi trường công việc.",
+    pattern: "A と申します。よろしくお願いいたします。",
+    example: "ブイと申します。よろしくお願いいたします。",
+    translation: "Tôi tên là Bùi. Rất mong được giúp đỡ/hợp tác.",
+    flashcards: [
+      { front: "申します", back: "tên là / nói là (khiêm nhường)", hint: "もうします" },
+      { front: "お願いいたします", back: "xin vui lòng / mong được giúp đỡ", hint: "Lịch sự hơn お願いします" },
+      { front: "会社", back: "công ty", hint: "かいしゃ" },
+      { front: "部署", back: "bộ phận", hint: "ぶしょ" }
+    ],
+    questions: [
+      {
+        id: "work-introduction-q1",
+        prompt: "Cách nói lịch sự hơn cho 'tôi tên là Bùi' là gì?",
+        options: ["ブイと申します。", "ブイを飲みます。", "ブイへ行きます。", "ブイがあります。"],
+        answer: "ブイと申します。",
+        explanation: "と申します là cách tự giới thiệu tên lịch sự trong công việc."
+      },
+      {
+        id: "work-introduction-q2",
+        prompt: "お願いいたします có sắc thái thế nào?",
+        options: ["Lịch sự", "Thân mật", "Thô", "Phủ định"],
+        answer: "Lịch sự",
+        explanation: "お願いいたします lịch sự hơn お願いします."
+      },
+      {
+        id: "work-introduction-q3",
+        prompt: "会社 nghĩa là gì?",
+        options: ["công ty", "trường học", "nhà ga", "bài tập"],
+        answer: "công ty",
+        explanation: "会社 đọc là かいしゃ, nghĩa là công ty."
+      },
+      {
+        id: "work-introduction-q4",
+        prompt: "部署 đọc là gì?",
+        options: ["ぶしょ", "かいしゃ", "せんせい", "えき"],
+        answer: "ぶしょ",
+        explanation: "部署 đọc là ぶしょ, nghĩa là bộ phận/phòng ban."
+      },
+      {
+        id: "work-introduction-q5",
+        prompt: "Pathway công việc nên ưu tiên gì?",
+        options: ["Cách nói lịch sự và tình huống công sở", "Tiếng lóng", "Bài hát", "Chỉ romaji"],
+        answer: "Cách nói lịch sự và tình huống công sở",
+        explanation: "Môi trường công việc cần câu lịch sự, rõ ý và đúng ngữ cảnh."
+      }
+    ]
+  },
+  reading: {
+    id: "reading-short-passage",
+    level: "N5",
+    title: "Bài 1: Đọc đoạn ngắn N5",
+    focus: "ý chính và từ khóa",
+    summary: "Tập đọc một đoạn ngắn, tìm chủ đề chính và tách từ chưa biết thành thẻ nhớ.",
+    pattern: "Topic は Adjective です。Reason から。",
+    example: "日本語はおもしろいです。新しい言葉が多いからです。",
+    translation: "Tiếng Nhật thú vị. Vì có nhiều từ mới.",
+    flashcards: [
+      { front: "おもしろい", back: "thú vị", hint: "Tính từ い" },
+      { front: "新しい", back: "mới", hint: "あたらしい" },
+      { front: "言葉", back: "từ ngữ", hint: "ことば" },
+      { front: "多い", back: "nhiều", hint: "おおい" }
+    ],
+    questions: [
+      {
+        id: "reading-short-passage-q1",
+        prompt: "日本語はおもしろいです nghĩa là gì?",
+        options: ["Tiếng Nhật thú vị", "Tiếng Nhật khó uống", "Tôi đi Nhật", "Tôi là người Nhật"],
+        answer: "Tiếng Nhật thú vị",
+        explanation: "おもしろい là thú vị."
+      },
+      {
+        id: "reading-short-passage-q2",
+        prompt: "から trong câu ví dụ dùng để làm gì?",
+        options: ["Nêu lý do", "Đánh dấu tân ngữ", "Tạo câu hỏi", "Chỉ nơi đến"],
+        answer: "Nêu lý do",
+        explanation: "から có thể dùng để nêu lý do: vì..."
+      },
+      {
+        id: "reading-short-passage-q3",
+        prompt: "言葉 nghĩa là gì?",
+        options: ["từ ngữ", "nhà ga", "nước", "bộ phận"],
+        answer: "từ ngữ",
+        explanation: "言葉 đọc là ことば, nghĩa là từ ngữ/lời nói."
+      },
+      {
+        id: "reading-short-passage-q4",
+        prompt: "Khi đọc hiểu, bước nào nên làm trước?",
+        options: ["Tìm ý chính", "Dịch từng chữ ngay", "Bỏ qua tiêu đề", "Chỉ đọc đáp án"],
+        answer: "Tìm ý chính",
+        explanation: "Đọc hiểu nên nắm ý chính trước rồi mới xử lý chi tiết."
+      },
+      {
+        id: "reading-short-passage-q5",
+        prompt: "Pathway đọc hiểu nên ưu tiên gì?",
+        options: ["Từ khóa, kanji và câu ngắn", "Chỉ hội thoại", "Chỉ nghe", "Chỉ email công việc"],
+        answer: "Từ khóa, kanji và câu ngắn",
+        explanation: "Đọc hiểu tiến bộ tốt hơn khi gom từ khóa và câu mẫu thành thẻ nhớ."
+      }
+    ]
+  }
+};
+
+const pathwayIntros: Record<string, StudyPathwayIntro> = {
+  jlpt_foundation: {
+    label: "JLPT từng bước",
+    title: "Pathway JLPT: học chắc từng mẫu, qua quiz rồi mở bài tiếp.",
+    description: "VAJA ưu tiên vòng học mới, flashcard, quiz ngắn và sửa lỗi theo chuẩn N5/N4."
+  },
+  conversation: {
+    label: "Giao tiếp hằng ngày",
+    title: "Pathway giao tiếp: học câu dùng được ngay trong đời sống.",
+    description: "VAJA ưu tiên hội thoại ngắn, phản xạ câu cơ bản và cách đáp tự nhiên."
+  },
+  school: {
+    label: "Bài trên lớp",
+    title: "Pathway trên lớp: bám bài học, từ mới và mẫu câu đang gặp.",
+    description: "VAJA ưu tiên câu hỏi trên lớp, từ vựng bài học và bài ôn ngắn để không bị đứt mạch."
+  },
+  work: {
+    label: "Tiếng Nhật công việc",
+    title: "Pathway công việc: học câu lịch sự và tình huống công sở.",
+    description: "VAJA ưu tiên tự giới thiệu, email, nhờ vả và cách nói phù hợp môi trường làm việc."
+  },
+  reading: {
+    label: "Đọc hiểu",
+    title: "Pathway đọc hiểu: đọc câu ngắn, gom từ khóa, tăng kanji.",
+    description: "VAJA ưu tiên từ vựng, kanji, ý chính và bài đọc ngắn N5/N4."
+  }
+};
+
+export function buildStudyLessons(profile?: StudyProfile | null): StudyLesson[] {
+  const pathway = normalizePathway(profile?.learningPathway);
+  const firstLesson = pathwayLessons[pathway] ?? pathwayLessons.jlpt_foundation;
+  const currentLevel = (profile?.currentLevel ?? "N5").toUpperCase();
+  const targetLevel = (profile?.targetLevel ?? "N4").toUpperCase();
+  const continuation = currentLevel === "N4" || targetLevel === "N4"
+    ? [studyLessons[1], studyLessons[2]]
+    : [studyLessons[1]];
+
+  return [firstLesson, ...continuation.filter((lesson) => lesson.id !== firstLesson.id)];
+}
+
+export function studyPathwayIntro(profile?: StudyProfile | null): StudyPathwayIntro {
+  return pathwayIntros[normalizePathway(profile?.learningPathway)] ?? pathwayIntros.jlpt_foundation;
+}
+
+export function weakSkillSummary(profile?: StudyProfile | null): string {
+  const weakSkills = profile?.weakSkills?.length ? profile.weakSkills : ["vocabulary"];
+  return weakSkills.slice(0, 3).map(weakSkillLabel).join(", ");
+}
+
+function normalizePathway(value?: string | null): string {
+  const normalized = value?.trim().toLowerCase().replace(/-/g, "_") || "jlpt_foundation";
+  return normalized in pathwayLessons ? normalized : "jlpt_foundation";
+}
+
+function weakSkillLabel(value: string): string {
+  const labels: Record<string, string> = {
+    vocabulary: "từ vựng",
+    grammar: "ngữ pháp",
+    kanji: "kanji",
+    listening: "nghe",
+    reading: "đọc",
+    speaking: "nói"
+  };
+  return labels[value.toLowerCase()] ?? value;
+}

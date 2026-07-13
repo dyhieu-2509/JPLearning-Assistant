@@ -2144,6 +2144,13 @@ progress::-webkit-progress-value {
   line-height: 1.65;
 }
 
+.study-profile-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
 .study-path-score {
   display: grid;
   align-content: center;

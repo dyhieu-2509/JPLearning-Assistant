@@ -122,7 +122,7 @@ test("learner can start a lesson, review flashcards, pass the quiz, and unlock t
   await page.goto("/learner");
   await page.getByRole("button", { name: /Học bài hôm nay/i }).click();
 
-  await expect(page.getByRole("heading", { name: /Bấm vào là học/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Pathway JLPT/i })).toBeVisible();
   await expect(page.getByRole("heading", { name: /Bài 1: Giới thiệu bản thân/i })).toBeVisible();
   await expect(page.getByRole("button", { name: /Bài 2: Đi đâu, làm gì/i })).toBeDisabled();
 
@@ -192,6 +192,56 @@ test("learner can open supporting tools from the guided study path", async ({ pa
   await page.getByRole("button", { name: /Xem kho thẻ riêng/i }).click();
   await expect(page.getByRole("heading", { name: /Ôn thẻ theo trí nhớ thật/i })).toBeVisible();
 });
+
+const personalizedPathwayCases = [
+  {
+    name: "JLPT",
+    profile: { learningPathway: "jlpt_foundation", weakSkills: ["grammar"], dailyStudyMinutes: 20 },
+    heading: /Pathway JLPT/i,
+    lesson: /Bài 1: Giới thiệu bản thân/i,
+    focus: /Trọng tâm: ngữ pháp/i
+  },
+  {
+    name: "conversation",
+    profile: { learningPathway: "conversation", weakSkills: ["speaking"], dailyStudyMinutes: 10 },
+    heading: /Pathway giao tiếp/i,
+    lesson: /Bài 1: Chào hỏi hằng ngày/i,
+    focus: /Trọng tâm: nói/i
+  },
+  {
+    name: "school",
+    profile: { learningPathway: "school", weakSkills: ["vocabulary"], dailyStudyMinutes: 30 },
+    heading: /Pathway trên lớp/i,
+    lesson: /Bài 1: Hỏi bài trên lớp/i,
+    focus: /Trọng tâm: từ vựng/i
+  },
+  {
+    name: "work",
+    profile: { currentLevel: "N4", learningPathway: "work", weakSkills: ["listening"], dailyStudyMinutes: 60 },
+    heading: /Pathway công việc/i,
+    lesson: /Bài 1: Tự giới thiệu nơi làm việc/i,
+    focus: /Trọng tâm: nghe/i
+  },
+  {
+    name: "reading",
+    profile: { learningPathway: "reading", weakSkills: ["kanji", "reading"], dailyStudyMinutes: 20 },
+    heading: /Pathway đọc hiểu/i,
+    lesson: /Bài 1: Đọc đoạn ngắn N5/i,
+    focus: /Trọng tâm: kanji, đọc/i
+  }
+];
+
+for (const scenario of personalizedPathwayCases) {
+  test(`guided study path is personalized for ${scenario.name}`, async ({ page }) => {
+    await seedAuthenticatedLearner(page, `user-${scenario.name}`);
+    await mockMvpApi(page, scenario.profile);
+
+    await page.goto("/learner/study");
+    await expect(page.getByRole("heading", { name: scenario.heading })).toBeVisible();
+    await expect(page.getByRole("heading", { name: scenario.lesson })).toBeVisible();
+    await expect(page.getByText(scenario.focus)).toBeVisible();
+  });
+}
 
 test("learner can understand the MVP study loop", async ({ page }) => {
   await seedAuthenticatedLearner(page);
@@ -269,16 +319,18 @@ async function answerLessonOneIncorrectly(page: Page) {
   await page.getByRole("button", { name: "Tôi ăn cơm", exact: true }).click();
 }
 
-async function seedAuthenticatedLearner(page: Page) {
-  await page.addInitScript(() => {
-    window.localStorage.removeItem("vaja.studyPathProgress");
+async function seedAuthenticatedLearner(page: Page, userId = "user-1") {
+  await page.addInitScript((seedUserId) => {
+    Object.keys(window.localStorage)
+      .filter((key) => key.startsWith("vaja.studyPathProgress"))
+      .forEach((key) => window.localStorage.removeItem(key));
     window.localStorage.setItem(
       "vaja.auth",
       JSON.stringify({
         accessToken: "demo-token",
         refreshToken: "demo-refresh",
         user: {
-          id: "user-1",
+          id: seedUserId,
           email: "demo.learner@example.com",
           displayName: "Demo Learner",
           avatarUrl: null,
@@ -287,10 +339,13 @@ async function seedAuthenticatedLearner(page: Page) {
         }
       })
     );
-  });
+  }, userId);
 }
 
-async function mockMvpApi(page: Page) {
+async function mockMvpApi(page: Page, profileOverride: Partial<typeof profile> = {}) {
+  const activeProfile = { ...profile, ...profileOverride };
+  const activeDashboard = { ...dashboard, profile: activeProfile };
+
   await page.route("**/api/v1/**", async (route) => {
     const request = route.request();
     const url = new URL(request.url());
@@ -298,12 +353,12 @@ async function mockMvpApi(page: Page) {
     const method = request.method();
 
     if (method === "GET" && path === "/personalization/me/profile") {
-      await json(route, profile);
+      await json(route, activeProfile);
       return;
     }
 
     if (method === "GET" && path === "/personalization/me/dashboard") {
-      await json(route, dashboard);
+      await json(route, activeDashboard);
       return;
     }
 
