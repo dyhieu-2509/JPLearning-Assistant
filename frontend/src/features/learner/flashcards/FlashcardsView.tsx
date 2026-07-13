@@ -168,7 +168,6 @@ export function FlashcardsView() {
             <select value={level} onChange={(event) => setLevel(event.target.value)}>
               <option>N5</option>
               <option>N4</option>
-              <option>N3</option>
             </select>
           </label>
           <label>

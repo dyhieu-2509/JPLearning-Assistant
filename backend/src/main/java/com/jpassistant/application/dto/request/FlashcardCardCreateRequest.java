@@ -9,7 +9,7 @@ public record FlashcardCardCreateRequest(
         @Size(max = 500) String reading,
         @Size(max = 50) String sourceType,
         @Size(max = 200) String sourceId,
-        @Pattern(regexp = "N[1-5]", message = "must be one of N1, N2, N3, N4, N5")
+        @Pattern(regexp = "N[45]", message = "must be N5 or N4 for the MVP scope")
         String level
 ) {
 }

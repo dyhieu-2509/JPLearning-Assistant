@@ -267,11 +267,7 @@ public class FlashcardServiceImpl implements FlashcardService {
     }
 
     private String normalizeLevel(String level, String defaultLevel) {
-        String normalized = level == null || level.isBlank() ? defaultLevel : level.trim().toUpperCase(Locale.ROOT);
-        if (!normalized.matches("N[1-5]")) {
-            throw new InvalidRequestException("level must be one of N1, N2, N3, N4, N5");
-        }
-        return normalized;
+        return MvpLearningLevels.normalize(level, defaultLevel);
     }
 
     private String normalizeCategory(String category, String defaultCategory) {

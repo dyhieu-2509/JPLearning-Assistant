@@ -25,12 +25,14 @@ import type {
   PlannerRecommendationResponse,
   SavedStudyPlanResponse
 } from "../../../shared/models";
+import { learningPathwayLabel, learningPathwayOptions } from "../../../shared/pathways";
 
 export function PlannerView() {
   const { accessToken } = useAuth();
   const token = accessToken ?? "";
   const [currentLevel, setCurrentLevel] = useState("N5");
   const [targetLevel, setTargetLevel] = useState("N4");
+  const [learningPathway, setLearningPathway] = useState("jlpt_foundation");
   const [weeklyStudyHours, setWeeklyStudyHours] = useState(3);
   const [goal, setGoal] = useState("Thi JLPT N4 và nhớ ngữ pháp chắc hơn");
   const [dashboard, setDashboard] = useState<LearnerDashboardResponse | null>(null);
@@ -63,6 +65,7 @@ export function PlannerView() {
     setDashboard(data);
     setCurrentLevel(data.profile.currentLevel ?? "N5");
     setTargetLevel(data.profile.targetLevel ?? "N4");
+    setLearningPathway(data.profile.learningPathway ?? "jlpt_foundation");
     setGoal(data.profile.goal || "Thi JLPT N4 và nhớ ngữ pháp chắc hơn");
     setWeeklyStudyHours(minutesPerDayToWeeklyHours(data.profile.dailyStudyMinutes));
   }
@@ -93,7 +96,7 @@ export function PlannerView() {
       const data = await apiRequest<PlannerRecommendationResponse>("/planner/recommend", {
         method: "POST",
         token,
-        body: { currentLevel, targetLevel, weeklyStudyHours, goal }
+        body: { currentLevel, targetLevel, learningPathway, weeklyStudyHours, goal }
       });
       setRecommendation(data);
       await loadPlans(data.planId);
@@ -133,15 +136,23 @@ export function PlannerView() {
             <select value={currentLevel} onChange={(event) => setCurrentLevel(event.target.value)}>
               <option>N5</option>
               <option>N4</option>
-              <option>N3</option>
             </select>
           </label>
           <label>
             Mục tiêu
             <select value={targetLevel} onChange={(event) => setTargetLevel(event.target.value)}>
+              <option>N5</option>
               <option>N4</option>
-              <option>N3</option>
-              <option>N2</option>
+            </select>
+          </label>
+          <label>
+            Pathway
+            <select value={learningPathway} onChange={(event) => setLearningPathway(event.target.value)}>
+              {learningPathwayOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
             </select>
           </label>
           <label>
@@ -274,6 +285,11 @@ function buildSignalSummary(context: PlannerContextResponse | null, dashboard: L
       icon: <Target size={18} />,
       label: "Mục tiêu",
       value: context?.profile?.targetLevel ?? dashboard?.profile.targetLevel ?? "N4"
+    },
+    {
+      icon: <CalendarCheck size={18} />,
+      label: "Pathway",
+      value: learningPathwayLabel(context?.profile?.learningPathway ?? dashboard?.profile.learningPathway)
     },
     {
       icon: <Layers3 size={18} />,

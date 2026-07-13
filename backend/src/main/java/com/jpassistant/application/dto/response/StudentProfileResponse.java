@@ -11,6 +11,7 @@ public record StudentProfileResponse(
         String targetLevel,
         String avatarUrl,
         String goal,
+        String learningPathway,
         int dailyStudyMinutes,
         String explanationStyle,
         boolean romajiEnabled,

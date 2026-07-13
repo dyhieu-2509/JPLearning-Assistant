@@ -1,5 +1,9 @@
+import pytest
+from pydantic import ValidationError
+
+from app.application.services.planner_service_impl import PlannerServiceImpl
 from app.application.services.tutor_service_impl import TutorServiceImpl
-from app.domain.schemas import KnowledgeSource, StudentProfileContext, TutorChatRequest
+from app.domain.schemas import KnowledgeSource, PlannerRequest, StudentProfileContext, TutorChatRequest
 from app.infrastructure.llm.langchain_client import LangChainClient
 
 
@@ -70,3 +74,22 @@ def test_tutor_service_returns_grounded_personalized_answer() -> None:
     assert response.sources[0].title == "\u98df\u3079\u307e\u3059"
     assert response.sources[1].title == "te form"
     assert "Ho so hoc" in response.answer
+
+
+def test_profile_context_rejects_levels_outside_mvp_scope() -> None:
+    with pytest.raises(ValidationError):
+        StudentProfileContext(userId="user-1", currentLevel="N3", targetLevel="N3")
+
+
+def test_planner_prioritizes_the_learner_pathway() -> None:
+    response = PlannerServiceImpl().recommend(
+        PlannerRequest(
+            currentLevel="N5",
+            targetLevel="N4",
+            weeklyStudyHours=5,
+            goal="daily conversation",
+            learningPathway="conversation",
+        )
+    )
+
+    assert response.items[0].title == "Luyện một đoạn hội thoại ngắn"

@@ -36,7 +36,7 @@ public class ChatServiceImpl implements ChatService {
     private static final int DEFAULT_SESSION_LIMIT = 20;
     private static final int DEFAULT_MESSAGE_LIMIT = 100;
     private static final int MAX_LIMIT = 100;
-    private static final Pattern LEVEL_PATTERN = Pattern.compile("N[1-5]");
+    private static final Pattern LEVEL_PATTERN = Pattern.compile("N[45]");
     private static final TypeReference<List<SourceResponse>> SOURCE_LIST_TYPE = new TypeReference<>() {
     };
 

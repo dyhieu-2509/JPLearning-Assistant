@@ -143,6 +143,7 @@ class ChatServiceImplTest {
                     "N4",
                     "https://cdn.example.com/avatar.png",
                     "JLPT N4",
+                    "jlpt_foundation",
                     45,
                     "detailed",
                     false,

@@ -7,7 +7,7 @@ import java.util.List;
 
 public record FlashcardDeckCreateRequest(
         @Size(max = 200) String title,
-        @Pattern(regexp = "N[1-5]", message = "must be one of N1, N2, N3, N4, N5")
+        @Pattern(regexp = "N[45]", message = "must be N5 or N4 for the MVP scope")
         String level,
         @Pattern(regexp = "[a-zA-Z0-9_-]{1,50}", message = "must contain only letters, numbers, underscore, or hyphen")
         String category,

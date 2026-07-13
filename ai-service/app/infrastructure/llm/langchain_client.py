@@ -110,6 +110,7 @@ class LangChainClient:
             f"currentLevel={profile.current_level}; "
             f"targetLevel={profile.target_level}; "
             f"goal={profile.goal}; "
+            f"learningPathway={profile.learning_pathway}; "
             f"dailyStudyMinutes={profile.daily_study_minutes}; "
             f"explanationStyle={profile.explanation_style}; "
             f"romajiEnabled={profile.romaji_enabled}; "
@@ -149,6 +150,7 @@ class LangChainClient:
         if profile is not None:
             lines.append(
                 f"Ho so hoc: {profile.current_level} -> {profile.target_level}, "
+                f"pathway: {profile.learning_pathway}, "
                 f"muc tieu: {profile.goal}, cach giai thich: {profile.explanation_style}."
             )
             if profile.weak_skills:

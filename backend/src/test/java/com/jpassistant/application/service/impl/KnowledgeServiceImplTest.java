@@ -31,7 +31,7 @@ class KnowledgeServiceImplTest {
 
         assertThatThrownBy(() -> service.searchGrammar("", "A1", 10))
                 .isInstanceOf(InvalidRequestException.class)
-                .hasMessageContaining("level must be one of");
+                .hasMessageContaining("N5 or N4");
     }
 
     private static class RecordingRepository implements KnowledgeGraphRepository {

@@ -185,11 +185,7 @@ public class AssessmentServiceImpl implements AssessmentService {
     }
 
     private String normalizeLevel(String level) {
-        String normalized = level == null || level.isBlank() ? "N5" : level.trim().toUpperCase(Locale.ROOT);
-        if (!normalized.matches("N[1-5]")) {
-            throw new InvalidRequestException("level must be one of N1, N2, N3, N4, N5");
-        }
-        return normalized;
+        return MvpLearningLevels.normalize(level, "N5");
     }
 
     private String normalizeCategory(String category) {

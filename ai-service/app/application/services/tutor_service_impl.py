@@ -37,7 +37,7 @@ class TutorServiceImpl(TutorService):
         if request.profile is None:
             return "N5"
         level = request.profile.current_level.strip().upper()
-        return level if level in {"N1", "N2", "N3", "N4", "N5"} else "N5"
+        return level if level in {"N5", "N4"} else "N5"
 
     def _merge_sources(self, *source_groups, limit: int):
         seen: set[tuple[str, str, str]] = set()

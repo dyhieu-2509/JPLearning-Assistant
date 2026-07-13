@@ -51,6 +51,7 @@ export type StudentProfileResponse = {
   targetLevel?: string | null;
   avatarUrl?: string | null;
   goal?: string | null;
+  learningPathway?: string | null;
   dailyStudyMinutes: number;
   explanationStyle?: string | null;
   romajiEnabled: boolean;
@@ -62,6 +63,7 @@ export type StudentProfileRequest = {
   targetLevel?: string | null;
   avatarUrl?: string | null;
   goal?: string | null;
+  learningPathway?: string | null;
   dailyStudyMinutes?: number | null;
   explanationStyle?: string | null;
   romajiEnabled?: boolean | null;

@@ -75,6 +75,7 @@ class PlannerServiceImplTest {
                 "N4",
                 null,
                 "JLPT N4",
+                "conversation",
                 45,
                 "concise",
                 true,
@@ -100,10 +101,10 @@ class PlannerServiceImplTest {
                 eq(AssessmentSessionStatus.SUBMITTED),
                 any(Pageable.class)
         )).thenReturn(List.of(assessmentSession));
-        when(aiServiceClient.recommendPlan(new AiPlannerRequest("N5", "N3", 6, "Pass N3")))
+        when(aiServiceClient.recommendPlan(new AiPlannerRequest("N5", "N4", 6, "Pass N4", "conversation")))
                 .thenReturn(new AiPlannerResponse(
                         "N5",
-                        "Pass N3",
+                        "Pass N4",
                         List.of(new StudyPlanItemResponse(1, "AI base plan", "Study core grammar.", 2.0))
                 ));
         when(studyPlanRepository.save(any(StudyPlan.class)))
@@ -111,21 +112,23 @@ class PlannerServiceImplTest {
 
         var response = service.recommend(
                 " user-1 ",
-                new PlannerRecommendRequest(null, "N3", 6, "Pass N3")
+                new PlannerRecommendRequest(null, "N4", 6, "Pass N4", null)
         );
 
         assertThat(response.planId()).isNotNull();
         assertThat(response.level()).isEqualTo("N5");
-        assertThat(response.targetLevel()).isEqualTo("N3");
+        assertThat(response.targetLevel()).isEqualTo("N4");
         assertThat(response.context().weakProgress()).hasSize(1);
         assertThat(response.context().dueFlashcards()).hasSize(1);
         assertThat(response.context().recentChatTopics()).contains("grammar");
         assertThat(response.context().recentAssessment().weakAreas()).contains("q1");
+        assertThat(response.context().profile().learningPathway()).isEqualTo("conversation");
         assertThat(response.items()).extracting(StudyPlanItemResponse::title)
                 .contains(
                         "Review due flashcards",
                         "Repair weak knowledge",
                         "Fix recent assessment mistakes",
+                        "Practice one daily dialogue",
                         "AI base plan",
                         "Follow up recent chat topics"
                 );

@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public record AssessmentStartRequest(
-        @Pattern(regexp = "N[1-5]", message = "must be one of N1, N2, N3, N4, N5")
+        @Pattern(regexp = "N[45]", message = "must be N5 or N4 for the MVP scope")
         String level,
         @Size(max = 50) String category,
         @Min(1) @Max(20) Integer questionCount

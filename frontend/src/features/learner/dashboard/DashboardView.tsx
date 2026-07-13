@@ -6,6 +6,7 @@ import { apiRequest, ApiError } from "../../../shared/api";
 import { logoUrl } from "../../../shared/assets";
 import { EmptyState, LoadingPanel, Panel, PrimaryButton, TopicChip } from "../../../shared/components";
 import type { LearnerDashboardResponse } from "../../../shared/models";
+import { learningPathwayLabel } from "../../../shared/pathways";
 
 const skillLabels: Record<string, string> = {
   vocabulary: "Từ vựng",
@@ -53,6 +54,7 @@ export function DashboardView() {
   const dailyMinutes = dashboard?.profile.dailyStudyMinutes ?? 15;
   const currentLevel = dashboard?.profile.currentLevel ?? "N5";
   const targetLevel = dashboard?.profile.targetLevel ?? "N4";
+  const pathwayLabel = learningPathwayLabel(dashboard?.profile.learningPathway);
   const completedSessions = dashboard?.assessments.completedSessions ?? 0;
   const averageScore = Math.round(dashboard?.assessments.averageScorePercent ?? 0);
   const recentTopics = dashboard?.chat.recentTopics.length ? dashboard.chat.recentTopics : ["grammar", "vocabulary"];
@@ -122,7 +124,7 @@ export function DashboardView() {
           </div>
           <strong>{memoryLabel}</strong>
           <p>
-            {currentLevel} → {targetLevel} · {reviewLabel}
+            {pathwayLabel} · {currentLevel} → {targetLevel} · {reviewLabel}
           </p>
           <div className="friendly-progress-bar" aria-hidden="true">
             <span style={{ width: `${Math.min(Math.max(masteryPercent, 8), 100)}%` }} />
@@ -160,6 +162,7 @@ export function DashboardView() {
       <Panel className="friendly-side-panel" eyebrow="Tuần này" title="Giữ nhịp vừa sức" action={<CalendarCheck size={22} />}>
         <div className="friendly-mini-stats">
           <MiniStat label="Thời lượng mỗi ngày" value={`${dailyMinutes} phút`} />
+          <MiniStat label="Pathway" value={pathwayLabel} />
           <MiniStat label="Bài kiểm tra đã làm" value={completedSessions ? `${completedSessions} lượt` : "Chưa làm"} />
           <MiniStat label="Điểm gần đây" value={completedSessions ? `${averageScore}%` : "Đợi bài đầu tiên"} />
         </div>

@@ -1,9 +1,10 @@
 import type { StudentProfileRequest } from "../../../shared/models";
+import { learningPathwayLabel } from "../../../shared/pathways";
 
 export type OnboardingAnswers = {
   currentLevel: string;
   targetLevel: string;
-  goal: string;
+  learningPathway: string;
   deadline: string;
   dailyStudyMinutes: string;
   weakSkills: string[];
@@ -14,7 +15,7 @@ export type OnboardingAnswers = {
 export const initialOnboardingAnswers: OnboardingAnswers = {
   currentLevel: "N5",
   targetLevel: "N4",
-  goal: "Thi JLPT",
+  learningPathway: "jlpt_foundation",
   deadline: "trong 3 tháng",
   dailyStudyMinutes: "30",
   weakSkills: ["vocabulary"],
@@ -26,7 +27,8 @@ export function toProfileRequest(answers: OnboardingAnswers): StudentProfileRequ
   return {
     currentLevel: answers.currentLevel,
     targetLevel: answers.targetLevel,
-    goal: `${answers.goal} ${answers.targetLevel} ${answers.deadline}`,
+    goal: `${learningPathwayLabel(answers.learningPathway)} ${answers.targetLevel} ${answers.deadline}`,
+    learningPathway: answers.learningPathway,
     dailyStudyMinutes: Number(answers.dailyStudyMinutes),
     explanationStyle: answers.explanationStyle,
     romajiEnabled: answers.romajiEnabled === "true",

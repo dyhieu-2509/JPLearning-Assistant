@@ -9,11 +9,12 @@ import {
   Target,
   type LucideIcon
 } from "lucide-react";
+import { learningPathwayOptions } from "../../../shared/pathways";
 
 export type OnboardingField =
   | "currentLevel"
   | "targetLevel"
-  | "goal"
+  | "learningPathway"
   | "deadline"
   | "dailyStudyMinutes"
   | "weakSkills"
@@ -33,7 +34,7 @@ export type OnboardingQuestion = {
   subtitle: string;
   multi?: boolean;
   icon: LucideIcon;
-  options: OnboardingOption[];
+  options: readonly OnboardingOption[];
 };
 
 export const onboardingQuestions: OnboardingQuestion[] = [
@@ -45,10 +46,7 @@ export const onboardingQuestions: OnboardingQuestion[] = [
     icon: GraduationCap,
     options: [
       { value: "N5", label: "Mới bắt đầu / N5", description: "Hiragana, katakana, mẫu câu cơ bản" },
-      { value: "N4", label: "N4", description: "Đã biết câu cơ bản và muốn tăng tốc" },
-      { value: "N3", label: "N3", description: "Đọc hiểu trung cấp, cần luyện đều" },
-      { value: "N2", label: "N2", description: "Tập trung đọc, nghe và tiếng Nhật công việc" },
-      { value: "N1", label: "N1", description: "Nâng độ chính xác và tốc độ xử lý" }
+      { value: "N4", label: "N4", description: "Đã biết câu cơ bản và muốn tăng tốc" }
     ]
   },
   {
@@ -59,25 +57,16 @@ export const onboardingQuestions: OnboardingQuestion[] = [
     icon: Target,
     options: [
       { value: "N5", label: "N5", description: "Nền tảng nhập môn" },
-      { value: "N4", label: "N4", description: "Giao tiếp và đọc hiểu cơ bản" },
-      { value: "N3", label: "N3", description: "Trung cấp, đọc đoạn dài hơn" },
-      { value: "N2", label: "N2", description: "Du học, công việc, đọc hiểu nâng cao" },
-      { value: "N1", label: "N1", description: "Nâng cấp học thuật và chuyên môn" }
+      { value: "N4", label: "N4", description: "Giao tiếp và đọc hiểu cơ bản" }
     ]
   },
   {
-    id: "goal",
-    eyebrow: "Lý do học",
-    title: "Mục tiêu học chính là gì?",
-    subtitle: "Mục tiêu này giúp VAJA chọn ví dụ, bài ôn và kế hoạch phù hợp hơn.",
+    id: "learningPathway",
+    eyebrow: "Pathway",
+    title: "Bạn muốn đi theo đường học nào?",
+    subtitle: "VAJA dùng pathway để xếp bài mới, bài ôn, quiz và thẻ nhớ theo cách hợp với bạn.",
     icon: BookOpenCheck,
-    options: [
-      { value: "Thi JLPT", label: "Thi JLPT", description: "Ưu tiên ngữ pháp, từ vựng, đọc hiểu" },
-      { value: "Luyện giao tiếp", label: "Giao tiếp", description: "Ưu tiên ví dụ hội thoại và phản xạ" },
-      { value: "Chuẩn bị du học", label: "Du học", description: "Từ vựng trường học, đời sống, thủ tục" },
-      { value: "Dùng tiếng Nhật trong công việc", label: "Công việc", description: "Kính ngữ, email, từ vựng công việc" },
-      { value: "Đọc nội dung tiếng Nhật", label: "Đọc hiểu", description: "Manga, tin tức, tài liệu Nhật" }
-    ]
+    options: learningPathwayOptions
   },
   {
     id: "deadline",

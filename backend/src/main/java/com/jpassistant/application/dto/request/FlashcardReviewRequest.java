@@ -11,7 +11,7 @@ public record FlashcardReviewRequest(
         @Size(max = 50) String knowledgeType,
         @Size(max = 200) String knowledgeId,
         @Size(max = 200) String title,
-        @Pattern(regexp = "N[1-5]", message = "must be one of N1, N2, N3, N4, N5")
+        @Pattern(regexp = "N[45]", message = "must be N5 or N4 for the MVP scope")
         String level,
         @NotNull LearningSignalResult rating,
         UUID cardId
@@ -21,7 +21,7 @@ public record FlashcardReviewRequest(
             @NotBlank @Size(max = 50) String knowledgeType,
             @NotBlank @Size(max = 200) String knowledgeId,
             @Size(max = 200) String title,
-            @Pattern(regexp = "N[1-5]", message = "must be one of N1, N2, N3, N4, N5")
+            @Pattern(regexp = "N[45]", message = "must be N5 or N4 for the MVP scope")
             String level,
             @NotNull LearningSignalResult rating
     ) {

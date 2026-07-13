@@ -86,12 +86,21 @@ public class PlannerServiceImpl implements PlannerService {
     public PlannerRecommendationResponse recommend(String userId, PlannerRecommendRequest request) {
         String normalizedUserId = normalizeRequired(userId, "userId");
         PlannerRecommendRequest safeRequest = request == null
-                ? new PlannerRecommendRequest(null, null, null, null)
+                ? new PlannerRecommendRequest(null, null, null, null, null)
                 : request;
         StudentProfileResponse profile = personalizationService.getOrCreateProfile(normalizedUserId);
-        String currentLevel = defaultText(safeRequest.currentLevel(), profile.currentLevel());
-        String targetLevel = defaultText(safeRequest.targetLevel(), profile.targetLevel());
+        String currentLevel = MvpLearningLevels.normalize(
+                defaultText(safeRequest.currentLevel(), profile.currentLevel()),
+                "N5"
+        );
+        String targetLevel = MvpLearningLevels.normalize(
+                defaultText(safeRequest.targetLevel(), profile.targetLevel()),
+                "N4"
+        );
         String goal = defaultText(safeRequest.goal(), profile.goal());
+        String learningPathway = LearningPathways.normalize(
+                defaultText(safeRequest.learningPathway(), profile.learningPathway())
+        );
         int weeklyStudyHours = normalizeWeeklyHours(safeRequest.weeklyStudyHours(), profile.dailyStudyMinutes());
 
         List<KnowledgeProgressResponse> weakProgress = personalizationService.getProgress(
@@ -115,7 +124,8 @@ public class PlannerServiceImpl implements PlannerService {
                 currentLevel,
                 targetLevel,
                 weeklyStudyHours,
-                goal
+                goal,
+                learningPathway
         ));
         PlannerContextResponse context = new PlannerContextResponse(
                 profile,
@@ -124,7 +134,12 @@ public class PlannerServiceImpl implements PlannerService {
                 recentChatTopics,
                 recentAssessment
         );
-        List<StudyPlanItemResponse> items = personalizeItems(aiPlan.items(), context, weeklyStudyHours);
+        List<StudyPlanItemResponse> items = personalizeItems(
+                aiPlan.items(),
+                context,
+                learningPathway,
+                weeklyStudyHours
+        );
         StudyPlan savedPlan = saveStudyPlan(
                 normalizedUserId,
                 currentLevel,
@@ -211,6 +226,7 @@ public class PlannerServiceImpl implements PlannerService {
     private List<StudyPlanItemResponse> personalizeItems(
             List<StudyPlanItemResponse> aiItems,
             PlannerContextResponse context,
+            String learningPathway,
             int weeklyStudyHours
     ) {
         List<StudyPlanItemResponse> items = new ArrayList<>();
@@ -238,6 +254,7 @@ public class PlannerServiceImpl implements PlannerService {
                     Math.max(0.5, roundOneDecimal(weeklyStudyHours * 0.2))
             ));
         }
+        items.add(pathwayAnchorItem(learningPathway, context, weeklyStudyHours));
         if (aiItems != null) {
             items.addAll(aiItems);
         }
@@ -268,6 +285,47 @@ public class PlannerServiceImpl implements PlannerService {
             ));
         }
         return ordered;
+    }
+
+    private StudyPlanItemResponse pathwayAnchorItem(
+            String learningPathway,
+            PlannerContextResponse context,
+            int weeklyStudyHours
+    ) {
+        String targetLevel = context.profile().targetLevel();
+        double estimatedHours = Math.max(0.5, roundOneDecimal(weeklyStudyHours * 0.2));
+        return switch (LearningPathways.normalize(learningPathway)) {
+            case "conversation" -> new StudyPlanItemResponse(
+                    0,
+                    "Practice one daily dialogue",
+                    "Build one short " + targetLevel + " conversation, then ask VAJA to correct wording and particles.",
+                    estimatedHours
+            );
+            case "school" -> new StudyPlanItemResponse(
+                    0,
+                    "Review the next class lesson",
+                    "Study textbook vocabulary, grammar pattern, and one short exercise before the next class.",
+                    estimatedHours
+            );
+            case "work" -> new StudyPlanItemResponse(
+                    0,
+                    "Practice one polite work scenario",
+                    "Review useful " + targetLevel + " phrases for email, request, or workplace self-introduction.",
+                    estimatedHours
+            );
+            case "reading" -> new StudyPlanItemResponse(
+                    0,
+                    "Read one short N5/N4 passage",
+                    "Pick a short passage, mark unknown words, then convert weak words into flashcards.",
+                    estimatedHours
+            );
+            default -> new StudyPlanItemResponse(
+                    0,
+                    "Move one step on the JLPT path",
+                    "Finish one focused loop: new lesson, quick quiz, fix mistakes, then review due flashcards.",
+                    estimatedHours
+            );
+        };
     }
 
     private List<String> recentChatTopics(String userId) {

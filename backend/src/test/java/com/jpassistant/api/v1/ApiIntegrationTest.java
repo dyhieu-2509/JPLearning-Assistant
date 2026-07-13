@@ -343,7 +343,8 @@ class ApiIntegrationTest {
                 .andExpect(jsonPath("$.level").value("N5"))
                 .andExpect(jsonPath("$.targetLevel").value("N4"))
                 .andExpect(jsonPath("$.weeklyStudyHours").value(5))
-                .andExpect(jsonPath("$.items[0].title").value("AI base plan"))
+                .andExpect(jsonPath("$.items[0].title").value("Move one step on the JLPT path"))
+                .andExpect(jsonPath("$.items[1].title").value("AI base plan"))
                 .andExpect(jsonPath("$.context.profile.userId", not(blankOrNullString())))
                 .andReturn();
 
@@ -352,7 +353,7 @@ class ApiIntegrationTest {
                         .header(HttpHeaders.AUTHORIZATION, bearer(accessToken)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(planId))
-                .andExpect(jsonPath("$.totalItems").value(1))
+                .andExpect(jsonPath("$.totalItems").value(2))
                 .andExpect(jsonPath("$.completedItems").value(0))
                 .andExpect(jsonPath("$.items[0].id", not(blankOrNullString())))
                 .andReturn();
@@ -362,7 +363,7 @@ class ApiIntegrationTest {
                         .header(HttpHeaders.AUTHORIZATION, bearer(accessToken)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.completedItems").value(1))
-                .andExpect(jsonPath("$.completionRate").value(100.0))
+                .andExpect(jsonPath("$.completionRate").value(50.0))
                 .andExpect(jsonPath("$.items[0].completed").value(true));
 
         mockMvc.perform(get("/api/v1/planner/plans")

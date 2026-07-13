@@ -60,6 +60,7 @@ public class PersonalizationServiceImpl implements PersonalizationService {
         profile.setTargetLevel(normalizeLevel(request.targetLevel(), "N4"));
         profile.setAvatarUrl(optionalText(request.avatarUrl()));
         profile.setGoal(defaultText(request.goal(), "JLPT preparation"));
+        profile.setLearningPathway(LearningPathways.normalize(request.learningPathway()));
         profile.setDailyStudyMinutes(request.dailyStudyMinutes() == null ? 30 : request.dailyStudyMinutes());
         profile.setExplanationStyle(defaultText(request.explanationStyle(), "concise"));
         profile.setRomajiEnabled(request.romajiEnabled() == null || request.romajiEnabled());
@@ -175,11 +176,7 @@ public class PersonalizationServiceImpl implements PersonalizationService {
     }
 
     private String normalizeLevel(String level, String defaultLevel) {
-        String normalized = level == null || level.isBlank() ? defaultLevel : level.trim().toUpperCase();
-        if (!normalized.matches("N[1-5]")) {
-            throw new InvalidRequestException("level must be one of N1, N2, N3, N4, N5");
-        }
-        return normalized;
+        return MvpLearningLevels.normalize(level, defaultLevel);
     }
 
     private int normalizeLimit(Integer limit) {
@@ -218,6 +215,7 @@ public class PersonalizationServiceImpl implements PersonalizationService {
                 profile.getTargetLevel(),
                 profile.getAvatarUrl(),
                 profile.getGoal(),
+                LearningPathways.normalize(profile.getLearningPathway()),
                 profile.getDailyStudyMinutes(),
                 profile.getExplanationStyle(),
                 profile.isRomajiEnabled(),

@@ -50,6 +50,10 @@ public class StudentProfile {
     @Setter
     private String goal = "JLPT preparation";
 
+    @Column(name = "learning_pathway", length = 50)
+    @Setter
+    private String learningPathway = "jlpt_foundation";
+
     @Column(name = "daily_study_minutes", nullable = false)
     @Setter
     private int dailyStudyMinutes = 30;

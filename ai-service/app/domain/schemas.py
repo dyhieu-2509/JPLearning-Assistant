@@ -1,4 +1,28 @@
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+
+
+SUPPORTED_MVP_LEVELS = {"N5", "N4"}
+SUPPORTED_LEARNING_PATHWAYS = {"jlpt_foundation", "conversation", "school", "work", "reading"}
+
+
+def normalize_mvp_level(value: str | None, default: str) -> str:
+    """Normalize JLPT level to the N5/N4 MVP scope."""
+    if value is None or str(value).strip() == "":
+        return default
+    normalized = str(value).strip().upper()
+    if normalized not in SUPPORTED_MVP_LEVELS:
+        raise ValueError("level must be N5 or N4 for the MVP scope")
+    return normalized
+
+
+def normalize_learning_pathway(value: str | None) -> str:
+    """Normalize the learner pathway used for personalization."""
+    if value is None or str(value).strip() == "":
+        return "jlpt_foundation"
+    normalized = str(value).strip().lower().replace("-", "_")
+    if normalized not in SUPPORTED_LEARNING_PATHWAYS:
+        raise ValueError("learningPathway is not supported")
+    return normalized
 
 
 class KnowledgeSource(BaseModel):
@@ -21,12 +45,31 @@ class StudentProfileContext(BaseModel):
     current_level: str = Field(default="N5", alias="currentLevel")
     target_level: str = Field(default="N4", alias="targetLevel")
     goal: str = "JLPT preparation"
+    learning_pathway: str = Field(default="jlpt_foundation", alias="learningPathway")
     daily_study_minutes: int = Field(default=30, alias="dailyStudyMinutes")
     explanation_style: str = Field(default="concise", alias="explanationStyle")
     romaji_enabled: bool = Field(default=True, alias="romajiEnabled")
     weak_skills: list[str] = Field(default_factory=list, alias="weakSkills")
 
     model_config = ConfigDict(populate_by_name=True)
+
+    @field_validator("current_level", mode="before")
+    @classmethod
+    def validate_current_level(cls, value: str | None) -> str:
+        """Keep learner current level inside the MVP scope."""
+        return normalize_mvp_level(value, "N5")
+
+    @field_validator("target_level", mode="before")
+    @classmethod
+    def validate_target_level(cls, value: str | None) -> str:
+        """Keep learner target level inside the MVP scope."""
+        return normalize_mvp_level(value, "N4")
+
+    @field_validator("learning_pathway", mode="before")
+    @classmethod
+    def validate_learning_pathway(cls, value: str | None) -> str:
+        """Normalize the learner pathway used for personalization."""
+        return normalize_learning_pathway(value)
 
 
 class KnowledgeProgressContext(BaseModel):
@@ -41,6 +84,12 @@ class KnowledgeProgressContext(BaseModel):
     wrong_count: int = Field(default=0, alias="wrongCount")
 
     model_config = ConfigDict(populate_by_name=True)
+
+    @field_validator("level", mode="before")
+    @classmethod
+    def validate_level(cls, value: str | None) -> str:
+        """Keep progress level inside the MVP scope."""
+        return normalize_mvp_level(value, "N5")
 
 
 class TutorChatRequest(BaseModel):
@@ -67,11 +116,30 @@ class PlannerRequest(BaseModel):
     """Input data for generating a learning roadmap."""
 
     current_level: str = Field(default="N5", alias="currentLevel")
-    target_level: str = Field(default="N5", alias="targetLevel")
+    target_level: str = Field(default="N4", alias="targetLevel")
     weekly_study_hours: int = Field(default=5, ge=1, le=40, alias="weeklyStudyHours")
     goal: str = "JLPT preparation"
+    learning_pathway: str = Field(default="jlpt_foundation", alias="learningPathway")
 
     model_config = ConfigDict(populate_by_name=True)
+
+    @field_validator("current_level", mode="before")
+    @classmethod
+    def validate_current_level(cls, value: str | None) -> str:
+        """Keep planner current level inside the MVP scope."""
+        return normalize_mvp_level(value, "N5")
+
+    @field_validator("target_level", mode="before")
+    @classmethod
+    def validate_target_level(cls, value: str | None) -> str:
+        """Keep planner target level inside the MVP scope."""
+        return normalize_mvp_level(value, "N4")
+
+    @field_validator("learning_pathway", mode="before")
+    @classmethod
+    def validate_learning_pathway(cls, value: str | None) -> str:
+        """Normalize the planner pathway used for task selection."""
+        return normalize_learning_pathway(value)
 
 
 class StudyPlanItem(BaseModel):
@@ -99,6 +167,12 @@ class AssessmentGenerateRequest(BaseModel):
     question_count: int = Field(default=10, ge=1, le=20, alias="questionCount")
 
     model_config = ConfigDict(populate_by_name=True)
+
+    @field_validator("level", mode="before")
+    @classmethod
+    def validate_level(cls, value: str | None) -> str:
+        """Keep assessment level inside the MVP scope."""
+        return normalize_mvp_level(value, "N5")
 
 
 class QuizQuestion(BaseModel):

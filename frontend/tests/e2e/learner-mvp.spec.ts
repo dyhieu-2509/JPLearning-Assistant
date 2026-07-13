@@ -1,0 +1,349 @@
+import { expect, type Page, type Route, test } from "@playwright/test";
+
+const profile = {
+  id: "profile-1",
+  userId: "user-1",
+  currentLevel: "N5",
+  targetLevel: "N4",
+  avatarUrl: null,
+  goal: "Thi JLPT N4 trong 3 tháng",
+  learningPathway: "jlpt_foundation",
+  dailyStudyMinutes: 20,
+  explanationStyle: "step-by-step",
+  romajiEnabled: true,
+  weakSkills: ["vocabulary", "grammar"],
+  createdAt: "2026-05-20T08:00:00Z",
+  updatedAt: "2026-05-20T08:00:00Z"
+};
+
+const card = {
+  id: "card-1",
+  deckId: "deck-1",
+  frontText: "食べる",
+  backText: "ăn",
+  reading: "たべる",
+  sourceType: "Vocabulary",
+  sourceId: "taberu:N5",
+  level: "N5",
+  easinessFactor: 2.5,
+  intervalDays: 0,
+  repetitions: 0,
+  nextReviewAt: "2026-05-20T08:00:00Z",
+  lastReviewedAt: null
+};
+
+const dashboard = {
+  profile,
+  progress: {
+    totalItems: 2,
+    masteredItems: 0,
+    weakItems: 2,
+    averageMasteryScore: 0.24,
+    weakestItems: [
+      {
+        id: "progress-1",
+        knowledgeType: "Vocabulary",
+        knowledgeId: "taberu:N5",
+        title: "食べる",
+        level: "N5",
+        masteryScore: 0.24,
+        exposureCount: 1,
+        correctCount: 0,
+        wrongCount: 1,
+        nextReviewAt: "2026-05-20T08:00:00Z",
+        updatedAt: "2026-05-20T08:00:00Z"
+      }
+    ]
+  },
+  flashcards: {
+    totalCards: 1,
+    dueCards: 1,
+    dueNow: [card]
+  },
+  assessments: {
+    completedSessions: 1,
+    averageScorePercent: 60,
+    latest: {
+      sessionId: "assessment-old",
+      level: "N5",
+      category: "grammar",
+      score: 3,
+      total: 5,
+      weakAreas: ["particles"],
+      submittedAt: "2026-05-20T08:00:00Z"
+    },
+    recentWeakAreas: ["particles"]
+  },
+  chat: {
+    sessionCount: 0,
+    messageCount: 0,
+    recentTopics: []
+  },
+  generatedAt: "2026-05-20T08:00:00Z"
+};
+
+const savedPlan = {
+  id: "plan-1",
+  level: "N5",
+  targetLevel: "N4",
+  goal: "Thi JLPT N4 trong 3 tháng",
+  weeklyStudyHours: 3,
+  completedItems: 0,
+  totalItems: 2,
+  completionRate: 0,
+  items: [
+    {
+      id: "item-1",
+      order: 1,
+      title: "Ôn trợ từ N5",
+      objective: "Làm 5 câu về は và が.",
+      estimatedHours: 1,
+      completed: false,
+      completedAt: null
+    },
+    {
+      id: "item-2",
+      order: 2,
+      title: "Ôn từ vựng ăn uống",
+      objective: "Ôn 10 thẻ N5 liên quan sinh hoạt.",
+      estimatedHours: 1,
+      completed: false,
+      completedAt: null
+    }
+  ],
+  createdAt: "2026-05-20T08:00:00Z",
+  updatedAt: "2026-05-20T08:00:00Z"
+};
+
+test("learner can understand the MVP study loop", async ({ page }) => {
+  await seedAuthenticatedLearner(page);
+  await mockMvpApi(page);
+
+  await page.goto("/learner");
+  await expect(page.getByRole("heading", { name: /hôm nay mình học nhẹ thôi/i })).toBeVisible();
+  await expect(page.getByText("JLPT từng bước", { exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Bắt đầu bài hôm nay/i })).toBeVisible();
+
+  await page.getByRole("link", { name: /Kiểm tra/i }).click();
+  await page.getByRole("button", { name: /Bắt đầu kiểm tra/i }).click();
+  await expect(page.getByRole("heading", { name: /Chọn dạng đúng/i })).toBeVisible();
+  await page.getByRole("radio", { name: "食べる" }).click();
+  await page.getByRole("button", { name: /Nộp bài/i }).click();
+  await expect(page.getByRole("heading", { name: /Đã xong lượt kiểm tra/i })).toBeVisible();
+
+  await page.getByRole("link", { name: /Thẻ nhớ/i }).click();
+  await expect(page.getByRole("heading", { name: /Ôn thẻ theo trí nhớ thật/i })).toBeVisible();
+  await page.getByRole("button", { name: "Lật đáp án", exact: true }).click();
+  await page.getByRole("button", { name: /Nhớ được/i }).click();
+  await expect(page.getByText(/Nhớ được đã được lưu/i)).toBeVisible();
+
+  await page.getByRole("link", { name: /Tra cứu/i }).click();
+  await page.getByRole("button", { name: "食べる" }).click();
+  await expect(page.getByRole("heading", { name: "食べる", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Hỏi VAJA", exact: true })).toBeVisible();
+
+  await page.getByRole("link", { name: /Lộ trình/i }).click();
+  await page.getByRole("button", { name: /Xếp kế hoạch học/i }).click();
+  await expect(page.getByText(/Ôn trợ từ N5/i)).toBeVisible();
+
+  await page.getByRole("link", { name: /Hỏi bài/i }).click();
+  await page.getByPlaceholder(/は và が khác nhau/i).fill("は và が khác nhau thế nào?");
+  await page.locator(".chat-composer .send-button").click();
+  await expect(page.getByText(/は dùng để nêu chủ đề/i)).toBeVisible();
+});
+
+async function seedAuthenticatedLearner(page: Page) {
+  await page.addInitScript(() => {
+    window.localStorage.setItem(
+      "vaja.auth",
+      JSON.stringify({
+        accessToken: "demo-token",
+        refreshToken: "demo-refresh",
+        user: {
+          id: "user-1",
+          email: "demo.learner@example.com",
+          displayName: "Demo Learner",
+          avatarUrl: null,
+          role: "STUDENT",
+          status: "ACTIVE"
+        }
+      })
+    );
+  });
+}
+
+async function mockMvpApi(page: Page) {
+  await page.route("**/api/v1/**", async (route) => {
+    const request = route.request();
+    const url = new URL(request.url());
+    const path = url.pathname.replace("/api/v1", "");
+    const method = request.method();
+
+    if (method === "GET" && path === "/personalization/me/profile") {
+      await json(route, profile);
+      return;
+    }
+
+    if (method === "GET" && path === "/personalization/me/dashboard") {
+      await json(route, dashboard);
+      return;
+    }
+
+    if (method === "GET" && path.startsWith("/knowledge/")) {
+      await json(route, [
+        {
+          type: "Vocabulary",
+          id: "taberu:N5",
+          title: "食べる",
+          reading: "たべる",
+          meaningVi: "ăn",
+          meaningEn: "eat",
+          level: "N5",
+          source: "JLPT N5"
+        }
+      ]);
+      return;
+    }
+
+    if (method === "POST" && path === "/assessment/sessions") {
+      await json(route, {
+        sessionId: "assessment-1",
+        level: "N5",
+        category: "vocabulary",
+        questions: [
+          {
+            id: "q1",
+            prompt: "Chọn dạng đúng của 食べます.",
+            options: ["食べる", "食べた", "食べて"]
+          }
+        ]
+      });
+      return;
+    }
+
+    if (method === "POST" && path === "/assessment/sessions/assessment-1/submit") {
+      await json(route, {
+        sessionId: "assessment-1",
+        score: 1,
+        total: 1,
+        weakAreas: [],
+        results: [
+          {
+            questionId: "q1",
+            selectedAnswer: "食べる",
+            correctAnswer: "食べる",
+            correct: true,
+            explanation: "食べます là thể lịch sự, dạng từ điển là 食べる."
+          }
+        ],
+        progress: []
+      });
+      return;
+    }
+
+    if (method === "GET" && path === "/flashcards/decks") {
+      await json(route, [
+        {
+          id: "deck-1",
+          title: "N5 vocabulary",
+          level: "N5",
+          category: "vocabulary",
+          cardCount: 1,
+          createdAt: "2026-05-20T08:00:00Z",
+          updatedAt: "2026-05-20T08:00:00Z"
+        }
+      ]);
+      return;
+    }
+
+    if (method === "GET" && path === "/flashcards/review/due") {
+      await json(route, [card]);
+      return;
+    }
+
+    if (method === "GET" && path === "/flashcards/decks/deck-1/cards") {
+      await json(route, [card]);
+      return;
+    }
+
+    if (method === "POST" && path === "/flashcards/review") {
+      await json(route, {
+        card: { ...card, repetitions: 1, intervalDays: 1, nextReviewAt: "2026-05-21T08:00:00Z" },
+        progress: {
+          id: "progress-1",
+          knowledgeType: "Vocabulary",
+          knowledgeId: "taberu:N5",
+          title: "食べる",
+          level: "N5",
+          masteryScore: 0.32,
+          exposureCount: 1,
+          correctCount: 1,
+          wrongCount: 0,
+          nextReviewAt: "2026-05-21T08:00:00Z",
+          updatedAt: "2026-05-20T08:00:00Z"
+        },
+        masteryScore: 0.32
+      });
+      return;
+    }
+
+    if (method === "GET" && path === "/planner/plans") {
+      await json(route, [savedPlan]);
+      return;
+    }
+
+    if (method === "POST" && path === "/planner/recommend") {
+      await json(route, {
+        planId: "plan-1",
+        level: "N5",
+        targetLevel: "N4",
+        goal: "Thi JLPT N4 trong 3 tháng",
+        weeklyStudyHours: 3,
+        items: savedPlan.items.map(({ order, title, objective, estimatedHours }) => ({
+          order,
+          title,
+          objective,
+          estimatedHours
+        })),
+        context: {
+          profile,
+          weakProgress: dashboard.progress.weakestItems,
+          dueFlashcards: [card],
+          recentChatTopics: [],
+          recentAssessment: dashboard.assessments.latest
+        }
+      });
+      return;
+    }
+
+    if (method === "GET" && path === "/chat/sessions") {
+      await json(route, []);
+      return;
+    }
+
+    if (method === "GET" && path === "/chat/sessions/chat-1/messages") {
+      await json(route, []);
+      return;
+    }
+
+    if (method === "POST" && path === "/chat") {
+      await json(route, {
+        answer: "は dùng để nêu chủ đề, が thường nhấn mạnh chủ ngữ hoặc thông tin mới.",
+        sources: [{ type: "GrammarPoint", id: "particle-wa-ga:N5", title: "は vs が" }],
+        confidence: 0.82,
+        sessionId: "chat-1"
+      });
+      return;
+    }
+
+    await route.fulfill({ status: 404, body: `Unhandled ${method} ${path}` });
+  });
+}
+
+async function json(route: Route, body: unknown) {
+  await route.fulfill({
+    status: 200,
+    contentType: "application/json",
+    body: JSON.stringify(body)
+  });
+}

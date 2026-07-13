@@ -4,6 +4,7 @@ public record AiPlannerRequest(
         String currentLevel,
         String targetLevel,
         int weeklyStudyHours,
-        String goal
+        String goal,
+        String learningPathway
 ) {
 }

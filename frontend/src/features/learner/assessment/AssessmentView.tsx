@@ -116,7 +116,6 @@ export function AssessmentView() {
             <select value={level} onChange={(event) => setLevel(event.target.value)} disabled={loading}>
               <option>N5</option>
               <option>N4</option>
-              <option>N3</option>
             </select>
           </label>
           <label>

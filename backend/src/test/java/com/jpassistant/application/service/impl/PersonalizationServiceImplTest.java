@@ -43,6 +43,7 @@ class PersonalizationServiceImplTest {
                         "n4",
                         " https://cdn.example.com/avatar.png ",
                         "  JLPT N4  ",
+                        "conversation",
                         45,
                         " detailed ",
                         false,
@@ -55,6 +56,7 @@ class PersonalizationServiceImplTest {
         assertThat(response.targetLevel()).isEqualTo("N4");
         assertThat(response.avatarUrl()).isEqualTo("https://cdn.example.com/avatar.png");
         assertThat(response.goal()).isEqualTo("JLPT N4");
+        assertThat(response.learningPathway()).isEqualTo("conversation");
         assertThat(response.dailyStudyMinutes()).isEqualTo(45);
         assertThat(response.explanationStyle()).isEqualTo("detailed");
         assertThat(response.romajiEnabled()).isFalse();
