@@ -1,9 +1,16 @@
 import pytest
 from pydantic import ValidationError
 
+from app.application.services.assessment_service_impl import AssessmentServiceImpl
 from app.application.services.planner_service_impl import PlannerServiceImpl
 from app.application.services.tutor_service_impl import TutorServiceImpl
-from app.domain.schemas import KnowledgeSource, PlannerRequest, StudentProfileContext, TutorChatRequest
+from app.domain.schemas import (
+    AssessmentGenerateRequest,
+    KnowledgeSource,
+    PlannerRequest,
+    StudentProfileContext,
+    TutorChatRequest,
+)
 from app.infrastructure.llm.langchain_client import LangChainClient
 
 
@@ -93,3 +100,30 @@ def test_planner_prioritizes_the_learner_pathway() -> None:
     )
 
     assert response.items[0].title == "Luyện một đoạn hội thoại ngắn"
+
+
+def test_assessment_uses_different_grammar_questions_for_n5_and_n4() -> None:
+    service = AssessmentServiceImpl()
+
+    n5 = service.generate(AssessmentGenerateRequest(level="N5", category="grammar", questionCount=3))
+    n4 = service.generate(AssessmentGenerateRequest(level="N4", category="grammar", questionCount=3))
+
+    assert n5.questions[0].id == "N5-grammar-1"
+    assert n4.questions[0].id == "N4-grammar-1"
+    assert n5.questions[0].prompt != n4.questions[0].prompt
+    assert "\u3067\u3059" in n5.questions[0].prompt
+    assert "\u306a\u3051\u308c\u3070\u306a\u308a\u307e\u305b\u3093" in n4.questions[0].prompt
+
+
+def test_assessment_uses_category_specific_questions() -> None:
+    service = AssessmentServiceImpl()
+
+    grammar = service.generate(AssessmentGenerateRequest(level="N5", category="grammar", questionCount=1))
+    vocabulary = service.generate(AssessmentGenerateRequest(level="N5", category="vocabulary", questionCount=1))
+    kanji = service.generate(AssessmentGenerateRequest(level="N5", category="kanji", questionCount=1))
+
+    prompts = {grammar.questions[0].prompt, vocabulary.questions[0].prompt, kanji.questions[0].prompt}
+    assert len(prompts) == 3
+    assert grammar.questions[0].id == "N5-grammar-1"
+    assert vocabulary.questions[0].id == "N5-vocabulary-1"
+    assert kanji.questions[0].id == "N5-kanji-1"

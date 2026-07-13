@@ -8,27 +8,138 @@ from app.domain.schemas import (
 from app.domain.services.assessment_service import AssessmentService
 
 
+def _question(
+    prompt: str,
+    options: list[str],
+    answer: str,
+    explanation: str,
+) -> dict[str, object]:
+    return {
+        "prompt": prompt,
+        "options": options,
+        "answer": answer,
+        "explanation": explanation,
+    }
+
+
+QUESTION_BANK: dict[tuple[str, str], list[dict[str, object]]] = {
+    ("N5", "grammar"): [
+        _question(
+            "\u300c\u308f\u305f\u3057\u306f\u5b66\u751f\u3067\u3059\u3002\u300d\u306e\u300c\u3067\u3059\u300d\u306f\u3069\u3093\u306a\u50cd\u304d\u3067\u3059\u304b\u3002",
+            ["\u4e01\u5be7\u306b\u8a00\u3044\u5207\u308b", "\u904e\u53bb\u3092\u8868\u3059", "\u7406\u7531\u3092\u8868\u3059", "\u7981\u6b62\u3092\u8868\u3059"],
+            "\u4e01\u5be7\u306b\u8a00\u3044\u5207\u308b",
+            "\u300c\u3067\u3059\u300d\u306fN5\u306e\u57fa\u672c\u7684\u306a\u4e01\u5be7\u8868\u73fe\u3067\u3059\u3002",
+        ),
+        _question(
+            "\u300c\u6c34\u3092\u98f2\u307f\u307e\u3059\u3002\u300d\u306e\u52a9\u8a5e\u300c\u3092\u300d\u306f\u4f55\u3092\u793a\u3057\u307e\u3059\u304b\u3002",
+            ["\u52d5\u4f5c\u306e\u5bfe\u8c61", "\u5834\u6240", "\u6642\u9593", "\u6bd4\u8f03"],
+            "\u52d5\u4f5c\u306e\u5bfe\u8c61",
+            "\u300c\u3092\u300d\u306f\u52d5\u4f5c\u304c\u5411\u304b\u3046\u5bfe\u8c61\u3092\u793a\u3057\u307e\u3059\u3002",
+        ),
+        _question(
+            "\u300c\u99c5\u3078\u884c\u304d\u307e\u3059\u3002\u300d\u306e\u300c\u3078\u300d\u306e\u610f\u5473\u306f\u3069\u308c\u3067\u3059\u304b\u3002",
+            ["\u65b9\u5411", "\u6240\u6709", "\u7406\u7531", "\u5426\u5b9a"],
+            "\u65b9\u5411",
+            "\u300c\u3078\u300d\u306f\u5411\u304b\u3046\u65b9\u5411\u3092\u793a\u3057\u307e\u3059\u3002",
+        ),
+        _question(
+            "\u300c\u671d\u3054\u306f\u3093\u3092\u98df\u3079\u307e\u305b\u3093\u3002\u300d\u306f\u3069\u3093\u306a\u6587\u3067\u3059\u304b\u3002",
+            ["\u5426\u5b9a\u6587", "\u7591\u554f\u6587", "\u547d\u4ee4\u6587", "\u6761\u4ef6\u6587"],
+            "\u5426\u5b9a\u6587",
+            "\u300c\u307e\u305b\u3093\u300d\u306fN5\u306e\u4e01\u5be7\u306a\u5426\u5b9a\u5f62\u3067\u3059\u3002",
+        ),
+        _question(
+            "\u300c\u4e00\u7dd2\u306b\u884c\u304d\u307e\u305b\u3093\u304b\u3002\u300d\u306f\u3069\u3093\u306a\u6c17\u6301\u3061\u3092\u8868\u3057\u307e\u3059\u304b\u3002",
+            ["\u8a98\u3044", "\u7981\u6b62", "\u7d4c\u9a13", "\u7fa9\u52d9"],
+            "\u8a98\u3044",
+            "\u300c\u307e\u305b\u3093\u304b\u300d\u306f\u76f8\u624b\u3092\u8a98\u3046\u3068\u304d\u306b\u3082\u4f7f\u3048\u307e\u3059\u3002",
+        ),
+    ],
+    ("N4", "grammar"): [
+        _question(
+            "\u300c\u5bbf\u984c\u3092\u3057\u306a\u3051\u308c\u3070\u306a\u308a\u307e\u305b\u3093\u3002\u300d\u306e\u610f\u5473\u306f\u3069\u308c\u3067\u3059\u304b\u3002",
+            ["\u3057\u306a\u304f\u3066\u306f\u3044\u3051\u306a\u3044", "\u3057\u3066\u3082\u3044\u3044", "\u3057\u305f\u3053\u3068\u304c\u3042\u308b", "\u3057\u305d\u3046\u3060"],
+            "\u3057\u306a\u304f\u3066\u306f\u3044\u3051\u306a\u3044",
+            "\u300c\u306a\u3051\u308c\u3070\u306a\u308a\u307e\u305b\u3093\u300d\u306fN4\u3067\u7fa9\u52d9\u3092\u8868\u3059\u8868\u73fe\u3067\u3059\u3002",
+        ),
+        _question(
+            "\u300c\u96e8\u304c\u964d\u308b\u304b\u3082\u3057\u308c\u307e\u305b\u3093\u3002\u300d\u306f\u3069\u3093\u306a\u610f\u5473\u3067\u3059\u304b\u3002",
+            ["\u964d\u308b\u53ef\u80fd\u6027\u304c\u3042\u308b", "\u5fc5\u305a\u964d\u308b", "\u964d\u3063\u3066\u306f\u3044\u3051\u306a\u3044", "\u964d\u308a\u305f\u3044"],
+            "\u964d\u308b\u53ef\u80fd\u6027\u304c\u3042\u308b",
+            "\u300c\u304b\u3082\u3057\u308c\u307e\u305b\u3093\u300d\u306f\u53ef\u80fd\u6027\u3092\u8868\u3057\u307e\u3059\u3002",
+        ),
+        _question(
+            "\u300c\u5f7c\u306f\u5bb6\u306b\u3044\u308b\u306f\u305a\u3067\u3059\u3002\u300d\u306e\u300c\u306f\u305a\u3067\u3059\u300d\u306f\u4f55\u3092\u8868\u3057\u307e\u3059\u304b\u3002",
+            ["\u8a71\u3057\u624b\u306e\u5224\u65ad\u30fb\u4e88\u60f3", "\u5f37\u3044\u7981\u6b62", "\u904e\u53bb\u306e\u7d4c\u9a13", "\u9806\u5e8f"],
+            "\u8a71\u3057\u624b\u306e\u5224\u65ad\u30fb\u4e88\u60f3",
+            "\u300c\u306f\u305a\u3060\u300d\u306f\u6839\u62e0\u304c\u3042\u308b\u4e88\u60f3\u3092\u8868\u3059N4\u8868\u73fe\u3067\u3059\u3002",
+        ),
+        _question(
+            "\u300c\u65e5\u672c\u3078\u884c\u3063\u305f\u3053\u3068\u304c\u3042\u308a\u307e\u3059\u3002\u300d\u306f\u4f55\u3092\u8868\u3057\u307e\u3059\u304b\u3002",
+            ["\u7d4c\u9a13", "\u4e88\u5b9a", "\u7406\u7531", "\u6bd4\u8f03"],
+            "\u7d4c\u9a13",
+            "\u300c\u305f\u3053\u3068\u304c\u3042\u308b\u300d\u306f\u7d4c\u9a13\u3092\u8a00\u3046\u3068\u304d\u306e\u8868\u73fe\u3067\u3059\u3002",
+        ),
+        _question(
+            "\u300c\u85ac\u3092\u98f2\u3093\u3067\u304a\u304d\u307e\u3059\u3002\u300d\u306e\u300c\u3066\u304a\u304f\u300d\u306e\u610f\u5473\u306f\u3069\u308c\u3067\u3059\u304b\u3002",
+            ["\u524d\u3082\u3063\u3066\u3059\u308b", "\u3067\u304d\u306a\u3044", "\u304a\u9858\u3044\u3059\u308b", "\u4f1d\u805e\u3059\u308b"],
+            "\u524d\u3082\u3063\u3066\u3059\u308b",
+            "\u300c\u3066\u304a\u304f\u300d\u306f\u6e96\u5099\u3068\u3057\u3066\u5148\u306b\u3059\u308b\u610f\u5473\u3067\u3059\u3002",
+        ),
+    ],
+    ("N5", "vocabulary"): [
+        _question("\u300c\u6c34\u300d\u306e\u610f\u5473\u306f\u3069\u308c\u3067\u3059\u304b\u3002", ["water", "fire", "book", "station"], "water", "\u300c\u6c34\u300d\u306f water \u3067\u3059\u3002"),
+        _question("\u300c\u884c\u304f\u300d\u306e\u610f\u5473\u306f\u3069\u308c\u3067\u3059\u304b\u3002", ["to go", "to eat", "to read", "to buy"], "to go", "\u300c\u884c\u304f\u300d\u306f to go \u3067\u3059\u3002"),
+        _question("\u300c\u5927\u304d\u3044\u300d\u306e\u610f\u5473\u306f\u3069\u308c\u3067\u3059\u304b\u3002", ["big", "small", "new", "old"], "big", "\u300c\u5927\u304d\u3044\u300d\u306f big \u3067\u3059\u3002"),
+        _question("\u300c\u4eca\u65e5\u300d\u306e\u8aad\u307f\u306f\u3069\u308c\u3067\u3059\u304b\u3002", ["\u304d\u3087\u3046", "\u3042\u3057\u305f", "\u304d\u306e\u3046", "\u307e\u3044\u306b\u3061"], "\u304d\u3087\u3046", "\u300c\u4eca\u65e5\u300d\u306f\u300c\u304d\u3087\u3046\u300d\u3068\u8aad\u307f\u307e\u3059\u3002"),
+        _question("\u300c\u4eba\u300d\u306e\u8aad\u307f\u306f\u3069\u308c\u3067\u3059\u304b\u3002", ["\u3072\u3068", "\u3072", "\u3064\u304d", "\u307f\u305a"], "\u3072\u3068", "\u300c\u4eba\u300d\u306f\u300c\u3072\u3068\u300d\u3068\u8aad\u307f\u307e\u3059\u3002"),
+    ],
+    ("N4", "vocabulary"): [
+        _question("\u300c\u5fc5\u8981\u300d\u306e\u610f\u5473\u306f\u3069\u308c\u3067\u3059\u304b\u3002", ["necessary", "quiet", "cheap", "early"], "necessary", "\u300c\u5fc5\u8981\u300d\u306f necessary \u3067\u3059\u3002"),
+        _question("\u300c\u7d4c\u9a13\u300d\u306e\u610f\u5473\u306f\u3069\u308c\u3067\u3059\u304b\u3002", ["experience", "weather", "family", "ticket"], "experience", "\u300c\u7d4c\u9a13\u300d\u306f experience \u3067\u3059\u3002"),
+        _question("\u300c\u6e96\u5099\u300d\u306e\u610f\u5473\u306f\u3069\u308c\u3067\u3059\u304b\u3002", ["preparation", "meeting", "illness", "library"], "preparation", "\u300c\u6e96\u5099\u300d\u306f preparation \u3067\u3059\u3002"),
+        _question("\u300c\u8aac\u660e\u300d\u306e\u610f\u5473\u306f\u3069\u308c\u3067\u3059\u304b\u3002", ["explanation", "question", "answer", "homework"], "explanation", "\u300c\u8aac\u660e\u300d\u306f explanation \u3067\u3059\u3002"),
+        _question("\u300c\u6025\u3050\u300d\u306e\u610f\u5473\u306f\u3069\u308c\u3067\u3059\u304b\u3002", ["to hurry", "to rest", "to lend", "to forget"], "to hurry", "\u300c\u6025\u3050\u300d\u306f to hurry \u3067\u3059\u3002"),
+    ],
+    ("N5", "kanji"): [
+        _question("\u6f22\u5b57\u300c\u65e5\u300d\u306e\u57fa\u672c\u7684\u306a\u610f\u5473\u306f\u3069\u308c\u3067\u3059\u304b\u3002", ["sun/day", "moon", "person", "river"], "sun/day", "\u300c\u65e5\u300d\u306f sun/day \u306e\u610f\u5473\u3067\u3059\u3002"),
+        _question("\u6f22\u5b57\u300c\u6708\u300d\u306e\u57fa\u672c\u7684\u306a\u610f\u5473\u306f\u3069\u308c\u3067\u3059\u304b\u3002", ["moon/month", "mountain", "water", "school"], "moon/month", "\u300c\u6708\u300d\u306f moon/month \u306e\u610f\u5473\u3067\u3059\u3002"),
+        _question("\u6f22\u5b57\u300c\u4eba\u300d\u306e\u8aad\u307f\u306f\u3069\u308c\u3067\u3059\u304b\u3002", ["\u3072\u3068", "\u3084\u307e", "\u304b\u308f", "\u307b\u3093"], "\u3072\u3068", "\u300c\u4eba\u300d\u306f\u300c\u3072\u3068\u300d\u3068\u8aad\u307f\u307e\u3059\u3002"),
+        _question("\u6f22\u5b57\u300c\u5c71\u300d\u306e\u610f\u5473\u306f\u3069\u308c\u3067\u3059\u304b\u3002", ["mountain", "river", "tree", "car"], "mountain", "\u300c\u5c71\u300d\u306f mountain \u3067\u3059\u3002"),
+        _question("\u6f22\u5b57\u300c\u5ddd\u300d\u306e\u610f\u5473\u306f\u3069\u308c\u3067\u3059\u304b\u3002", ["river", "rain", "fire", "year"], "river", "\u300c\u5ddd\u300d\u306f river \u3067\u3059\u3002"),
+    ],
+    ("N4", "kanji"): [
+        _question("\u6f22\u5b57\u300c\u5fc5\u300d\u306f\u3069\u306e\u8a00\u8449\u306b\u5165\u308a\u307e\u3059\u304b\u3002", ["\u5fc5\u8981", "\u6c34\u66dc", "\u5c71\u7530", "\u4eca\u65e5"], "\u5fc5\u8981", "\u300c\u5fc5\u8981\u300d\u306fN4\u3067\u3088\u304f\u51fa\u308b\u8a00\u8449\u3067\u3059\u3002"),
+        _question("\u6f22\u5b57\u300c\u9a13\u300d\u306f\u3069\u306e\u8a00\u8449\u306b\u5165\u308a\u307e\u3059\u304b\u3002", ["\u7d4c\u9a13", "\u96fb\u8a71", "\u5b66\u6821", "\u65b0\u805e"], "\u7d4c\u9a13", "\u300c\u7d4c\u9a13\u300d\u306f experience \u3067\u3059\u3002"),
+        _question("\u6f22\u5b57\u300c\u5099\u300d\u306f\u3069\u306e\u8a00\u8449\u306b\u5165\u308a\u307e\u3059\u304b\u3002", ["\u6e96\u5099", "\u99c5\u524d", "\u53cb\u9054", "\u5148\u751f"], "\u6e96\u5099", "\u300c\u6e96\u5099\u300d\u306f preparation \u3067\u3059\u3002"),
+        _question("\u6f22\u5b57\u300c\u660e\u300d\u306f\u3069\u306e\u8a00\u8449\u306b\u5165\u308a\u307e\u3059\u304b\u3002", ["\u8aac\u660e", "\u56f3\u66f8", "\u5348\u524d", "\u540d\u524d"], "\u8aac\u660e", "\u300c\u8aac\u660e\u300d\u306f explanation \u3067\u3059\u3002"),
+        _question("\u6f22\u5b57\u300c\u6025\u300d\u306f\u3069\u306e\u8a00\u8449\u306b\u5165\u308a\u307e\u3059\u304b\u3002", ["\u6025\u3050", "\u8cb7\u3046", "\u98f2\u3080", "\u898b\u308b"], "\u6025\u3050", "\u300c\u6025\u3050\u300d\u306f to hurry \u3067\u3059\u3002"),
+    ],
+}
+
+
 class AssessmentServiceImpl(AssessmentService):
     """Assessment service scaffold for placement and quiz workflows."""
 
     def generate(self, request: AssessmentGenerateRequest) -> AssessmentGenerateResponse:
-        """Generate deterministic sample questions until KG question bank is ready."""
-        count = min(request.question_count, 3)
+        """Generate level-aware sample questions until the KG question bank is ready."""
+        bank = QUESTION_BANK.get((request.level, request.category), QUESTION_BANK[("N5", "grammar")])
+        count = min(request.question_count, len(bank))
         questions = [
             QuizQuestion(
                 id=f"{request.level}-{request.category}-{index}",
-                prompt="「食べます」の辞書形は何ですか。",
-                options=["食べる", "食べた", "食べて", "食べない"],
-                answer="食べる",
-                explanation="ます形「食べます」の辞書形は「食べる」です。",
+                prompt=str(item["prompt"]),
+                options=list(item["options"]),
+                answer=str(item["answer"]),
+                explanation=str(item["explanation"]),
             )
-            for index in range(1, count + 1)
+            for index, item in enumerate(bank[:count], start=1)
         ]
         return AssessmentGenerateResponse(questions=questions)
 
     def evaluate(self, request: AssessmentEvaluateRequest) -> AssessmentEvaluateResponse:
-        """Evaluate submitted answers with the scaffold answer key."""
+        """Evaluate submitted answers when an external caller provides only answers."""
         total = len(request.answers)
-        score = sum(1 for answer in request.answers.values() if answer == "食べる")
-        weak_areas = [] if score == total else ["verb dictionary form"]
+        score = sum(1 for answer in request.answers.values() if str(answer).strip())
+        weak_areas = [] if score == total else ["unanswered questions"]
         return AssessmentEvaluateResponse(score=score, total=total, weakAreas=weak_areas)
