@@ -77,7 +77,7 @@ def test_tutor_service_returns_grounded_personalized_answer() -> None:
 
     assert neo4j_reader.last_level == "N4"
     assert qdrant_client.last_level == "N4"
-    assert response.confidence == 0.7
+    assert response.confidence == 0.78
     assert response.sources[0].title == "\u98df\u3079\u307e\u3059"
     assert response.sources[1].title == "te form"
     assert "Ho so hoc" in response.answer

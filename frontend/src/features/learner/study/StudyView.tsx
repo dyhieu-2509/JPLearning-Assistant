@@ -5,8 +5,10 @@ import {
   CircleX,
   ClipboardCheck,
   Layers3,
+  Lightbulb,
   Lock,
   RotateCcw,
+  Target,
   Trophy
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -24,10 +26,11 @@ import {
   weakSkillSummary,
   type StudyChapter,
   type StudyLesson,
-  type StudyProfile
+  type StudyProfile,
+  type StudyQuestion
 } from "./studyPath";
 
-type LessonPhase = "learn" | "flashcards" | "quiz" | "result";
+type LessonPhase = "learn" | "flashcards" | "quiz" | "review" | "result";
 type AdaptivePace = "support" | "steady" | "fast";
 
 type LessonProgress = {
@@ -66,6 +69,7 @@ export function StudyView() {
   const [cardIndex, setCardIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [lastSubmittedAnswers, setLastSubmittedAnswers] = useState<Record<string, string>>({});
   const [lastScore, setLastScore] = useState<number | null>(null);
 
   useEffect(() => {
@@ -122,6 +126,15 @@ export function StudyView() {
   const answeredCount = lesson.questions.filter((question) => answers[question.id]).length;
   const currentCard = lesson.flashcards[cardIndex] ?? lesson.flashcards[0];
   const currentScore = lastScore ?? lessonProgress?.bestScore ?? 0;
+  const submittedAnswers = Object.keys(lastSubmittedAnswers).length ? lastSubmittedAnswers : answers;
+  const missedQuestions = useMemo(
+    () => lesson.questions.filter((question) => submittedAnswers[question.id] !== question.answer),
+    [lesson, submittedAnswers]
+  );
+  const reviewFlashcards = useMemo(
+    () => relatedFlashcardsForMistakes(lesson, missedQuestions),
+    [lesson, missedQuestions]
+  );
   const nextLesson = lessons[activeIndex + 1] ?? null;
   const nextChapter = nextLesson ? findChapterForLesson(chapters, nextLesson.id) : null;
   const adaptiveState = useMemo(
@@ -148,6 +161,7 @@ export function StudyView() {
     setCardIndex(0);
     setFlipped(false);
     setAnswers({});
+    setLastSubmittedAnswers({});
     setLastScore(null);
   }
 
@@ -168,6 +182,10 @@ export function StudyView() {
     const correct = lesson.questions.filter((question) => answers[question.id] === question.answer).length;
     const score = Math.round((correct / lesson.questions.length) * 100);
     setLastScore(score);
+    setLastSubmittedAnswers(answers);
+    if (accessToken) {
+      void recordStudyQuizSignals(accessToken, lesson, answers);
+    }
     setProgress((current) => {
       const previous = current[lesson.id];
       const recentScores = [...(previous?.recentScores ?? []), score].slice(-5);
@@ -185,6 +203,13 @@ export function StudyView() {
       };
     });
     setPhase("result");
+  }
+
+  function reviewMistakes() {
+    setPhase("review");
+    setCardIndex(0);
+    setFlipped(false);
+    setAnswers({});
   }
 
   function goNextLesson() {
@@ -241,6 +266,7 @@ export function StudyView() {
                     const itemIndex = lessons.findIndex((candidate) => candidate.id === item.id);
                     const itemUnlocked = isLessonUnlocked(itemIndex, progress, lessons);
                     const itemProgress = progress[item.id];
+                    const itemStatus = lessonStatus(itemProgress, itemUnlocked, item.id === lesson.id);
                     return (
                       <button
                         className={item.id === lesson.id ? "study-lesson-row active" : "study-lesson-row"}
@@ -254,7 +280,7 @@ export function StudyView() {
                           <strong>{item.title}</strong>
                           <small>{item.level} · {item.focus}</small>
                         </span>
-                        <em>{itemProgress?.passed ? "Đã qua" : itemUnlocked ? `${itemProgress?.bestScore ?? 0}%` : "Khóa"}</em>
+                        <em className={`study-lesson-status ${itemStatus.kind}`}>{itemStatus.label}</em>
                       </button>
                     );
                   })}
@@ -284,6 +310,12 @@ export function StudyView() {
                   <div className="study-example-card">
                     <span>{lesson.example}</span>
                     <small>{lesson.translation}</small>
+                  </div>
+                  <div className="study-tutor-brief">
+                    <Lightbulb size={20} />
+                    <span>
+                      Hôm nay tập trung vào {lesson.focus}. Nếu quiz sai, VAJA sẽ giữ bài này và đưa phần cần ôn ra trước.
+                    </span>
                   </div>
                   <div className="study-action-row">
                     <PrimaryButton type="button" onClick={startFlashcards}>
@@ -351,15 +383,73 @@ export function StudyView() {
                 </div>
               )}
 
+              {phase === "review" && (
+                <div className="study-review-step">
+                  <div className="study-step-meter">
+                    <TopicChip>{missedQuestions.length || lesson.questions.length} câu cần ôn</TopicChip>
+                    <TopicChip>{reviewFlashcards.length} thẻ gợi ý</TopicChip>
+                    <TopicChip>{adaptiveState.label}</TopicChip>
+                  </div>
+                  <div className="study-mistake-plan">
+                    <Target size={24} />
+                    <div>
+                      <strong>Ôn đúng phần vừa sai</strong>
+                      <span>
+                        VAJA giữ bạn ở bài này để vá phần chưa chắc trước. Khi làm lại đạt từ {passThreshold}%,
+                        bài tiếp theo sẽ mở.
+                      </span>
+                    </div>
+                  </div>
+                  <div className="study-mistake-list">
+                    {(missedQuestions.length ? missedQuestions : lesson.questions).map((question) => (
+                      <article className="study-mistake-card" key={question.id}>
+                        <strong>{question.prompt}</strong>
+                        <span>Bạn chọn: {submittedAnswers[question.id] || "chưa chọn"}</span>
+                        <span>Đáp án đúng: {question.answer}</span>
+                        <small>{question.explanation}</small>
+                      </article>
+                    ))}
+                  </div>
+                  <div className="study-review-card-grid" aria-label="Thẻ nên ôn trước khi làm lại">
+                    {reviewFlashcards.map((card) => (
+                      <div className="study-review-flashcard" key={`${card.front}-${card.back}`}>
+                        <strong>{card.front}</strong>
+                        <span>{card.back}</span>
+                        <small>{card.hint}</small>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="study-action-row">
+                    <PrimaryButton type="button" onClick={() => resetLessonState("quiz")}>
+                      <ClipboardCheck size={18} />
+                      Làm lại quiz
+                    </PrimaryButton>
+                    <IconTextButton type="button" variant="ghost" onClick={startFlashcards}>
+                      <Layers3 size={18} />
+                      Ôn toàn bộ thẻ
+                    </IconTextButton>
+                  </div>
+                </div>
+              )}
+
               {phase === "result" && (
                 <div className={currentScore >= passThreshold ? "study-result passed" : "study-result retry"}>
                   <Trophy size={36} />
                   <h3>{currentScore >= passThreshold ? "Qua bài rồi." : "Chưa qua bài này."}</h3>
                   <strong>{currentScore}%</strong>
                   <p>{resultMessage(currentScore, nextLesson, nextChapter, currentChapter, adaptiveState)}</p>
+                  {currentScore < passThreshold && (
+                    <div className="study-mistake-plan compact">
+                      <Target size={22} />
+                      <div>
+                        <strong>{missedQuestions.length} câu cần xem lại</strong>
+                        <span>Ưu tiên ôn câu sai trước, sau đó làm lại quiz.</span>
+                      </div>
+                    </div>
+                  )}
                   <div className="study-answer-review">
                     {lesson.questions.map((question) => {
-                      const selected = answers[question.id];
+                      const selected = submittedAnswers[question.id];
                       const correct = selected === question.answer;
                       return (
                         <div className={correct ? "study-answer-row correct" : "study-answer-row wrong"} key={question.id}>
@@ -393,9 +483,9 @@ export function StudyView() {
                         <ArrowRight size={18} />
                       </PrimaryButton>
                     ) : (
-                      <PrimaryButton type="button" onClick={startFlashcards}>
+                      <PrimaryButton type="button" onClick={reviewMistakes}>
                         <RotateCcw size={18} />
-                        Ôn lại bài này
+                        Ôn câu sai trước
                       </PrimaryButton>
                     )}
                     <IconTextButton type="button" variant="ghost" onClick={() => resetLessonState("quiz")}>
@@ -451,9 +541,30 @@ function LessonPhaseBadge({ phase }: { phase: LessonPhase }) {
     learn: "Học",
     flashcards: "Thẻ nhớ",
     quiz: "Quiz",
+    review: "Ôn sai",
     result: "Kết quả"
   };
   return <TopicChip>{labels[phase]}</TopicChip>;
+}
+
+function lessonStatus(
+  progress: LessonProgress | undefined,
+  unlocked: boolean,
+  active: boolean
+): { kind: "current" | "review" | "done" | "locked" | "open"; label: string } {
+  if (progress?.passed) {
+    return { kind: "done", label: "Đã qua" };
+  }
+  if (!unlocked) {
+    return { kind: "locked", label: "Khóa" };
+  }
+  if ((progress?.failCount ?? 0) > 0) {
+    return { kind: "review", label: "Cần ôn" };
+  }
+  if (active) {
+    return { kind: "current", label: "Đang học" };
+  }
+  return { kind: "open", label: `${progress?.bestScore ?? 0}%` };
 }
 
 function LockedLesson({ previous }: { previous?: StudyLesson }) {
@@ -485,6 +596,69 @@ function resultMessage(
   return adaptiveState.pace === "fast"
     ? "Bạn qua rất chắc. VAJA tăng nhịp, có thể học thêm bài kế tiếp trong hôm nay."
     : "Bài kế tiếp đã mở. Cứ đi tiếp theo nhịp hiện tại.";
+}
+
+async function recordStudyQuizSignals(
+  token: string,
+  lesson: StudyLesson,
+  submittedAnswers: Record<string, string>
+) {
+  const knowledgeType = knowledgeTypeForLesson(lesson);
+  await Promise.allSettled(
+    lesson.questions.map((question) =>
+      apiRequest("/personalization/me/progress/signals", {
+        method: "POST",
+        token,
+        body: {
+          knowledgeType,
+          knowledgeId: `${lesson.id}:${question.id}`,
+          title: truncateTitle(`${lesson.title}: ${question.prompt}`),
+          level: lesson.level,
+          source: "QUIZ",
+          result: submittedAnswers[question.id] === question.answer ? "CORRECT" : "WRONG"
+        }
+      })
+    )
+  );
+}
+
+function knowledgeTypeForLesson(lesson: StudyLesson): string {
+  const searchable = `${lesson.focus} ${lesson.title}`.toLowerCase();
+  if (searchable.includes("kanji") || searchable.includes("漢字")) {
+    return "Kanji";
+  }
+  if (searchable.includes("từ") || searchable.includes("vocab") || searchable.includes("word")) {
+    return "Vocabulary";
+  }
+  return "GrammarPoint";
+}
+
+function relatedFlashcardsForMistakes(lesson: StudyLesson, questions: StudyQuestion[]) {
+  if (!questions.length) {
+    return lesson.flashcards.slice(0, 3);
+  }
+
+  const questionText = normalizeStudyText(
+    questions
+      .flatMap((question) => [question.prompt, question.answer, question.explanation])
+      .join(" ")
+  );
+  const matched = lesson.flashcards.filter((card) =>
+    [card.front, card.back, card.hint].some((value) => {
+      const normalized = normalizeStudyText(value);
+      return normalized.length >= 2 && questionText.includes(normalized);
+    })
+  );
+
+  return (matched.length ? matched : lesson.flashcards).slice(0, 3);
+}
+
+function normalizeStudyText(value: string): string {
+  return value.toLowerCase().replace(/\s+/g, "");
+}
+
+function truncateTitle(value: string): string {
+  return value.length <= 190 ? value : `${value.slice(0, 187)}...`;
 }
 
 function getAdaptiveState(

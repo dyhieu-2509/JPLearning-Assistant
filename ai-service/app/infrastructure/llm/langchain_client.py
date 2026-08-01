@@ -10,7 +10,7 @@ except ImportError:  # pragma: no cover - keeps tests runnable before optional d
 
 
 class LangChainClient:
-    """LLM adapter used by the Tutor Agent."""
+    """LLM adapter used by the role-based tutor service."""
 
     def __init__(self, settings: Settings) -> None:
         self._settings = settings
@@ -74,18 +74,23 @@ class LangChainClient:
         learner_context = self._format_profile(profile, weak_progress)
 
         return (
-            "Ban la tro ly hoc tieng Nhat cho nguoi Viet. "
-            "Tra loi bang tieng Viet, dung muc do phu hop voi learner profile. "
+            "Ban la VAJA, mot tro giang tieng Nhat cho nguoi Viet. "
+            "Vai tro cua ban la tutor theo ngu canh bai hoc: giai thich, goi y cach nghi, "
+            "va de xuat buoc on tiep theo. "
+            "Tra loi bang tieng Viet don gian, phu hop voi learner profile. "
             "Chi dua tren nguon duoc cung cap; neu nguon khong du thi noi ro.\n\n"
             f"Learner profile:\n{learner_context}\n\n"
             f"Cau hoi: {message}\n\n"
             f"Nguon kien thuc:\n{context}\n\n"
             "Yeu cau cau tra loi:\n"
+            "- Mo dau bang 1 cau chot y ngan.\n"
             "- Giai thich truc tiep y nghia/cach dung.\n"
             "- Dieu chinh do kho theo currentLevel va goal cua nguoi hoc.\n"
             "- Neu lien quan den weakSkills hoac weakProgress, uu tien nhac lai ngan gon diem yeu do.\n"
             "- Neu co tu vung tieng Nhat, ghi kanji/kana va nghia.\n"
             "- Neu la ngu phap, dua 1 vi du ngan.\n"
+            "- Ket thuc bang 1 viec nguoi hoc nen lam tiep trong pathway.\n"
+            "- Neu nguoi hoc xin dap an truc tiep, van giai thich ly do de ho tu lam lai.\n"
             "- Khong bia them nguon ngoai context."
         )
 
@@ -139,13 +144,12 @@ class LangChainClient:
     ) -> str:
         if not sources:
             return (
-                "Minh chua tim thay ngu canh phu hop trong Knowledge Graph. "
-                "He thong da nhan cau hoi va san sang noi RAG; "
-                "hay import du lieu Neo4j/Qdrant de cau tra loi co nguon tham chieu."
+                "Minh chua co nguon hoc du ro cho cau nay. "
+                "Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon."
             )
 
         lines = [
-            "Dua tren du lieu da truy xuat tu Knowledge Graph, day la phan giai thich ngan:",
+            "Chot nhanh: day la phan ban nen nam truoc.",
         ]
         if profile is not None:
             lines.append(
@@ -164,5 +168,5 @@ class LangChainClient:
             lines.append(f"- {source.title}{reading}: {meaning}.")
 
         lines.append(f"Cau hoi cua ban: {message}")
-        lines.append("Ban sinh tu nhien bang Gemini se duoc dung khi cau hinh API key hop le.")
+        lines.append("Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.")
         return "\n".join(lines)

@@ -30,7 +30,7 @@ class TutorServiceImpl(TutorService):
             profile=request.profile,
             weak_progress=request.weak_progress,
         )
-        confidence = 0.7 if sources else 0.3
+        confidence = self._estimate_confidence(vector_sources, graph_sources)
         return TutorChatResponse(answer=answer, sources=sources, confidence=confidence)
 
     def _profile_level(self, request: TutorChatRequest) -> str:
@@ -52,3 +52,10 @@ class TutorServiceImpl(TutorService):
                 if len(merged) >= limit:
                     return merged
         return merged
+
+    def _estimate_confidence(self, vector_sources, graph_sources) -> float:
+        if vector_sources and graph_sources:
+            return 0.78
+        if vector_sources or graph_sources:
+            return 0.62
+        return 0.3

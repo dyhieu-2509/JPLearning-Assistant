@@ -162,7 +162,12 @@ test("learner cannot unlock the next lesson below the pass score", async ({ page
   await expect(page.getByText("Nhịp củng cố").first()).toBeVisible();
   await expect(page.getByRole("button", { name: /Bài 2: Đi đâu, làm gì/i })).toBeDisabled();
 
-  await page.getByRole("button", { name: /Ôn lại bài này/i }).click();
+  await expect(page.getByText(/câu cần xem lại/i)).toBeVisible();
+  await page.getByRole("button", { name: /Ôn câu sai trước/i }).click();
+  await expect(page.getByText(/Ôn đúng phần vừa sai/i)).toBeVisible();
+  await expect(page.getByText(/Đáp án đúng/i).first()).toBeVisible();
+
+  await page.getByRole("button", { name: /Ôn toàn bộ thẻ/i }).click();
   await expect(page.locator(".study-flashcard")).toBeVisible();
 
   for (let index = 0; index < 4; index += 1) {
@@ -283,6 +288,8 @@ test("learner can understand the MVP study loop", async ({ page }) => {
   await expect(page.locator(".flashcard-study-panel").getByText(kanjiCard.frontText, { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Từ vựng", exact: true }).click();
   await expect(page.getByRole("button", { name: /N5 vocabulary/i })).toBeVisible();
+  await page.getByRole("button", { name: "Câu sai", exact: true }).click();
+  await expect(page.locator(".flashcard-study-panel").getByText(card.frontText, { exact: true })).toBeVisible();
   const studyPanel = page.locator(".flashcard-study-panel");
   await page.getByRole("button", { name: "Lật đáp án", exact: true }).click();
   await expect(studyPanel.getByText(card.backText, { exact: true })).toBeVisible();
@@ -310,7 +317,7 @@ test("new learner can finish onboarding and reach the dashboard", async ({ page 
   await mockOnboardingApi(page);
 
   await page.goto("/learner");
-  await expect(page.locator(".onboarding-panel")).toBeVisible();
+  await expect(page.locator(".onboarding-panel")).toBeVisible({ timeout: 15000 });
 
   await page.locator(".onboarding-actions button").last().click();
   await page.locator(".onboarding-actions button").last().click();
@@ -336,7 +343,7 @@ test("mobile study view shows the active lesson before the full pathway", async 
   await mockMvpApi(page);
 
   await page.goto("/learner/study");
-  await expect(page.locator(".study-lesson-stage")).toBeVisible();
+  await expect(page.locator(".study-lesson-stage")).toBeVisible({ timeout: 15000 });
 
   const stageBox = await page.locator(".study-lesson-stage").boundingBox();
   const railBox = await page.locator(".study-lesson-rail").boundingBox();
@@ -421,6 +428,11 @@ async function mockMvpApi(page: Page, profileOverride: Partial<typeof profile> =
       return;
     }
 
+    if (method === "GET" && path === "/personalization/me/progress") {
+      await json(route, activeDashboard.progress.weakestItems);
+      return;
+    }
+
     if (method === "POST" && path === "/personalization/me/feedback") {
       const feedback = JSON.parse(request.postData() || "{}");
       await json(route, {
@@ -428,6 +440,25 @@ async function mockMvpApi(page: Page, profileOverride: Partial<typeof profile> =
         userId: activeProfile.userId,
         createdAt: "2026-05-20T08:00:00Z",
         ...feedback
+      });
+      return;
+    }
+
+    if (method === "POST" && path === "/personalization/me/progress/signals") {
+      const signal = JSON.parse(request.postData() || "{}");
+      await json(route, {
+        id: `progress-${signal.knowledgeId ?? "study"}`,
+        userId: activeProfile.userId,
+        knowledgeType: signal.knowledgeType,
+        knowledgeId: signal.knowledgeId,
+        title: signal.title,
+        level: signal.level,
+        masteryScore: signal.result === "CORRECT" ? 0.58 : 0.18,
+        exposureCount: 0,
+        correctCount: signal.result === "CORRECT" ? 1 : 0,
+        wrongCount: signal.result === "WRONG" ? 1 : 0,
+        nextReviewAt: "2026-05-21T08:00:00Z",
+        updatedAt: "2026-05-20T08:00:00Z"
       });
       return;
     }

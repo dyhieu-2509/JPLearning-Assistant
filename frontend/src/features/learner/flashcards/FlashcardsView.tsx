@@ -10,17 +10,29 @@ import {
   PrimaryButton,
   TopicChip
 } from "../../../shared/components";
-import type { FlashcardCardResponse, FlashcardDeckResponse, FlashcardReviewResponse } from "../../../shared/models";
+import type {
+  FlashcardCardResponse,
+  FlashcardDeckResponse,
+  FlashcardReviewResponse,
+  KnowledgeProgressResponse
+} from "../../../shared/models";
 
 const ratings = ["AGAIN", "HARD", "GOOD", "EASY"] as const;
 type ReviewRating = (typeof ratings)[number];
 type CategoryFilter = "all" | "vocabulary" | "grammar" | "kanji";
+type FlashcardMode = "due" | "deck" | "weak";
 
 const categoryFilters: Array<{ value: CategoryFilter; label: string }> = [
   { value: "all", label: "Tất cả" },
   { value: "kanji", label: "Kanji" },
   { value: "vocabulary", label: "Từ vựng" },
   { value: "grammar", label: "Ngữ pháp" }
+];
+
+const modeFilters: Array<{ value: FlashcardMode; label: string }> = [
+  { value: "due", label: "Đến hạn" },
+  { value: "deck", label: "Bộ thẻ" },
+  { value: "weak", label: "Câu sai" }
 ];
 
 const ratingLabels: Record<ReviewRating, { label: string; description: string }> = {
@@ -56,6 +68,7 @@ export function FlashcardsView() {
   const [selectedDeckId, setSelectedDeckId] = useState<string | null>(null);
   const [cards, setCards] = useState<FlashcardCardResponse[]>([]);
   const [dueCards, setDueCards] = useState<FlashcardCardResponse[]>([]);
+  const [weakProgress, setWeakProgress] = useState<KnowledgeProgressResponse[]>([]);
   const [flipped, setFlipped] = useState<string | null>(null);
   const [reviewFeedback, setReviewFeedback] = useState<ReviewFeedback | null>(null);
   const [title, setTitle] = useState("Tăng tốc từ vựng N5");
@@ -63,6 +76,7 @@ export function FlashcardsView() {
   const [category, setCategory] = useState("vocabulary");
   const [selectedLevel, setSelectedLevel] = useState("N5");
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("all");
+  const [mode, setMode] = useState<FlashcardMode>("due");
   const [loading, setLoading] = useState(true);
   const [reviewing, setReviewing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -83,19 +97,33 @@ export function FlashcardsView() {
     () => dueCards.filter((card) => cardMatchesFilter(card, selectedLevel, categoryFilter)),
     [categoryFilter, dueCards, selectedLevel]
   );
-  const activeCard = visibleDueCards[0] ?? cards[0] ?? null;
+  const visibleDeckCards = useMemo(
+    () => cards.filter((card) => cardMatchesFilter(card, selectedLevel, categoryFilter)),
+    [cards, categoryFilter, selectedLevel]
+  );
+  const weakCards = useMemo(
+    () =>
+      uniqueCards([...visibleDueCards, ...visibleDeckCards]).filter((card) =>
+        weakProgress.some((progress) => progressMatchesCard(progress, card))
+      ),
+    [visibleDeckCards, visibleDueCards, weakProgress]
+  );
+  const studyCards = mode === "weak" ? weakCards : mode === "deck" ? visibleDeckCards : visibleDueCards;
+  const activeCard = studyCards[0] ?? (mode === "due" ? visibleDeckCards[0] : null);
   const isFlipped = Boolean(activeCard && flipped === activeCard.id);
-  const studyMode = visibleDueCards.length ? "Đến hạn" : "Luyện tự do";
+  const studyMode = studyModeLabel(mode, visibleDueCards.length);
 
   async function loadFlashcards(deckId = selectedDeckId) {
     setError(null);
     try {
-      const [deckData, dueData] = await Promise.all([
+      const [deckData, dueData, weakData] = await Promise.all([
         apiRequest<FlashcardDeckResponse[]>("/flashcards/decks", { token }),
-        apiRequest<FlashcardCardResponse[]>("/flashcards/review/due?limit=12", { token })
+        apiRequest<FlashcardCardResponse[]>("/flashcards/review/due?limit=12", { token }),
+        apiRequest<KnowledgeProgressResponse[]>("/personalization/me/progress?weakOnly=true&limit=12", { token })
       ]);
       setDecks(deckData);
       setDueCards(dueData);
+      setWeakProgress(weakData);
       const nextDeckId = deckId ?? deckData[0]?.id ?? null;
       const nextDeck = deckData.find((deck) => deck.id === nextDeckId) ?? deckData[0];
       if (nextDeck?.level) {
@@ -216,6 +244,22 @@ export function FlashcardsView() {
       {error && <div className="form-error full-span">{error}</div>}
 
       <Panel className="flashcard-filter-panel full-span" eyebrow="Cấp học" title="Chọn phạm vi ôn">
+        <div className="flashcard-mode-tabs" aria-label="Chọn cách ôn thẻ">
+          {modeFilters.map((option) => (
+            <button
+              className={option.value === mode ? "active" : ""}
+              key={option.value}
+              type="button"
+              onClick={() => {
+                setMode(option.value);
+                setReviewFeedback(null);
+                setFlipped(null);
+              }}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
         <div className="flashcard-filter-group" aria-label="Chọn cấp học">
           {availableLevels.map((item) => (
             <button
@@ -299,9 +343,7 @@ export function FlashcardsView() {
         ) : activeCard ? (
           <div className="flashcard-study">
             <div className="flashcard-study-meta">
-              <TopicChip>
-                {visibleDueCards.length ? `${visibleDueCards.length} thẻ đến hạn` : "Không có thẻ đến hạn"}
-              </TopicChip>
+              <TopicChip>{studyCountLabel(mode, studyCards.length, visibleDueCards.length)}</TopicChip>
               <TopicChip>{displayCategory(activeCard.sourceType)}</TopicChip>
               <TopicChip>{activeCard.repetitions} lượt ôn</TopicChip>
               <TopicChip>{activeCard.intervalDays} ngày giãn cách</TopicChip>
@@ -336,7 +378,7 @@ export function FlashcardsView() {
             {reviewFeedback && <ReviewFeedbackPanel feedback={reviewFeedback} />}
           </div>
         ) : (
-          <EmptyState compact>Chưa có thẻ trong phạm vi này. Đổi cấp học, đổi nhóm thẻ hoặc tạo bộ thẻ mới.</EmptyState>
+          <EmptyState compact>{emptyModeText(mode)}</EmptyState>
         )}
       </Panel>
 
@@ -353,6 +395,10 @@ export function FlashcardsView() {
           <div>
             <strong>{visibleDecks.length}</strong>
             <span>Bộ trong cấp này</span>
+          </div>
+          <div>
+            <strong>{weakProgress.length}</strong>
+            <span>Mục yếu</span>
           </div>
         </div>
         <p className="muted-copy">
@@ -431,6 +477,67 @@ function displayCategory(value?: string | null): string {
     other: value
   };
   return labels[normalizeCategory(value)];
+}
+
+function studyModeLabel(mode: FlashcardMode, dueCardCount: number): string {
+  if (mode === "weak") {
+    return "Câu sai";
+  }
+  if (mode === "deck") {
+    return "Bộ thẻ";
+  }
+  return dueCardCount ? "Đến hạn" : "Luyện tự do";
+}
+
+function studyCountLabel(mode: FlashcardMode, studyCardCount: number, dueCardCount: number): string {
+  if (mode === "weak") {
+    return studyCardCount ? `${studyCardCount} thẻ từ phần yếu` : "Chưa có thẻ từ phần yếu";
+  }
+  if (mode === "deck") {
+    return `${studyCardCount} thẻ trong bộ`;
+  }
+  return dueCardCount ? `${dueCardCount} thẻ đến hạn` : "Không có thẻ đến hạn";
+}
+
+function emptyModeText(mode: FlashcardMode): string {
+  if (mode === "weak") {
+    return "Chưa có thẻ khớp với phần sai. Làm quiz hoặc ôn thẻ thêm một chút, phần này sẽ có dữ liệu.";
+  }
+  if (mode === "deck") {
+    return "Bộ thẻ này chưa có thẻ phù hợp với bộ lọc.";
+  }
+  return "Chưa có thẻ trong phạm vi này. Đổi cấp học, đổi nhóm thẻ hoặc tạo bộ thẻ mới.";
+}
+
+function progressMatchesCard(progress: KnowledgeProgressResponse, card: FlashcardCardResponse): boolean {
+  const progressId = normalizeMatchText(progress.knowledgeId);
+  const progressTitle = normalizeMatchText(progress.title ?? "");
+  const cardSourceId = normalizeMatchText(card.sourceId ?? "");
+  const cardFront = normalizeMatchText(card.frontText);
+  const cardBack = normalizeMatchText(card.backText);
+
+  return Boolean(
+    (progressId && cardSourceId && (progressId.includes(cardSourceId) || cardSourceId.includes(progressId))) ||
+      (progressTitle && (cardFront.includes(progressTitle) || progressTitle.includes(cardFront))) ||
+      (progressTitle && cardBack.includes(progressTitle))
+  );
+}
+
+function uniqueCards(cards: FlashcardCardResponse[]): FlashcardCardResponse[] {
+  const seen = new Set<string>();
+  const unique: FlashcardCardResponse[] = [];
+  for (const card of cards) {
+    if (seen.has(card.id)) {
+      continue;
+    }
+    seen.add(card.id);
+    unique.push(card);
+  }
+  return unique;
+}
+
+function normalizeMatchText(value: string): string {
+  return value.toLowerCase().replace(/\s+/g, "");
 }
 
 function deckMatchesFilter(deck: FlashcardDeckResponse, selectedLevel: string, filter: CategoryFilter): boolean {
