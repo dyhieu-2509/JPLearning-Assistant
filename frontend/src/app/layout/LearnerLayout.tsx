@@ -10,7 +10,7 @@ import {
   Menu,
   X
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Navigate, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../providers/AuthProvider";
 import { logoUrl } from "../../shared/assets";
@@ -29,6 +29,10 @@ const navItems = [
   { to: "/learner/assessment", label: "Kiểm tra", icon: ClipboardCheck }
 ];
 
+export type LearnerOutletContext = {
+  markOnboardingComplete: () => void;
+};
+
 export function LearnerLayout() {
   const { accessToken, user, logout } = useAuth();
   const location = useLocation();
@@ -43,6 +47,15 @@ export function LearnerLayout() {
     !checkingProfile &&
     !needsOnboarding &&
     !isOnboardingRoute;
+
+  const markOnboardingComplete = useCallback(() => {
+    setNeedsOnboarding(false);
+    setCheckingProfile(false);
+  }, []);
+  const outletContext = useMemo<LearnerOutletContext>(
+    () => ({ markOnboardingComplete }),
+    [markOnboardingComplete]
+  );
 
   useEffect(() => {
     if (!accessToken) {
@@ -137,12 +150,12 @@ export function LearnerLayout() {
             Mỗi ngày một bài nhỏ
           </div>
         </header>
-        {needsOnboarding && !isOnboardingRoute ? (
-          <Navigate replace to={onboardingPath} />
-        ) : checkingProfile ? (
+        {checkingProfile ? (
           <LoadingPanel>Đang chuẩn bị góc học của bạn...</LoadingPanel>
+        ) : needsOnboarding && !isOnboardingRoute ? (
+          <Navigate replace to={onboardingPath} />
         ) : (
-          <Outlet />
+          <Outlet context={outletContext} />
         )}
         {showFloatingTutor && (
           <FloatingTutor

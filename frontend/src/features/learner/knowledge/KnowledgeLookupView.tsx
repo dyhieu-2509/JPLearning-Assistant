@@ -1,5 +1,5 @@
 import { BookOpenText, DatabaseZap, Search, Sparkles } from "lucide-react";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { ApiError, apiRequest } from "../../../shared/api";
 import { IconTextButton, LoadingPanel, Panel, TopicChip } from "../../../shared/components";
 import type { KnowledgeItemResponse } from "../../../shared/models";
@@ -22,6 +22,7 @@ export function KnowledgeLookupView() {
   const [items, setItems] = useState<KnowledgeItemResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const requestSequence = useRef(0);
 
   useEffect(() => {
     void searchKnowledge(submittedQuery);
@@ -29,6 +30,8 @@ export function KnowledgeLookupView() {
   }, [category, level, submittedQuery]);
 
   async function searchKnowledge(nextQuery: string) {
+    const requestId = requestSequence.current + 1;
+    requestSequence.current = requestId;
     setLoading(true);
     setError(null);
 
@@ -39,12 +42,20 @@ export function KnowledgeLookupView() {
         limit: "24"
       });
       const data = await apiRequest<KnowledgeItemResponse[]>(`/knowledge/${category}?${params.toString()}`);
+      if (requestId !== requestSequence.current) {
+        return;
+      }
       setItems(data);
     } catch (caught) {
+      if (requestId !== requestSequence.current) {
+        return;
+      }
       setError(caught instanceof ApiError ? caught.message : "Không thể tra cứu kiến thức");
       setItems([]);
     } finally {
-      setLoading(false);
+      if (requestId === requestSequence.current) {
+        setLoading(false);
+      }
     }
   }
 

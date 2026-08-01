@@ -16,12 +16,14 @@ import com.jpassistant.application.dto.request.KnowledgeProgressRequest;
 import com.jpassistant.application.dto.request.KnowledgeReviewRequest;
 import com.jpassistant.application.dto.request.LearningSignalRequest;
 import com.jpassistant.application.dto.request.StudentProfileRequest;
+import com.jpassistant.application.dto.request.StudyFeedbackRequest;
 import com.jpassistant.application.dto.response.AiAssessmentGenerateResponse;
 import com.jpassistant.application.dto.response.AiPlannerResponse;
 import com.jpassistant.application.dto.response.ChatResponse;
 import com.jpassistant.application.dto.response.KnowledgeProgressResponse;
 import com.jpassistant.application.dto.response.SourceResponse;
 import com.jpassistant.application.dto.response.StudentProfileResponse;
+import com.jpassistant.application.dto.response.StudyFeedbackResponse;
 import com.jpassistant.application.exception.InvalidRequestException;
 import com.jpassistant.application.port.out.AiServiceClient;
 import com.jpassistant.application.service.PersonalizationService;
@@ -192,6 +194,16 @@ class ChatServiceImplTest {
         @Override
         public KnowledgeProgressResponse recordLearningSignal(String userId, LearningSignalRequest request) {
             throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public StudyFeedbackResponse recordStudyFeedback(String userId, StudyFeedbackRequest request) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public List<StudyFeedbackResponse> getStudyFeedback(String userId, Integer limit) {
+            return List.of();
         }
     }
 }

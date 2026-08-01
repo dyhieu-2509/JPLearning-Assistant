@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { useAuth } from "../../../app/providers/AuthProvider";
+import type { LearnerOutletContext } from "../../../app/layout/LearnerLayout";
 import { apiRequest } from "../../../shared/api";
 import { LoadingPanel } from "../../../shared/components";
 import type { StudentProfileRequest, StudentProfileResponse } from "../../../shared/models";
@@ -10,6 +11,7 @@ import { OnboardingWizard } from "./OnboardingWizard";
 export function OnboardingView() {
   const { accessToken } = useAuth();
   const navigate = useNavigate();
+  const { markOnboardingComplete } = useOutletContext<LearnerOutletContext>();
   const [checkingProfile, setCheckingProfile] = useState(true);
   const [allowInitialPersonalization, setAllowInitialPersonalization] = useState(false);
 
@@ -54,6 +56,7 @@ export function OnboardingView() {
       token: accessToken,
       body: request
     });
+    markOnboardingComplete();
     navigate("/learner", { replace: true });
   }
 

@@ -302,6 +302,31 @@ test("learner can understand the MVP study loop", async ({ page }) => {
   ).toBeVisible();
 });
 
+test("new learner can finish onboarding and reach the dashboard", async ({ page }) => {
+  await seedAuthenticatedLearner(page, "new-onboarding-user");
+  await mockOnboardingApi(page);
+
+  await page.goto("/learner");
+  await expect(page.locator(".onboarding-panel")).toBeVisible();
+
+  await page.locator(".onboarding-actions button").last().click();
+  await page.locator(".onboarding-actions button").last().click();
+  await page.locator(".choice-grid button").nth(3).click();
+  await page.locator(".onboarding-actions button").last().click();
+  await page.locator(".choice-grid button").nth(0).click();
+  await page.locator(".onboarding-actions button").last().click();
+  await page.locator(".choice-grid button").nth(3).click();
+  await page.locator(".onboarding-actions button").last().click();
+  await page.locator(".choice-grid button").nth(3).click();
+  await page.locator(".onboarding-actions button").last().click();
+  await page.locator(".onboarding-actions button").last().click();
+  await page.locator(".choice-grid button").nth(1).click();
+  await page.locator(".onboarding-actions button").last().click();
+
+  await expect(page).toHaveURL(/\/learner$/);
+  await expect(page.locator(".friendly-dashboard")).toBeVisible();
+});
+
 async function walkThroughLessonOneFlashcards(page: Page, includeBackButton = false) {
   await page.getByRole("button", { name: /Học thẻ của bài này/i }).click();
 
@@ -523,6 +548,52 @@ async function mockMvpApi(page: Page, profileOverride: Partial<typeof profile> =
         sources: [{ type: "GrammarPoint", id: "particle-wa-ga:N5", title: "は vs が" }],
         confidence: 0.82,
         sessionId: "chat-1"
+      });
+      return;
+    }
+
+    await route.fulfill({ status: 404, body: `Unhandled ${method} ${path}` });
+  });
+}
+
+async function mockOnboardingApi(page: Page) {
+  const defaultProfile = {
+    ...profile,
+    goal: "JLPT preparation",
+    learningPathway: "jlpt_foundation",
+    dailyStudyMinutes: 30,
+    explanationStyle: "concise",
+    romajiEnabled: true,
+    weakSkills: []
+  };
+  let savedProfile: typeof profile | null = null;
+
+  await page.route("**/api/v1/**", async (route) => {
+    const request = route.request();
+    const url = new URL(request.url());
+    const path = url.pathname.replace("/api/v1", "");
+    const method = request.method();
+
+    if (method === "GET" && path === "/personalization/me/profile") {
+      await json(route, savedProfile ?? defaultProfile);
+      return;
+    }
+
+    if (method === "PUT" && path === "/personalization/me/profile") {
+      const body = JSON.parse(request.postData() || "{}");
+      savedProfile = {
+        ...defaultProfile,
+        ...body,
+        updatedAt: "2026-05-20T08:10:00Z"
+      };
+      await json(route, savedProfile);
+      return;
+    }
+
+    if (method === "GET" && path === "/personalization/me/dashboard") {
+      await json(route, {
+        ...dashboard,
+        profile: savedProfile ?? defaultProfile
       });
       return;
     }
