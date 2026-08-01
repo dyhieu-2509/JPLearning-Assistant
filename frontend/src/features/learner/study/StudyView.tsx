@@ -62,6 +62,13 @@ type TutorInsight = {
   sources: Array<{ type: string; id: string; title: string }>;
 };
 
+const lessonPhaseSteps: Array<{ phase: Exclude<LessonPhase, "result">; label: string; hint: string }> = [
+  { phase: "learn", label: "Học", hint: "Mẫu câu" },
+  { phase: "flashcards", label: "Thẻ", hint: "Tự nhớ" },
+  { phase: "quiz", label: "Quiz", hint: "85% qua" },
+  { phase: "review", label: "Tutor", hint: "Sửa sai" }
+];
+
 export function StudyView() {
   const navigate = useNavigate();
   const { accessToken, user } = useAuth();
@@ -348,6 +355,15 @@ export function StudyView() {
             <LockedLesson previous={lessons[activeIndex - 1]} />
           ) : (
             <>
+              <div className="study-phase-track" aria-label="Luồng học trong bài">
+                {lessonPhaseSteps.map((step) => (
+                  <div className={`study-phase-node ${phaseStepState(step.phase, phase)}`} key={step.phase}>
+                    <span>{step.label}</span>
+                    <small>{step.hint}</small>
+                  </div>
+                ))}
+              </div>
+
               {phase === "learn" && (
                 <div className="study-learn-step">
                   <div className="study-pattern-card">
@@ -674,6 +690,21 @@ function lessonStatus(
     return { kind: "current", label: "Đang học" };
   }
   return { kind: "open", label: `${progress?.bestScore ?? 0}%` };
+}
+
+function phaseStepState(stepPhase: Exclude<LessonPhase, "result">, currentPhase: LessonPhase): string {
+  if (currentPhase === "result") {
+    return stepPhase === "quiz" ? "active" : "done";
+  }
+  const currentIndex = lessonPhaseSteps.findIndex((step) => step.phase === currentPhase);
+  const stepIndex = lessonPhaseSteps.findIndex((step) => step.phase === stepPhase);
+  if (stepIndex < currentIndex) {
+    return "done";
+  }
+  if (stepIndex === currentIndex) {
+    return "active";
+  }
+  return "upcoming";
 }
 
 function LockedLesson({ previous }: { previous?: StudyLesson }) {

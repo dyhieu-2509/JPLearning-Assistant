@@ -1,5 +1,5 @@
-import { BookOpenCheck, Layers3, Search, Sparkles } from "lucide-react";
-import { useEffect, useState } from "react";
+import { BookOpenCheck, Brain, CalendarClock, CheckCircle2, Layers3, MessageCircle, Search, Sparkles, Target } from "lucide-react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../app/providers/AuthProvider";
 import { apiRequest, ApiError } from "../../../shared/api";
@@ -95,6 +95,12 @@ export function DashboardView() {
             Dành khoảng {dailyMinutes} phút cho một bài nhỏ: học mẫu câu, lật thẻ nhớ, rồi làm quiz cuối bài.
             Đạt từ 85% thì bài tiếp theo sẽ mở.
           </p>
+          <div className="friendly-mission-strip" aria-label="Phiên học hôm nay">
+            <MissionItem icon={<CalendarClock size={18} />} label="Thời gian" value={`${dailyMinutes} phút`} />
+            <MissionItem icon={<Target size={18} />} label="Pathway" value={`${currentLevel} -> ${targetLevel}`} />
+            <MissionItem icon={<Brain size={18} />} label="Mức nhớ" value={`${masteryPercent}%`} />
+            <MissionItem icon={<MessageCircle size={18} />} label="Tutor" value="Luôn sẵn" />
+          </div>
           <div className="friendly-hero-actions">
             <PrimaryButton type="button" onClick={() => navigate("/learner/study")}>
               <BookOpenCheck size={18} />
@@ -117,6 +123,10 @@ export function DashboardView() {
           <p>
             {pathwayLabel} · {currentLevel} → {targetLevel} · {reviewLabel}
           </p>
+          <div className="friendly-ai-note">
+            <CheckCircle2 size={17} />
+            <span>Sai quiz thì VAJA tự giải thích ngay trong bài.</span>
+          </div>
           <div className="friendly-progress-bar" aria-hidden="true">
             <span style={{ width: `${Math.min(Math.max(masteryPercent, 8), 100)}%` }} />
           </div>
@@ -217,6 +227,16 @@ function displaySkill(value: string): string {
 function MiniStat({ label, value }: { label: string; value: string }) {
   return (
     <div className="friendly-mini-stat">
+      <span>{label}</span>
+      <strong>{value}</strong>
+    </div>
+  );
+}
+
+function MissionItem({ icon, label, value }: { icon: ReactNode; label: string; value: string }) {
+  return (
+    <div className="friendly-mission-item">
+      {icon}
       <span>{label}</span>
       <strong>{value}</strong>
     </div>
