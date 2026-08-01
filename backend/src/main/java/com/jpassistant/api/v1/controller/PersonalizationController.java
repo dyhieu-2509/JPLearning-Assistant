@@ -4,8 +4,10 @@ import com.jpassistant.application.dto.request.KnowledgeProgressRequest;
 import com.jpassistant.application.dto.request.KnowledgeReviewRequest;
 import com.jpassistant.application.dto.request.LearningSignalRequest;
 import com.jpassistant.application.dto.request.StudentProfileRequest;
+import com.jpassistant.application.dto.request.StudyFeedbackRequest;
 import com.jpassistant.application.dto.response.KnowledgeProgressResponse;
 import com.jpassistant.application.dto.response.StudentProfileResponse;
+import com.jpassistant.application.dto.response.StudyFeedbackResponse;
 import com.jpassistant.application.service.PersonalizationService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -72,6 +74,22 @@ public class PersonalizationController {
             Authentication authentication
     ) {
         return personalizationService.recordLearningSignal(authenticatedUserId(authentication), request);
+    }
+
+    @PostMapping("/me/feedback")
+    public StudyFeedbackResponse recordStudyFeedback(
+            @Valid @RequestBody StudyFeedbackRequest request,
+            Authentication authentication
+    ) {
+        return personalizationService.recordStudyFeedback(authenticatedUserId(authentication), request);
+    }
+
+    @GetMapping("/me/feedback")
+    public List<StudyFeedbackResponse> getStudyFeedback(
+            @RequestParam(defaultValue = "20") Integer limit,
+            Authentication authentication
+    ) {
+        return personalizationService.getStudyFeedback(authenticatedUserId(authentication), limit);
     }
 
     private String authenticatedUserId(Authentication authentication) {

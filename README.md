@@ -12,7 +12,7 @@ Implemented:
 - FastAPI AI service under `ai-service/`
 - React/Vite frontend under `frontend/`
 - Neo4j/PostgreSQL/Qdrant Docker Compose services
-- REST endpoints for auth, knowledge lookup, tutor chat, personalization dashboard, flashcards, assessment, and planner
+- REST endpoints for auth, knowledge lookup, tutor chat, personalization dashboard, study feedback, flashcards, assessment, and planner
 
 ## Run Infrastructure
 

@@ -8,11 +8,15 @@ import com.jpassistant.application.dto.request.KnowledgeProgressRequest;
 import com.jpassistant.application.dto.request.KnowledgeReviewRequest;
 import com.jpassistant.application.dto.request.LearningSignalRequest;
 import com.jpassistant.application.dto.request.StudentProfileRequest;
+import com.jpassistant.application.dto.request.StudyFeedbackRequest;
+import com.jpassistant.domain.personalization.KnowledgeProgress;
 import com.jpassistant.domain.personalization.LearningSignalResult;
 import com.jpassistant.domain.personalization.LearningSignalSource;
-import com.jpassistant.domain.personalization.KnowledgeProgress;
+import com.jpassistant.domain.personalization.StudyFeedback;
+import com.jpassistant.domain.personalization.StudyFeedbackMoment;
 import com.jpassistant.domain.personalization.StudentProfile;
 import com.jpassistant.infrastructure.persistence.jpa.KnowledgeProgressJpaRepository;
+import com.jpassistant.infrastructure.persistence.jpa.StudyFeedbackJpaRepository;
 import com.jpassistant.infrastructure.persistence.jpa.StudentProfileJpaRepository;
 import java.util.List;
 import java.util.Optional;
@@ -26,9 +30,13 @@ class PersonalizationServiceImplTest {
     private final KnowledgeProgressJpaRepository progressRepository = org.mockito.Mockito.mock(
             KnowledgeProgressJpaRepository.class
     );
+    private final StudyFeedbackJpaRepository feedbackRepository = org.mockito.Mockito.mock(
+            StudyFeedbackJpaRepository.class
+    );
     private final PersonalizationServiceImpl service = new PersonalizationServiceImpl(
             profileRepository,
-            progressRepository
+            progressRepository,
+            feedbackRepository
     );
 
     @Test
@@ -134,5 +142,38 @@ class PersonalizationServiceImplTest {
         assertThat(response.correctCount()).isEqualTo(1);
         assertThat(response.wrongCount()).isZero();
         assertThat(response.nextReviewAt()).isNotNull();
+    }
+
+    @Test
+    void recordStudyFeedbackStoresPilotStudySignal() {
+        when(feedbackRepository.save(any(StudyFeedback.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        var response = service.recordStudyFeedback(
+                " user-1 ",
+                new StudyFeedbackRequest(
+                        StudyFeedbackMoment.TUTOR,
+                        "floating_tutor",
+                        "session-1",
+                        "particle wa answer",
+                        4,
+                        5,
+                        4,
+                        null,
+                        null,
+                        "MOVE_ON",
+                        "clear enough"
+                )
+        );
+
+        assertThat(response.userId()).isEqualTo("user-1");
+        assertThat(response.moment()).isEqualTo(StudyFeedbackMoment.TUTOR);
+        assertThat(response.contextType()).isEqualTo("floating_tutor");
+        assertThat(response.contextId()).isEqualTo("session-1");
+        assertThat(response.contextTitle()).isEqualTo("particle wa answer");
+        assertThat(response.rating()).isEqualTo(4);
+        assertThat(response.clarityRating()).isEqualTo(5);
+        assertThat(response.trustRating()).isEqualTo(4);
+        assertThat(response.actionChoice()).isEqualTo("MOVE_ON");
+        assertThat(response.comment()).isEqualTo("clear enough");
     }
 }

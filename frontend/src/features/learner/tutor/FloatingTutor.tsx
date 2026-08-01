@@ -2,6 +2,7 @@ import { Bot, Loader2, MessageCircle, Send, Sparkles, X } from "lucide-react";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { apiRequest, ApiError } from "../../../shared/api";
 import type { ChatResponse, SourceResponse } from "../../../shared/models";
+import { StudyFeedbackPrompt } from "../feedback/StudyFeedbackPrompt";
 
 type FloatingTutorProps = {
   token: string;
@@ -15,6 +16,8 @@ type TutorMessage = {
   content: string;
   sources?: SourceResponse[];
   confidence?: number | null;
+  sessionId?: string | null;
+  contextTopic?: string;
 };
 
 export function FloatingTutor({ token, contextTopic, suggestions }: FloatingTutorProps) {
@@ -78,7 +81,9 @@ export function FloatingTutor({ token, contextTopic, suggestions }: FloatingTuto
           role: "ASSISTANT",
           content: response.answer,
           sources: response.sources,
-          confidence: response.confidence
+          confidence: response.confidence,
+          sessionId: response.sessionId,
+          contextTopic
         }
       ]);
     } catch (caught) {
@@ -130,7 +135,9 @@ export function FloatingTutor({ token, contextTopic, suggestions }: FloatingTuto
 
         <div className="floating-message-list" aria-live="polite">
           {messages.length ? (
-            messages.map((message) => <FloatingMessageBubble key={message.id} message={message} />)
+            messages.map((message) => (
+              <FloatingMessageBubble key={message.id} message={message} token={token} />
+            ))
           ) : (
             <div className="floating-empty-state">
               <Bot size={30} />
@@ -166,7 +173,7 @@ export function FloatingTutor({ token, contextTopic, suggestions }: FloatingTuto
   );
 }
 
-function FloatingMessageBubble({ message }: { message: TutorMessage }) {
+function FloatingMessageBubble({ message, token }: { message: TutorMessage; token: string }) {
   const assistant = message.role === "ASSISTANT";
 
   return (
@@ -186,6 +193,22 @@ function FloatingMessageBubble({ message }: { message: TutorMessage }) {
               <span>Chưa có nguồn tham khảo</span>
             )}
           </div>
+        )}
+        {assistant && (
+          <StudyFeedbackPrompt
+            token={token}
+            feedbackKey={`tutor.${message.id}`}
+            mode="tutor"
+            title="Câu trả lời này có ổn không?"
+            description="Chấm nhanh để đo clarity và trust."
+            baseFeedback={{
+              moment: "TUTOR",
+              contextType: "floating_tutor",
+              contextId: message.sessionId ?? message.id,
+              contextTitle: message.contextTopic ?? "tutor answer"
+            }}
+            defaultActionChoice="MOVE_ON"
+          />
         )}
       </div>
     </div>

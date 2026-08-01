@@ -1,0 +1,51 @@
+question_id,level,category,question,expected_terms
+Q001,N5,particle,Khi nao dung は va が?,は|が|particle|chu de
+Q002,N5,particle,を dung trong cau tieng Nhat nhu the nao?,を|object|tan ngu
+Q003,N5,particle,に va で khac nhau the nao?,に|で|place
+Q004,N5,particle,へ co giong に khi noi ve huong di khong?,へ|に|direction
+Q005,N5,particle,も dung de noi cung vay nhu the nao?,も|also|cung
+Q006,N5,particle,と dung de noi di voi ai nhu the nao?,と|with|cung voi
+Q007,N5,particle,から va まで dung trong thoi gian ra sao?,から|まで|from
+Q008,N5,particle,の dung de noi so huu nhu the nao?,の|possessive|so huu
+Q009,N4,particle,より dung khi so sanh nhu the nao?,より|comparison|so sanh
+Q010,N4,particle,しか dung voi phu dinh co nghia gi?,しか|only|phu dinh
+Q011,N5,verb,ます form la gi?,ます|polite|verb
+Q012,N5,verb,Dictionary form cua たべます la gi?,食べる|たべる|dictionary
+Q013,N5,verb,The past polite form cua いきます la gi?,行きました|いきました|past
+Q014,N5,verb,ない form dung de noi khong lam gi?,ない|negative|verb
+Q015,N5,verb,て form dung de noi ket noi hanh dong nhu the nao?,て|te-form|connect
+Q016,N4,verb,たい form dung de noi muon lam gi?,たい|want|verb
+Q017,N4,verb,たことがある co nghia gi?,ことがある|experience|kinh nghiem
+Q018,N4,verb,てもいい dung de xin phep nhu the nao?,てもいい|permission|duoc
+Q019,N4,verb,なければならない co nghia gi?,なければならない|must|phai
+Q020,N4,verb,てしまう dung trong ngu canh nao?,てしまう|complete|regret
+Q021,N5,grammar,です dung nhu the nao trong cau co ban?,です|copula|la
+Q022,N5,grammar,あります va います khac nhau the nao?,あります|います|exist
+Q023,N5,grammar,ここ そこ あそこ khac nhau nhu the nao?,ここ|そこ|あそこ
+Q024,N5,grammar,これはなんですか co cau truc ra sao?,なん|ですか|what
+Q025,N5,grammar,A は B です co nghia gi?,は|です|sentence
+Q026,N5,grammar,い adjective chia phu dinh nhu the nao?,い|adjective|negative
+Q027,N5,grammar,な adjective dung truoc danh tu nhu the nao?,な|adjective|noun
+Q028,N4,grammar,ので va から khac nhau the nao?,ので|から|reason
+Q029,N4,grammar,ながら dung de noi lam hai viec ra sao?,ながら|while|two actions
+Q030,N4,grammar,そうです dung khi nghe noi nhu the nao?,そうです|heard|seem
+Q031,N4,grammar,ようになる co nghia gi?,ようになる|become|change
+Q032,N4,grammar,ほうがいい dung de khuyen nhu the nao?,ほうがいい|advice|should
+Q033,N5,vocabulary,たべる nghia la gi va dung khi nao?,食べる|たべる|eat
+Q034,N5,vocabulary,のむ nghia la gi?,飲む|のむ|drink
+Q035,N5,vocabulary,いく va くる khac nhau the nao?,行く|来る|go
+Q036,N5,vocabulary,みる dung de noi xem hay nhin nhu the nao?,見る|みる|see
+Q037,N5,vocabulary,きく co the co nghia nghe va hoi khong?,聞く|きく|listen
+Q038,N4,vocabulary,はじめる dung voi dong tu nhu the nao?,始める|はじめる|start
+Q039,N4,vocabulary,おわる dung trong cau ra sao?,終わる|おわる|finish
+Q040,N4,vocabulary,つかれる nghia la gi?,疲れる|つかれる|tired
+Q041,N5,kanji,日 co nhung cach doc co ban nao?,日|にち|ひ
+Q042,N5,kanji,月 co nghia gi va doc la gi?,月|げつ|つき
+Q043,N5,kanji,人 doc la ひと hay じん khi nao?,人|ひと|じん
+Q044,N5,kanji,学 trong 学生 co nghia gi?,学|学生|study
+Q045,N5,kanji,行 trong 行きます doc nhu the nao?,行|いきます|go
+Q046,N4,kanji,駅 co nghia gi?,駅|えき|station
+Q047,N4,kanji,会 trong 会社 co nghia gi?,会|会社|company
+Q048,N4,kanji,電 trong 電車 co nghia gi?,電|電車|electric
+Q049,N4,usage,Lam sao noi toi muon hoc tieng Nhat?,日本語|勉強|たい
+Q050,N4,usage,Lam sao hoi nha ga o dau?,駅|どこ|ですか

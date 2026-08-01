@@ -129,7 +129,7 @@ class QdrantVectorClient:
 
     def _get_client(self):
         if self._client is None:
-            self._client = QdrantClient(url=self._settings.qdrant_url)
+            self._client = QdrantClient(url=self._settings.qdrant_url, check_compatibility=False)
         return self._client
 
     def _level_filter(self, level: str):

@@ -160,6 +160,7 @@ Personalization phải dựa trên dữ liệu có thể kiểm chứng, không 
 - `sources` từ RAG/KG được ghi vào progress như **exposure**; không được tự tăng mastery như câu trả lời đúng.
 - Exposure từ chatbot/knowledge browsing chỉ được tăng `exposureCount` và `lastExposedAt`; không cho phép client tự set `masteryScore`.
 - Mastery chỉ tăng/giảm khi có tín hiệu đánh giá rõ: quiz answer, flashcard review, placement/assessment result, hoặc explicit feedback.
+- Study Feedback dùng `/api/v1/personalization/me/feedback` để lưu cảm nhận ngắn trong lúc học (lesson/tutor/quiz/chapter) cho pilot user test; không tự tăng mastery nếu không đi qua learning signal có cấu trúc.
 - Learning signal phải đi qua API có cấu trúc `source` + `result`: `QUIZ/ASSESSMENT` chỉ nhận `CORRECT|WRONG`, `FLASHCARD` chỉ nhận `AGAIN|HARD|GOOD|EASY`.
 - Assessment/quiz session phải lưu answer key ở backend (`assessment_sessions.questions_json`); response start session không được trả field `answer`.
 - Assessment submit dùng `/api/v1/assessment/sessions/{sessionId}/submit`, chấm bằng answer key đã lưu và chỉ sau đó mới ghi `ASSESSMENT` learning signal.

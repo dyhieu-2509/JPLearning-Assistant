@@ -70,6 +70,28 @@ export type StudentProfileRequest = {
   weakSkills?: string[];
 };
 
+export type StudyFeedbackMoment = "LESSON" | "TUTOR" | "QUIZ" | "CHAPTER";
+
+export type StudyFeedbackRequest = {
+  moment: StudyFeedbackMoment;
+  contextType: string;
+  contextId?: string | null;
+  contextTitle?: string | null;
+  rating?: number | null;
+  clarityRating?: number | null;
+  trustRating?: number | null;
+  difficultyFit?: string | null;
+  paceChoice?: string | null;
+  actionChoice?: string | null;
+  comment?: string | null;
+};
+
+export type StudyFeedbackResponse = StudyFeedbackRequest & {
+  id: string;
+  userId: string;
+  createdAt: string;
+};
+
 export type FlashcardCardResponse = {
   id: string;
   deckId: string;

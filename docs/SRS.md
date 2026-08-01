@@ -531,6 +531,8 @@ graph LR
 | GET | `/api/v1/personalization/me/progress` | Xem learning progress |
 | POST | `/api/v1/personalization/me/progress/exposures` | Ghi nhận exposure từ chatbot/RAG, không tăng mastery |
 | POST | `/api/v1/personalization/me/progress/signals` | Ghi nhận learning signal từ quiz/assessment/flashcard để cập nhật mastery |
+| POST | `/api/v1/personalization/me/feedback` | Ghi feedback ngắn trong lúc học cho pilot user test |
+| GET | `/api/v1/personalization/me/feedback` | Xem feedback gần đây của learner đang đăng nhập |
 | GET | `/api/v1/flashcards/decks` | List decks |
 | POST | `/api/v1/flashcards/decks` | Tạo deck; có thể auto-generate cards từ KG theo `level + category` |
 | GET | `/api/v1/flashcards/decks/{deckId}/cards` | Lấy cards trong deck của learner hiện tại |

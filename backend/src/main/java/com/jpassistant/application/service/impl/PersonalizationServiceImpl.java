@@ -4,15 +4,19 @@ import com.jpassistant.application.dto.request.KnowledgeProgressRequest;
 import com.jpassistant.application.dto.request.KnowledgeReviewRequest;
 import com.jpassistant.application.dto.request.LearningSignalRequest;
 import com.jpassistant.application.dto.request.StudentProfileRequest;
+import com.jpassistant.application.dto.request.StudyFeedbackRequest;
 import com.jpassistant.application.dto.response.KnowledgeProgressResponse;
 import com.jpassistant.application.dto.response.StudentProfileResponse;
+import com.jpassistant.application.dto.response.StudyFeedbackResponse;
 import com.jpassistant.application.exception.InvalidRequestException;
 import com.jpassistant.application.service.PersonalizationService;
 import com.jpassistant.domain.personalization.KnowledgeProgress;
 import com.jpassistant.domain.personalization.LearningSignalResult;
 import com.jpassistant.domain.personalization.LearningSignalSource;
+import com.jpassistant.domain.personalization.StudyFeedback;
 import com.jpassistant.domain.personalization.StudentProfile;
 import com.jpassistant.infrastructure.persistence.jpa.KnowledgeProgressJpaRepository;
+import com.jpassistant.infrastructure.persistence.jpa.StudyFeedbackJpaRepository;
 import com.jpassistant.infrastructure.persistence.jpa.StudentProfileJpaRepository;
 import java.util.EnumSet;
 import java.util.LinkedHashSet;
@@ -31,13 +35,16 @@ public class PersonalizationServiceImpl implements PersonalizationService {
 
     private final StudentProfileJpaRepository profileRepository;
     private final KnowledgeProgressJpaRepository progressRepository;
+    private final StudyFeedbackJpaRepository feedbackRepository;
 
     public PersonalizationServiceImpl(
             StudentProfileJpaRepository profileRepository,
-            KnowledgeProgressJpaRepository progressRepository
+            KnowledgeProgressJpaRepository progressRepository,
+            StudyFeedbackJpaRepository feedbackRepository
     ) {
         this.profileRepository = profileRepository;
         this.progressRepository = progressRepository;
+        this.feedbackRepository = feedbackRepository;
     }
 
     @Override
@@ -123,6 +130,41 @@ public class PersonalizationServiceImpl implements PersonalizationService {
         validateSignal(request.source(), request.result());
         progress.recordLearningSignal(request.source(), request.result());
         return toProgressResponse(progressRepository.save(progress));
+    }
+
+    @Override
+    @Transactional
+    public StudyFeedbackResponse recordStudyFeedback(String userId, StudyFeedbackRequest request) {
+        String normalizedUserId = normalizeUserId(userId);
+        if (request.moment() == null) {
+            throw new InvalidRequestException("feedback moment is required");
+        }
+        StudyFeedback feedback = new StudyFeedback(
+                normalizedUserId,
+                request.moment(),
+                normalizeRequired(request.contextType(), "contextType"),
+                optionalText(request.contextId()),
+                optionalText(request.contextTitle()),
+                request.rating(),
+                request.clarityRating(),
+                request.trustRating(),
+                optionalText(request.difficultyFit()),
+                optionalText(request.paceChoice()),
+                optionalText(request.actionChoice()),
+                optionalText(request.comment())
+        );
+        return toFeedbackResponse(feedbackRepository.save(feedback));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<StudyFeedbackResponse> getStudyFeedback(String userId, Integer limit) {
+        String normalizedUserId = normalizeUserId(userId);
+        PageRequest page = PageRequest.of(0, normalizeLimit(limit));
+        return feedbackRepository.findByUserIdOrderByCreatedAtDesc(normalizedUserId, page)
+                .stream()
+                .map(this::toFeedbackResponse)
+                .toList();
     }
 
     private void validateSignal(LearningSignalSource source, LearningSignalResult result) {
@@ -241,6 +283,25 @@ public class PersonalizationServiceImpl implements PersonalizationService {
                 progress.getLastReviewedAt(),
                 progress.getNextReviewAt(),
                 progress.getUpdatedAt()
+        );
+    }
+
+    private StudyFeedbackResponse toFeedbackResponse(StudyFeedback feedback) {
+        return new StudyFeedbackResponse(
+                feedback.getId(),
+                feedback.getUserId(),
+                feedback.getMoment(),
+                feedback.getContextType(),
+                feedback.getContextId(),
+                feedback.getContextTitle(),
+                feedback.getRating(),
+                feedback.getClarityRating(),
+                feedback.getTrustRating(),
+                feedback.getDifficultyFit(),
+                feedback.getPaceChoice(),
+                feedback.getActionChoice(),
+                feedback.getComment(),
+                feedback.getCreatedAt()
         );
     }
 }

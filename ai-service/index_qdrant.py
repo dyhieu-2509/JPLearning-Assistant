@@ -210,6 +210,7 @@ def main() -> None:
         "url": qdrant_url,
         "prefer_grpc": args.prefer_grpc,
         "timeout": 60,
+        "check_compatibility": False,
     }
     if not args.prefer_grpc:
         client_kwargs["headers"] = {"Accept-Encoding": "identity"}

@@ -25,6 +25,15 @@ export type StudyLesson = {
   questions: StudyQuestion[];
 };
 
+export type StudyChapter = {
+  id: string;
+  title: string;
+  level: "N5" | "N4";
+  focus: string;
+  description: string;
+  lessons: StudyLesson[];
+};
+
 export type StudyProfile = {
   currentLevel?: string | null;
   targetLevel?: string | null;
@@ -41,422 +50,542 @@ export type StudyPathwayIntro = {
 
 export const passThreshold = 85;
 
-export const studyLessons: StudyLesson[] = [
+function makeQuestion(
+  id: string,
+  prompt: string,
+  options: string[],
+  answer: string,
+  explanation: string
+): StudyQuestion {
+  return { id, prompt, options, answer, explanation };
+}
+
+function makeLesson(
+  id: string,
+  level: "N5" | "N4",
+  title: string,
+  focus: string,
+  summary: string,
+  pattern: string,
+  example: string,
+  translation: string,
+  flashcards: StudyFlashcard[],
+  questions: StudyQuestion[]
+): StudyLesson {
+  return { id, level, title, focus, summary, pattern, example, translation, flashcards, questions };
+}
+
+const n5DesuWa = makeLesson(
+  "n5-desu-wa",
+  "N5",
+  "Giới thiệu bản thân",
+  "です và は",
+  "Dùng một câu đơn giản để nói mình là ai, đang học gì hoặc thích gì.",
+  "A は B です。",
+  "わたしは学生です。",
+  "Tôi là học sinh/sinh viên.",
+  [
+    { front: "わたし", back: "tôi", hint: "Từ xưng hô cơ bản" },
+    { front: "学生", back: "học sinh / sinh viên", hint: "がくせい" },
+    { front: "です", back: "là / thì / ở dạng lịch sự", hint: "Đặt cuối câu" },
+    { front: "は", back: "đánh dấu chủ đề", hint: "Viết là は, đọc là wa" }
+  ],
+  [
+    makeQuestion("n5-desu-wa-q1", "Câu nào đúng để nói: Tôi là sinh viên?", ["わたしは学生です。", "わたしを学生です。", "わたしが学生をです。", "学生はわたしをです。"], "わたしは学生です。", "Mẫu đúng là A は B です。"),
+    makeQuestion("n5-desu-wa-q2", "Trong câu わたしは学生です, は dùng để làm gì?", ["Đánh dấu chủ đề", "Đánh dấu tân ngữ", "Tạo phủ định", "Chỉ thời gian"], "Đánh dấu chủ đề", "は nêu chủ đề đang được nói tới."),
+    makeQuestion("n5-desu-wa-q3", "です thường đứng ở đâu?", ["Cuối câu", "Đầu câu", "Trước は", "Sau mọi danh từ trong câu"], "Cuối câu", "です đặt cuối câu để tạo sắc thái lịch sự."),
+    makeQuestion("n5-desu-wa-q4", "学生 đọc là gì?", ["がくせい", "せんせい", "ともだち", "にほん"], "がくせい", "学生 đọc là がくせい."),
+    makeQuestion("n5-desu-wa-q5", "Câu わたしは学生です có nghĩa gần nhất là gì?", ["Tôi là sinh viên", "Tôi ăn cơm", "Tôi đi học", "Tôi không hiểu"], "Tôi là sinh viên", "わたし là tôi, 学生 là sinh viên, です là dạng lịch sự.")
+  ]
+);
+
+const n5OE = makeLesson(
+  "n5-o-e",
+  "N5",
+  "Đi đâu, làm gì",
+  "を và へ",
+  "Nói hành động đơn giản: ăn gì, uống gì, đi tới đâu.",
+  "N を Vます。 / Place へ 行きます。",
+  "水を飲みます。駅へ行きます。",
+  "Tôi uống nước. Tôi đi tới nhà ga.",
+  [
+    { front: "水", back: "nước", hint: "みず" },
+    { front: "飲みます", back: "uống", hint: "のみます" },
+    { front: "駅", back: "nhà ga", hint: "えき" },
+    { front: "行きます", back: "đi", hint: "いきます" }
+  ],
+  [
+    makeQuestion("n5-o-e-q1", "Chọn câu đúng: Tôi uống nước.", ["水を飲みます。", "水へ飲みます。", "水は行きます。", "水です飲みます。"], "水を飲みます。", "を đánh dấu đối tượng của hành động uống."),
+    makeQuestion("n5-o-e-q2", "駅へ行きます nghĩa là gì?", ["Đi tới nhà ga", "Uống nước", "Là nhà ga", "Không đi"], "Đi tới nhà ga", "へ chỉ hướng đi tới."),
+    makeQuestion("n5-o-e-q3", "を thường đi với phần nào?", ["Đối tượng của hành động", "Nơi đến", "Chủ đề", "Câu hỏi"], "Đối tượng của hành động", "Trong 水を飲みます, 水 là thứ được uống."),
+    makeQuestion("n5-o-e-q4", "へ trong 駅へ行きます nhấn mạnh điều gì?", ["Hướng đến", "Người nói", "Đồ vật", "Phủ định"], "Hướng đến", "へ dùng để chỉ hướng hoặc đích đến."),
+    makeQuestion("n5-o-e-q5", "飲みます là động từ nào?", ["uống", "ăn", "đi", "nghe"], "uống", "飲みます nghĩa là uống.")
+  ]
+);
+
+const n5Classroom = makeLesson(
+  "n5-classroom",
+  "N5",
+  "Hỏi bài trên lớp",
+  "これは何ですか",
+  "Tập hỏi đồ vật, từ mới và phần chưa hiểu khi đang học trên lớp.",
+  "これは何ですか。 / もう一度お願いします。",
+  "これは何ですか。もう一度お願いします。",
+  "Cái này là gì? Xin thầy/cô nói lại một lần nữa.",
+  [
+    { front: "これ", back: "cái này", hint: "Vật gần người nói" },
+    { front: "何", back: "cái gì", hint: "なん / なに" },
+    { front: "もう一度", back: "một lần nữa", hint: "もういちど" },
+    { front: "お願いします", back: "xin vui lòng", hint: "Cách nhờ lịch sự" }
+  ],
+  [
+    makeQuestion("n5-classroom-q1", "Câu nào dùng để hỏi 'Cái này là gì?'", ["これは何ですか。", "これは行きますか。", "何を飲みますか。", "学校へ行きます。"], "これは何ですか。", "これは何ですか dùng để hỏi tên hoặc nghĩa của vật gần người nói."),
+    makeQuestion("n5-classroom-q2", "もう一度お願いします dùng khi nào?", ["Muốn nghe lại", "Muốn về nhà", "Muốn ăn cơm", "Muốn ngủ"], "Muốn nghe lại", "もう一度 nghĩa là một lần nữa, お願いします làm câu nhờ lịch sự hơn."),
+    makeQuestion("n5-classroom-q3", "何 trong これは何ですか nghĩa là gì?", ["cái gì", "ở đâu", "khi nào", "ai"], "cái gì", "何 là từ hỏi cho 'cái gì'.")
+  ]
+);
+
+const n5DeNi = makeLesson(
+  "n5-de-ni",
+  "N5",
+  "Làm ở đâu, vào lúc nào",
+  "で và に",
+  "Phân biệt nơi diễn ra hành động và mốc thời gian/nơi tồn tại.",
+  "Place で Vます。 / Time に Vます。",
+  "学校で勉強します。七時に起きます。",
+  "Tôi học ở trường. Tôi thức dậy lúc 7 giờ.",
+  [
+    { front: "学校で", back: "ở trường", hint: "Nơi diễn ra hành động" },
+    { front: "七時に", back: "lúc 7 giờ", hint: "Mốc thời gian" },
+    { front: "勉強します", back: "học", hint: "べんきょうします" }
+  ],
+  [
+    makeQuestion("n5-de-ni-q1", "学校で勉強します dùng trợ từ nào cho nơi hành động?", ["で", "に", "を", "へ"], "で", "で chỉ nơi hành động diễn ra."),
+    makeQuestion("n5-de-ni-q2", "七時に起きます nghĩa là gì?", ["Thức dậy lúc 7 giờ", "Học ở trường", "Đi nhà ga", "Ăn cơm"], "Thức dậy lúc 7 giờ", "に có thể đánh dấu mốc thời gian."),
+    makeQuestion("n5-de-ni-q3", "Câu nào tự nhiên nhất?", ["図書館で読みます。", "図書館を読みます。", "図書館へ読みます。", "図書館は読みます。"], "図書館で読みます。", "Đọc sách ở thư viện là hành động diễn ra tại nơi đó, dùng で.")
+  ]
+);
+
+const n5TimeFrequency = makeLesson(
+  "n5-time-frequency",
+  "N5",
+  "Thời gian và tần suất",
+  "まいにち và ときどき",
+  "Nói thói quen hằng ngày, thỉnh thoảng hoặc không thường xuyên.",
+  "Time/Frequency + Vます。",
+  "まいにち日本語を勉強します。",
+  "Mỗi ngày tôi học tiếng Nhật.",
+  [
+    { front: "まいにち", back: "mỗi ngày", hint: "Tần suất" },
+    { front: "ときどき", back: "thỉnh thoảng", hint: "Không phải lúc nào cũng làm" },
+    { front: "あまり", back: "không ... lắm", hint: "Hay đi với phủ định" }
+  ],
+  [
+    makeQuestion("n5-time-q1", "まいにち nghĩa là gì?", ["mỗi ngày", "hôm qua", "ngày mai", "thỉnh thoảng"], "mỗi ngày", "まいにち dùng cho việc lặp lại hằng ngày."),
+    makeQuestion("n5-time-q2", "ときどき dùng khi nào?", ["Thỉnh thoảng làm", "Luôn luôn làm", "Không bao giờ làm", "Đã làm xong"], "Thỉnh thoảng làm", "ときどき chỉ tần suất không thường xuyên."),
+    makeQuestion("n5-time-q3", "あまり thường đi với dạng nào?", ["Phủ định", "Mệnh lệnh", "Quá khứ", "て form"], "Phủ định", "あまり...ません nghĩa là không ... lắm.")
+  ]
+);
+
+const n5VerbsMasu = makeLesson(
+  "n5-verbs-masu",
+  "N5",
+  "Động từ lịch sự",
+  "ます / ません / ました",
+  "Nắm hiện tại, phủ định và quá khứ lịch sự của động từ cơ bản.",
+  "Vます / Vません / Vました。",
+  "きのう映画を見ました。",
+  "Hôm qua tôi đã xem phim.",
+  [
+    { front: "見ます", back: "xem", hint: "みます" },
+    { front: "見ません", back: "không xem", hint: "Phủ định lịch sự" },
+    { front: "見ました", back: "đã xem", hint: "Quá khứ lịch sự" }
+  ],
+  [
+    makeQuestion("n5-masu-q1", "見ました là nghĩa nào?", ["đã xem", "không xem", "đang đi", "sẽ uống"], "đã xem", "ました là quá khứ lịch sự."),
+    makeQuestion("n5-masu-q2", "Dạng phủ định lịch sự của 飲みます là gì?", ["飲みません", "飲みました", "飲んで", "飲むです"], "飲みません", "ます đổi thành ません để phủ định."),
+    makeQuestion("n5-masu-q3", "きのう thường kéo câu về thời nào?", ["Quá khứ", "Hiện tại", "Tương lai chắc chắn", "Mệnh lệnh"], "Quá khứ", "きのう là hôm qua nên thường dùng dạng quá khứ.")
+  ]
+);
+
+const n5Adjectives = makeLesson(
+  "n5-adjectives",
+  "N5",
+  "Tính từ cơ bản",
+  "い và な",
+  "Nói đồ vật, nơi chốn hoặc cảm xúc bằng tính từ N5.",
+  "いAdj です。 / なAdj です。",
+  "この町は静かです。",
+  "Thị trấn này yên tĩnh.",
+  [
+    { front: "高い", back: "cao / đắt", hint: "たかい" },
+    { front: "静か", back: "yên tĩnh", hint: "しずか, tính từ な" },
+    { front: "おもしろい", back: "thú vị", hint: "Tính từ い" }
+  ],
+  [
+    makeQuestion("n5-adj-q1", "静か thuộc nhóm nào?", ["Tính từ な", "Tính từ い", "Động từ", "Trợ từ"], "Tính từ な", "静か là tính từ な."),
+    makeQuestion("n5-adj-q2", "高い có thể nghĩa là gì?", ["cao / đắt", "rẻ", "nhanh", "gần"], "cao / đắt", "高い có hai nghĩa thường gặp là cao hoặc đắt."),
+    makeQuestion("n5-adj-q3", "この町は静かです nghĩa là gì?", ["Thị trấn này yên tĩnh", "Tôi uống nước", "Tôi đi học", "Nhà ga xa"], "Thị trấn này yên tĩnh", "町 là thị trấn, 静か là yên tĩnh.")
+  ]
+);
+
+const n5TeForm = makeLesson(
+  "n5-te-form",
+  "N5",
+  "Nối hành động bằng て",
+  "て form",
+  "Dùng て để nối hành động và tạo lời nhờ đơn giản.",
+  "Vて、Vます。 / Vてください。",
+  "朝ごはんを食べて、学校へ行きます。",
+  "Tôi ăn sáng rồi đi học.",
+  [
+    { front: "食べて", back: "ăn rồi / hãy ăn", hint: "て form của 食べる" },
+    { front: "行って", back: "đi rồi / hãy đi", hint: "て form của 行く" },
+    { front: "ください", back: "xin hãy", hint: "Dùng để nhờ" }
+  ],
+  [
+    makeQuestion("n5-te-q1", "食べて là dạng gì?", ["て form", "Phủ định", "Quá khứ", "Danh từ"], "て form", "食べて là て form của 食べる."),
+    makeQuestion("n5-te-q2", "Vてください dùng để làm gì?", ["Nhờ ai làm gì", "Nói quá khứ", "Đếm đồ", "So sánh"], "Nhờ ai làm gì", "ください làm lời nhờ lịch sự hơn."),
+    makeQuestion("n5-te-q3", "行く chuyển sang て form là gì?", ["行って", "行いて", "行んで", "行きて"], "行って", "行く là trường hợp đặc biệt: 行って.")
+  ]
+);
+
+const n5Existence = makeLesson(
+  "n5-existence",
+  "N5",
+  "Có người, có đồ vật",
+  "あります và います",
+  "Nói nơi có đồ vật, người hoặc con vật.",
+  "Place に N が あります/います。",
+  "部屋に机があります。公園に子どもがいます。",
+  "Trong phòng có bàn. Ở công viên có trẻ em.",
+  [
+    { front: "あります", back: "có (đồ vật/cây)", hint: "Dùng với vật không tự di chuyển" },
+    { front: "います", back: "có (người/động vật)", hint: "Dùng với sinh vật" },
+    { front: "部屋", back: "phòng", hint: "へや" }
+  ],
+  [
+    makeQuestion("n5-exist-q1", "机があります dùng cho loại nào?", ["Đồ vật", "Người", "Động vật", "Thời gian"], "Đồ vật", "机 là bàn, dùng あります."),
+    makeQuestion("n5-exist-q2", "子どもがいます nghĩa là gì?", ["Có trẻ em", "Có cái bàn", "Ăn cơm", "Đi học"], "Có trẻ em", "います dùng cho người hoặc động vật."),
+    makeQuestion("n5-exist-q3", "Place に N が... mẫu này dùng để nói gì?", ["Nơi có gì", "Ai làm gì", "Giá tiền", "So sánh"], "Nơi có gì", "に đánh dấu nơi tồn tại.")
+  ]
+);
+
+const n5Requests = makeLesson(
+  "n5-requests",
+  "N5",
+  "Xin phép và nhờ vả",
+  "てもいいですか",
+  "Hỏi có thể làm gì không và nhờ người khác làm giúp.",
+  "Vてもいいですか。 / Vてください。",
+  "写真を撮ってもいいですか。",
+  "Tôi chụp ảnh được không?",
+  [
+    { front: "撮ってもいいですか", back: "chụp được không", hint: "とってもいいですか" },
+    { front: "書いてください", back: "xin hãy viết", hint: "かいてください" },
+    { front: "少し", back: "một chút", hint: "すこし" }
+  ],
+  [
+    makeQuestion("n5-request-q1", "てもいいですか dùng để làm gì?", ["Xin phép", "Cấm đoán", "Quá khứ", "Đếm người"], "Xin phép", "Mẫu này dùng để hỏi có được làm gì không."),
+    makeQuestion("n5-request-q2", "書いてください nghĩa là gì?", ["Xin hãy viết", "Đã viết", "Không viết", "Muốn viết"], "Xin hãy viết", "Vてください là lời nhờ."),
+    makeQuestion("n5-request-q3", "写真を撮ってもいいですか nghĩa gần nhất là gì?", ["Tôi chụp ảnh được không?", "Tôi đã chụp ảnh", "Đừng chụp ảnh", "Ảnh ở đâu?"], "Tôi chụp ảnh được không?", "撮る là chụp, てもいいですか là xin phép.")
+  ]
+);
+
+const n5CountersMoney = makeLesson(
+  "n5-counters-money",
+  "N5",
+  "Số đếm và mua đồ",
+  "いくら và つ",
+  "Hỏi giá, gọi món và đếm một vài đồ vật cơ bản.",
+  "N は いくらですか。 / N を ひとつください。",
+  "このパンはいくらですか。パンをひとつください。",
+  "Bánh mì này bao nhiêu tiền? Cho tôi một cái bánh mì.",
+  [
+    { front: "いくら", back: "bao nhiêu tiền", hint: "Hỏi giá" },
+    { front: "ひとつ", back: "một cái", hint: "Cách đếm chung" },
+    { front: "ください", back: "cho tôi / xin hãy", hint: "Dùng khi gọi món" }
+  ],
+  [
+    makeQuestion("n5-money-q1", "いくらですか dùng để hỏi gì?", ["Giá tiền", "Thời gian", "Địa điểm", "Tên người"], "Giá tiền", "いくら là bao nhiêu tiền."),
+    makeQuestion("n5-money-q2", "ひとつ nghĩa là gì?", ["một cái", "hai người", "ba giờ", "hôm qua"], "một cái", "ひとつ là một đơn vị trong cách đếm chung."),
+    makeQuestion("n5-money-q3", "パンをひとつください dùng khi nào?", ["Mua/gọi một cái bánh mì", "Hỏi đường", "Nói sở thích", "Xin nghỉ"], "Mua/gọi một cái bánh mì", "Mẫu Nを...ください dùng khi muốn lấy/mua thứ gì.")
+  ]
+);
+
+const n5KanjiDays = makeLesson(
+  "n5-kanji-days",
+  "N5",
+  "Kanji ngày tháng cơ bản",
+  "日 月 火 水 木 金 土",
+  "Nhận diện các kanji rất hay gặp trong lịch học, ngày tháng và lịch thi.",
+  "Kanji + reading + example word",
+  "今日は月曜日です。",
+  "Hôm nay là thứ Hai.",
+  [
+    { front: "日", back: "ngày / mặt trời", hint: "にち / ひ" },
+    { front: "月", back: "tháng / mặt trăng", hint: "げつ / つき" },
+    { front: "水", back: "nước / thứ Tư", hint: "みず / すい" }
+  ],
+  [
+    makeQuestion("n5-kanji-q1", "日 có nghĩa thường gặp nào?", ["ngày / mặt trời", "lửa", "tiền", "người"], "ngày / mặt trời", "日 là kanji rất cơ bản trong ngày tháng."),
+    makeQuestion("n5-kanji-q2", "月曜日 là thứ mấy?", ["Thứ Hai", "Thứ Ba", "Thứ Tư", "Chủ nhật"], "Thứ Hai", "月曜日 là thứ Hai."),
+    makeQuestion("n5-kanji-q3", "水 có âm đọc nào trong 水曜日?", ["すい", "げつ", "か", "きん"], "すい", "水曜日 đọc là すいようび.")
+  ]
+);
+
+const n5ReadingShort = makeLesson(
+  "n5-reading-short-passage",
+  "N5",
+  "Đọc đoạn ngắn N5",
+  "ý chính và từ khóa",
+  "Tập đọc một đoạn ngắn, tìm chủ đề chính và tách từ chưa biết thành thẻ nhớ.",
+  "Topic は Adjective です。Reason から。",
+  "日本語はおもしろいです。新しい言葉が多いからです。",
+  "Tiếng Nhật thú vị. Vì có nhiều từ mới.",
+  [
+    { front: "おもしろい", back: "thú vị", hint: "Tính từ い" },
+    { front: "新しい", back: "mới", hint: "あたらしい" },
+    { front: "言葉", back: "từ ngữ", hint: "ことば" }
+  ],
+  [
+    makeQuestion("n5-reading-q1", "日本語はおもしろいです nghĩa là gì?", ["Tiếng Nhật thú vị", "Tiếng Nhật khó uống", "Tôi đi Nhật", "Tôi là người Nhật"], "Tiếng Nhật thú vị", "おもしろい là thú vị."),
+    makeQuestion("n5-reading-q2", "から trong câu ví dụ dùng để làm gì?", ["Nêu lý do", "Đánh dấu tân ngữ", "Tạo câu hỏi", "Chỉ nơi đến"], "Nêu lý do", "から có thể dùng để nêu lý do: vì..."),
+    makeQuestion("n5-reading-q3", "Khi đọc hiểu, bước nào nên làm trước?", ["Tìm ý chính", "Dịch từng chữ ngay", "Bỏ qua tiêu đề", "Chỉ đọc đáp án"], "Tìm ý chính", "Đọc hiểu nên nắm ý chính trước rồi mới xử lý chi tiết.")
+  ]
+);
+
+const n5ListeningCues = makeLesson(
+  "n5-listening-cues",
+  "N5",
+  "Nghe tín hiệu trong câu",
+  "từ khóa nghe hiểu",
+  "Tập bắt từ chỉ thời gian, nơi chốn và hành động chính trong câu ngắn.",
+  "Keyword first, detail second",
+  "あした、友だちと図書館へ行きます。",
+  "Ngày mai tôi đi thư viện với bạn.",
+  [
+    { front: "あした", back: "ngày mai", hint: "Từ khóa thời gian" },
+    { front: "友だちと", back: "với bạn", hint: "と là với" },
+    { front: "図書館", back: "thư viện", hint: "としょかん" }
+  ],
+  [
+    makeQuestion("n5-listen-q1", "あした là tín hiệu gì?", ["Thời gian", "Địa điểm", "Người", "Giá tiền"], "Thời gian", "あした nghĩa là ngày mai."),
+    makeQuestion("n5-listen-q2", "友だちと nghĩa là gì?", ["với bạn", "ở trường", "mỗi ngày", "không hiểu"], "với bạn", "と có thể nghĩa là với."),
+    makeQuestion("n5-listen-q3", "Khi nghe câu ngắn nên bắt gì trước?", ["Từ khóa chính", "Từng chữ nhỏ", "Kanji khó", "Đáp án dài nhất"], "Từ khóa chính", "Bắt từ khóa giúp hiểu nhanh ý chính.")
+  ]
+);
+
+const n5MockReview = makeLesson(
+  "n5-mock-review",
+  "N5",
+  "Ôn tổng hợp N5",
+  "quiz hỗn hợp",
+  "Trộn trợ từ, từ vựng, kanji và câu ngắn để kiểm tra trước khi sang phần mới.",
+  "Mixed N5 review",
+  "わたしは毎日、学校で日本語を勉強します。",
+  "Mỗi ngày tôi học tiếng Nhật ở trường.",
+  [
+    { front: "毎日", back: "mỗi ngày", hint: "まいにち" },
+    { front: "学校で", back: "ở trường", hint: "Nơi hành động" },
+    { front: "日本語", back: "tiếng Nhật", hint: "にほんご" }
+  ],
+  [
+    makeQuestion("n5-review-q1", "学校で dùng で vì sao?", ["Nơi hành động", "Tân ngữ", "Hướng đến", "Sở hữu"], "Nơi hành động", "で đánh dấu nơi diễn ra hành động."),
+    makeQuestion("n5-review-q2", "毎日 nghĩa là gì?", ["mỗi ngày", "hôm qua", "tháng này", "một cái"], "mỗi ngày", "毎日 đọc là まいにち."),
+    makeQuestion("n5-review-q3", "Câu ví dụ nói hành động nào?", ["Học tiếng Nhật", "Uống nước", "Mua bánh", "Chụp ảnh"], "Học tiếng Nhật", "勉強します là học.")
+  ]
+);
+
+const conversationEntry = makeLesson(
+  "conversation-greetings",
+  "N5",
+  "Chào hỏi hằng ngày",
+  "hội thoại ngắn",
+  "Tập mở lời, giới thiệu ngắn và đáp lại tự nhiên trong một cuộc nói chuyện cơ bản.",
+  "はじめまして。A です。よろしくお願いします。",
+  "はじめまして。ヒエウです。よろしくお願いします。",
+  "Rất vui được gặp bạn. Tôi là Hiếu. Mong được giúp đỡ.",
+  [
+    { front: "はじめまして", back: "rất vui được gặp lần đầu", hint: "Dùng khi mới gặp ai đó" },
+    { front: "よろしくお願いします", back: "mong được giúp đỡ", hint: "Câu kết khi tự giới thiệu" },
+    { front: "友だち", back: "bạn bè", hint: "ともだち" }
+  ],
+  [
+    makeQuestion("conversation-q1", "Câu nào phù hợp khi gặp ai đó lần đầu?", ["はじめまして。", "ただいま。", "おやすみ。", "いただきます。"], "はじめまして。", "はじめまして dùng khi gặp ai đó lần đầu."),
+    makeQuestion("conversation-q2", "よろしくお願いします thường đặt ở đâu?", ["Cuối phần giới thiệu", "Trước tên", "Giữa trợ từ", "Sau mọi động từ"], "Cuối phần giới thiệu", "Câu này thường dùng để kết thúc phần tự giới thiệu một cách lịch sự."),
+    makeQuestion("conversation-q3", "ヒエウです có nghĩa gần nhất là gì?", ["Tôi là Hiếu", "Tôi đi học", "Tôi uống nước", "Tôi không hiểu"], "Tôi là Hiếu", "Tên + です là cách nói 'tôi là...' lịch sự.")
+  ]
+);
+
+const workEntry = makeLesson(
+  "work-introduction",
+  "N4",
+  "Tự giới thiệu nơi làm việc",
+  "申します và lịch sự",
+  "Tập nói lịch sự khi giới thiệu tên, bộ phận và mong được hợp tác trong môi trường công việc.",
+  "A と申します。よろしくお願いいたします。",
+  "ブイと申します。よろしくお願いいたします。",
+  "Tôi tên là Bùi. Rất mong được giúp đỡ/hợp tác.",
+  [
+    { front: "申します", back: "tên là / nói là", hint: "もうします" },
+    { front: "お願いいたします", back: "xin vui lòng", hint: "Lịch sự hơn お願いします" },
+    { front: "部署", back: "bộ phận", hint: "ぶしょ" }
+  ],
+  [
+    makeQuestion("work-q1", "Cách nói lịch sự hơn cho 'tôi tên là Bùi' là gì?", ["ブイと申します。", "ブイを飲みます。", "ブイへ行きます。", "ブイがあります。"], "ブイと申します。", "と申します là cách tự giới thiệu tên lịch sự trong công việc."),
+    makeQuestion("work-q2", "お願いいたします có sắc thái thế nào?", ["Lịch sự", "Thân mật", "Thô", "Phủ định"], "Lịch sự", "お願いいたします lịch sự hơn お願いします."),
+    makeQuestion("work-q3", "部署 đọc là gì?", ["ぶしょ", "かいしゃ", "せんせい", "えき"], "ぶしょ", "部署 nghĩa là bộ phận/phòng ban.")
+  ]
+);
+
+const n4Nakereba = makeLesson(
+  "n4-nakereba",
+  "N4",
+  "Việc phải làm",
+  "なければなりません",
+  "Nói việc bắt buộc phải làm, ví dụ bài tập, công việc hoặc lịch học.",
+  "Vない bỏ い + ければなりません。",
+  "宿題をしなければなりません。",
+  "Tôi phải làm bài tập.",
+  [
+    { front: "宿題", back: "bài tập về nhà", hint: "しゅくだい" },
+    { front: "しなければなりません", back: "phải làm", hint: "Từ する" },
+    { front: "行かなければなりません", back: "phải đi", hint: "行く -> 行かない" }
+  ],
+  [
+    makeQuestion("n4-nakereba-q1", "宿題をしなければなりません nghĩa là gì?", ["Phải làm bài tập", "Có thể làm bài tập", "Đã làm bài tập", "Không làm bài tập"], "Phải làm bài tập", "なければなりません diễn tả nghĩa vụ."),
+    makeQuestion("n4-nakereba-q2", "行く chuyển sang mẫu 'phải đi' là gì?", ["行かなければなりません", "行きなければなりません", "行くなければなりません", "行ってなりません"], "行かなければなりません", "行く có thể ない là 行かない, rồi đổi thành 行かなければなりません."),
+    makeQuestion("n4-nakereba-q3", "Mẫu なければなりません thuộc ý nghĩa nào?", ["Nghĩa vụ", "So sánh", "Kinh nghiệm", "Dự đoán"], "Nghĩa vụ", "Mẫu này dùng khi có việc bắt buộc phải làm.")
+  ]
+);
+
+const n4Requests = makeLesson(
+  "n4-requests-soft",
+  "N4",
+  "Nhờ vả mềm hơn",
+  "てもらえませんか",
+  "Nói lời nhờ lịch sự hơn trong lớp học hoặc công việc.",
+  "Vてもらえませんか。",
+  "もう一度説明してもらえませんか。",
+  "Bạn có thể giải thích lại một lần nữa không?",
+  [
+    { front: "説明", back: "giải thích", hint: "せつめい" },
+    { front: "もう一度", back: "một lần nữa", hint: "もういちど" },
+    { front: "てもらえませんか", back: "có thể làm giúp không", hint: "Nhờ lịch sự" }
+  ],
+  [
+    makeQuestion("n4-request-q1", "てもらえませんか dùng để làm gì?", ["Nhờ lịch sự", "Cấm đoán", "Nói giá tiền", "So sánh"], "Nhờ lịch sự", "Mẫu này dùng khi nhờ ai đó làm giúp."),
+    makeQuestion("n4-request-q2", "説明 nghĩa là gì?", ["giải thích", "công ty", "bài tập", "ga"], "giải thích", "説明 đọc là せつめい."),
+    makeQuestion("n4-request-q3", "もう一度説明してもらえませんか nghĩa gần nhất là gì?", ["Bạn giải thích lại giúp được không?", "Tôi đã giải thích", "Đừng giải thích", "Giải thích rất rẻ"], "Bạn giải thích lại giúp được không?", "もう一度 là một lần nữa, てもらえませんか là nhờ lịch sự.")
+  ]
+);
+
+const coreChapters: StudyChapter[] = [
   {
-    id: "n5-desu-wa",
+    id: "n5-chapter-1",
+    title: "Câu nền tảng N5",
     level: "N5",
-    title: "Bài 1: Giới thiệu bản thân",
-    focus: "です và は",
-    summary: "Dùng một câu đơn giản để nói mình là ai, đang học gì hoặc thích gì.",
-    pattern: "A は B です。",
-    example: "わたしは学生です。",
-    translation: "Tôi là học sinh/sinh viên.",
-    flashcards: [
-      { front: "わたし", back: "tôi", hint: "Từ xưng hô cơ bản" },
-      { front: "学生", back: "học sinh / sinh viên", hint: "がくせい" },
-      { front: "です", back: "là / thì / ở dạng lịch sự", hint: "Đặt cuối câu" },
-      { front: "は", back: "đánh dấu chủ đề", hint: "Viết là は, đọc là wa" }
-    ],
-    questions: [
-      {
-        id: "n5-desu-wa-q1",
-        prompt: "Câu nào đúng để nói: Tôi là sinh viên?",
-        options: ["わたしは学生です。", "わたしを学生です。", "わたしが学生をです。", "学生はわたしをです。"],
-        answer: "わたしは学生です。",
-        explanation: "Mẫu đúng là A は B です。"
-      },
-      {
-        id: "n5-desu-wa-q2",
-        prompt: "Trong câu わたしは学生です, は dùng để làm gì?",
-        options: ["Đánh dấu chủ đề", "Đánh dấu tân ngữ", "Tạo phủ định", "Chỉ thời gian"],
-        answer: "Đánh dấu chủ đề",
-        explanation: "は nêu chủ đề đang được nói tới."
-      },
-      {
-        id: "n5-desu-wa-q3",
-        prompt: "です thường đứng ở đâu?",
-        options: ["Cuối câu", "Đầu câu", "Trước は", "Sau mọi danh từ trong câu"],
-        answer: "Cuối câu",
-        explanation: "です đặt cuối câu để tạo sắc thái lịch sự."
-      },
-      {
-        id: "n5-desu-wa-q4",
-        prompt: "学生 đọc là gì?",
-        options: ["がくせい", "せんせい", "ともだち", "にほん"],
-        answer: "がくせい",
-        explanation: "学生 đọc là がくせい."
-      },
-      {
-        id: "n5-desu-wa-q5",
-        prompt: "Câu わたしは学生です có nghĩa gần nhất là gì?",
-        options: ["Tôi là sinh viên", "Tôi ăn cơm", "Tôi đi học", "Tôi không hiểu"],
-        answer: "Tôi là sinh viên",
-        explanation: "わたし là tôi, 学生 là sinh viên, です là dạng lịch sự."
-      }
-    ]
+    focus: "giới thiệu, hành động, hỏi bài",
+    description: "Chương mở đầu giúp người học nói câu đơn giản và không bị lạc trong lớp.",
+    lessons: [n5DesuWa, n5OE, n5Classroom]
   },
   {
-    id: "n5-o-e",
+    id: "n5-chapter-2",
+    title: "Trợ từ và thời gian",
     level: "N5",
-    title: "Bài 2: Đi đâu, làm gì",
-    focus: "を và へ",
-    summary: "Nói hành động đơn giản: ăn gì, uống gì, đi tới đâu.",
-    pattern: "N を Vます。 / Place へ 行きます。",
-    example: "水を飲みます。駅へ行きます。",
-    translation: "Tôi uống nước. Tôi đi tới nhà ga.",
-    flashcards: [
-      { front: "水", back: "nước", hint: "みず" },
-      { front: "飲みます", back: "uống", hint: "のみます" },
-      { front: "駅", back: "nhà ga", hint: "えき" },
-      { front: "行きます", back: "đi", hint: "いきます" }
-    ],
-    questions: [
-      {
-        id: "n5-o-e-q1",
-        prompt: "Chọn câu đúng: Tôi uống nước.",
-        options: ["水を飲みます。", "水へ飲みます。", "水は行きます。", "水です飲みます。"],
-        answer: "水を飲みます。",
-        explanation: "を đánh dấu đối tượng của hành động uống."
-      },
-      {
-        id: "n5-o-e-q2",
-        prompt: "駅へ行きます nghĩa là gì?",
-        options: ["Đi tới nhà ga", "Uống nước", "Là nhà ga", "Không đi"],
-        answer: "Đi tới nhà ga",
-        explanation: "へ chỉ hướng đi tới."
-      },
-      {
-        id: "n5-o-e-q3",
-        prompt: "を thường đi với phần nào?",
-        options: ["Đối tượng của hành động", "Nơi đến", "Chủ đề", "Câu hỏi"],
-        answer: "Đối tượng của hành động",
-        explanation: "Trong 水を飲みます, 水 là thứ được uống."
-      },
-      {
-        id: "n5-o-e-q4",
-        prompt: "へ trong 駅へ行きます nhấn mạnh điều gì?",
-        options: ["Hướng đến", "Người nói", "Đồ vật", "Phủ định"],
-        answer: "Hướng đến",
-        explanation: "へ dùng để chỉ hướng hoặc đích đến."
-      },
-      {
-        id: "n5-o-e-q5",
-        prompt: "飲みます là động từ nào?",
-        options: ["uống", "ăn", "đi", "nghe"],
-        answer: "uống",
-        explanation: "飲みます nghĩa là uống."
-      }
-    ]
+    focus: "で, に, thói quen",
+    description: "Củng cố các trợ từ hay sai và cách nói thói quen hằng ngày.",
+    lessons: [n5DeNi, n5TimeFrequency, n5VerbsMasu]
   },
   {
-    id: "n4-nakereba",
-    level: "N4",
-    title: "Bài 3: Việc phải làm",
-    focus: "なければなりません",
-    summary: "Nói việc bắt buộc phải làm, ví dụ bài tập, công việc hoặc lịch học.",
-    pattern: "Vない bỏ い + ければなりません。",
-    example: "宿題をしなければなりません。",
-    translation: "Tôi phải làm bài tập.",
-    flashcards: [
-      { front: "宿題", back: "bài tập về nhà", hint: "しゅくだい" },
-      { front: "しなければなりません", back: "phải làm", hint: "Từ する" },
-      { front: "勉強しなければなりません", back: "phải học", hint: "勉強する -> 勉強しない" },
-      { front: "行かなければなりません", back: "phải đi", hint: "行く -> 行かない" }
-    ],
-    questions: [
-      {
-        id: "n4-nakereba-q1",
-        prompt: "宿題をしなければなりません nghĩa là gì?",
-        options: ["Phải làm bài tập", "Có thể làm bài tập", "Đã làm bài tập", "Không làm bài tập"],
-        answer: "Phải làm bài tập",
-        explanation: "なければなりません diễn tả nghĩa vụ."
-      },
-      {
-        id: "n4-nakereba-q2",
-        prompt: "行く chuyển sang mẫu 'phải đi' là gì?",
-        options: ["行かなければなりません", "行きなければなりません", "行くなければなりません", "行ってなりません"],
-        answer: "行かなければなりません",
-        explanation: "行く có thể ない là 行かない, rồi đổi thành 行かなければなりません."
-      },
-      {
-        id: "n4-nakereba-q3",
-        prompt: "Mẫu なければなりません thuộc ý nghĩa nào?",
-        options: ["Nghĩa vụ", "So sánh", "Kinh nghiệm", "Dự đoán"],
-        answer: "Nghĩa vụ",
-        explanation: "Mẫu này dùng khi có việc bắt buộc phải làm."
-      },
-      {
-        id: "n4-nakereba-q4",
-        prompt: "勉強する thành 'phải học' là gì?",
-        options: ["勉強しなければなりません", "勉強するなりません", "勉強したことがあります", "勉強しておきます"],
-        answer: "勉強しなければなりません",
-        explanation: "する đổi sang しない, rồi dùng しなければなりません."
-      },
-      {
-        id: "n4-nakereba-q5",
-        prompt: "Câu nào tự nhiên nhất khi nói 'Tôi phải uống thuốc'?",
-        options: ["薬を飲まなければなりません。", "薬へ飲まなければなりません。", "薬です飲みます。", "薬を飲みたことがあります。"],
-        answer: "薬を飲まなければなりません。",
-        explanation: "薬を飲む là uống thuốc, đổi sang 飲まなければなりません."
-      }
-    ]
+    id: "n5-chapter-3",
+    title: "Mô tả và nối câu",
+    level: "N5",
+    focus: "tính từ, て form, tồn tại",
+    description: "Tập mô tả người/vật, nối hành động và nói nơi có người hoặc đồ vật.",
+    lessons: [n5Adjectives, n5TeForm, n5Existence]
+  },
+  {
+    id: "n5-chapter-4",
+    title: "Tình huống đời sống",
+    level: "N5",
+    focus: "xin phép, mua đồ, kanji ngày tháng",
+    description: "Đưa mẫu câu vào mua đồ, xin phép và đọc lịch học/lịch thi.",
+    lessons: [n5Requests, n5CountersMoney, n5KanjiDays]
+  },
+  {
+    id: "n5-chapter-5",
+    title: "Ôn thi JLPT N5",
+    level: "N5",
+    focus: "đọc, nghe, tổng hợp",
+    description: "Gom kiến thức đã học vào dạng đọc hiểu, nghe tín hiệu và quiz hỗn hợp.",
+    lessons: [n5ReadingShort, n5ListeningCues, n5MockReview]
   }
 ];
 
-const pathwayLessons: Record<string, StudyLesson> = {
-  jlpt_foundation: studyLessons[0],
-  conversation: {
-    id: "conversation-greetings",
-    level: "N5",
-    title: "Bài 1: Chào hỏi hằng ngày",
-    focus: "hội thoại ngắn",
-    summary: "Tập mở lời, giới thiệu ngắn và đáp lại tự nhiên trong một cuộc nói chuyện cơ bản.",
-    pattern: "はじめまして。A です。よろしくお願いします。",
-    example: "はじめまして。ヒエウです。よろしくお願いします。",
-    translation: "Rất vui được gặp bạn. Tôi là Hiếu. Mong được giúp đỡ.",
-    flashcards: [
-      { front: "はじめまして", back: "rất vui được gặp lần đầu", hint: "Dùng khi mới gặp ai đó" },
-      { front: "よろしくお願いします", back: "mong được giúp đỡ / rất mong được hợp tác", hint: "Câu kết khi tự giới thiệu" },
-      { front: "友だち", back: "bạn bè", hint: "ともだち" },
-      { front: "です", back: "là / dạng lịch sự", hint: "Đặt cuối câu" }
-    ],
-    questions: [
-      {
-        id: "conversation-greetings-q1",
-        prompt: "Câu nào phù hợp khi gặp ai đó lần đầu?",
-        options: ["はじめまして。", "ただいま。", "おやすみ。", "いただきます。"],
-        answer: "はじめまして。",
-        explanation: "はじめまして dùng khi gặp ai đó lần đầu."
-      },
-      {
-        id: "conversation-greetings-q2",
-        prompt: "よろしくお願いします thường đặt ở đâu trong phần tự giới thiệu?",
-        options: ["Cuối phần giới thiệu", "Trước tên", "Giữa trợ từ", "Sau mọi động từ"],
-        answer: "Cuối phần giới thiệu",
-        explanation: "Câu này thường dùng để kết thúc phần tự giới thiệu một cách lịch sự."
-      },
-      {
-        id: "conversation-greetings-q3",
-        prompt: "ヒエウです có nghĩa gần nhất là gì?",
-        options: ["Tôi là Hiếu", "Tôi đi học", "Tôi uống nước", "Tôi không hiểu"],
-        answer: "Tôi là Hiếu",
-        explanation: "Tên + です là cách nói 'tôi là...' lịch sự."
-      },
-      {
-        id: "conversation-greetings-q4",
-        prompt: "友だち đọc là gì?",
-        options: ["ともだち", "せんせい", "がくせい", "かいしゃ"],
-        answer: "ともだち",
-        explanation: "友だち đọc là ともだち, nghĩa là bạn bè."
-      },
-      {
-        id: "conversation-greetings-q5",
-        prompt: "Pathway giao tiếp nên ưu tiên luyện gì trước?",
-        options: ["Câu dùng được ngay", "Kanji hiếm", "Bài đọc dài", "Mẫu email trang trọng"],
-        answer: "Câu dùng được ngay",
-        explanation: "Giao tiếp hằng ngày cần phản xạ với câu ngắn và tự nhiên trước."
-      }
-    ]
-  },
-  school: {
-    id: "school-classroom",
-    level: "N5",
-    title: "Bài 1: Hỏi bài trên lớp",
-    focus: "これは何ですか",
-    summary: "Tập hỏi đồ vật, từ mới và phần chưa hiểu khi đang học trên lớp.",
-    pattern: "これは何ですか。 / もう一度お願いします。",
-    example: "これは何ですか。もう一度お願いします。",
-    translation: "Cái này là gì? Xin thầy/cô nói lại một lần nữa.",
-    flashcards: [
-      { front: "これ", back: "cái này", hint: "Vật gần người nói" },
-      { front: "何", back: "cái gì", hint: "なん / なに" },
-      { front: "もう一度", back: "một lần nữa", hint: "もういちど" },
-      { front: "お願いします", back: "xin vui lòng", hint: "Cách nhờ lịch sự" }
-    ],
-    questions: [
-      {
-        id: "school-classroom-q1",
-        prompt: "Câu nào dùng để hỏi 'Cái này là gì?'",
-        options: ["これは何ですか。", "これは行きますか。", "何を飲みますか。", "学校へ行きます。"],
-        answer: "これは何ですか。",
-        explanation: "これは何ですか dùng để hỏi tên hoặc nghĩa của vật gần người nói."
-      },
-      {
-        id: "school-classroom-q2",
-        prompt: "もう一度お願いします dùng khi nào?",
-        options: ["Muốn nghe lại", "Muốn về nhà", "Muốn ăn cơm", "Muốn ngủ"],
-        answer: "Muốn nghe lại",
-        explanation: "もう一度 nghĩa là một lần nữa, お願いします làm câu nhờ lịch sự hơn."
-      },
-      {
-        id: "school-classroom-q3",
-        prompt: "何 trong これは何ですか nghĩa là gì?",
-        options: ["cái gì", "ở đâu", "khi nào", "ai"],
-        answer: "cái gì",
-        explanation: "何 là từ hỏi cho 'cái gì'."
-      },
-      {
-        id: "school-classroom-q4",
-        prompt: "これは chỉ vật ở vị trí nào?",
-        options: ["Gần người nói", "Gần người nghe", "Xa cả hai", "Không chỉ vật"],
-        answer: "Gần người nói",
-        explanation: "これ dùng cho vật gần người nói."
-      },
-      {
-        id: "school-classroom-q5",
-        prompt: "Pathway bài trên lớp nên ưu tiên gì?",
-        options: ["Từ vựng và mẫu đang học", "Hội thoại công sở", "Bài báo dài", "Kính ngữ nâng cao"],
-        answer: "Từ vựng và mẫu đang học",
-        explanation: "Người học theo lớp cần bám vào bài hiện tại để không đứt mạch."
-      }
-    ]
-  },
-  work: {
-    id: "work-introduction",
-    level: "N4",
-    title: "Bài 1: Tự giới thiệu nơi làm việc",
-    focus: "申します và lịch sự",
-    summary: "Tập nói lịch sự khi giới thiệu tên, bộ phận và mong được hợp tác trong môi trường công việc.",
-    pattern: "A と申します。よろしくお願いいたします。",
-    example: "ブイと申します。よろしくお願いいたします。",
-    translation: "Tôi tên là Bùi. Rất mong được giúp đỡ/hợp tác.",
-    flashcards: [
-      { front: "申します", back: "tên là / nói là (khiêm nhường)", hint: "もうします" },
-      { front: "お願いいたします", back: "xin vui lòng / mong được giúp đỡ", hint: "Lịch sự hơn お願いします" },
-      { front: "会社", back: "công ty", hint: "かいしゃ" },
-      { front: "部署", back: "bộ phận", hint: "ぶしょ" }
-    ],
-    questions: [
-      {
-        id: "work-introduction-q1",
-        prompt: "Cách nói lịch sự hơn cho 'tôi tên là Bùi' là gì?",
-        options: ["ブイと申します。", "ブイを飲みます。", "ブイへ行きます。", "ブイがあります。"],
-        answer: "ブイと申します。",
-        explanation: "と申します là cách tự giới thiệu tên lịch sự trong công việc."
-      },
-      {
-        id: "work-introduction-q2",
-        prompt: "お願いいたします có sắc thái thế nào?",
-        options: ["Lịch sự", "Thân mật", "Thô", "Phủ định"],
-        answer: "Lịch sự",
-        explanation: "お願いいたします lịch sự hơn お願いします."
-      },
-      {
-        id: "work-introduction-q3",
-        prompt: "会社 nghĩa là gì?",
-        options: ["công ty", "trường học", "nhà ga", "bài tập"],
-        answer: "công ty",
-        explanation: "会社 đọc là かいしゃ, nghĩa là công ty."
-      },
-      {
-        id: "work-introduction-q4",
-        prompt: "部署 đọc là gì?",
-        options: ["ぶしょ", "かいしゃ", "せんせい", "えき"],
-        answer: "ぶしょ",
-        explanation: "部署 đọc là ぶしょ, nghĩa là bộ phận/phòng ban."
-      },
-      {
-        id: "work-introduction-q5",
-        prompt: "Pathway công việc nên ưu tiên gì?",
-        options: ["Cách nói lịch sự và tình huống công sở", "Tiếng lóng", "Bài hát", "Chỉ romaji"],
-        answer: "Cách nói lịch sự và tình huống công sở",
-        explanation: "Môi trường công việc cần câu lịch sự, rõ ý và đúng ngữ cảnh."
-      }
-    ]
-  },
-  reading: {
-    id: "reading-short-passage",
-    level: "N5",
-    title: "Bài 1: Đọc đoạn ngắn N5",
-    focus: "ý chính và từ khóa",
-    summary: "Tập đọc một đoạn ngắn, tìm chủ đề chính và tách từ chưa biết thành thẻ nhớ.",
-    pattern: "Topic は Adjective です。Reason から。",
-    example: "日本語はおもしろいです。新しい言葉が多いからです。",
-    translation: "Tiếng Nhật thú vị. Vì có nhiều từ mới.",
-    flashcards: [
-      { front: "おもしろい", back: "thú vị", hint: "Tính từ い" },
-      { front: "新しい", back: "mới", hint: "あたらしい" },
-      { front: "言葉", back: "từ ngữ", hint: "ことば" },
-      { front: "多い", back: "nhiều", hint: "おおい" }
-    ],
-    questions: [
-      {
-        id: "reading-short-passage-q1",
-        prompt: "日本語はおもしろいです nghĩa là gì?",
-        options: ["Tiếng Nhật thú vị", "Tiếng Nhật khó uống", "Tôi đi Nhật", "Tôi là người Nhật"],
-        answer: "Tiếng Nhật thú vị",
-        explanation: "おもしろい là thú vị."
-      },
-      {
-        id: "reading-short-passage-q2",
-        prompt: "から trong câu ví dụ dùng để làm gì?",
-        options: ["Nêu lý do", "Đánh dấu tân ngữ", "Tạo câu hỏi", "Chỉ nơi đến"],
-        answer: "Nêu lý do",
-        explanation: "から có thể dùng để nêu lý do: vì..."
-      },
-      {
-        id: "reading-short-passage-q3",
-        prompt: "言葉 nghĩa là gì?",
-        options: ["từ ngữ", "nhà ga", "nước", "bộ phận"],
-        answer: "từ ngữ",
-        explanation: "言葉 đọc là ことば, nghĩa là từ ngữ/lời nói."
-      },
-      {
-        id: "reading-short-passage-q4",
-        prompt: "Khi đọc hiểu, bước nào nên làm trước?",
-        options: ["Tìm ý chính", "Dịch từng chữ ngay", "Bỏ qua tiêu đề", "Chỉ đọc đáp án"],
-        answer: "Tìm ý chính",
-        explanation: "Đọc hiểu nên nắm ý chính trước rồi mới xử lý chi tiết."
-      },
-      {
-        id: "reading-short-passage-q5",
-        prompt: "Pathway đọc hiểu nên ưu tiên gì?",
-        options: ["Từ khóa, kanji và câu ngắn", "Chỉ hội thoại", "Chỉ nghe", "Chỉ email công việc"],
-        answer: "Từ khóa, kanji và câu ngắn",
-        explanation: "Đọc hiểu tiến bộ tốt hơn khi gom từ khóa và câu mẫu thành thẻ nhớ."
-      }
-    ]
-  }
+const n4BridgeChapter: StudyChapter = {
+  id: "n4-bridge-1",
+  title: "Cầu nối lên N4",
+  level: "N4",
+  focus: "công việc, nghĩa vụ, nhờ vả",
+  description: "Chỉ mở khi hồ sơ hướng tới N4 để người học có đường đi tiếp sau nền N5.",
+  lessons: [workEntry, n4Nakereba, n4Requests]
+};
+
+const pathwayEntryLessons: Record<string, StudyLesson> = {
+  jlpt_foundation: n5DesuWa,
+  conversation: conversationEntry,
+  school: n5Classroom,
+  work: workEntry,
+  reading: n5ReadingShort
 };
 
 const pathwayIntros: Record<string, StudyPathwayIntro> = {
   jlpt_foundation: {
     label: "JLPT từng bước",
-    title: "Pathway JLPT: học chắc từng mẫu, qua quiz rồi mở bài tiếp.",
-    description: "VAJA ưu tiên vòng học mới, flashcard, quiz ngắn và sửa lỗi theo chuẩn N5/N4."
+    title: "Pathway JLPT: học theo chương, qua quiz rồi mở phần tiếp.",
+    description: "VAJA chia JLPT N5 thành các chương 3 bài, rồi điều chỉnh nhịp theo điểm và số lần làm lại."
   },
   conversation: {
     label: "Giao tiếp hằng ngày",
-    title: "Pathway giao tiếp: học câu dùng được ngay trong đời sống.",
-    description: "VAJA ưu tiên hội thoại ngắn, phản xạ câu cơ bản và cách đáp tự nhiên."
+    title: "Pathway giao tiếp: bắt đầu bằng câu dùng được ngay.",
+    description: "VAJA vẫn giữ khung JLPT N5, nhưng đưa hội thoại lên trước để học xong dùng được ngay."
   },
   school: {
     label: "Bài trên lớp",
     title: "Pathway trên lớp: bám bài học, từ mới và mẫu câu đang gặp.",
-    description: "VAJA ưu tiên câu hỏi trên lớp, từ vựng bài học và bài ôn ngắn để không bị đứt mạch."
+    description: "VAJA ưu tiên câu hỏi trên lớp trước, sau đó nối vào các chương N5 nền tảng."
   },
   work: {
     label: "Tiếng Nhật công việc",
-    title: "Pathway công việc: học câu lịch sự và tình huống công sở.",
-    description: "VAJA ưu tiên tự giới thiệu, email, nhờ vả và cách nói phù hợp môi trường làm việc."
+    title: "Pathway công việc: học câu lịch sự rồi nối về nền JLPT.",
+    description: "VAJA đưa tình huống công việc lên đầu, sau đó giữ nhịp phù hợp để không hổng nền."
   },
   reading: {
     label: "Đọc hiểu",
     title: "Pathway đọc hiểu: đọc câu ngắn, gom từ khóa, tăng kanji.",
-    description: "VAJA ưu tiên từ vựng, kanji, ý chính và bài đọc ngắn N5/N4."
+    description: "VAJA ưu tiên từ khóa, kanji và bài đọc ngắn trước khi đi sâu vào các mẫu còn yếu."
   }
 };
 
-export function buildStudyLessons(profile?: StudyProfile | null): StudyLesson[] {
+export function buildStudyChapters(profile?: StudyProfile | null): StudyChapter[] {
   const pathway = normalizePathway(profile?.learningPathway);
-  const firstLesson = pathwayLessons[pathway] ?? pathwayLessons.jlpt_foundation;
-  const currentLevel = (profile?.currentLevel ?? "N5").toUpperCase();
-  const targetLevel = (profile?.targetLevel ?? "N4").toUpperCase();
-  const continuation = currentLevel === "N4" || targetLevel === "N4"
-    ? [studyLessons[1], studyLessons[2]]
-    : [studyLessons[1]];
+  const wantsN4 = wantsN4Bridge(profile);
+  const entryLesson = pathwayEntryLessons[pathway] ?? pathwayEntryLessons.jlpt_foundation;
+  const selectedChapters = pathway === "jlpt_foundation"
+    ? coreChapters
+    : [buildPersonalizedEntryChapter(pathway, entryLesson), ...coreChapters];
+  const withBridge = wantsN4 ? [...selectedChapters, n4BridgeChapter] : selectedChapters;
+  return renumberChapters(removeDuplicateLessons(withBridge));
+}
 
-  return [firstLesson, ...continuation.filter((lesson) => lesson.id !== firstLesson.id)];
+export function buildStudyLessons(profile?: StudyProfile | null): StudyLesson[] {
+  return flattenStudyChapters(buildStudyChapters(profile));
+}
+
+export function flattenStudyChapters(chapters: StudyChapter[]): StudyLesson[] {
+  return chapters.flatMap((chapter) => chapter.lessons);
 }
 
 export function studyPathwayIntro(profile?: StudyProfile | null): StudyPathwayIntro {
@@ -468,9 +597,64 @@ export function weakSkillSummary(profile?: StudyProfile | null): string {
   return weakSkills.slice(0, 3).map(weakSkillLabel).join(", ");
 }
 
+function buildPersonalizedEntryChapter(pathway: string, entryLesson: StudyLesson): StudyChapter {
+  const secondLesson = pathway === "reading" ? n5KanjiDays : n5DesuWa;
+  const thirdLesson = pathway === "work" ? n4Nakereba : n5OE;
+  return {
+    id: `${pathway}-entry`,
+    title: "Khởi động cá nhân",
+    level: entryLesson.level,
+    focus: entryLesson.focus,
+    description: "Chương đầu được đổi theo câu trả lời onboarding để người học vào đúng nhu cầu trước.",
+    lessons: [entryLesson, secondLesson, thirdLesson]
+  };
+}
+
+function removeDuplicateLessons(chapters: StudyChapter[]): StudyChapter[] {
+  const seen = new Set<string>();
+  return chapters
+    .map((chapter) => ({
+      ...chapter,
+      lessons: chapter.lessons.filter((lesson) => {
+        if (seen.has(lesson.id)) {
+          return false;
+        }
+        seen.add(lesson.id);
+        return true;
+      })
+    }))
+    .filter((chapter) => chapter.lessons.length > 0);
+}
+
+function renumberChapters(chapters: StudyChapter[]): StudyChapter[] {
+  let lessonIndex = 1;
+  return chapters.map((chapter, chapterIndex) => ({
+    ...chapter,
+    title: `Chương ${chapterIndex + 1}: ${cleanChapterTitle(chapter.title)}`,
+    lessons: chapter.lessons.map((lesson) => ({
+      ...lesson,
+      title: `Bài ${lessonIndex++}: ${cleanLessonTitle(lesson.title)}`
+    }))
+  }));
+}
+
+function wantsN4Bridge(profile?: StudyProfile | null): boolean {
+  const currentLevel = (profile?.currentLevel ?? "N5").toUpperCase();
+  const targetLevel = (profile?.targetLevel ?? "N4").toUpperCase();
+  return currentLevel === "N4" || targetLevel === "N4";
+}
+
 function normalizePathway(value?: string | null): string {
   const normalized = value?.trim().toLowerCase().replace(/-/g, "_") || "jlpt_foundation";
-  return normalized in pathwayLessons ? normalized : "jlpt_foundation";
+  return normalized in pathwayEntryLessons ? normalized : "jlpt_foundation";
+}
+
+function cleanLessonTitle(value: string): string {
+  return value.replace(/^Bài\s+\d+:\s*/i, "");
+}
+
+function cleanChapterTitle(value: string): string {
+  return value.replace(/^Chương\s+\d+:\s*/i, "");
 }
 
 function weakSkillLabel(value: string): string {

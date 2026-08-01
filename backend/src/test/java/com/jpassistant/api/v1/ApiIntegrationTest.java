@@ -469,6 +469,48 @@ class ApiIntegrationTest {
     }
 
     @Test
+    void studyFeedbackRequiresJwtAndStoresPilotUserTestData() throws Exception {
+        JsonNode authResponse = register(uniqueEmail("feedback"));
+        String accessToken = authResponse.get("accessToken").asText();
+        Map<String, Object> feedback = Map.ofEntries(
+                Map.entry("moment", "QUIZ"),
+                Map.entry("contextType", "study_lesson"),
+                Map.entry("contextId", "n5-foundation-lesson-1"),
+                Map.entry("contextTitle", "N5 first lesson"),
+                Map.entry("rating", 4),
+                Map.entry("clarityRating", 5),
+                Map.entry("trustRating", 4),
+                Map.entry("difficultyFit", "JUST_RIGHT"),
+                Map.entry("paceChoice", "OK"),
+                Map.entry("actionChoice", "MOVE_ON"),
+                Map.entry("comment", "Good for beginner")
+        );
+
+        mockMvc.perform(post("/api/v1/personalization/me/feedback")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json(feedback)))
+                .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(post("/api/v1/personalization/me/feedback")
+                        .header(HttpHeaders.AUTHORIZATION, bearer(accessToken))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json(feedback)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.moment").value("QUIZ"))
+                .andExpect(jsonPath("$.contextType").value("study_lesson"))
+                .andExpect(jsonPath("$.rating").value(4))
+                .andExpect(jsonPath("$.clarityRating").value(5))
+                .andExpect(jsonPath("$.trustRating").value(4))
+                .andExpect(jsonPath("$.difficultyFit").value("JUST_RIGHT"));
+
+        mockMvc.perform(get("/api/v1/personalization/me/feedback")
+                        .header(HttpHeaders.AUTHORIZATION, bearer(accessToken)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].contextId").value("n5-foundation-lesson-1"))
+                .andExpect(jsonPath("$[0].actionChoice").value("MOVE_ON"));
+    }
+
+    @Test
     void assessmentSessionStoresAnswerKeyAndUpdatesMasteryOnSubmit() throws Exception {
         when(aiServiceClient.generateAssessment(any())).thenReturn(new AiAssessmentGenerateResponse(List.of(
                 new AiAssessmentQuestionResponse(

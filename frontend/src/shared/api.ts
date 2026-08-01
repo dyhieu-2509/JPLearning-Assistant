@@ -17,6 +17,8 @@ export type {
   SourceResponse,
   StudentProfileRequest,
   StudentProfileResponse,
+  StudyFeedbackRequest,
+  StudyFeedbackResponse,
   UserResponse
 } from "./models";
 import { apiBaseUrl } from "./config";

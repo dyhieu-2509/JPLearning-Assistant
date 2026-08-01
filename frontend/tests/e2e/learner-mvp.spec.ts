@@ -123,6 +123,9 @@ test("learner can start a lesson, review flashcards, pass the quiz, and unlock t
 
   await expect(page.getByRole("heading", { name: /Pathway JLPT/i })).toBeVisible();
   await expect(page.getByRole("heading", { name: /Bài 1: Giới thiệu bản thân/i })).toBeVisible();
+  await expect(page.getByText(/Chương 1: Câu nền tảng N5/i)).toBeVisible();
+  await expect(page.getByText(/Trợ từ và thời gian/i).first()).toBeVisible();
+  await expect(page.getByText("Nhịp ổn định").first()).toBeVisible();
   await expect(page.getByRole("button", { name: /Bài 2: Đi đâu, làm gì/i })).toBeDisabled();
 
   await walkThroughLessonOneFlashcards(page, true);
@@ -131,6 +134,7 @@ test("learner can start a lesson, review flashcards, pass the quiz, and unlock t
 
   await expect(page.getByRole("heading", { name: /Qua bài rồi/i })).toBeVisible();
   await expect(page.locator(".study-result > strong")).toHaveText("100%");
+  await expect(page.getByText("Nhịp nhanh").first()).toBeVisible();
   await expect(page.getByRole("button", { name: /Bài 2: Đi đâu, làm gì/i })).toBeEnabled();
 
   await page.getByRole("button", { name: /Học bài tiếp theo/i }).click();
@@ -138,6 +142,9 @@ test("learner can start a lesson, review flashcards, pass the quiz, and unlock t
 
   await page.getByRole("button", { name: /Làm lại pathway/i }).click();
   await expect(page.getByRole("heading", { name: /Bài 1: Giới thiệu bản thân/i })).toBeVisible();
+  await expect(page.getByText(/Chương 1: Câu nền tảng N5/i)).toBeVisible();
+  await expect(page.getByText(/Trợ từ và thời gian/i).first()).toBeVisible();
+  await expect(page.getByText("Nhịp ổn định").first()).toBeVisible();
   await expect(page.getByRole("button", { name: /Bài 2: Đi đâu, làm gì/i })).toBeDisabled();
 });
 
@@ -152,6 +159,7 @@ test("learner cannot unlock the next lesson below the pass score", async ({ page
 
   await expect(page.getByRole("heading", { name: /Chưa qua bài này/i })).toBeVisible();
   await expect(page.locator(".study-result > strong")).toHaveText("0%");
+  await expect(page.getByText("Nhịp củng cố").first()).toBeVisible();
   await expect(page.getByRole("button", { name: /Bài 2: Đi đâu, làm gì/i })).toBeDisabled();
 
   await page.getByRole("button", { name: /Ôn lại bài này/i }).click();
@@ -332,7 +340,7 @@ async function answerLessonOneIncorrectly(page: Page) {
 async function seedAuthenticatedLearner(page: Page, userId = "user-1") {
   await page.addInitScript((seedUserId) => {
     Object.keys(window.localStorage)
-      .filter((key) => key.startsWith("vaja.studyPathProgress"))
+      .filter((key) => key.startsWith("vaja.studyPathProgress") || key.startsWith("vaja.studyFeedback"))
       .forEach((key) => window.localStorage.removeItem(key));
     window.localStorage.setItem(
       "vaja.auth",
@@ -369,6 +377,17 @@ async function mockMvpApi(page: Page, profileOverride: Partial<typeof profile> =
 
     if (method === "GET" && path === "/personalization/me/dashboard") {
       await json(route, activeDashboard);
+      return;
+    }
+
+    if (method === "POST" && path === "/personalization/me/feedback") {
+      const feedback = JSON.parse(request.postData() || "{}");
+      await json(route, {
+        id: "feedback-1",
+        userId: activeProfile.userId,
+        createdAt: "2026-05-20T08:00:00Z",
+        ...feedback
+      });
       return;
     }
 
