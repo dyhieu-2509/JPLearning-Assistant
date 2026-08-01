@@ -2603,6 +2603,83 @@ progress::-webkit-progress-value {
   text-align: left;
 }
 
+.study-tutor-insight {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  padding: 14px;
+  border: 1px solid rgba(14, 165, 233, 0.24);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(14, 165, 233, 0.09), rgba(255, 255, 255, 0.9)),
+    var(--white);
+}
+
+.study-tutor-insight-heading {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+}
+
+.study-tutor-insight-heading svg {
+  color: var(--sky-600);
+}
+
+.study-tutor-insight-heading strong,
+.study-tutor-insight-heading span {
+  display: block;
+}
+
+.study-tutor-insight-heading strong {
+  color: var(--blue-950);
+}
+
+.study-tutor-insight-heading span,
+.study-tutor-insight p,
+.study-tutor-loading,
+.study-tutor-error {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.55;
+}
+
+.study-tutor-insight p {
+  margin: 0;
+  white-space: pre-line;
+}
+
+.study-tutor-loading,
+.study-tutor-error {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--white);
+}
+
+.study-tutor-error button,
+.study-tutor-retry {
+  min-height: 34px;
+  padding: 0 10px;
+  border: 1px solid var(--sky-200);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--sky-700);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.study-tutor-source-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .study-support-panel {
   display: grid;
   gap: 10px;

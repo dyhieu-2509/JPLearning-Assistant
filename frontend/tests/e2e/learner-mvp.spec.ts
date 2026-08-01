@@ -165,6 +165,10 @@ test("learner cannot unlock the next lesson below the pass score", async ({ page
   await expect(page.getByText(/câu cần xem lại/i)).toBeVisible();
   await page.getByRole("button", { name: /Ôn câu sai trước/i }).click();
   await expect(page.getByText(/Ôn đúng phần vừa sai/i)).toBeVisible();
+  await expect(page.getByText(/VAJA Tutor xem lỗi sai/i)).toBeVisible();
+  await expect(
+    page.locator(".study-tutor-insight").filter({ hasText: /は dùng để nêu chủ đề/i })
+  ).toBeVisible();
   await expect(page.getByText(/Đáp án đúng/i).first()).toBeVisible();
 
   await page.getByRole("button", { name: /Ôn toàn bộ thẻ/i }).click();

@@ -1,11 +1,13 @@
 import {
   ArrowRight,
+  Bot,
   BookOpenCheck,
   CheckCircle2,
   CircleX,
   ClipboardCheck,
   Layers3,
   Lightbulb,
+  Loader2,
   Lock,
   RotateCcw,
   Target,
@@ -14,9 +16,9 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../app/providers/AuthProvider";
-import { apiRequest } from "../../../shared/api";
+import { apiRequest, ApiError } from "../../../shared/api";
 import { IconTextButton, LoadingPanel, Panel, PrimaryButton, TopicChip } from "../../../shared/components";
-import type { StudentProfileResponse } from "../../../shared/models";
+import type { ChatResponse, StudentProfileResponse } from "../../../shared/models";
 import { StudyFeedbackPrompt } from "../feedback/StudyFeedbackPrompt";
 import {
   buildStudyChapters,
@@ -53,6 +55,13 @@ type AdaptiveState = {
   detail: string;
 };
 
+type TutorInsight = {
+  answer: string;
+  confidence: number;
+  sessionId: string;
+  sources: Array<{ type: string; id: string; title: string }>;
+};
+
 export function StudyView() {
   const navigate = useNavigate();
   const { accessToken, user } = useAuth();
@@ -71,6 +80,9 @@ export function StudyView() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [lastSubmittedAnswers, setLastSubmittedAnswers] = useState<Record<string, string>>({});
   const [lastScore, setLastScore] = useState<number | null>(null);
+  const [tutorInsight, setTutorInsight] = useState<TutorInsight | null>(null);
+  const [loadingTutorInsight, setLoadingTutorInsight] = useState(false);
+  const [tutorInsightError, setTutorInsightError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!accessToken) {
@@ -163,6 +175,9 @@ export function StudyView() {
     setAnswers({});
     setLastSubmittedAnswers({});
     setLastScore(null);
+    setTutorInsight(null);
+    setTutorInsightError(null);
+    setLoadingTutorInsight(false);
   }
 
   function startFlashcards() {
@@ -183,6 +198,8 @@ export function StudyView() {
     const score = Math.round((correct / lesson.questions.length) * 100);
     setLastScore(score);
     setLastSubmittedAnswers(answers);
+    setTutorInsight(null);
+    setTutorInsightError(null);
     if (accessToken) {
       void recordStudyQuizSignals(accessToken, lesson, answers);
     }
@@ -210,6 +227,37 @@ export function StudyView() {
     setCardIndex(0);
     setFlipped(false);
     setAnswers({});
+    if (accessToken && missedQuestions.length) {
+      void requestTutorMistakeHelp();
+    }
+  }
+
+  async function requestTutorMistakeHelp() {
+    if (!accessToken || loadingTutorInsight) {
+      return;
+    }
+    setLoadingTutorInsight(true);
+    setTutorInsightError(null);
+    try {
+      const response = await apiRequest<ChatResponse>("/chat", {
+        method: "POST",
+        token: accessToken,
+        body: {
+          message: buildTutorMistakePrompt(lesson, submittedAnswers, missedQuestions, currentScore, adaptiveState),
+          contextTopic: `study:${lesson.id}`
+        }
+      });
+      setTutorInsight({
+        answer: response.answer,
+        confidence: response.confidence,
+        sessionId: response.sessionId,
+        sources: response.sources
+      });
+    } catch (caught) {
+      setTutorInsightError(caught instanceof ApiError ? caught.message : "VAJA chưa giải thích được lỗi sai lúc này");
+    } finally {
+      setLoadingTutorInsight(false);
+    }
   }
 
   function goNextLesson() {
@@ -400,6 +448,14 @@ export function StudyView() {
                       </span>
                     </div>
                   </div>
+                  {accessToken && (
+                    <TutorMistakeInsight
+                      error={tutorInsightError}
+                      insight={tutorInsight}
+                      loading={loadingTutorInsight}
+                      onRetry={requestTutorMistakeHelp}
+                    />
+                  )}
                   <div className="study-mistake-list">
                     {(missedQuestions.length ? missedQuestions : lesson.questions).map((question) => (
                       <article className="study-mistake-card" key={question.id}>
@@ -547,6 +603,59 @@ function LessonPhaseBadge({ phase }: { phase: LessonPhase }) {
   return <TopicChip>{labels[phase]}</TopicChip>;
 }
 
+function TutorMistakeInsight({
+  error,
+  insight,
+  loading,
+  onRetry
+}: {
+  error: string | null;
+  insight: TutorInsight | null;
+  loading: boolean;
+  onRetry: () => void;
+}) {
+  return (
+    <div className="study-tutor-insight">
+      <div className="study-tutor-insight-heading">
+        <Bot size={22} />
+        <div>
+          <strong>VAJA Tutor xem lỗi sai của bạn</strong>
+          <span>AI đọc câu sai, câu bạn chọn và đáp án đúng để giải thích theo bài này.</span>
+        </div>
+      </div>
+
+      {loading && (
+        <div className="study-tutor-loading">
+          <Loader2 className="spin" size={18} />
+          VAJA đang phân tích lỗi sai trong quiz...
+        </div>
+      )}
+
+      {error && (
+        <div className="study-tutor-error">
+          <span>{error}</span>
+          <button type="button" onClick={onRetry}>Hỏi lại VAJA</button>
+        </div>
+      )}
+
+      {insight && !loading && (
+        <>
+          <p>{insight.answer}</p>
+          <div className="study-tutor-source-row">
+            <TopicChip>Độ tin cậy {Math.round(insight.confidence * 100)}%</TopicChip>
+            {insight.sources.slice(0, 3).map((source) => (
+              <TopicChip key={`${source.type}-${source.id}`}>{source.title || source.id}</TopicChip>
+            ))}
+          </div>
+          <button className="study-tutor-retry" type="button" onClick={onRetry}>
+            Hỏi VAJA giải thích cách khác
+          </button>
+        </>
+      )}
+    </div>
+  );
+}
+
 function lessonStatus(
   progress: LessonProgress | undefined,
   unlocked: boolean,
@@ -596,6 +705,35 @@ function resultMessage(
   return adaptiveState.pace === "fast"
     ? "Bạn qua rất chắc. VAJA tăng nhịp, có thể học thêm bài kế tiếp trong hôm nay."
     : "Bài kế tiếp đã mở. Cứ đi tiếp theo nhịp hiện tại.";
+}
+
+function buildTutorMistakePrompt(
+  lesson: StudyLesson,
+  submittedAnswers: Record<string, string>,
+  missedQuestions: StudyQuestion[],
+  score: number,
+  adaptiveState: AdaptiveState
+): string {
+  const mistakes = missedQuestions.slice(0, 5).map((question, index) =>
+    [
+      `${index + 1}. Câu hỏi: ${question.prompt}`,
+      `Người học chọn: ${submittedAnswers[question.id] || "chưa chọn"}`,
+      `Đáp án đúng: ${question.answer}`,
+      `Giải thích gốc: ${question.explanation}`
+    ].join("\n")
+  );
+
+  return truncatePrompt(
+    [
+      `Người học vừa làm sai quiz trong bài "${lesson.title}" (${lesson.level}, trọng tâm ${lesson.focus}).`,
+      `Điểm: ${score}%. Nhịp hiện tại: ${adaptiveState.label}.`,
+      "Hãy đóng vai tutor trong bài học, giải thích bằng tiếng Việt dễ hiểu.",
+      "Đừng chỉ đưa đáp án. Hãy nói vì sao người học sai, nên nhớ điểm nào, và cho 1 câu luyện rất ngắn.",
+      "Các câu sai:",
+      mistakes.join("\n\n"),
+      "Kết thúc bằng một bước học tiếp theo trước khi làm lại quiz."
+    ].join("\n")
+  );
 }
 
 async function recordStudyQuizSignals(
@@ -659,6 +797,10 @@ function normalizeStudyText(value: string): string {
 
 function truncateTitle(value: string): string {
   return value.length <= 190 ? value : `${value.slice(0, 187)}...`;
+}
+
+function truncatePrompt(value: string): string {
+  return value.length <= 1900 ? value : `${value.slice(0, 1897)}...`;
 }
 
 function getAdaptiveState(
