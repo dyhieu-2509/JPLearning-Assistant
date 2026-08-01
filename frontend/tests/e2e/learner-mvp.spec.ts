@@ -196,12 +196,15 @@ test("learner can open supporting tools from the guided study path", async ({ pa
   ).toBeVisible();
 
   await page.goto("/learner/study");
+  await page.getByRole("button", { name: /Mở hỏi VAJA/i }).click();
   await page.getByRole("button", { name: /Tra mẫu câu đang học/i }).click();
   await expect(page.getByRole("heading", { name: /Từ điển Nhật - Việt N5\/N4/i })).toBeVisible();
+  await expect(page.locator(".floating-tutor.open")).toHaveCount(0);
 
   await page.goto("/learner/study");
   await page.getByRole("button", { name: /Xem kho thẻ riêng/i }).click();
   await expect(page.getByRole("heading", { name: /Thẻ nhớ theo cấp học/i })).toBeVisible();
+  await expect(page.locator(".floating-tutor.open")).toHaveCount(0);
 });
 
 const personalizedPathwayCases = [
@@ -325,6 +328,19 @@ test("new learner can finish onboarding and reach the dashboard", async ({ page 
 
   await expect(page).toHaveURL(/\/learner$/);
   await expect(page.locator(".friendly-dashboard")).toBeVisible();
+});
+
+test("mobile study view shows the active lesson before the full pathway", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await seedAuthenticatedLearner(page, "mobile-study-user");
+  await mockMvpApi(page);
+
+  await page.goto("/learner/study");
+  await expect(page.locator(".study-lesson-stage")).toBeVisible();
+
+  const stageBox = await page.locator(".study-lesson-stage").boundingBox();
+  const railBox = await page.locator(".study-lesson-rail").boundingBox();
+  expect(stageBox?.y ?? Number.POSITIVE_INFINITY).toBeLessThan(railBox?.y ?? 0);
 });
 
 async function walkThroughLessonOneFlashcards(page: Page, includeBackButton = false) {

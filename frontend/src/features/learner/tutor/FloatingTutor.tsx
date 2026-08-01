@@ -30,6 +30,7 @@ export function FloatingTutor({ token, contextTopic, suggestions }: FloatingTuto
   const endRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    setOpen(false);
     setSessionId(null);
     setMessages([]);
     setInput("");

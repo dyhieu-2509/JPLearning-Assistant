@@ -3380,6 +3380,18 @@ progress::-webkit-progress-value {
     grid-template-columns: 1fr;
   }
 
+  .study-lesson-stage {
+    order: 1;
+  }
+
+  .study-side-stack {
+    order: 2;
+  }
+
+  .study-lesson-rail {
+    order: 3;
+  }
+
   .friendly-step-row {
     grid-template-columns: 40px minmax(0, 1fr);
   }
