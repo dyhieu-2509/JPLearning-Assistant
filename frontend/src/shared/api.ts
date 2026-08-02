@@ -29,6 +29,10 @@ type RequestOptions = {
   body?: unknown;
 };
 
+type AuthRefreshHandler = () => Promise<string | null>;
+
+let authRefreshHandler: AuthRefreshHandler | null = null;
+
 export class ApiError extends Error {
   readonly status: number;
 
@@ -38,7 +42,11 @@ export class ApiError extends Error {
   }
 }
 
-export async function apiRequest<T>(path: string, options: RequestOptions = {}): Promise<T> {
+export function setAuthRefreshHandler(handler: AuthRefreshHandler | null) {
+  authRefreshHandler = handler;
+}
+
+export async function apiRequest<T>(path: string, options: RequestOptions = {}, retried = false): Promise<T> {
   const headers = new Headers();
   headers.set("Accept", "application/json");
 
@@ -64,6 +72,13 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
   const payload = contentType?.includes("application/json") ? await response.json() : await response.text();
 
   if (!response.ok) {
+    if (response.status === 401 && options.token && !retried && authRefreshHandler && !path.startsWith("/auth/")) {
+      const refreshedToken = await authRefreshHandler();
+      if (refreshedToken) {
+        return apiRequest<T>(path, { ...options, token: refreshedToken }, true);
+      }
+    }
+
     const message = typeof payload === "object" && payload?.message ? payload.message : "Chưa tải được dữ liệu. Thử lại sau.";
     throw new ApiError(response.status, message);
   }

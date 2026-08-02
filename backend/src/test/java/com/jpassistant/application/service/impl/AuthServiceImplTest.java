@@ -13,6 +13,7 @@ import com.jpassistant.application.dto.request.RegisterRequest;
 import com.jpassistant.application.exception.AccountLinkRequiredException;
 import com.jpassistant.config.AuthProperties;
 import com.jpassistant.domain.auth.AuthProvider;
+import com.jpassistant.domain.auth.RefreshToken;
 import com.jpassistant.domain.auth.User;
 import com.jpassistant.domain.auth.UserAuthProvider;
 import com.jpassistant.infrastructure.persistence.jpa.RefreshTokenJpaRepository;
@@ -44,7 +45,7 @@ class AuthServiceImplTest {
     );
     private final JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(new AuthProperties(
             "test-secret-change-me-32-bytes-minimum-for-hs256",
-            Duration.ofMinutes(30),
+            Duration.ofMinutes(8),
             Duration.ofDays(14),
             "http://localhost:3000/auth/callback"
     ));
@@ -60,7 +61,9 @@ class AuthServiceImplTest {
     @Test
     void registerCreatesLocalUserProviderAndJwtTokens() {
         when(userRepository.existsByEmailIgnoreCase("student@example.com")).thenReturn(false);
-        when(userRepository.save(any(User.class))).thenAnswer(invocation -> withId(invocation.getArgument(0)));
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> withId((User) invocation.getArgument(0)));
+        when(refreshTokenRepository.save(any(RefreshToken.class)))
+                .thenAnswer(invocation -> withId((RefreshToken) invocation.getArgument(0)));
         when(studentProfileRepository.findByUserId(anyString())).thenReturn(Optional.empty());
 
         var response = service.register(new RegisterRequest(
@@ -72,7 +75,7 @@ class AuthServiceImplTest {
 
         assertThat(response.accessToken()).isNotBlank();
         assertThat(response.refreshToken()).isNotBlank();
-        assertThat(response.expiresIn()).isEqualTo(1800);
+        assertThat(response.expiresIn()).isEqualTo(480);
         assertThat(response.user().email()).isEqualTo("student@example.com");
         assertThat(response.user().displayName()).isEqualTo("Student One");
         assertThat(response.user().avatarUrl()).isEqualTo("https://cdn.example.com/avatar.png");
@@ -128,6 +131,8 @@ class AuthServiceImplTest {
                 .thenReturn(Optional.empty());
         when(providerRepository.findByUserIdAndProvider(existing.getId(), AuthProvider.GOOGLE))
                 .thenReturn(Optional.empty());
+        when(refreshTokenRepository.save(any(RefreshToken.class)))
+                .thenAnswer(invocation -> withId((RefreshToken) invocation.getArgument(0)));
         when(studentProfileRepository.findByUserId(existing.getId().toString())).thenReturn(Optional.empty());
 
         var response = service.linkGoogleAccount(new GoogleAccountLinkRequest(linkToken, PASSWORD));
@@ -146,5 +151,10 @@ class AuthServiceImplTest {
     private User withId(User user) {
         ReflectionTestUtils.setField(user, "id", UUID.randomUUID());
         return user;
+    }
+
+    private RefreshToken withId(RefreshToken refreshToken) {
+        ReflectionTestUtils.setField(refreshToken, "id", UUID.randomUUID());
+        return refreshToken;
     }
 }

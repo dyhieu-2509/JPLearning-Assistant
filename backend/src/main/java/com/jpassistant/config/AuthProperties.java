@@ -19,7 +19,7 @@ public record AuthProperties(
             jwtSecret = "dev-secret-change-me-32-bytes-minimum-for-hs256";
         }
         if (accessTokenTtl == null) {
-            accessTokenTtl = Duration.ofMinutes(30);
+            accessTokenTtl = Duration.ofMinutes(8);
         }
         if (refreshTokenTtl == null) {
             refreshTokenTtl = Duration.ofDays(14);

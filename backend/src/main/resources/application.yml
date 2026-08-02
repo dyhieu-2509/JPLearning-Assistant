@@ -27,7 +27,7 @@ spring:
 jpassistant:
   auth:
     jwt-secret: ${JWT_SECRET:dev-secret-change-me-32-bytes-minimum-for-hs256}
-    access-token-ttl: ${JWT_ACCESS_TOKEN_TTL:30m}
+    access-token-ttl: ${JWT_ACCESS_TOKEN_TTL:8m}
     refresh-token-ttl: ${JWT_REFRESH_TOKEN_TTL:14d}
     frontend-redirect-url: ${FRONTEND_AUTH_REDIRECT_URL:http://localhost:3000/auth/callback}
   ai-service:

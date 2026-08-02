@@ -29,11 +29,12 @@ public class JwtTokenProvider {
         this.signingKey = Keys.hmacShaKeyFor(properties.jwtSecret().getBytes(StandardCharsets.UTF_8));
     }
 
-    public String createAccessToken(User user) {
+    public String createAccessToken(User user, UUID sessionId) {
         Instant now = Instant.now();
         Instant expiresAt = now.plus(properties.accessTokenTtl());
         return Jwts.builder()
                 .subject(user.getId().toString())
+                .claim("sid", sessionId.toString())
                 .claim("email", user.getEmail())
                 .claim("role", user.getRole().name())
                 .issuedAt(Date.from(now))
@@ -48,6 +49,14 @@ public class JwtTokenProvider {
 
     public String extractRole(String token) {
         return parseClaims(token).get("role", String.class);
+    }
+
+    public UUID extractSessionId(String token) {
+        String sessionId = parseClaims(token).get("sid", String.class);
+        if (sessionId == null || sessionId.isBlank()) {
+            throw new JwtException("access token is missing session id");
+        }
+        return UUID.fromString(sessionId);
     }
 
     public long accessTokenExpiresInSeconds() {

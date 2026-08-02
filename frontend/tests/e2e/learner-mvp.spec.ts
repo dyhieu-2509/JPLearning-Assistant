@@ -351,6 +351,86 @@ test("learner can understand the MVP study loop", async ({ page }) => {
   ).toBeVisible();
 });
 
+test("learner session refreshes access token after a 401", async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem(
+      "vaja.auth",
+      JSON.stringify({
+        accessToken: "expired-access",
+        refreshToken: "refresh-1",
+        expiresAt: Date.now() + 5 * 60_000,
+        user: {
+          id: "refresh-user",
+          email: "refresh.learner@example.com",
+          displayName: "Refresh Learner",
+          avatarUrl: null,
+          role: "STUDENT",
+          status: "ACTIVE"
+        }
+      })
+    );
+  });
+
+  let refreshCalls = 0;
+  await page.route("**/api/v1/**", async (route) => {
+    const request = route.request();
+    const url = new URL(request.url());
+    const path = url.pathname.replace("/api/v1", "");
+    const method = request.method();
+    const authHeader = request.headers().authorization;
+
+    if (method === "POST" && path === "/auth/refresh") {
+      refreshCalls += 1;
+      await json(route, {
+        accessToken: "fresh-access",
+        refreshToken: "refresh-2",
+        expiresIn: 480,
+        user: {
+          id: "refresh-user",
+          email: "refresh.learner@example.com",
+          displayName: "Refresh Learner",
+          avatarUrl: null,
+          role: "STUDENT",
+          status: "ACTIVE"
+        }
+      });
+      return;
+    }
+
+    if (authHeader !== "Bearer fresh-access") {
+      await route.fulfill({
+        status: 401,
+        contentType: "application/json",
+        body: JSON.stringify({ message: "expired" })
+      });
+      return;
+    }
+
+    if (method === "GET" && path === "/personalization/me/profile") {
+      await json(route, { ...profile, userId: "refresh-user" });
+      return;
+    }
+
+    if (method === "GET" && path === "/personalization/me/dashboard") {
+      await json(route, {
+        ...dashboard,
+        profile: { ...profile, userId: "refresh-user" }
+      });
+      return;
+    }
+
+    await route.fulfill({ status: 404, body: `Unhandled ${method} ${path}` });
+  });
+
+  await page.goto("/learner");
+  await expect(page.locator(".friendly-dashboard")).toBeVisible({ timeout: 15000 });
+  await expect.poll(() => refreshCalls).toBe(1);
+
+  const storedAuth = await page.evaluate(() => JSON.parse(window.localStorage.getItem("vaja.auth") || "{}"));
+  expect(storedAuth.accessToken).toBe("fresh-access");
+  expect(storedAuth.refreshToken).toBe("refresh-2");
+});
+
 test("new learner can finish onboarding and reach the dashboard", async ({ page }) => {
   await seedAuthenticatedLearner(page, "new-onboarding-user");
   await mockOnboardingApi(page);
@@ -434,6 +514,7 @@ async function seedAuthenticatedLearner(page: Page, userId = "user-1") {
       JSON.stringify({
         accessToken: "demo-token",
         refreshToken: "demo-refresh",
+        expiresAt: Date.now() + 5 * 60_000,
         user: {
           id: seedUserId,
           email: "demo.learner@example.com",

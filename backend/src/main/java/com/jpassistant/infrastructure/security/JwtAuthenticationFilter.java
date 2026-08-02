@@ -1,12 +1,14 @@
 package com.jpassistant.infrastructure.security;
 
 import com.jpassistant.infrastructure.persistence.jpa.UserJpaRepository;
+import com.jpassistant.infrastructure.persistence.jpa.RefreshTokenJpaRepository;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,10 +25,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final UserJpaRepository userRepository;
+    private final RefreshTokenJpaRepository refreshTokenRepository;
 
-    public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider, UserJpaRepository userRepository) {
+    public JwtAuthenticationFilter(
+            JwtTokenProvider jwtTokenProvider,
+            UserJpaRepository userRepository,
+            RefreshTokenJpaRepository refreshTokenRepository
+    ) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.userRepository = userRepository;
+        this.refreshTokenRepository = refreshTokenRepository;
     }
 
     @Override
@@ -45,6 +53,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private void authenticate(String token) {
         try {
             var userId = jwtTokenProvider.extractUserId(token);
+            var sessionId = jwtTokenProvider.extractSessionId(token);
+            boolean sessionActive = refreshTokenRepository.findByIdAndUser_Id(sessionId, userId)
+                    .filter(refreshToken -> !refreshToken.isRevoked())
+                    .filter(refreshToken -> !refreshToken.isExpired(Instant.now()))
+                    .isPresent();
+            if (!sessionActive) {
+                SecurityContextHolder.clearContext();
+                return;
+            }
             userRepository.findById(userId)
                     .filter(user -> user.isActive())
                     .ifPresent(user -> {

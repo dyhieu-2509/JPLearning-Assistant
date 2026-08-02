@@ -228,13 +228,13 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private AuthResponse issueTokens(User user) {
-        String accessToken = jwtTokenProvider.createAccessToken(user);
         String refreshToken = generateRefreshToken();
-        refreshTokenRepository.save(new RefreshToken(
+        RefreshToken savedRefreshToken = refreshTokenRepository.save(new RefreshToken(
                 user,
                 hashToken(refreshToken),
                 jwtTokenProvider.refreshTokenExpiresAt()
         ));
+        String accessToken = jwtTokenProvider.createAccessToken(user, savedRefreshToken.getId());
         return new AuthResponse(
                 accessToken,
                 refreshToken,

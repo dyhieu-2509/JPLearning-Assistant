@@ -75,6 +75,12 @@ class ApiIntegrationTest {
     void authRegisterLoginRefreshAndLogoutUseUnifiedJwtContract() throws Exception {
         String email = uniqueEmail("auth");
         JsonNode registerResponse = register(email);
+        String originalAccessToken = registerResponse.get("accessToken").asText();
+
+        mockMvc.perform(get("/api/v1/personalization/me/profile")
+                        .header(HttpHeaders.AUTHORIZATION, bearer(originalAccessToken)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.userId", not(blankOrNullString())));
 
         mockMvc.perform(post("/api/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -85,6 +91,7 @@ class ApiIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accessToken", not(blankOrNullString())))
                 .andExpect(jsonPath("$.refreshToken", not(blankOrNullString())))
+                .andExpect(jsonPath("$.expiresIn").value(480))
                 .andExpect(jsonPath("$.user.email").value(email));
 
         String refreshToken = registerResponse.get("refreshToken").asText();
@@ -94,13 +101,30 @@ class ApiIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accessToken", not(blankOrNullString())))
                 .andExpect(jsonPath("$.refreshToken", not(blankOrNullString())))
+                .andExpect(jsonPath("$.expiresIn").value(480))
                 .andReturn();
 
-        String rotatedRefreshToken = readJson(refreshResult).get("refreshToken").asText();
+        JsonNode rotatedSession = readJson(refreshResult);
+        String rotatedAccessToken = rotatedSession.get("accessToken").asText();
+        String rotatedRefreshToken = rotatedSession.get("refreshToken").asText();
+
+        mockMvc.perform(get("/api/v1/personalization/me/profile")
+                        .header(HttpHeaders.AUTHORIZATION, bearer(originalAccessToken)))
+                .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(get("/api/v1/personalization/me/profile")
+                        .header(HttpHeaders.AUTHORIZATION, bearer(rotatedAccessToken)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.userId", not(blankOrNullString())));
+
         mockMvc.perform(post("/api/v1/auth/logout")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json(Map.of("refreshToken", rotatedRefreshToken))))
                 .andExpect(status().isNoContent());
+
+        mockMvc.perform(get("/api/v1/personalization/me/profile")
+                        .header(HttpHeaders.AUTHORIZATION, bearer(rotatedAccessToken)))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -577,6 +601,7 @@ class ApiIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accessToken", not(blankOrNullString())))
                 .andExpect(jsonPath("$.refreshToken", not(blankOrNullString())))
+                .andExpect(jsonPath("$.expiresIn").value(480))
                 .andExpect(jsonPath("$.user.email").value(email))
                 .andReturn();
         return readJson(result);

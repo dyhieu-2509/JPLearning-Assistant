@@ -15,15 +15,16 @@ export function AuthCallbackView() {
 
   const accessToken = params.get("accessToken");
   const refreshToken = params.get("refreshToken");
+  const expiresIn = Number(params.get("expiresIn")) || undefined;
   const linkToken = params.get("linkToken");
   const email = params.get("email");
   const needsLink = params.get("error") === "ACCOUNT_LINK_REQUIRED" && linkToken;
 
   useEffect(() => {
     if (accessToken && refreshToken) {
-      void completeOAuth(accessToken, refreshToken);
+      void completeOAuth(accessToken, refreshToken, expiresIn);
     }
-  }, [accessToken, completeOAuth, refreshToken]);
+  }, [accessToken, completeOAuth, expiresIn, refreshToken]);
 
   const message = useMemo(() => {
     if (needsLink) {
