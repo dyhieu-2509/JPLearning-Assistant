@@ -51,6 +51,49 @@ class FakeQdrantClient:
         ]
 
 
+class EmptyRetriever:
+    def search(self, query: str, level: str = "N5", limit: int = 5) -> list[KnowledgeSource]:
+        return []
+
+
+class DuplicateNeo4jReader:
+    def search(self, query: str, level: str = "N5", limit: int = 5) -> list[KnowledgeSource]:
+        return [
+            KnowledgeSource(
+                type="GrammarPoint",
+                id="duplicate-kg:N5",
+                title="te form",
+                reading="",
+                meaningVi="d\u1ea1ng n\u1ed1i c\u1ee7a \u0111\u1ed9ng t\u1eeb",
+                level=level,
+                source="kg",
+            ),
+            KnowledgeSource(
+                type="GrammarPoint",
+                id="graph-only:N5",
+                title="\u306f",
+                meaningVi="tr\u1ee3 t\u1eeb n\u00eau ch\u1ee7 \u0111\u1ec1",
+                level=level,
+                source="kg",
+            ),
+        ]
+
+
+class DuplicateQdrantClient:
+    def search(self, query: str, level: str = "N5", limit: int = 5) -> list[KnowledgeSource]:
+        return [
+            KnowledgeSource(
+                type="GrammarPoint",
+                id="duplicate-vector:N5",
+                title="te form",
+                reading="",
+                meaningVi="d\u1ea1ng n\u1ed1i c\u1ee7a \u0111\u1ed9ng t\u1eeb",
+                level=level,
+                source="vector",
+            )
+        ]
+
+
 class FakeSettings:
     embedding_vector_size = 384
     llm_provider = "mock"
@@ -86,6 +129,30 @@ def test_tutor_service_returns_grounded_personalized_answer() -> None:
 def test_profile_context_rejects_levels_outside_mvp_scope() -> None:
     with pytest.raises(ValidationError):
         StudentProfileContext(userId="user-1", currentLevel="N3", targetLevel="N3")
+
+
+def test_tutor_merges_kg_and_vector_sources_without_duplicates() -> None:
+    service = TutorServiceImpl(DuplicateNeo4jReader(), DuplicateQdrantClient(), LangChainClient(FakeSettings()))
+
+    response = service.chat(TutorChatRequest(message="\u3066 form la gi?"))
+
+    assert response.confidence == 0.78
+    assert [source.id for source in response.sources] == ["duplicate-vector:N5", "graph-only:N5"]
+    assert len({(source.type, source.title, source.reading) for source in response.sources}) == len(response.sources)
+
+
+def test_tutor_confidence_drops_when_retrieval_has_less_evidence() -> None:
+    vector_only = TutorServiceImpl(EmptyRetriever(), FakeQdrantClient(), LangChainClient(FakeSettings()))
+    no_sources = TutorServiceImpl(EmptyRetriever(), EmptyRetriever(), LangChainClient(FakeSettings()))
+
+    vector_response = vector_only.chat(TutorChatRequest(message="tabemasu la gi?"))
+    empty_response = no_sources.chat(TutorChatRequest(message="cau khong co nguon"))
+
+    assert vector_response.confidence == 0.62
+    assert len(vector_response.sources) == 1
+    assert empty_response.confidence == 0.3
+    assert empty_response.sources == []
+    assert "Minh chua co nguon" in empty_response.answer
 
 
 def test_planner_prioritizes_the_learner_pathway() -> None:

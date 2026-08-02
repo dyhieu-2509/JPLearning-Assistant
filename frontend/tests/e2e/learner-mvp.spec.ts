@@ -114,6 +114,11 @@ const dashboard = {
   generatedAt: "2026-05-20T08:00:00Z"
 };
 
+type MockMvpOptions = {
+  onFeedback?: (feedback: Record<string, unknown>) => void;
+  onLearningSignal?: (signal: Record<string, unknown>) => void;
+};
+
 test("learner can start a lesson, review flashcards, pass the quiz, and unlock the next lesson", async ({ page }) => {
   await seedAuthenticatedLearner(page);
   await mockMvpApi(page);
@@ -190,6 +195,36 @@ test("learner cannot unlock the next lesson below the pass score", async ({ page
   await page.getByRole("button", { name: /Nộp quiz cuối bài/i }).click();
   await expect(page.getByRole("heading", { name: /Qua bài rồi/i })).toBeVisible();
   await expect(page.getByRole("button", { name: /Bài 2: Đi đâu, làm gì/i })).toBeEnabled();
+});
+
+test("study pilot feedback captures user-test signal after a lesson result", async ({ page }) => {
+  const feedbackRequests: Array<Record<string, unknown>> = [];
+  await seedAuthenticatedLearner(page, "pilot-feedback-user");
+  await mockMvpApi(page, {}, { onFeedback: (feedback) => feedbackRequests.push(feedback) });
+
+  await page.goto("/learner/study");
+  await walkThroughLessonOneFlashcards(page);
+  await answerLessonOneCorrectly(page);
+  await page.getByRole("button", { name: /Nộp quiz cuối bài/i }).click();
+
+  const feedbackPanel = page.locator(".study-feedback");
+  await expect(feedbackPanel).toBeVisible();
+  await feedbackPanel.getByRole("button", { name: /Độ dễ hiểu 4/i }).click();
+  await feedbackPanel.getByRole("button", { name: "Vừa sức", exact: true }).click();
+  await feedbackPanel.getByRole("button", { name: "Gửi", exact: true }).click();
+  await expect(feedbackPanel).toContainText(/Đã ghi nhận/i);
+  await expect.poll(() => feedbackRequests.length).toBe(1);
+
+  expect(feedbackRequests[0]).toMatchObject({
+    moment: "QUIZ",
+    contextType: "study_lesson",
+    contextId: "n5-desu-wa",
+    contextTitle: "Bài 1: Giới thiệu bản thân",
+    rating: 4,
+    difficultyFit: "JUST_RIGHT",
+    actionChoice: "MOVE_ON",
+    paceChoice: "FAST"
+  });
 });
 
 test("learner can open supporting tools from the guided study path", async ({ page }) => {
@@ -412,7 +447,7 @@ async function seedAuthenticatedLearner(page: Page, userId = "user-1") {
   }, userId);
 }
 
-async function mockMvpApi(page: Page, profileOverride: Partial<typeof profile> = {}) {
+async function mockMvpApi(page: Page, profileOverride: Partial<typeof profile> = {}, options: MockMvpOptions = {}) {
   const activeProfile = { ...profile, ...profileOverride };
   const activeDashboard = { ...dashboard, profile: activeProfile };
 
@@ -439,6 +474,7 @@ async function mockMvpApi(page: Page, profileOverride: Partial<typeof profile> =
 
     if (method === "POST" && path === "/personalization/me/feedback") {
       const feedback = JSON.parse(request.postData() || "{}");
+      options.onFeedback?.(feedback);
       await json(route, {
         id: "feedback-1",
         userId: activeProfile.userId,
@@ -450,6 +486,7 @@ async function mockMvpApi(page: Page, profileOverride: Partial<typeof profile> =
 
     if (method === "POST" && path === "/personalization/me/progress/signals") {
       const signal = JSON.parse(request.postData() || "{}");
+      options.onLearningSignal?.(signal);
       await json(route, {
         id: `progress-${signal.knowledgeId ?? "study"}`,
         userId: activeProfile.userId,

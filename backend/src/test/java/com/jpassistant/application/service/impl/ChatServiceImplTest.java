@@ -71,6 +71,7 @@ class ChatServiceImplTest {
         assertThat(response.answer()).contains("て form");
         assertThat(response.sessionId()).isNotNull();
         assertThat(aiClient.lastRequest.userId()).isEqualTo("user-1");
+        assertThat(aiClient.lastRequest.contextTopic()).isEqualTo("grammar");
         assertThat(aiClient.lastRequest.profile()).isNotNull();
         assertThat(aiClient.lastRequest.profile().currentLevel()).isEqualTo("N5");
         assertThat(aiClient.lastRequest.weakProgress()).hasSize(1);
@@ -100,6 +101,31 @@ class ChatServiceImplTest {
                 .hasMessageContaining("authenticated user is required");
     }
 
+    @Test
+    void chatDoesNotRecordExposureWhenAiReturnsNoGroundingSources() {
+        RecordingAiServiceClient aiClient = new RecordingAiServiceClient(List.of(), 0.3);
+        StubPersonalizationService personalizationService = new StubPersonalizationService();
+        ChatServiceImpl service = new ChatServiceImpl(
+                aiClient,
+                personalizationService,
+                sessionRepository,
+                messageRepository,
+                new ObjectMapper()
+        );
+        when(sessionRepository.save(any(ChatSession.class)))
+                .thenAnswer(invocation -> withId(invocation.getArgument(0)));
+
+        ChatResponse response = service.chat(
+                "user-1",
+                new ChatRequest("cau nay khong co trong nguon", null, "floating_tutor")
+        );
+
+        assertThat(response.sources()).isEmpty();
+        assertThat(response.confidence()).isEqualTo(0.3);
+        assertThat(aiClient.lastRequest.contextTopic()).isEqualTo("floating_tutor");
+        assertThat(personalizationService.exposures).isEmpty();
+    }
+
     private ChatSession withId(ChatSession session) {
         if (session.getId() == null) {
             ReflectionTestUtils.setField(session, "id", UUID.randomUUID());
@@ -109,15 +135,26 @@ class ChatServiceImplTest {
 
     private static class RecordingAiServiceClient implements AiServiceClient {
 
+        private final List<SourceResponse> sources;
+        private final double confidence;
         private AiTutorChatRequest lastRequest;
+
+        private RecordingAiServiceClient() {
+            this(List.of(new SourceResponse("GrammarPoint", "te-form:N5", "te form")), 0.7);
+        }
+
+        private RecordingAiServiceClient(List<SourceResponse> sources, double confidence) {
+            this.sources = sources;
+            this.confidence = confidence;
+        }
 
         @Override
         public ChatResponse chat(AiTutorChatRequest request) {
             this.lastRequest = request;
             return new ChatResponse(
                     request.message() + " là dạng nối của động từ.",
-                    List.of(new SourceResponse("GrammarPoint", "te-form:N5", "te form")),
-                    0.7
+                    sources,
+                    confidence
             );
         }
 

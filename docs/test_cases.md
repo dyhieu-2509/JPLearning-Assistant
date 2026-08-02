@@ -1,0 +1,64 @@
+# Test Cases For Thesis Feedback
+
+This file lists the main test cases used to prove the system after teacher feedback. It is written for appendix use and maps directly to automated tests where possible.
+
+| ID | Area | Teacher Feedback Covered | Test Case | Expected Result | Automated Test |
+|---|---|---|---|---|---|
+| TC-01 | Role-based AI workflow | Avoid overclaiming autonomous multi-agent system | Chat request must carry `contextTopic`, learner profile, and weak progress into the Tutor role | Tutor answer is tied to a learning context, not generic chat | `ChatServiceImplTest.chatPersistsSessionMessagesAndRecordsSourceExposure` |
+| TC-02 | Grounded tutor/RAG | RAG reliability and source evidence | Tutor returns answer with sources, saves chat messages, and records source exposure only | Chat history has user/assistant messages; exposure count increases; mastery stays unchanged | `ApiIntegrationTest.chatRequiresJwtPersistsMessagesAndRecordsSourceExposureOnly` |
+| TC-03 | Ungrounded AI safety | Avoid hallucination becoming learner progress | AI returns no sources | No exposure is recorded; confidence stays low | `ChatServiceImplTest.chatDoesNotRecordExposureWhenAiReturnsNoGroundingSources` |
+| TC-04 | RAG benchmark RQ2 | Compare LLM only vs Vector vs KG vs KG+Vector | Benchmark question set has 50 questions, N5/N4 levels, and 4 retrieval modes | CSV can be generated for appendix; metric functions calculate Precision@3 and Recall | `test_rag_benchmark.py` |
+| TC-05 | Personalized pathway | Personalization must vary by learner pathway | Run planner for JLPT, conversation, school, work, and reading profiles | First recommended task changes by pathway | `PlannerServiceImplTest.recommendChangesFirstTaskForEachLearnerPathway` |
+| TC-06 | Personalized context | Planner must use real learner data | Profile, weak progress, due flashcards, recent chat, and latest assessment are available | Plan includes review, repair, assessment fix, pathway task, AI task, chat follow-up | `PlannerServiceImplTest.recommendCombinesAiPlanWithPersonalizationContext` |
+| TC-07 | Adaptive study flow | Learner must pass before next lesson opens | Finish lesson flashcards and pass quiz with at least 85% | Next lesson is unlocked | `learner can start a lesson, review flashcards, pass the quiz, and unlock the next lesson` |
+| TC-08 | Adaptive support flow | If learner fails, pathway slows down | Fail quiz below 85% | Next lesson stays locked; mistake review and Tutor explanation appear | `learner cannot unlock the next lesson below the pass score` |
+| TC-09 | Pilot user study | Add small user test data collection | Submit in-lesson feedback after quiz result | `/personalization/me/feedback` receives rating, difficulty fit, pace, and action choice | `study pilot feedback captures user-test signal after a lesson result` |
+| TC-10 | Feedback is not mastery | User survey is not a learning signal | Save study feedback | Feedback is stored but mastery/progress is not changed | `PersonalizationServiceImplTest.recordStudyFeedbackDoesNotMutateMasteryProgress` |
+| TC-11 | Learning signal contract | Mastery must use structured evidence only | Submit invalid source/result pair, such as ASSESSMENT + EASY | Backend rejects request and does not save progress | `PersonalizationServiceImplTest.recordLearningSignalRejectsInvalidSourceResultPair` |
+| TC-12 | Flashcard learning | Quizlet-like review with SRS | Create deck, review by `cardId + rating` | Card schedule and mastery are updated; reviewed card is no longer due immediately | `ApiIntegrationTest.flashcardDeckLifecycleCreatesCardsTracksDueCardsAndReviewsByCardId` |
+| TC-13 | Assessment integrity | Answer key must be backend-side | Start assessment then submit answers | Start response hides answer; submit grades from stored answer key and rejects resubmission | `ApiIntegrationTest.assessmentSessionStoresAnswerKeyAndUpdatesMasteryOnSubmit` |
+| TC-14 | End-user usability | Learner should understand app without many buttons | New learner follows dashboard, study, flashcards, lookup, floating tutor | Main loop is visible and old separate roadmap/help menu does not appear | `learner can understand the MVP study loop` |
+| TC-15 | Mobile usability | UI must work on small screens | Open study on mobile viewport | Active lesson appears before full pathway list | `mobile study view shows the active lesson before the full pathway` |
+
+## Pilot User Test Plan
+
+Target: 10-12 Vietnamese university students learning Japanese N5/N4.
+
+Steps:
+
+1. User completes onboarding.
+2. User studies one personalized lesson.
+3. User flips flashcards and completes quiz.
+4. If score is below 85%, user reviews mistakes with VAJA Tutor.
+5. User submits the short in-lesson feedback survey.
+6. Collect time-to-complete, quiz score, feedback rating, difficulty fit, trust/clarity for Tutor, and comments.
+
+Minimum reported metrics:
+
+| Metric | Source |
+|---|---|
+| Time to complete one lesson | Screen recording or observer timer |
+| Quiz score | Study result screen |
+| Pass/fail rate | Study result screen |
+| Difficulty fit | `/personalization/me/feedback` |
+| Tutor clarity and trust | Tutor feedback prompt |
+| Main issue found by learner | Feedback comment or interview note |
+
+## RAG Benchmark Plan
+
+Run the benchmark with:
+
+```powershell
+cd ai-service
+python benchmark_rag.py --output ..\docs\rag_benchmark_results.csv --modes llm_only vector_only kg_only kg_vector
+```
+
+Report:
+
+| Metric | Meaning |
+|---|---|
+| Precision@3 | How many of the top 3 retrieved sources match expected terms |
+| Source Recall | Whether at least one relevant source is retrieved |
+| Faithfulness | Manual 0-2 score: answer follows retrieved sources |
+| Correctness | Manual 0-2 score: answer is correct |
+| Clarity | Manual 0-2 score: answer is easy for beginner |

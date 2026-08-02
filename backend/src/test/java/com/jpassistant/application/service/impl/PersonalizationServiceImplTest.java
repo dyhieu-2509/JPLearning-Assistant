@@ -1,7 +1,10 @@
 package com.jpassistant.application.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.jpassistant.application.dto.request.KnowledgeProgressRequest;
@@ -9,6 +12,7 @@ import com.jpassistant.application.dto.request.KnowledgeReviewRequest;
 import com.jpassistant.application.dto.request.LearningSignalRequest;
 import com.jpassistant.application.dto.request.StudentProfileRequest;
 import com.jpassistant.application.dto.request.StudyFeedbackRequest;
+import com.jpassistant.application.exception.InvalidRequestException;
 import com.jpassistant.domain.personalization.KnowledgeProgress;
 import com.jpassistant.domain.personalization.LearningSignalResult;
 import com.jpassistant.domain.personalization.LearningSignalSource;
@@ -145,6 +149,30 @@ class PersonalizationServiceImplTest {
     }
 
     @Test
+    void recordLearningSignalRejectsInvalidSourceResultPair() {
+        when(progressRepository.findByUserIdAndKnowledgeTypeAndKnowledgeId(
+                "user-1",
+                "GrammarPoint",
+                "particle-wa:N5"
+        )).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.recordLearningSignal(
+                "user-1",
+                new LearningSignalRequest(
+                        "GrammarPoint",
+                        "particle-wa:N5",
+                        "particle wa",
+                        "N5",
+                        LearningSignalSource.ASSESSMENT,
+                        LearningSignalResult.EASY
+                )
+        ))
+                .isInstanceOf(InvalidRequestException.class)
+                .hasMessageContaining("not valid for source ASSESSMENT");
+        verify(progressRepository, never()).save(any(KnowledgeProgress.class));
+    }
+
+    @Test
     void recordStudyFeedbackStoresPilotStudySignal() {
         when(feedbackRepository.save(any(StudyFeedback.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -175,5 +203,29 @@ class PersonalizationServiceImplTest {
         assertThat(response.trustRating()).isEqualTo(4);
         assertThat(response.actionChoice()).isEqualTo("MOVE_ON");
         assertThat(response.comment()).isEqualTo("clear enough");
+    }
+
+    @Test
+    void recordStudyFeedbackDoesNotMutateMasteryProgress() {
+        when(feedbackRepository.save(any(StudyFeedback.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        service.recordStudyFeedback(
+                "user-1",
+                new StudyFeedbackRequest(
+                        StudyFeedbackMoment.QUIZ,
+                        "study_lesson",
+                        "n5-desu-wa",
+                        "Bai 1",
+                        4,
+                        null,
+                        null,
+                        "JUST_RIGHT",
+                        "FAST",
+                        "MOVE_ON",
+                        null
+                )
+        );
+
+        verify(progressRepository, never()).save(any(KnowledgeProgress.class));
     }
 }

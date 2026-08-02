@@ -135,6 +135,33 @@ class PlannerServiceImplTest {
     }
 
     @Test
+    void recommendChangesFirstTaskForEachLearnerPathway() {
+        when(personalizationService.getProgress(any(), eq(true), eq(5))).thenReturn(List.of());
+        when(flashcardCardRepository.findByDeckUserIdAndNextReviewAtLessThanEqualOrderByNextReviewAtAsc(
+                any(),
+                any(),
+                any(Pageable.class)
+        )).thenReturn(List.of());
+        when(chatSessionRepository.findByUserIdOrderByUpdatedAtDesc(any(), any(Pageable.class)))
+                .thenReturn(List.of());
+        when(assessmentSessionRepository.findByUserIdAndStatusOrderBySubmittedAtDesc(
+                any(),
+                eq(AssessmentSessionStatus.SUBMITTED),
+                any(Pageable.class)
+        )).thenReturn(List.of());
+        when(aiServiceClient.recommendPlan(any(AiPlannerRequest.class)))
+                .thenReturn(new AiPlannerResponse("N5", "Goal", List.of()));
+        when(studyPlanRepository.save(any(StudyPlan.class)))
+                .thenAnswer(invocation -> withPlanIds(invocation.getArgument(0)));
+
+        assertPathwayAnchor("jlpt-user", "jlpt_foundation", "Move one step on the JLPT path");
+        assertPathwayAnchor("conversation-user", "conversation", "Practice one daily dialogue");
+        assertPathwayAnchor("school-user", "school", "Review the next class lesson");
+        assertPathwayAnchor("work-user", "work", "Practice one polite work scenario");
+        assertPathwayAnchor("reading-user", "reading", "Read one short N5/N4 passage");
+    }
+
+    @Test
     void completePlanItemMarksItemAndReturnsSavedPlan() {
         StudyPlan plan = withPlanIds(new StudyPlan("user-1", "N5", "N4", "JLPT N4", 5, "{}"));
         StudyPlanItem item = plan.getItems().get(0);
@@ -162,6 +189,38 @@ class PlannerServiceImplTest {
                 2,
                 Instant.now(),
                 Instant.now(),
+                Instant.now(),
+                Instant.now()
+        );
+    }
+
+    private void assertPathwayAnchor(String userId, String pathway, String expectedTitle) {
+        when(personalizationService.getOrCreateProfile(userId))
+                .thenReturn(profile(userId, pathway));
+
+        var response = service.recommend(
+                userId,
+                new PlannerRecommendRequest(null, null, 5, null, null)
+        );
+
+        assertThat(response.context().profile().learningPathway()).isEqualTo(pathway);
+        assertThat(response.items()).hasSize(1);
+        assertThat(response.items().get(0).title()).isEqualTo(expectedTitle);
+    }
+
+    private StudentProfileResponse profile(String userId, String pathway) {
+        return new StudentProfileResponse(
+                UUID.randomUUID(),
+                userId,
+                "N5",
+                "N4",
+                null,
+                "JLPT N4",
+                pathway,
+                30,
+                "concise",
+                true,
+                List.of("grammar"),
                 Instant.now(),
                 Instant.now()
         );
