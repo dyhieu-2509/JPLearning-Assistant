@@ -22,6 +22,10 @@ backend/target/
 *.iml
 .vscode/settings.json
 
+# Local staging helpers
+.bin/
+.tmp/
+
 # Environment
 .env
 !.env.example
