@@ -251,6 +251,29 @@ test("learner can open supporting tools from the guided study path", async ({ pa
   await expect(page.locator(".floating-tutor.open")).toHaveCount(0);
 });
 
+test("quiz nudges the floating tutor for the current question", async ({ page }) => {
+  await seedAuthenticatedLearner(page, "quiz-nudge-user");
+  await mockMvpApi(page);
+
+  await page.goto("/learner/study");
+  await walkThroughLessonOneFlashcards(page);
+
+  const tutorButton = page.getByRole("button", { name: /có 1 gợi ý mới/i });
+  await expect(tutorButton).toBeVisible();
+  await expect(page.locator(".floating-tutor-badge")).toHaveText("1");
+
+  await tutorButton.click();
+  await expect(page.locator(".floating-nudge-card")).toContainText("VAJA đang theo câu 1");
+  await page.getByRole("button", { name: /Gợi ý câu 1/i }).first().click();
+  await expect(page.locator(".floating-message-row.user .floating-message-bubble")).toContainText(/Câu hỏi:/);
+  await expect(
+    page.locator(".floating-message-row.assistant .floating-message-bubble").filter({ hasText: /は dùng để nêu chủ đề/i })
+  ).toBeVisible();
+
+  await page.getByRole("button", { name: "わたしは学生です。", exact: true }).click();
+  await expect(page.locator(".floating-nudge-card")).toContainText("VAJA đang theo câu 2");
+});
+
 const personalizedPathwayCases = [
   {
     name: "JLPT",

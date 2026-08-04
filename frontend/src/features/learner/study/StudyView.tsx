@@ -62,6 +62,15 @@ type TutorInsight = {
   sources: Array<{ type: string; id: string; title: string }>;
 };
 
+type TutorNudgeDetail = {
+  id: string;
+  title: string;
+  preview: string;
+  message: string;
+  actionLabel: string;
+  contextTopic: string;
+};
+
 const lessonPhaseSteps: Array<{ phase: Exclude<LessonPhase, "result">; label: string; hint: string }> = [
   { phase: "learn", label: "Học", hint: "Mẫu câu" },
   { phase: "flashcards", label: "Thẻ", hint: "Tự nhớ" },
@@ -90,6 +99,7 @@ export function StudyView() {
   const [tutorInsight, setTutorInsight] = useState<TutorInsight | null>(null);
   const [loadingTutorInsight, setLoadingTutorInsight] = useState(false);
   const [tutorInsightError, setTutorInsightError] = useState<string | null>(null);
+  const [activeSupportQuestionId, setActiveSupportQuestionId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!accessToken) {
@@ -130,6 +140,7 @@ export function StudyView() {
     setFlipped(false);
     setAnswers({});
     setLastScore(null);
+    setActiveSupportQuestionId(null);
   }, [lessons, progressKey]);
 
   useEffect(() => {
@@ -161,6 +172,39 @@ export function StudyView() {
     [lesson, lessons, profile, progress]
   );
   const currentChapterComplete = currentChapter.lessons.every((item) => progress[item.id]?.passed);
+  const activeQuizQuestion = useMemo(
+    () =>
+      lesson.questions.find((question) => question.id === activeSupportQuestionId) ??
+      lesson.questions.find((question) => !answers[question.id]) ??
+      lesson.questions[0],
+    [activeSupportQuestionId, answers, lesson.questions]
+  );
+  const activeQuizQuestionIndex = activeQuizQuestion
+    ? lesson.questions.findIndex((question) => question.id === activeQuizQuestion.id)
+    : -1;
+
+  useEffect(() => {
+    if (phase !== "quiz" || !unlocked || !activeQuizQuestion) {
+      return;
+    }
+    const timer = window.setTimeout(() => dispatchTutorNudge({
+      id: `study:${lesson.id}:${activeQuizQuestion.id}:${answers[activeQuizQuestion.id] ? "answered" : "open"}`,
+      title: `VAJA đang theo câu ${activeQuizQuestionIndex + 1}`,
+      preview: answers[activeQuizQuestion.id]
+        ? "Bạn đã chọn đáp án. VAJA có thể kiểm tra cách nghĩ."
+        : "Mở VAJA nếu câu này chưa rõ.",
+      actionLabel: `Gợi ý câu ${activeQuizQuestionIndex + 1}`,
+      contextTopic: `study:${lesson.id}:question:${activeQuizQuestion.id}`,
+      message: buildTutorQuestionPrompt(
+        lesson,
+        activeQuizQuestion,
+        activeQuizQuestionIndex + 1,
+        answers[activeQuizQuestion.id],
+        adaptiveState
+      )
+    }), 0);
+    return () => window.clearTimeout(timer);
+  }, [activeQuizQuestion, activeQuizQuestionIndex, adaptiveState, answers, lesson, phase, unlocked]);
 
   if (loadingProfile) {
     return <LoadingPanel>Đang cá nhân hóa pathway học của bạn...</LoadingPanel>;
@@ -185,6 +229,7 @@ export function StudyView() {
     setTutorInsight(null);
     setTutorInsightError(null);
     setLoadingTutorInsight(false);
+    setActiveSupportQuestionId(null);
   }
 
   function startFlashcards() {
@@ -197,7 +242,18 @@ export function StudyView() {
       setCardIndex((current) => current + 1);
       return;
     }
+    setActiveSupportQuestionId(lesson.questions[0]?.id ?? null);
     setPhase("quiz");
+  }
+
+  function activateQuestionSupport(questionId: string) {
+    setActiveSupportQuestionId(questionId);
+  }
+
+  function chooseQuizAnswer(questionId: string, option: string) {
+    setAnswers((current) => ({ ...current, [questionId]: option }));
+    const nextQuestion = lesson.questions.find((question) => question.id !== questionId && !answers[question.id]);
+    setActiveSupportQuestionId(nextQuestion?.id ?? questionId);
   }
 
   function submitQuiz() {
@@ -424,7 +480,11 @@ export function StudyView() {
                     <TopicChip>{adaptiveState.label}</TopicChip>
                   </div>
                   {lesson.questions.map((question, index) => (
-                    <fieldset className="study-question" key={question.id}>
+                    <fieldset
+                      className={activeQuizQuestion?.id === question.id ? "study-question active-support" : "study-question"}
+                      key={question.id}
+                      onFocus={() => activateQuestionSupport(question.id)}
+                    >
                       <legend>{index + 1}. {question.prompt}</legend>
                       <div className="study-option-grid">
                         {question.options.map((option) => (
@@ -432,7 +492,7 @@ export function StudyView() {
                             className={answers[question.id] === option ? "study-option selected" : "study-option"}
                             key={option}
                             type="button"
-                            onClick={() => setAnswers((current) => ({ ...current, [question.id]: option }))}
+                            onClick={() => chooseQuizAnswer(question.id, option)}
                           >
                             {option}
                           </button>
@@ -763,6 +823,33 @@ function buildTutorMistakePrompt(
       "Các câu sai:",
       mistakes.join("\n\n"),
       "Kết thúc bằng một bước học tiếp theo trước khi làm lại quiz."
+    ].join("\n")
+  );
+}
+
+function dispatchTutorNudge(detail: TutorNudgeDetail) {
+  window.dispatchEvent(new CustomEvent("vaja:tutor-nudge", { detail }));
+}
+
+function buildTutorQuestionPrompt(
+  lesson: StudyLesson,
+  question: StudyQuestion,
+  questionNumber: number,
+  selectedAnswer: string | undefined,
+  adaptiveState: AdaptiveState
+): string {
+  return truncatePrompt(
+    [
+      `Mình đang làm câu ${questionNumber} trong bài "${lesson.title}" (${lesson.level}, trọng tâm ${lesson.focus}).`,
+      `Câu hỏi: ${question.prompt}`,
+      `Các lựa chọn: ${question.options.join(" | ")}`,
+      selectedAnswer ? `Mình đang chọn: ${selectedAnswer}` : "Mình chưa chọn đáp án.",
+      `Nhịp học hiện tại: ${adaptiveState.label}.`,
+      "Hãy giải thích như tutor đang ngồi cạnh người mới học.",
+      selectedAnswer
+        ? "Hãy kiểm tra cách nghĩ của mình. Nếu đáp án này sai, nói vì sao sai và dẫn mình tới đáp án đúng."
+        : "Đừng chốt đáp án ngay. Hãy gợi ý cách nhận ra từ khóa, mẫu câu, hoặc bẫy trong câu.",
+      "Trả lời ngắn, bằng tiếng Việt dễ hiểu, kèm một ví dụ rất gần với bài."
     ].join("\n")
   );
 }

@@ -1,4 +1,4 @@
-import { Bot, Loader2, MessageCircle, Send, Sparkles, X } from "lucide-react";
+import { Bot, Lightbulb, Loader2, MessageCircle, Send, Sparkles, X } from "lucide-react";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { apiRequest, ApiError } from "../../../shared/api";
 import type { ChatResponse, SourceResponse } from "../../../shared/models";
@@ -20,6 +20,15 @@ type TutorMessage = {
   contextTopic?: string;
 };
 
+type TutorNudge = {
+  id: string;
+  title: string;
+  preview: string;
+  message: string;
+  actionLabel?: string;
+  contextTopic?: string;
+};
+
 export function FloatingTutor({ token, contextTopic, suggestions }: FloatingTutorProps) {
   const [open, setOpen] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -27,7 +36,10 @@ export function FloatingTutor({ token, contextTopic, suggestions }: FloatingTuto
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [nudge, setNudge] = useState<TutorNudge | null>(null);
+  const [seenNudgeId, setSeenNudgeId] = useState<string | null>(null);
   const endRef = useRef<HTMLDivElement | null>(null);
+  const hasUnreadNudge = Boolean(nudge && nudge.id !== seenNudgeId);
 
   useEffect(() => {
     setOpen(false);
@@ -35,7 +47,25 @@ export function FloatingTutor({ token, contextTopic, suggestions }: FloatingTuto
     setMessages([]);
     setInput("");
     setError(null);
+    setNudge(null);
+    setSeenNudgeId(null);
   }, [contextTopic]);
+
+  useEffect(() => {
+    function receiveTutorNudge(event: Event) {
+      const detail = (event as CustomEvent<TutorNudge>).detail;
+      if (!detail?.id || !detail.message) {
+        return;
+      }
+      setNudge(detail);
+      if (open) {
+        setSeenNudgeId(detail.id);
+      }
+    }
+
+    window.addEventListener("vaja:tutor-nudge", receiveTutorNudge);
+    return () => window.removeEventListener("vaja:tutor-nudge", receiveTutorNudge);
+  }, [open]);
 
   useEffect(() => {
     if (open) {
@@ -43,7 +73,14 @@ export function FloatingTutor({ token, contextTopic, suggestions }: FloatingTuto
     }
   }, [messages, open]);
 
-  async function ask(event?: FormEvent<HTMLFormElement>, text = input) {
+  function openTutor() {
+    setOpen(true);
+    if (nudge) {
+      setSeenNudgeId(nudge.id);
+    }
+  }
+
+  async function ask(event?: FormEvent<HTMLFormElement>, text = input, askContextTopic = contextTopic) {
     event?.preventDefault();
     const message = text.trim();
 
@@ -70,7 +107,7 @@ export function FloatingTutor({ token, contextTopic, suggestions }: FloatingTuto
         token,
         body: {
           message,
-          contextTopic,
+          contextTopic: askContextTopic,
           sessionId
         }
       });
@@ -84,7 +121,7 @@ export function FloatingTutor({ token, contextTopic, suggestions }: FloatingTuto
           sources: response.sources,
           confidence: response.confidence,
           sessionId: response.sessionId,
-          contextTopic
+          contextTopic: askContextTopic
         }
       ]);
     } catch (caught) {
@@ -96,14 +133,20 @@ export function FloatingTutor({ token, contextTopic, suggestions }: FloatingTuto
 
   if (!open) {
     return (
-      <section className="floating-tutor" aria-label="Hỏi VAJA nhanh">
-        <button className="floating-tutor-bar" type="button" aria-label="Mở hỏi VAJA" onClick={() => setOpen(true)}>
+      <section className={hasUnreadNudge ? "floating-tutor has-nudge" : "floating-tutor"} aria-label="Hỏi VAJA nhanh">
+        <button
+          className="floating-tutor-bar"
+          type="button"
+          aria-label={hasUnreadNudge ? "Mở hỏi VAJA, có 1 gợi ý mới" : "Mở hỏi VAJA"}
+          onClick={openTutor}
+        >
           <span className="floating-tutor-icon">
             <Bot size={20} />
+            {hasUnreadNudge && <span className="floating-tutor-badge">1</span>}
           </span>
           <span>
-            <strong>Hỏi VAJA</strong>
-            <small>Đang bí về {displayContext(contextTopic)}</small>
+            <strong>{hasUnreadNudge ? nudge?.title ?? "VAJA có gợi ý" : "Hỏi VAJA"}</strong>
+            <small>{hasUnreadNudge ? nudge?.preview : `Đang bí về ${displayContext(contextTopic)}`}</small>
           </span>
           <Sparkles size={18} />
         </button>
@@ -125,7 +168,40 @@ export function FloatingTutor({ token, contextTopic, suggestions }: FloatingTuto
           </button>
         </header>
 
+        {nudge && (
+          <div className="floating-nudge-card">
+            <Lightbulb size={18} />
+            <div>
+              <strong>{nudge.title}</strong>
+              <span>{nudge.preview}</span>
+            </div>
+            <button
+              type="button"
+              disabled={sending}
+              onClick={() => {
+                setSeenNudgeId(nudge.id);
+                void ask(undefined, nudge.message, nudge.contextTopic ?? contextTopic);
+              }}
+            >
+              {nudge.actionLabel ?? "Hỏi gợi ý"}
+            </button>
+          </div>
+        )}
+
         <div className="floating-suggestion-row">
+          {nudge && (
+            <button
+              type="button"
+              disabled={sending}
+              onClick={() => {
+                setSeenNudgeId(nudge.id);
+                void ask(undefined, nudge.message, nudge.contextTopic ?? contextTopic);
+              }}
+            >
+              <Lightbulb size={14} />
+              {nudge.actionLabel ?? "Gợi ý câu này"}
+            </button>
+          )}
           {suggestions.map((suggestion) => (
             <button key={suggestion} type="button" disabled={sending} onClick={() => void ask(undefined, suggestion)}>
               <MessageCircle size={14} />
