@@ -34,7 +34,7 @@ public class StudyPlan {
     @Column(name = "user_id", nullable = false, length = 100)
     private String userId;
 
-    @Column(name = "level", nullable = false, length = 2)
+    @Column(name = "level", nullable = false, length = 10)
     private String level;
 
     @Column(name = "target_level", nullable = false, length = 2)

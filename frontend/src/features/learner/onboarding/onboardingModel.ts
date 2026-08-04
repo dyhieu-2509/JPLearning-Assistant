@@ -13,12 +13,12 @@ export type OnboardingAnswers = {
 };
 
 export const initialOnboardingAnswers: OnboardingAnswers = {
-  currentLevel: "N5",
-  targetLevel: "N4",
+  currentLevel: "ZERO",
+  targetLevel: "N5",
   learningPathway: "jlpt_foundation",
   deadline: "trong 3 tháng",
   dailyStudyMinutes: "30",
-  weakSkills: ["vocabulary"],
+  weakSkills: ["kana"],
   explanationStyle: "step-by-step",
   romajiEnabled: "true"
 };

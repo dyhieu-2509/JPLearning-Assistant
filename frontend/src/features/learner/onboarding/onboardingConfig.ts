@@ -45,7 +45,8 @@ export const onboardingQuestions: OnboardingQuestion[] = [
     subtitle: "VAJA dùng trình độ này để chọn độ khó khi trò chuyện, kiểm tra nhanh và ôn thẻ nhớ.",
     icon: GraduationCap,
     options: [
-      { value: "N5", label: "Mới bắt đầu / N5", description: "Hiragana, katakana, mẫu câu cơ bản" },
+      { value: "ZERO", label: "Số 0", description: "Chưa biết hoặc chưa chắc hiragana, katakana" },
+      { value: "N5", label: "Đang học N5", description: "Đã biết bảng chữ và muốn học mẫu câu cơ bản" },
       { value: "N4", label: "N4", description: "Đã biết câu cơ bản và muốn tăng tốc" }
     ]
   },
@@ -102,6 +103,7 @@ export const onboardingQuestions: OnboardingQuestion[] = [
     multi: true,
     icon: PencilLine,
     options: [
+      { value: "kana", label: "Bảng chữ", description: "Hiragana, katakana, cách đọc âm cơ bản" },
       { value: "vocabulary", label: "Từ vựng", description: "Nhớ nghĩa, collocation, ví dụ" },
       { value: "grammar", label: "Ngữ pháp", description: "Mẫu câu, sắc thái, cách dùng" },
       { value: "kanji", label: "Kanji", description: "Âm đọc, nghĩa, ghi nhớ" },

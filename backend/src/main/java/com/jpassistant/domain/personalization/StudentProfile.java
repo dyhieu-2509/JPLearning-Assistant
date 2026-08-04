@@ -34,7 +34,7 @@ public class StudentProfile {
     @Column(name = "user_id", nullable = false, unique = true, length = 100)
     private String userId;
 
-    @Column(name = "current_level", nullable = false, length = 2)
+    @Column(name = "current_level", nullable = false, length = 10)
     @Setter
     private String currentLevel = "N5";
 

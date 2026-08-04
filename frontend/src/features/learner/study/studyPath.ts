@@ -75,6 +75,83 @@ function makeLesson(
   return { id, level, title, focus, summary, pattern, example, translation, flashcards, questions };
 }
 
+const kanaHiraganaVowels = makeLesson(
+  "kana-hiragana-vowels",
+  "N5",
+  "Hiragana hàng あ",
+  "bảng chữ hiragana",
+  "Nhận mặt chữ あ, い, う, え, お trước khi học mẫu câu. Người mới chỉ cần đọc chậm và nhớ âm chính.",
+  "あ い う え お = a i u e o",
+  "あおい / いいえ / うえ",
+  "xanh / không / phía trên",
+  [
+    { front: "あ", back: "a", hint: "Âm a, mở miệng rõ" },
+    { front: "い", back: "i", hint: "Âm i, ngắn và gọn" },
+    { front: "う", back: "u", hint: "Âm u, môi khép nhẹ" },
+    { front: "え", back: "e", hint: "Âm e" },
+    { front: "お", back: "o", hint: "Âm o" }
+  ],
+  [
+    makeQuestion("kana-vowels-q1", "あ đọc là gì?", ["a", "i", "u", "e"], "a", "あ là âm a trong hiragana."),
+    makeQuestion("kana-vowels-q2", "い đọc là gì?", ["i", "a", "u", "o"], "i", "い là âm i trong hiragana."),
+    makeQuestion("kana-vowels-q3", "Đâu là hàng nguyên âm hiragana đúng?", ["あ い う え お", "か き く け こ", "ア イ ウ エ オ", "さ し す せ そ"], "あ い う え お", "Hàng nguyên âm hiragana đầu tiên là あ, い, う, え, お."),
+    makeQuestion("kana-vowels-q4", "え đọc là gì?", ["e", "o", "a", "u"], "e", "え là âm e."),
+    makeQuestion("kana-vowels-q5", "お đọc là gì?", ["o", "a", "i", "e"], "o", "お là âm o.")
+  ]
+);
+
+const kanaHiraganaRows = makeLesson(
+  "kana-hiragana-rows",
+  "N5",
+  "Hiragana hàng か-さ-た",
+  "kana ghép âm",
+  "Tập đọc các hàng hay gặp: か, さ, た. Chưa cần viết đẹp, trước hết phải nhìn chữ và đọc được.",
+  "Phụ âm + nguyên âm: か ka, き ki, く ku, け ke, こ ko",
+  "かさ / すし / たこ",
+  "ô / sushi / bạch tuộc",
+  [
+    { front: "か", back: "ka", hint: "Hàng k, âm a" },
+    { front: "き", back: "ki", hint: "Hàng k, âm i" },
+    { front: "さ", back: "sa", hint: "Hàng s, âm a" },
+    { front: "し", back: "shi", hint: "Đặc biệt: không đọc là si" },
+    { front: "た", back: "ta", hint: "Hàng t, âm a" },
+    { front: "ち", back: "chi", hint: "Đặc biệt: không đọc là ti" }
+  ],
+  [
+    makeQuestion("kana-rows-q1", "か đọc là gì?", ["ka", "sa", "ta", "a"], "ka", "か là âm ka."),
+    makeQuestion("kana-rows-q2", "し đọc tự nhiên là gì?", ["shi", "si", "chi", "ki"], "shi", "し thường đọc là shi."),
+    makeQuestion("kana-rows-q3", "た đọc là gì?", ["ta", "ka", "sa", "to"], "ta", "た là âm ta."),
+    makeQuestion("kana-rows-q4", "Từ すし gồm các âm nào?", ["su + shi", "sa + si", "ku + shi", "ta + ko"], "su + shi", "す là su, し là shi."),
+    makeQuestion("kana-rows-q5", "ち đọc tự nhiên là gì?", ["chi", "ti", "shi", "ki"], "chi", "ち thường đọc là chi.")
+  ]
+);
+
+const kanaKatakanaEntry = makeLesson(
+  "kana-katakana-entry",
+  "N5",
+  "Katakana cơ bản",
+  "katakana và từ vay mượn",
+  "Katakana dùng nhiều cho tên nước, tên người, đồ ăn và từ mượn. Học hàng ア trước để không bị ngợp khi gặp từ mới.",
+  "ア イ ウ エ オ = a i u e o",
+  "コーヒー / テスト / ベトナム",
+  "cà phê / bài kiểm tra / Việt Nam",
+  [
+    { front: "ア", back: "a", hint: "Katakana của あ" },
+    { front: "イ", back: "i", hint: "Katakana của い" },
+    { front: "ウ", back: "u", hint: "Katakana của う" },
+    { front: "エ", back: "e", hint: "Katakana của え" },
+    { front: "オ", back: "o", hint: "Katakana của お" },
+    { front: "コーヒー", back: "cà phê", hint: "Từ mượn hay gặp" }
+  ],
+  [
+    makeQuestion("kana-katakana-q1", "ア đọc là gì?", ["a", "i", "u", "e"], "a", "ア là âm a trong katakana."),
+    makeQuestion("kana-katakana-q2", "Đâu là hàng nguyên âm katakana đúng?", ["ア イ ウ エ オ", "あ い う え お", "か き く け こ", "さ し す せ そ"], "ア イ ウ エ オ", "Katakana dùng nét góc cạnh hơn hiragana."),
+    makeQuestion("kana-katakana-q3", "コーヒー nghĩa là gì?", ["cà phê", "trà", "nước", "cơm"], "cà phê", "コーヒー là từ mượn, nghĩa là cà phê."),
+    makeQuestion("kana-katakana-q4", "テスト thường nghĩa là gì?", ["bài kiểm tra", "giáo viên", "nhà ga", "sách"], "bài kiểm tra", "テスト là từ mượn từ test."),
+    makeQuestion("kana-katakana-q5", "Katakana thường dùng cho nhóm nào?", ["từ mượn và tên riêng", "trợ từ は", "chia động từ", "đếm ngày tháng"], "từ mượn và tên riêng", "Katakana hay dùng cho từ mượn, tên riêng và tên nước.")
+  ]
+);
+
 const n5DesuWa = makeLesson(
   "n5-desu-wa",
   "N5",
@@ -481,6 +558,15 @@ const n4Requests = makeLesson(
   ]
 );
 
+const kanaFoundationChapter: StudyChapter = {
+  id: "kana-foundation",
+  title: "Bảng chữ cái nhập môn",
+  level: "N5",
+  focus: "hiragana, katakana",
+  description: "Dành cho người học từ số 0: đọc được kana trước, rồi mới vào mẫu câu N5.",
+  lessons: [kanaHiraganaVowels, kanaHiraganaRows, kanaKatakanaEntry]
+};
+
 const coreChapters: StudyChapter[] = [
   {
     id: "n5-chapter-1",
@@ -573,9 +659,12 @@ export function buildStudyChapters(profile?: StudyProfile | null): StudyChapter[
   const pathway = normalizePathway(profile?.learningPathway);
   const wantsN4 = wantsN4Bridge(profile);
   const entryLesson = pathwayEntryLessons[pathway] ?? pathwayEntryLessons.jlpt_foundation;
-  const selectedChapters = pathway === "jlpt_foundation"
+  const corePathChapters = pathway === "jlpt_foundation"
     ? coreChapters
     : [buildPersonalizedEntryChapter(pathway, entryLesson), ...coreChapters];
+  const selectedChapters = isZeroBeginner(profile)
+    ? [kanaFoundationChapter, ...corePathChapters]
+    : corePathChapters;
   const withBridge = wantsN4 ? [...selectedChapters, n4BridgeChapter] : selectedChapters;
   return renumberChapters(removeDuplicateLessons(withBridge));
 }
@@ -589,6 +678,13 @@ export function flattenStudyChapters(chapters: StudyChapter[]): StudyLesson[] {
 }
 
 export function studyPathwayIntro(profile?: StudyProfile | null): StudyPathwayIntro {
+  if (isZeroBeginner(profile)) {
+    return {
+      label: "Số 0 đến N5",
+      title: "Pathway số 0: học bảng chữ trước, rồi mới vào N5.",
+      description: "VAJA mở đầu bằng hiragana và katakana. Khi đọc được kana cơ bản, bạn mới sang mẫu câu N5 theo pathway đã chọn."
+    };
+  }
   return pathwayIntros[normalizePathway(profile?.learningPathway)] ?? pathwayIntros.jlpt_foundation;
 }
 
@@ -644,6 +740,17 @@ function wantsN4Bridge(profile?: StudyProfile | null): boolean {
   return currentLevel === "N4" || targetLevel === "N4";
 }
 
+function isZeroBeginner(profile?: StudyProfile | null): boolean {
+  const currentLevel = (profile?.currentLevel ?? "").trim().toUpperCase();
+  const weakSkills = profile?.weakSkills ?? [];
+  return currentLevel === "ZERO" || currentLevel === "N0" || weakSkills.some(isKanaSkill);
+}
+
+function isKanaSkill(skill: string): boolean {
+  const normalized = skill.trim().toLowerCase();
+  return normalized === "kana" || normalized === "hiragana" || normalized === "katakana";
+}
+
 function normalizePathway(value?: string | null): string {
   const normalized = value?.trim().toLowerCase().replace(/-/g, "_") || "jlpt_foundation";
   return normalized in pathwayEntryLessons ? normalized : "jlpt_foundation";
@@ -660,6 +767,7 @@ function cleanChapterTitle(value: string): string {
 function weakSkillLabel(value: string): string {
   const labels: Record<string, string> = {
     vocabulary: "từ vựng",
+    kana: "bảng chữ",
     grammar: "ngữ pháp",
     kanji: "kanji",
     listening: "nghe",

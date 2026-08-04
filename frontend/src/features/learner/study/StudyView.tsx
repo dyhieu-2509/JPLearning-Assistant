@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../app/providers/AuthProvider";
 import { apiRequest, ApiError } from "../../../shared/api";
 import { IconTextButton, LoadingPanel, Panel, PrimaryButton, TopicChip } from "../../../shared/components";
+import { displayLearningLevel } from "../../../shared/levels";
 import type { ChatResponse, StudentProfileResponse } from "../../../shared/models";
 import { StudyFeedbackPrompt } from "../feedback/StudyFeedbackPrompt";
 import {
@@ -347,7 +348,7 @@ export function StudyView() {
             {intro.description} Mỗi chương có 3 bài. Mỗi bài gồm học ngắn, thẻ nhớ và quiz cuối bài. Đạt từ {passThreshold}% trở lên thì bài kế tiếp mới mở.
           </p>
           <div className="study-profile-chips">
-            <TopicChip>{profile?.currentLevel ?? "N5"} → {profile?.targetLevel ?? "N4"}</TopicChip>
+            <TopicChip>{displayLearningLevel(profile?.currentLevel)} → {displayLearningLevel(profile?.targetLevel, "N4")}</TopicChip>
             <TopicChip>Trọng tâm: {weakSkillSummary(profile)}</TopicChip>
             <TopicChip>{profile?.dailyStudyMinutes ?? 30} phút/ngày</TopicChip>
             <TopicChip>{adaptiveState.label}</TopicChip>
@@ -880,6 +881,14 @@ async function recordStudyQuizSignals(
 
 function knowledgeTypeForLesson(lesson: StudyLesson): string {
   const searchable = `${lesson.focus} ${lesson.title}`.toLowerCase();
+  if (
+    searchable.includes("kana") ||
+    searchable.includes("hiragana") ||
+    searchable.includes("katakana") ||
+    searchable.includes("bảng chữ")
+  ) {
+    return "Kana";
+  }
   if (searchable.includes("kanji") || searchable.includes("漢字")) {
     return "Kanji";
   }

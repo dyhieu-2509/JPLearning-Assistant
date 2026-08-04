@@ -89,7 +89,7 @@ public class PlannerServiceImpl implements PlannerService {
                 ? new PlannerRecommendRequest(null, null, null, null, null)
                 : request;
         StudentProfileResponse profile = personalizationService.getOrCreateProfile(normalizedUserId);
-        String currentLevel = MvpLearningLevels.normalize(
+        String currentLevel = MvpLearningLevels.normalizeProfileCurrentLevel(
                 defaultText(safeRequest.currentLevel(), profile.currentLevel()),
                 "N5"
         );
@@ -121,7 +121,7 @@ public class PlannerServiceImpl implements PlannerService {
         AssessmentSummaryResponse recentAssessment = recentAssessment(normalizedUserId);
 
         AiPlannerResponse aiPlan = aiServiceClient.recommendPlan(new AiPlannerRequest(
-                currentLevel,
+                aiPlannerCurrentLevel(currentLevel),
                 targetLevel,
                 weeklyStudyHours,
                 goal,
@@ -254,6 +254,14 @@ public class PlannerServiceImpl implements PlannerService {
                     Math.max(0.5, roundOneDecimal(weeklyStudyHours * 0.2))
             ));
         }
+        if (MvpLearningLevels.isZeroBeginner(context.profile().currentLevel())) {
+            items.add(new StudyPlanItemResponse(
+                    0,
+                    "Learn kana before N5 grammar",
+                    "Finish hiragana and katakana practice first, then start the first N5 sentence lesson.",
+                    Math.max(0.5, roundOneDecimal(weeklyStudyHours * 0.25))
+            ));
+        }
         items.add(pathwayAnchorItem(learningPathway, context, weeklyStudyHours));
         if (aiItems != null) {
             items.addAll(aiItems);
@@ -326,6 +334,10 @@ public class PlannerServiceImpl implements PlannerService {
                     estimatedHours
             );
         };
+    }
+
+    private String aiPlannerCurrentLevel(String currentLevel) {
+        return MvpLearningLevels.isZeroBeginner(currentLevel) ? "N5" : currentLevel;
     }
 
     private List<String> recentChatTopics(String userId) {

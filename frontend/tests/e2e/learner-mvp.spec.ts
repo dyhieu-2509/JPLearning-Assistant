@@ -274,7 +274,41 @@ test("quiz nudges the floating tutor for the current question", async ({ page })
   await expect(page.locator(".floating-nudge-card")).toContainText("VAJA đang theo câu 2");
 });
 
+test("zero beginner starts with kana before N5 grammar", async ({ page }) => {
+  await seedAuthenticatedLearner(page, "zero-beginner-user");
+  await mockMvpApi(page, {
+    currentLevel: "ZERO",
+    targetLevel: "N5",
+    dailyStudyMinutes: 10,
+    weakSkills: ["kana"]
+  });
+
+  await page.goto("/learner/study");
+  await expect(page.getByRole("heading", { name: /Pathway số 0/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Bài 1: Hiragana hàng あ/i })).toBeVisible();
+  await expect(page.getByText(/Chương 1: Bảng chữ cái nhập môn/i)).toBeVisible();
+  await expect(page.getByText(/Trọng tâm: bảng chữ/i)).toBeVisible();
+  await expect(page.getByText(/Số 0 → N5/i)).toBeVisible();
+  await expect(page.getByRole("button", { name: /Bài 2: Hiragana hàng か-さ-た/i })).toBeDisabled();
+  await expect(page.getByRole("button", { name: /Bài 4: Giới thiệu bản thân/i })).toBeDisabled();
+
+  await walkThroughCurrentLessonFlashcards(page, 5);
+  await answerKanaLessonOneCorrectly(page);
+  await page.getByRole("button", { name: /Nộp quiz cuối bài/i }).click();
+
+  await expect(page.getByRole("heading", { name: /Qua bài rồi/i })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Bài 2: Hiragana hàng か-さ-た/i })).toBeEnabled();
+  await expect(page.getByRole("button", { name: /Bài 4: Giới thiệu bản thân/i })).toBeDisabled();
+});
+
 const personalizedPathwayCases = [
+  {
+    name: "zero beginner",
+    profile: { currentLevel: "ZERO", targetLevel: "N5", weakSkills: ["kana"], dailyStudyMinutes: 10 },
+    heading: /Pathway số 0/i,
+    lesson: /Bài 1: Hiragana hàng あ/i,
+    focus: /Trọng tâm: bảng chữ/i
+  },
   {
     name: "JLPT",
     profile: { learningPathway: "jlpt_foundation", weakSkills: ["grammar"], dailyStudyMinutes: 20 },
@@ -493,22 +527,34 @@ test("mobile study view shows the active lesson before the full pathway", async 
 });
 
 async function walkThroughLessonOneFlashcards(page: Page, includeBackButton = false) {
+  await walkThroughCurrentLessonFlashcards(page, 4, includeBackButton);
+}
+
+async function walkThroughCurrentLessonFlashcards(page: Page, cardCount: number, includeBackButton = false) {
   await page.getByRole("button", { name: /Học thẻ của bài này/i }).click();
 
   if (includeBackButton) {
     await page.locator(".study-flashcard").click();
     await page.getByRole("button", { name: /Thẻ tiếp theo/i }).click();
-    await expect(page.getByText("Thẻ 2/4", { exact: true })).toBeVisible();
+    await expect(page.getByText(`Thẻ 2/${cardCount}`, { exact: true })).toBeVisible();
     await page.getByRole("button", { name: /Quay lại/i }).click();
-    await expect(page.getByText("Thẻ 1/4", { exact: true })).toBeVisible();
+    await expect(page.getByText(`Thẻ 1/${cardCount}`, { exact: true })).toBeVisible();
   }
 
-  for (let index = 0; index < 4; index += 1) {
+  for (let index = 0; index < cardCount; index += 1) {
     await page.locator(".study-flashcard").click();
     await page
-      .getByRole("button", { name: index < 3 ? /Thẻ tiếp theo/i : /Làm quiz cuối bài/i })
+      .getByRole("button", { name: index < cardCount - 1 ? /Thẻ tiếp theo/i : /Làm quiz cuối bài/i })
       .click();
   }
+}
+
+async function answerKanaLessonOneCorrectly(page: Page) {
+  await page.locator(".study-question").nth(0).getByRole("button", { name: "a", exact: true }).click();
+  await page.locator(".study-question").nth(1).getByRole("button", { name: "i", exact: true }).click();
+  await page.locator(".study-question").nth(2).getByRole("button", { name: "あ い う え お", exact: true }).click();
+  await page.locator(".study-question").nth(3).getByRole("button", { name: "e", exact: true }).click();
+  await page.locator(".study-question").nth(4).getByRole("button", { name: "o", exact: true }).click();
 }
 
 async function answerLessonOneCorrectly(page: Page) {

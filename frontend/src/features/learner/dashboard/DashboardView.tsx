@@ -5,10 +5,12 @@ import { useAuth } from "../../../app/providers/AuthProvider";
 import { apiRequest, ApiError } from "../../../shared/api";
 import { logoUrl } from "../../../shared/assets";
 import { EmptyState, LoadingPanel, Panel, PrimaryButton, TopicChip } from "../../../shared/components";
+import { displayLearningLevel } from "../../../shared/levels";
 import type { LearnerDashboardResponse } from "../../../shared/models";
 import { learningPathwayLabel } from "../../../shared/pathways";
 
 const skillLabels: Record<string, string> = {
+  kana: "Bảng chữ",
   vocabulary: "Từ vựng",
   grammar: "Ngữ pháp",
   kanji: "Kanji",
@@ -51,8 +53,8 @@ export function DashboardView() {
   const masteryPercent = Math.round((dashboard?.progress.averageMasteryScore ?? 0) * 100);
   const dueCards = dashboard?.flashcards.dueCards ?? 0;
   const dailyMinutes = dashboard?.profile.dailyStudyMinutes ?? 15;
-  const currentLevel = dashboard?.profile.currentLevel ?? "N5";
-  const targetLevel = dashboard?.profile.targetLevel ?? "N4";
+  const currentLevel = displayLearningLevel(dashboard?.profile.currentLevel);
+  const targetLevel = displayLearningLevel(dashboard?.profile.targetLevel, "N4");
   const pathwayLabel = learningPathwayLabel(dashboard?.profile.learningPathway);
   const completedSessions = dashboard?.assessments.completedSessions ?? 0;
   const averageScore = Math.round(dashboard?.assessments.averageScorePercent ?? 0);

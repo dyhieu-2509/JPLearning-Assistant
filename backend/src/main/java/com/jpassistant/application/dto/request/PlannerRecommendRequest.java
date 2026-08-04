@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public record PlannerRecommendRequest(
-        @Pattern(regexp = "N[45]", message = "must be N5 or N4 for the MVP scope")
+        @Pattern(regexp = "ZERO|N[45]", message = "must be ZERO, N5 or N4 for the MVP scope")
         String currentLevel,
         @Pattern(regexp = "N[45]", message = "must be N5 or N4 for the MVP scope")
         String targetLevel,

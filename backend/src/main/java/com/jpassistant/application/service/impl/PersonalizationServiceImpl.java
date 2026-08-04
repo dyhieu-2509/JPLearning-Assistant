@@ -63,7 +63,7 @@ public class PersonalizationServiceImpl implements PersonalizationService {
         StudentProfile profile = profileRepository.findByUserId(normalizedUserId)
                 .orElseGet(() -> new StudentProfile(normalizedUserId));
 
-        profile.setCurrentLevel(normalizeLevel(request.currentLevel(), "N5"));
+        profile.setCurrentLevel(normalizeCurrentLevel(request.currentLevel(), "N5"));
         profile.setTargetLevel(normalizeLevel(request.targetLevel(), "N4"));
         profile.setAvatarUrl(optionalText(request.avatarUrl()));
         profile.setGoal(defaultText(request.goal(), "JLPT preparation"));
@@ -219,6 +219,10 @@ public class PersonalizationServiceImpl implements PersonalizationService {
 
     private String normalizeLevel(String level, String defaultLevel) {
         return MvpLearningLevels.normalize(level, defaultLevel);
+    }
+
+    private String normalizeCurrentLevel(String level, String defaultLevel) {
+        return MvpLearningLevels.normalizeProfileCurrentLevel(level, defaultLevel);
     }
 
     private int normalizeLimit(Integer limit) {

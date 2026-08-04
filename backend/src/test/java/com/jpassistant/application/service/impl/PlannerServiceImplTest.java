@@ -3,6 +3,7 @@ package com.jpassistant.application.service.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,6 +31,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.mockito.ArgumentCaptor;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -159,6 +161,55 @@ class PlannerServiceImplTest {
         assertPathwayAnchor("school-user", "school", "Review the next class lesson");
         assertPathwayAnchor("work-user", "work", "Practice one polite work scenario");
         assertPathwayAnchor("reading-user", "reading", "Read one short N5/N4 passage");
+    }
+
+    @Test
+    void recommendStartsZeroBeginnerWithKanaAndCallsAiAsN5() {
+        StudentProfileResponse zeroProfile = new StudentProfileResponse(
+                UUID.randomUUID(),
+                "zero-user",
+                "ZERO",
+                "N5",
+                null,
+                "Start from kana",
+                "jlpt_foundation",
+                20,
+                "concise",
+                true,
+                List.of("kana"),
+                Instant.now(),
+                Instant.now()
+        );
+        when(personalizationService.getOrCreateProfile("zero-user")).thenReturn(zeroProfile);
+        when(personalizationService.getProgress("zero-user", true, 5)).thenReturn(List.of());
+        when(flashcardCardRepository.findByDeckUserIdAndNextReviewAtLessThanEqualOrderByNextReviewAtAsc(
+                eq("zero-user"),
+                any(),
+                any(Pageable.class)
+        )).thenReturn(List.of());
+        when(chatSessionRepository.findByUserIdOrderByUpdatedAtDesc(eq("zero-user"), any(Pageable.class)))
+                .thenReturn(List.of());
+        when(assessmentSessionRepository.findByUserIdAndStatusOrderBySubmittedAtDesc(
+                eq("zero-user"),
+                eq(AssessmentSessionStatus.SUBMITTED),
+                any(Pageable.class)
+        )).thenReturn(List.of());
+        when(aiServiceClient.recommendPlan(any(AiPlannerRequest.class)))
+                .thenReturn(new AiPlannerResponse("N5", "Start from kana", List.of()));
+        when(studyPlanRepository.save(any(StudyPlan.class)))
+                .thenAnswer(invocation -> withPlanIds(invocation.getArgument(0)));
+
+        var response = service.recommend(
+                "zero-user",
+                new PlannerRecommendRequest(null, null, 4, null, null)
+        );
+
+        ArgumentCaptor<AiPlannerRequest> aiRequest = ArgumentCaptor.forClass(AiPlannerRequest.class);
+        verify(aiServiceClient).recommendPlan(aiRequest.capture());
+        assertThat(aiRequest.getValue().currentLevel()).isEqualTo("N5");
+        assertThat(response.level()).isEqualTo("ZERO");
+        assertThat(response.items()).extracting(StudyPlanItemResponse::title)
+                .contains("Learn kana before N5 grammar", "Move one step on the JLPT path");
     }
 
     @Test

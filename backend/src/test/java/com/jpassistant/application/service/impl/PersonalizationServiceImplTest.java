@@ -76,6 +76,31 @@ class PersonalizationServiceImplTest {
     }
 
     @Test
+    void updateProfileAcceptsZeroBeginnerCurrentLevel() {
+        when(profileRepository.findByUserId("zero-user")).thenReturn(Optional.empty());
+        when(profileRepository.save(any(StudentProfile.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        var response = service.updateProfile(
+                "zero-user",
+                new StudentProfileRequest(
+                        "zero",
+                        "n5",
+                        null,
+                        "Start from kana",
+                        "jlpt_foundation",
+                        20,
+                        "step-by-step",
+                        true,
+                        List.of("kana")
+                )
+        );
+
+        assertThat(response.currentLevel()).isEqualTo("ZERO");
+        assertThat(response.targetLevel()).isEqualTo("N5");
+        assertThat(response.weakSkills()).containsExactly("kana");
+    }
+
+    @Test
     void recordReviewUpdatesMasteryAndSchedule() {
         when(progressRepository.findByUserIdAndKnowledgeTypeAndKnowledgeId(
                 "user-1",
