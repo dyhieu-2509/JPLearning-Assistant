@@ -363,7 +363,7 @@ export function StudyView() {
       </section>
 
       <div className="study-path-layout">
-        <Panel className="study-lesson-rail" eyebrow="Pathway" title="Đường học theo chương">
+        <Panel className="study-lesson-rail" eyebrow="Pathway" title="Đường học theo chương" data-tour="study-roadmap">
           <div className="study-lesson-list">
             {chapters.map((chapter, chapterIndex) => {
               const chapterDone = chapter.lessons.filter((item) => progress[item.id]?.passed).length;
@@ -404,6 +404,7 @@ export function StudyView() {
 
         <Panel
           className="study-lesson-stage"
+          data-tour="study-stage"
           eyebrow={`${currentChapter.title} · ${lesson.level} · ${lesson.focus}`}
           title={lesson.title}
           action={<LessonPhaseBadge phase={phase} />}

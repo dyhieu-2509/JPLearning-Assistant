@@ -133,7 +133,11 @@ export function FloatingTutor({ token, contextTopic, suggestions }: FloatingTuto
 
   if (!open) {
     return (
-      <section className={hasUnreadNudge ? "floating-tutor has-nudge" : "floating-tutor"} aria-label="Hỏi VAJA nhanh">
+      <section
+        className={hasUnreadNudge ? "floating-tutor has-nudge" : "floating-tutor"}
+        aria-label="Hỏi VAJA nhanh"
+        data-tour="floating-tutor"
+      >
         <button
           className="floating-tutor-bar"
           type="button"
@@ -155,7 +159,7 @@ export function FloatingTutor({ token, contextTopic, suggestions }: FloatingTuto
   }
 
   return (
-    <section className="floating-tutor open" aria-label="Hỏi VAJA nhanh">
+    <section className="floating-tutor open" aria-label="Hỏi VAJA nhanh" data-tour="floating-tutor">
       <div className="floating-tutor-panel">
         <header className="floating-tutor-header">
           <div>

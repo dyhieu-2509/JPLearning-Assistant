@@ -1,17 +1,20 @@
 import {
+  ArrowLeft,
+  ArrowRight,
   BarChart3,
   Flame,
   ClipboardCheck,
   BookOpenCheck,
   BookOpenText,
+  HelpCircle,
   Layers3,
   LayoutDashboard,
   LogOut,
   Menu,
   X
 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Navigate, NavLink, Outlet, useLocation } from "react-router-dom";
+import { type CSSProperties, useCallback, useEffect, useMemo, useState } from "react";
+import { Navigate, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../providers/AuthProvider";
 import { logoUrl } from "../../shared/assets";
 import { isAdminRole } from "../../shared/auth";
@@ -29,6 +32,79 @@ const navItems = [
   { to: "/learner/assessment", label: "Kiểm tra", icon: ClipboardCheck }
 ];
 
+const navTourTargets: Record<string, string> = {
+  "/learner/study": "nav-study",
+  "/learner/knowledge": "nav-lookup",
+  "/learner/flashcards": "nav-flashcards"
+};
+
+type LearnerTourStep = {
+  target: string;
+  route: string;
+  title: string;
+  body: string;
+};
+
+type TourBox = {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+};
+
+const learnerTourSteps: LearnerTourStep[] = [
+  {
+    target: "today-start",
+    route: "/learner",
+    title: "Bắt đầu ở đây",
+    body: "Người mới chỉ cần bấm nút này. App sẽ đưa bạn vào bài đang mở trong pathway của riêng bạn."
+  },
+  {
+    target: "daily-loop",
+    route: "/learner",
+    title: "Một buổi học có 3 bước",
+    body: "Học ngắn, lật thẻ, rồi làm quiz cuối bài. Đạt từ 85% thì bài tiếp theo mới mở."
+  },
+  {
+    target: "nav-study",
+    route: "/learner",
+    title: "Tab Học là luồng chính",
+    body: "Khi không biết làm gì tiếp, vào Học. Đây là nơi app xếp chương và bài theo câu trả lời mở đầu, điểm quiz và phần bạn hay sai."
+  },
+  {
+    target: "study-stage",
+    route: "/learner/study",
+    title: "Khung giữa là bài hôm nay",
+    body: "Bạn làm theo nút chính trong khung này: học mẫu, học thẻ, làm quiz, rồi xem kết quả."
+  },
+  {
+    target: "study-roadmap",
+    route: "/learner/study",
+    title: "Pathway mở dần theo chương",
+    body: "Bài sáng là học được. Bài khóa cần qua bài trước. Nếu rớt nhiều, VAJA giữ lại để ôn kỹ hơn."
+  },
+  {
+    target: "floating-tutor",
+    route: "/learner/study",
+    title: "Bí thì hỏi VAJA",
+    body: "Bong bóng chat luôn đi theo bạn. Khi vào quiz, VAJA còn báo số 1 và gợi ý đúng câu bạn đang làm."
+  },
+  {
+    target: "nav-flashcards",
+    route: "/learner/study",
+    title: "Thẻ nhớ để ôn thêm",
+    body: "Phần này dùng như kho thẻ riêng: lọc theo cấp, kanji hoặc nhóm từ để ôn ngoài bài chính."
+  },
+  {
+    target: "nav-lookup",
+    route: "/learner/study",
+    title: "Tra cứu khi gặp từ lạ",
+    body: "Tra cứu hoạt động như từ điển ngắn: nghĩa, cách dùng, ví dụ và ngữ cảnh nên dùng."
+  }
+];
+
+const learnerTourSeenPrefix = "vaja.learnerTour.seen.v1";
+
 export type LearnerOutletContext = {
   markOnboardingComplete: () => void;
 };
@@ -36,12 +112,19 @@ export type LearnerOutletContext = {
 export function LearnerLayout() {
   const { accessToken, user, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [checkingProfile, setCheckingProfile] = useState(false);
   const [needsOnboarding, setNeedsOnboarding] = useState(false);
+  const [tourOpen, setTourOpen] = useState(false);
+  const [tourStepIndex, setTourStepIndex] = useState(0);
+  const [tourBox, setTourBox] = useState<TourBox | null>(null);
+  const [tourCardStyle, setTourCardStyle] = useState<CSSProperties>({});
   const onboardingPath = "/learner/onboarding";
   const isOnboardingRoute = location.pathname === onboardingPath;
   const tutorContext = getTutorContext(location.pathname);
+  const tourStep = learnerTourSteps[Math.min(tourStepIndex, learnerTourSteps.length - 1)];
+  const tourStorageKey = `${learnerTourSeenPrefix}.${user?.id ?? "guest"}`;
   const showFloatingTutor =
     Boolean(accessToken) &&
     !checkingProfile &&
@@ -88,6 +171,153 @@ export function LearnerLayout() {
     };
   }, [accessToken]);
 
+  useEffect(() => {
+    if (!showFloatingTutor || hasSeenLearnerTour(tourStorageKey)) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setTourStepIndex(0);
+      setTourOpen(true);
+    }, 650);
+
+    return () => window.clearTimeout(timer);
+  }, [showFloatingTutor, tourStorageKey]);
+
+  useEffect(() => {
+    if (!tourOpen || location.pathname === tourStep.route) {
+      return;
+    }
+    navigate(tourStep.route);
+  }, [location.pathname, navigate, tourOpen, tourStep.route]);
+
+  useEffect(() => {
+    if (!tourOpen) {
+      setTourBox(null);
+      setTourCardStyle({});
+      document.querySelectorAll(".tour-target-active").forEach((element) => {
+        element.classList.remove("tour-target-active");
+      });
+      return;
+    }
+
+    let retryTimer: number | undefined;
+    let measureTimer: number | undefined;
+
+    function placeTour(targetId: string, shouldScroll = false, attempt = 0) {
+      document.querySelectorAll(".tour-target-active").forEach((element) => {
+        element.classList.remove("tour-target-active");
+      });
+
+      const target = document.querySelector<HTMLElement>(`[data-tour="${targetId}"]`);
+      if (!target) {
+        setTourBox(null);
+        setTourCardStyle({
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "min(360px, calc(100vw - 32px))"
+        });
+        if (attempt < 10) {
+          retryTimer = window.setTimeout(() => placeTour(targetId, shouldScroll, attempt + 1), 120);
+        }
+        return;
+      }
+
+      if (shouldScroll) {
+        target.scrollIntoView({ block: "center", inline: "center", behavior: "smooth" });
+      }
+      target.classList.add("tour-target-active");
+
+      if (measureTimer) {
+        window.clearTimeout(measureTimer);
+      }
+      measureTimer = window.setTimeout(() => {
+        const rect = target.getBoundingClientRect();
+        const padding = 10;
+        const nextBox = {
+          top: Math.max(10, rect.top - padding),
+          left: Math.max(10, rect.left - padding),
+          width: Math.min(window.innerWidth - 20, rect.width + padding * 2),
+          height: Math.min(window.innerHeight - 20, rect.height + padding * 2)
+        };
+        setTourBox(nextBox);
+
+        const cardWidth = Math.min(380, window.innerWidth - 32);
+        const belowTop = nextBox.top + nextBox.height + 14;
+        const aboveTop = nextBox.top - 238;
+        const top = belowTop + 224 < window.innerHeight ? belowTop : Math.max(16, aboveTop);
+        const left = clamp(nextBox.left, 16, window.innerWidth - cardWidth - 16);
+        setTourCardStyle({ top, left, width: cardWidth });
+      }, 180);
+    }
+
+    function handleViewportChange() {
+      placeTour(tourStep.target);
+    }
+
+    placeTour(tourStep.target, true);
+    window.addEventListener("resize", handleViewportChange);
+    window.addEventListener("scroll", handleViewportChange, true);
+
+    return () => {
+      if (retryTimer) {
+        window.clearTimeout(retryTimer);
+      }
+      if (measureTimer) {
+        window.clearTimeout(measureTimer);
+      }
+      window.removeEventListener("resize", handleViewportChange);
+      window.removeEventListener("scroll", handleViewportChange, true);
+      document.querySelectorAll(".tour-target-active").forEach((element) => {
+        element.classList.remove("tour-target-active");
+      });
+    };
+  }, [tourOpen, tourStep.target, location.pathname]);
+
+  const closeTour = useCallback(() => {
+    markLearnerTourSeen(tourStorageKey);
+    setTourOpen(false);
+  }, [tourStorageKey]);
+
+  const openTour = useCallback(() => {
+    setTourStepIndex(0);
+    setTourOpen(true);
+  }, []);
+
+  const goToPreviousTourStep = useCallback(() => {
+    setTourStepIndex((current) => Math.max(0, current - 1));
+  }, []);
+
+  const goToNextTourStep = useCallback(() => {
+    if (tourStepIndex >= learnerTourSteps.length - 1) {
+      closeTour();
+      return;
+    }
+    setTourStepIndex((current) => Math.min(learnerTourSteps.length - 1, current + 1));
+  }, [closeTour, tourStepIndex]);
+
+  useEffect(() => {
+    if (!tourOpen) {
+      return;
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        closeTour();
+      }
+      if (event.key === "ArrowLeft") {
+        goToPreviousTourStep();
+      }
+      if (event.key === "ArrowRight") {
+        goToNextTourStep();
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [closeTour, goToNextTourStep, goToPreviousTourStep, tourOpen]);
+
   return (
     <div className="app-shell learner-shell">
       <aside className={`sidebar ${open ? "open" : ""}`}>
@@ -107,6 +337,7 @@ export function LearnerLayout() {
                 to={item.to}
                 end={item.to === "/learner"}
                 className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+                data-tour={navTourTargets[item.to]}
                 onClick={() => setOpen(false)}
               >
                 <Icon size={19} />
@@ -145,9 +376,15 @@ export function LearnerLayout() {
             <p className="eyebrow">VAJA 日本語</p>
             <h1>Học tiếng Nhật cùng VAJA</h1>
           </div>
-          <div className="status-chip">
-            <Flame size={17} />
-            Mỗi ngày một bài nhỏ
+          <div className="topbar-actions">
+            <button className="tour-trigger-button" type="button" onClick={openTour}>
+              <HelpCircle size={17} />
+              Giới thiệu nhanh
+            </button>
+            <div className="status-chip" data-tour="daily-status">
+              <Flame size={17} />
+              Mỗi ngày một bài nhỏ
+            </div>
           </div>
         </header>
         {checkingProfile ? (
@@ -164,9 +401,110 @@ export function LearnerLayout() {
             suggestions={tutorContext.suggestions}
           />
         )}
+        {tourOpen && (
+          <LearnerTourOverlay
+            box={tourBox}
+            cardStyle={tourCardStyle}
+            current={tourStepIndex + 1}
+            step={tourStep}
+            total={learnerTourSteps.length}
+            onBack={goToPreviousTourStep}
+            onClose={closeTour}
+            onNext={goToNextTourStep}
+          />
+        )}
       </div>
     </div>
   );
+}
+
+function LearnerTourOverlay({
+  box,
+  cardStyle,
+  current,
+  step,
+  total,
+  onBack,
+  onClose,
+  onNext
+}: {
+  box: TourBox | null;
+  cardStyle: CSSProperties;
+  current: number;
+  step: LearnerTourStep;
+  total: number;
+  onBack: () => void;
+  onClose: () => void;
+  onNext: () => void;
+}) {
+  const lastStep = current === total;
+
+  return (
+    <div className="learner-tour-layer" role="dialog" aria-modal="true" aria-labelledby="learner-tour-title">
+      <button className="learner-tour-click-catcher" type="button" aria-label="Bỏ qua giới thiệu" onClick={onClose} />
+      {box && (
+        <div
+          className="learner-tour-highlight"
+          style={{
+            top: box.top,
+            left: box.left,
+            width: box.width,
+            height: box.height
+          }}
+        />
+      )}
+      <article className="learner-tour-card" style={cardStyle}>
+        <div className="learner-tour-card-head">
+          <span>{current}/{total}</span>
+          <button className="icon-button" type="button" title="Bỏ qua" onClick={onClose}>
+            <X size={18} />
+          </button>
+        </div>
+        <h2 id="learner-tour-title">{step.title}</h2>
+        <p>{step.body}</p>
+        <div className="learner-tour-progress" aria-hidden="true">
+          {Array.from({ length: total }).map((_, index) => (
+            <span className={index + 1 <= current ? "active" : ""} key={index} />
+          ))}
+        </div>
+        <div className="learner-tour-actions">
+          <button className="learner-tour-skip" type="button" onClick={onClose}>
+            Bỏ qua
+          </button>
+          <div>
+            <button className="icon-text-button ghost" type="button" disabled={current === 1} onClick={onBack}>
+              <ArrowLeft size={16} />
+              Quay lại
+            </button>
+            <button className="primary-button" type="button" onClick={onNext}>
+              {lastStep ? "Xong" : "Tiếp"}
+              {!lastStep && <ArrowRight size={16} />}
+            </button>
+          </div>
+        </div>
+      </article>
+    </div>
+  );
+}
+
+function hasSeenLearnerTour(key: string): boolean {
+  try {
+    return window.localStorage.getItem(key) === "true";
+  } catch {
+    return true;
+  }
+}
+
+function markLearnerTourSeen(key: string) {
+  try {
+    window.localStorage.setItem(key, "true");
+  } catch {
+    // Local storage may be blocked in private contexts; the tour can still close for this session.
+  }
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), max);
 }
 
 function getTutorContext(pathname: string): { topic: string; suggestions: string[] } {

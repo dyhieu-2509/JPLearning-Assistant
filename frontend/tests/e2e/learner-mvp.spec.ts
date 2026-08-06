@@ -119,6 +119,10 @@ type MockMvpOptions = {
   onLearningSignal?: (signal: Record<string, unknown>) => void;
 };
 
+type SeedOptions = {
+  tourSeen?: boolean;
+};
+
 test("learner can start a lesson, review flashcards, pass the quiz, and unlock the next lesson", async ({ page }) => {
   await seedAuthenticatedLearner(page);
   await mockMvpApi(page);
@@ -444,6 +448,57 @@ test("learner can understand the MVP study loop", async ({ page }) => {
   ).toBeVisible();
 });
 
+test("new learner can follow the guided app tour", async ({ page }) => {
+  const userId = "guided-tour-user";
+  await seedAuthenticatedLearner(page, userId, { tourSeen: false });
+  await mockMvpApi(page);
+
+  await page.goto("/learner");
+
+  const tour = page.locator(".learner-tour-card");
+  await expect(tour).toContainText("Bắt đầu ở đây", { timeout: 15000 });
+  await expect(page.locator(".learner-tour-highlight")).toBeVisible();
+  await expect(page.locator('[data-tour="today-start"]')).toHaveClass(/tour-target-active/);
+
+  await tour.getByRole("button", { name: "Tiếp", exact: true }).click();
+  await expect(tour).toContainText("Một buổi học có 3 bước");
+  await expect(page.locator('[data-tour="daily-loop"]')).toHaveClass(/tour-target-active/);
+
+  await tour.getByRole("button", { name: "Tiếp", exact: true }).click();
+  await expect(tour).toContainText("Tab Học là luồng chính");
+  await expect(page.locator('[data-tour="nav-study"]')).toHaveClass(/tour-target-active/);
+
+  await tour.getByRole("button", { name: "Tiếp", exact: true }).click();
+  await expect(page).toHaveURL(/\/learner\/study$/);
+  await expect(tour).toContainText("Khung giữa là bài hôm nay");
+  await expect(page.locator('[data-tour="study-stage"]')).toHaveClass(/tour-target-active/);
+
+  await tour.getByRole("button", { name: "Tiếp", exact: true }).click();
+  await expect(tour).toContainText("Pathway mở dần theo chương");
+  await expect(page.locator('[data-tour="study-roadmap"]')).toHaveClass(/tour-target-active/);
+
+  await tour.getByRole("button", { name: "Tiếp", exact: true }).click();
+  await expect(tour).toContainText("Bí thì hỏi VAJA");
+  await expect(page.locator('[data-tour="floating-tutor"]')).toHaveClass(/tour-target-active/);
+
+  await tour.getByRole("button", { name: "Tiếp", exact: true }).click();
+  await expect(tour).toContainText("Thẻ nhớ để ôn thêm");
+  await expect(page.locator('[data-tour="nav-flashcards"]')).toHaveClass(/tour-target-active/);
+
+  await tour.getByRole("button", { name: "Tiếp", exact: true }).click();
+  await expect(tour).toContainText("Tra cứu khi gặp từ lạ");
+  await expect(page.locator('[data-tour="nav-lookup"]')).toHaveClass(/tour-target-active/);
+
+  await tour.getByRole("button", { name: "Xong", exact: true }).click();
+  await expect(tour).toHaveCount(0);
+  await expect.poll(async () =>
+    page.evaluate((currentUserId) => window.localStorage.getItem(`vaja.learnerTour.seen.v1.${currentUserId}`), userId)
+  ).toBe("true");
+
+  await page.getByRole("button", { name: /Giới thiệu nhanh/i }).click();
+  await expect(page.locator(".learner-tour-card")).toContainText("Bắt đầu ở đây");
+});
+
 test("learner session refreshes access token after a 401", async ({ page }) => {
   await page.addInitScript(() => {
     window.localStorage.setItem(
@@ -625,11 +680,18 @@ async function answerLessonOneIncorrectly(page: Page) {
   await page.getByRole("button", { name: "Tôi ăn cơm", exact: true }).click();
 }
 
-async function seedAuthenticatedLearner(page: Page, userId = "user-1") {
-  await page.addInitScript((seedUserId) => {
+async function seedAuthenticatedLearner(page: Page, userId = "user-1", options: SeedOptions = {}) {
+  await page.addInitScript(({ seedUserId, tourSeen }) => {
     Object.keys(window.localStorage)
-      .filter((key) => key.startsWith("vaja.studyPathProgress") || key.startsWith("vaja.studyFeedback"))
+      .filter((key) =>
+        key.startsWith("vaja.studyPathProgress") ||
+        key.startsWith("vaja.studyFeedback") ||
+        key.startsWith("vaja.learnerTour.seen")
+      )
       .forEach((key) => window.localStorage.removeItem(key));
+    if (tourSeen) {
+      window.localStorage.setItem(`vaja.learnerTour.seen.v1.${seedUserId}`, "true");
+    }
     window.localStorage.setItem(
       "vaja.auth",
       JSON.stringify({
@@ -646,7 +708,7 @@ async function seedAuthenticatedLearner(page: Page, userId = "user-1") {
         }
       })
     );
-  }, userId);
+  }, { seedUserId: userId, tourSeen: options.tourSeen ?? true });
 }
 
 async function mockMvpApi(page: Page, profileOverride: Partial<typeof profile> = {}, options: MockMvpOptions = {}) {

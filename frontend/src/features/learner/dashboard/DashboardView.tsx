@@ -104,10 +104,12 @@ export function DashboardView() {
             <MissionItem icon={<MessageCircle size={18} />} label="Tutor" value="Luôn sẵn" />
           </div>
           <div className="friendly-hero-actions">
-            <PrimaryButton type="button" onClick={() => navigate("/learner/study")}>
-              <BookOpenCheck size={18} />
-              Học bài hôm nay
-            </PrimaryButton>
+            <span className="tour-anchor" data-tour="today-start">
+              <PrimaryButton type="button" onClick={() => navigate("/learner/study")}>
+                <BookOpenCheck size={18} />
+                Học bài hôm nay
+              </PrimaryButton>
+            </span>
             <button className="friendly-secondary-action" type="button" onClick={() => navigate("/learner/flashcards")}>
               Ôn thẻ riêng
             </button>
@@ -148,7 +150,7 @@ export function DashboardView() {
             <h3>Bấm một chỗ để học, ôn thẻ và làm quiz.</h3>
           </div>
         </div>
-        <div className="friendly-step-list" aria-label="Các bước học hôm nay">
+        <div className="friendly-step-list" aria-label="Các bước học hôm nay" data-tour="daily-loop">
           {studySteps.map((step, index) => (
             <button className="friendly-step-row" key={step.label} type="button" onClick={() => navigate(step.to)}>
               <span className="friendly-step-icon">{step.icon}</span>

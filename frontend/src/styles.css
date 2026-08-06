@@ -812,6 +812,34 @@ a {
   font-weight: 900;
 }
 
+.topbar-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.tour-trigger-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--sky-700);
+  font-size: 13px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.tour-trigger-button:hover {
+  border-color: rgba(37, 99, 235, 0.34);
+  background: var(--sky-50);
+}
+
 .admin-eyebrow,
 .admin-status-chip {
   color: var(--blue-950);
@@ -2039,6 +2067,168 @@ progress::-webkit-progress-value {
   color: var(--muted);
   font-size: 12px;
   font-weight: 800;
+}
+
+.tour-anchor {
+  display: inline-flex;
+}
+
+.tour-anchor .primary-button {
+  width: auto;
+}
+
+.learner-tour-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 1190;
+  pointer-events: none;
+}
+
+.learner-tour-click-catcher {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  cursor: default;
+  pointer-events: auto;
+}
+
+.learner-tour-highlight {
+  position: absolute;
+  z-index: 1200;
+  border: 2px solid #ffffff;
+  border-radius: 12px;
+  box-shadow:
+    0 0 0 9999px rgba(7, 12, 24, 0.72),
+    0 0 0 6px rgba(37, 99, 235, 0.2),
+    0 16px 42px rgba(7, 12, 24, 0.28);
+  pointer-events: none;
+  transition:
+    top 180ms ease,
+    left 180ms ease,
+    width 180ms ease,
+    height 180ms ease;
+}
+
+.tour-target-active {
+  position: relative;
+  animation: tour-target-pop 1.3s ease-in-out infinite;
+}
+
+.floating-tutor.tour-target-active {
+  position: fixed;
+  z-index: 32;
+}
+
+@keyframes tour-target-pop {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  45% {
+    transform: translateY(-2px) scale(1.015);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tour-target-active {
+    animation: none;
+  }
+
+  .learner-tour-highlight {
+    transition: none;
+  }
+}
+
+.learner-tour-card {
+  position: absolute;
+  z-index: 1210;
+  display: grid;
+  gap: 12px;
+  max-width: calc(100vw - 32px);
+  padding: 16px;
+  border: 1px solid rgba(217, 226, 238, 0.96);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 24px 70px rgba(7, 12, 24, 0.34);
+  color: var(--ink);
+  pointer-events: auto;
+}
+
+.learner-tour-card-head,
+.learner-tour-actions,
+.learner-tour-actions > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.learner-tour-card-head,
+.learner-tour-actions {
+  justify-content: space-between;
+}
+
+.learner-tour-card-head span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: var(--sky-50);
+  color: var(--sky-700);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.learner-tour-card h2 {
+  margin: 0;
+  color: var(--blue-950);
+  font-size: 20px;
+  line-height: 1.22;
+}
+
+.learner-tour-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.58;
+}
+
+.learner-tour-progress {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.learner-tour-progress span {
+  display: block;
+  height: 5px;
+  border-radius: 999px;
+  background: #dbe5f1;
+}
+
+.learner-tour-progress span.active {
+  background: linear-gradient(90deg, var(--green-600), var(--sky-600));
+}
+
+.learner-tour-actions .primary-button,
+.learner-tour-actions .icon-text-button {
+  width: auto;
+  min-height: 38px;
+  padding: 0 12px;
+  font-size: 13px;
+}
+
+.learner-tour-skip {
+  min-height: 38px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 900;
 }
 
 .floating-nudge-card {
@@ -4077,6 +4267,26 @@ progress::-webkit-progress-value {
 
   .status-chip {
     display: none;
+  }
+
+  .topbar-actions {
+    gap: 8px;
+  }
+
+  .tour-trigger-button {
+    width: 42px;
+    padding: 0;
+    font-size: 0;
+  }
+
+  .learner-tour-card {
+    max-height: calc(100dvh - 32px);
+    overflow: auto;
+  }
+
+  .learner-tour-actions,
+  .learner-tour-actions > div {
+    flex-wrap: wrap;
   }
 
   .dashboard-grid,

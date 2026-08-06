@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { type HTMLAttributes, ReactNode } from "react";
 import { logoUrl } from "./assets";
 
 export function Headbar() {
@@ -29,8 +29,9 @@ export function Panel({
   className = "",
   title,
   eyebrow,
-  action
-}: {
+  action,
+  ...sectionProps
+}: HTMLAttributes<HTMLElement> & {
   children: ReactNode;
   className?: string;
   title?: string;
@@ -38,7 +39,7 @@ export function Panel({
   action?: ReactNode;
 }) {
   return (
-    <section className={`workspace-panel ${className}`.trim()}>
+    <section {...sectionProps} className={`workspace-panel ${className}`.trim()}>
       {(title || eyebrow || action) && (
         <div className="panel-heading">
           <div>
