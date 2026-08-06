@@ -424,7 +424,7 @@ export function StudyView() {
               {phase === "learn" && (
                 <div className="study-learn-step">
                   <div className="study-pattern-card">
-                    <TopicChip>Mẫu chính</TopicChip>
+                    <TopicChip>{lessonPrimaryLabel(lesson)}</TopicChip>
                     <strong>{lesson.pattern}</strong>
                     <p>{lesson.summary}</p>
                   </div>
@@ -652,7 +652,7 @@ export function StudyView() {
           <Panel className="study-support-panel" eyebrow="Công cụ phụ" title="Khi bị kẹt">
             <button type="button" onClick={() => navigate("/learner/knowledge")}>
               <BookOpenCheck size={18} />
-              Tra mẫu câu đang học
+              Tra cứu khi bí
             </button>
             <button type="button" onClick={() => navigate("/learner/flashcards")}>
               <Layers3 size={18} />
@@ -881,12 +881,7 @@ async function recordStudyQuizSignals(
 
 function knowledgeTypeForLesson(lesson: StudyLesson): string {
   const searchable = `${lesson.focus} ${lesson.title}`.toLowerCase();
-  if (
-    searchable.includes("kana") ||
-    searchable.includes("hiragana") ||
-    searchable.includes("katakana") ||
-    searchable.includes("bảng chữ")
-  ) {
+  if (isKanaLesson(lesson)) {
     return "Kana";
   }
   if (searchable.includes("kanji") || searchable.includes("漢字")) {
@@ -896,6 +891,20 @@ function knowledgeTypeForLesson(lesson: StudyLesson): string {
     return "Vocabulary";
   }
   return "GrammarPoint";
+}
+
+function lessonPrimaryLabel(lesson: StudyLesson): string {
+  return isKanaLesson(lesson) ? "Chữ cần nhớ" : "Mẫu chính";
+}
+
+function isKanaLesson(lesson: StudyLesson): boolean {
+  const searchable = `${lesson.focus} ${lesson.title}`.toLowerCase();
+  return (
+    searchable.includes("kana") ||
+    searchable.includes("hiragana") ||
+    searchable.includes("katakana") ||
+    searchable.includes("bảng chữ")
+  );
 }
 
 function relatedFlashcardsForMistakes(lesson: StudyLesson, questions: StudyQuestion[]) {
