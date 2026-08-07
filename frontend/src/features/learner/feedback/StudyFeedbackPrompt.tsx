@@ -104,30 +104,51 @@ export function StudyFeedbackPrompt({
 
       {mode === "tutor" ? (
         <div className="study-feedback-grid">
-          <RatingPicker label="Dễ hiểu" value={clarityRating} onChange={setClarityRating} />
-          <RatingPicker label="Đáng tin" value={trustRating} onChange={setTrustRating} />
+          <RatingPicker
+            hint="1 là khó hiểu, 5 là rất rõ."
+            label="Dễ hiểu"
+            value={clarityRating}
+            onChange={setClarityRating}
+          />
+          <RatingPicker
+            hint="1 là chưa tin, 5 là tin được."
+            label="Đáng tin"
+            value={trustRating}
+            onChange={setTrustRating}
+          />
         </div>
       ) : (
         <>
-          <RatingPicker label="Độ dễ hiểu" value={rating} onChange={setRating} />
-          <div className="study-feedback-choice-row" aria-label="Độ khó bài học">
-            <ChoiceButton active={difficultyFit === "TOO_EASY"} onClick={() => setDifficultyFit("TOO_EASY")}>
-              Quá dễ
-            </ChoiceButton>
-            <ChoiceButton active={difficultyFit === "JUST_RIGHT"} onClick={() => setDifficultyFit("JUST_RIGHT")}>
-              Vừa sức
-            </ChoiceButton>
-            <ChoiceButton active={difficultyFit === "TOO_HARD"} onClick={() => setDifficultyFit("TOO_HARD")}>
-              Hơi khó
-            </ChoiceButton>
+          <RatingPicker
+            hint="1 là khó hiểu, 5 là rất dễ hiểu."
+            label="Độ dễ hiểu"
+            value={rating}
+            onChange={setRating}
+          />
+          <div className="study-feedback-question">
+            <span className="study-feedback-question-title">Độ khó bài học</span>
+            <div className="study-feedback-choice-row" aria-label="Độ khó bài học">
+              <ChoiceButton active={difficultyFit === "TOO_EASY"} onClick={() => setDifficultyFit("TOO_EASY")}>
+                Quá dễ
+              </ChoiceButton>
+              <ChoiceButton active={difficultyFit === "JUST_RIGHT"} onClick={() => setDifficultyFit("JUST_RIGHT")}>
+                Vừa sức
+              </ChoiceButton>
+              <ChoiceButton active={difficultyFit === "TOO_HARD"} onClick={() => setDifficultyFit("TOO_HARD")}>
+                Hơi khó
+              </ChoiceButton>
+            </div>
           </div>
-          <div className="study-feedback-choice-row" aria-label="Mong muốn tiếp theo">
-            <ChoiceButton active={actionChoice === "REVIEW_AGAIN"} onClick={() => setActionChoice("REVIEW_AGAIN")}>
-              Ôn lại
-            </ChoiceButton>
-            <ChoiceButton active={actionChoice === "MOVE_ON"} onClick={() => setActionChoice("MOVE_ON")}>
-              Đi tiếp
-            </ChoiceButton>
+          <div className="study-feedback-question">
+            <span className="study-feedback-question-title">Bạn muốn làm gì tiếp?</span>
+            <div className="study-feedback-choice-row" aria-label="Mong muốn tiếp theo">
+              <ChoiceButton active={actionChoice === "REVIEW_AGAIN"} onClick={() => setActionChoice("REVIEW_AGAIN")}>
+                Ôn lại
+              </ChoiceButton>
+              <ChoiceButton active={actionChoice === "MOVE_ON"} onClick={() => setActionChoice("MOVE_ON")}>
+                Đi tiếp
+              </ChoiceButton>
+            </div>
           </div>
         </>
       )}
@@ -154,18 +175,23 @@ export function StudyFeedbackPrompt({
 }
 
 function RatingPicker({
+  hint,
   label,
   value,
   onChange
 }: {
+  hint: string;
   label: string;
   value: number | null;
   onChange: (value: number) => void;
 }) {
   return (
     <div className="study-feedback-rating">
-      <span>{label}</span>
-      <div>
+      <div className="study-feedback-question-copy">
+        <span className="study-feedback-question-title">{label}</span>
+        <small>{hint}</small>
+      </div>
+      <div className="study-feedback-rating-buttons">
         {ratingValues.map((item) => (
           <button
             className={value === item ? "active" : ""}
@@ -178,6 +204,7 @@ function RatingPicker({
           </button>
         ))}
       </div>
+      <small className="study-feedback-selection">{value ? `Đã chọn ${value}/5` : "Chưa chọn điểm"}</small>
     </div>
   );
 }
