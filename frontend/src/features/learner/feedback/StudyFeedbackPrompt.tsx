@@ -14,6 +14,7 @@ type StudyFeedbackPromptProps = {
   baseFeedback: Pick<StudyFeedbackRequest, "moment" | "contextType" | "contextId" | "contextTitle">;
   defaultActionChoice?: string;
   defaultPaceChoice?: string;
+  onSubmitted?: (feedback: StudyFeedbackRequest) => void;
 };
 
 const ratingValues = [1, 2, 3, 4, 5];
@@ -26,7 +27,8 @@ export function StudyFeedbackPrompt({
   description,
   baseFeedback,
   defaultActionChoice,
-  defaultPaceChoice
+  defaultPaceChoice,
+  onSubmitted
 }: StudyFeedbackPromptProps) {
   const storageKey = `vaja.studyFeedback.${feedbackKey}`;
   const [hidden, setHidden] = useState(() => localStorage.getItem(storageKey) === "done");
@@ -64,19 +66,21 @@ export function StudyFeedbackPrompt({
     setSending(true);
     setError(null);
     try {
+      const feedback: StudyFeedbackRequest = {
+        ...baseFeedback,
+        rating,
+        clarityRating,
+        trustRating,
+        difficultyFit,
+        paceChoice: defaultPaceChoice,
+        actionChoice
+      };
       await apiRequest("/personalization/me/feedback", {
         method: "POST",
         token,
-        body: {
-          ...baseFeedback,
-          rating,
-          clarityRating,
-          trustRating,
-          difficultyFit,
-          paceChoice: defaultPaceChoice,
-          actionChoice
-        }
+        body: feedback
       });
+      onSubmitted?.(feedback);
       localStorage.setItem(storageKey, "done");
       setSent(true);
       window.setTimeout(() => setHidden(true), 900);

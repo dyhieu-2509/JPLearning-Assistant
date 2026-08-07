@@ -153,7 +153,9 @@ public class PersonalizationServiceImpl implements PersonalizationService {
                 optionalText(request.actionChoice()),
                 optionalText(request.comment())
         );
-        return toFeedbackResponse(feedbackRepository.save(feedback));
+        StudyFeedback savedFeedback = feedbackRepository.save(feedback);
+        recordFeedbackProgressSignal(normalizedUserId, savedFeedback);
+        return toFeedbackResponse(savedFeedback);
     }
 
     @Override
@@ -187,6 +189,40 @@ public class PersonalizationServiceImpl implements PersonalizationService {
         if (!allowedResults.contains(result)) {
             throw new InvalidRequestException("result " + result + " is not valid for source " + source);
         }
+    }
+
+    private void recordFeedbackProgressSignal(String userId, StudyFeedback feedback) {
+        if (!isStudyPathFeedback(feedback) || !feedbackNeedsSupport(feedback)) {
+            return;
+        }
+        KnowledgeProgress progress = findOrCreateProgress(
+                userId,
+                "StudyFeedback",
+                feedback.getContextId()
+        );
+        applyItemMetadata(progress, feedback.getContextTitle(), inferFeedbackLevel(feedback));
+        progress.recordLearningSignal(LearningSignalSource.EXPLICIT_FEEDBACK, LearningSignalResult.AGAIN);
+        progressRepository.save(progress);
+    }
+
+    private boolean isStudyPathFeedback(StudyFeedback feedback) {
+        return feedback.getContextType() != null
+                && feedback.getContextType().startsWith("study_")
+                && feedback.getContextId() != null
+                && !feedback.getContextId().isBlank();
+    }
+
+    private boolean feedbackNeedsSupport(StudyFeedback feedback) {
+        return "TOO_HARD".equalsIgnoreCase(feedback.getDifficultyFit())
+                || "REVIEW_AGAIN".equalsIgnoreCase(feedback.getActionChoice())
+                || (feedback.getRating() != null && feedback.getRating() <= 2);
+    }
+
+    private String inferFeedbackLevel(StudyFeedback feedback) {
+        String searchable = ((feedback.getContextId() == null ? "" : feedback.getContextId())
+                + " "
+                + (feedback.getContextTitle() == null ? "" : feedback.getContextTitle())).toUpperCase();
+        return searchable.contains("N4") ? "N4" : "N5";
     }
 
     private KnowledgeProgress findOrCreateProgress(String userId, String knowledgeType, String knowledgeId) {

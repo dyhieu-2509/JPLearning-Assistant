@@ -225,6 +225,7 @@ export type PlannerContextResponse = {
   dueFlashcards: FlashcardCardResponse[];
   recentChatTopics: string[];
   recentAssessment?: AssessmentSummaryResponse | null;
+  recentFeedback?: StudyFeedbackResponse[];
 };
 
 export type PlannerRecommendationResponse = {

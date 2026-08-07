@@ -14,6 +14,7 @@ import com.jpassistant.application.dto.response.PlannerRecommendationResponse;
 import com.jpassistant.application.dto.response.SavedStudyPlanItemResponse;
 import com.jpassistant.application.dto.response.SavedStudyPlanResponse;
 import com.jpassistant.application.dto.response.StudentProfileResponse;
+import com.jpassistant.application.dto.response.StudyFeedbackResponse;
 import com.jpassistant.application.dto.response.StudyPlanItemResponse;
 import com.jpassistant.application.exception.InvalidRequestException;
 import com.jpassistant.application.port.out.AiServiceClient;
@@ -119,6 +120,10 @@ public class PlannerServiceImpl implements PlannerService {
                 .toList();
         List<String> recentChatTopics = recentChatTopics(normalizedUserId);
         AssessmentSummaryResponse recentAssessment = recentAssessment(normalizedUserId);
+        List<StudyFeedbackResponse> recentFeedback = safeList(personalizationService.getStudyFeedback(
+                normalizedUserId,
+                5
+        ));
 
         AiPlannerResponse aiPlan = aiServiceClient.recommendPlan(new AiPlannerRequest(
                 aiPlannerCurrentLevel(currentLevel),
@@ -132,7 +137,8 @@ public class PlannerServiceImpl implements PlannerService {
                 weakProgress,
                 dueCards,
                 recentChatTopics,
-                recentAssessment
+                recentAssessment,
+                recentFeedback
         );
         List<StudyPlanItemResponse> items = personalizeItems(
                 aiPlan.items(),
@@ -254,6 +260,10 @@ public class PlannerServiceImpl implements PlannerService {
                     Math.max(0.5, roundOneDecimal(weeklyStudyHours * 0.2))
             ));
         }
+        StudyPlanItemResponse feedbackItem = feedbackAdjustmentItem(context.recentFeedback(), weeklyStudyHours);
+        if (feedbackItem != null) {
+            items.add(feedbackItem);
+        }
         if (MvpLearningLevels.isZeroBeginner(context.profile().currentLevel())) {
             items.add(new StudyPlanItemResponse(
                     0,
@@ -334,6 +344,57 @@ public class PlannerServiceImpl implements PlannerService {
                     estimatedHours
             );
         };
+    }
+
+    private StudyPlanItemResponse feedbackAdjustmentItem(
+            List<StudyFeedbackResponse> recentFeedback,
+            int weeklyStudyHours
+    ) {
+        if (recentFeedback == null || recentFeedback.isEmpty()) {
+            return null;
+        }
+        StudyFeedbackResponse latestStudyFeedback = recentFeedback.stream()
+                .filter(this::isStudyFeedback)
+                .findFirst()
+                .orElse(null);
+        if (latestStudyFeedback == null) {
+            return null;
+        }
+        double estimatedHours = Math.max(0.5, roundOneDecimal(weeklyStudyHours * 0.15));
+        if (feedbackNeedsSupport(latestStudyFeedback)) {
+            return new StudyPlanItemResponse(
+                    0,
+                    "Slow down from learner feedback",
+                    "The learner marked the recent lesson as hard or asked to review again. Add a short repair loop before new material.",
+                    estimatedHours
+            );
+        }
+        if (feedbackAllowsFasterPace(latestStudyFeedback)) {
+            return new StudyPlanItemResponse(
+                    0,
+                    "Speed up from learner feedback",
+                    "The learner marked the recent lesson as easy enough. Keep one normal review, then open the next lesson sooner.",
+                    estimatedHours
+            );
+        }
+        return null;
+    }
+
+    private boolean isStudyFeedback(StudyFeedbackResponse feedback) {
+        return feedback.contextType() != null && feedback.contextType().startsWith("study_");
+    }
+
+    private boolean feedbackNeedsSupport(StudyFeedbackResponse feedback) {
+        return "TOO_HARD".equalsIgnoreCase(feedback.difficultyFit())
+                || "REVIEW_AGAIN".equalsIgnoreCase(feedback.actionChoice())
+                || (feedback.rating() != null && feedback.rating() <= 2);
+    }
+
+    private boolean feedbackAllowsFasterPace(StudyFeedbackResponse feedback) {
+        return "TOO_EASY".equalsIgnoreCase(feedback.difficultyFit())
+                || ("MOVE_ON".equalsIgnoreCase(feedback.actionChoice())
+                && feedback.rating() != null
+                && feedback.rating() >= 4);
     }
 
     private String aiPlannerCurrentLevel(String currentLevel) {
@@ -460,6 +521,10 @@ public class PlannerServiceImpl implements PlannerService {
         if (topic != null && !topic.isBlank() && topics.size() < RECENT_CHAT_LIMIT) {
             topics.add(topic.trim());
         }
+    }
+
+    private <T> List<T> safeList(List<T> values) {
+        return values == null ? List.of() : values;
     }
 
     private int normalizeWeeklyHours(Integer requestedHours, int dailyStudyMinutes) {

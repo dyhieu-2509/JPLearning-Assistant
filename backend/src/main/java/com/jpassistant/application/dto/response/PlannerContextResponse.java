@@ -7,6 +7,7 @@ public record PlannerContextResponse(
         List<KnowledgeProgressResponse> weakProgress,
         List<FlashcardCardResponse> dueFlashcards,
         List<String> recentChatTopics,
-        AssessmentSummaryResponse recentAssessment
+        AssessmentSummaryResponse recentAssessment,
+        List<StudyFeedbackResponse> recentFeedback
 ) {
 }

@@ -12,6 +12,7 @@ import com.jpassistant.application.dto.request.PlannerRecommendRequest;
 import com.jpassistant.application.dto.response.AiPlannerResponse;
 import com.jpassistant.application.dto.response.KnowledgeProgressResponse;
 import com.jpassistant.application.dto.response.StudentProfileResponse;
+import com.jpassistant.application.dto.response.StudyFeedbackResponse;
 import com.jpassistant.application.dto.response.StudyPlanItemResponse;
 import com.jpassistant.application.port.out.AiServiceClient;
 import com.jpassistant.application.service.PersonalizationService;
@@ -22,6 +23,7 @@ import com.jpassistant.domain.flashcard.FlashcardCard;
 import com.jpassistant.domain.flashcard.FlashcardDeck;
 import com.jpassistant.domain.planner.StudyPlan;
 import com.jpassistant.domain.planner.StudyPlanItem;
+import com.jpassistant.domain.personalization.StudyFeedbackMoment;
 import com.jpassistant.infrastructure.persistence.jpa.AssessmentSessionJpaRepository;
 import com.jpassistant.infrastructure.persistence.jpa.ChatSessionJpaRepository;
 import com.jpassistant.infrastructure.persistence.jpa.FlashcardCardJpaRepository;
@@ -210,6 +212,57 @@ class PlannerServiceImplTest {
         assertThat(response.level()).isEqualTo("ZERO");
         assertThat(response.items()).extracting(StudyPlanItemResponse::title)
                 .contains("Learn kana before N5 grammar", "Move one step on the JLPT path");
+    }
+
+    @Test
+    void recommendAdjustsPaceFromRecentStudyFeedback() {
+        StudentProfileResponse profile = profile("feedback-user", "jlpt_foundation");
+        when(personalizationService.getOrCreateProfile("feedback-user")).thenReturn(profile);
+        when(personalizationService.getProgress("feedback-user", true, 5)).thenReturn(List.of());
+        when(personalizationService.getStudyFeedback("feedback-user", 5)).thenReturn(List.of(
+                new StudyFeedbackResponse(
+                        UUID.randomUUID(),
+                        "feedback-user",
+                        StudyFeedbackMoment.QUIZ,
+                        "study_lesson",
+                        "n5-desu-wa",
+                        "Bai 1",
+                        2,
+                        null,
+                        null,
+                        "TOO_HARD",
+                        "STEADY",
+                        "REVIEW_AGAIN",
+                        null,
+                        Instant.now()
+                )
+        ));
+        when(flashcardCardRepository.findByDeckUserIdAndNextReviewAtLessThanEqualOrderByNextReviewAtAsc(
+                eq("feedback-user"),
+                any(),
+                any(Pageable.class)
+        )).thenReturn(List.of());
+        when(chatSessionRepository.findByUserIdOrderByUpdatedAtDesc(eq("feedback-user"), any(Pageable.class)))
+                .thenReturn(List.of());
+        when(assessmentSessionRepository.findByUserIdAndStatusOrderBySubmittedAtDesc(
+                eq("feedback-user"),
+                eq(AssessmentSessionStatus.SUBMITTED),
+                any(Pageable.class)
+        )).thenReturn(List.of());
+        when(aiServiceClient.recommendPlan(any(AiPlannerRequest.class)))
+                .thenReturn(new AiPlannerResponse("N5", "Goal", List.of()));
+        when(studyPlanRepository.save(any(StudyPlan.class)))
+                .thenAnswer(invocation -> withPlanIds(invocation.getArgument(0)));
+
+        var response = service.recommend(
+                "feedback-user",
+                new PlannerRecommendRequest(null, null, 5, null, null)
+        );
+
+        assertThat(response.context().recentFeedback()).hasSize(1);
+        assertThat(response.items()).extracting(StudyPlanItemResponse::title)
+                .contains("Slow down from learner feedback", "Move one step on the JLPT path");
+        assertThat(response.items().get(0).title()).isEqualTo("Slow down from learner feedback");
     }
 
     @Test

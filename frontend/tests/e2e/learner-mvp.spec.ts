@@ -231,6 +231,26 @@ test("study pilot feedback captures user-test signal after a lesson result", asy
   });
 });
 
+test("study feedback changes the current adaptive pace", async ({ page }) => {
+  await seedAuthenticatedLearner(page, "adaptive-feedback-user");
+  await mockMvpApi(page);
+
+  await page.goto("/learner/study");
+  await walkThroughLessonOneFlashcards(page);
+  await answerLessonOneCorrectly(page);
+  await page.getByRole("button", { name: /Nộp quiz cuối bài/i }).click();
+  await expect(page.locator(".study-adaptive-card.fast")).toContainText("Nhịp nhanh");
+
+  const feedbackPanel = page.locator(".study-feedback");
+  await feedbackPanel.getByRole("button", { name: /Độ dễ hiểu 2/i }).click();
+  await feedbackPanel.getByRole("button", { name: "Hơi khó", exact: true }).click();
+  await feedbackPanel.getByRole("button", { name: "Ôn lại", exact: true }).click();
+  await feedbackPanel.getByRole("button", { name: "Gửi", exact: true }).click();
+
+  await expect(page.locator(".study-adaptive-card.support")).toContainText("Nhịp củng cố");
+  await expect(page.locator(".study-adaptive-card.support")).toContainText(/vừa báo bài này hơi khó/i);
+});
+
 test("learner can open supporting tools from the guided study path", async ({ page }) => {
   await seedAuthenticatedLearner(page);
   await mockMvpApi(page);
@@ -383,6 +403,13 @@ const personalizedPathwayCases = [
     heading: /Pathway đọc hiểu/i,
     lesson: /Bài 1: Đọc đoạn ngắn N5/i,
     focus: /Trọng tâm: kanji, đọc/i
+  },
+  {
+    name: "N5 kana review without zero reset",
+    profile: { currentLevel: "N5", learningPathway: "conversation", weakSkills: ["kana", "speaking"], dailyStudyMinutes: 25 },
+    heading: /Pathway giao tiếp/i,
+    lesson: /Bài 1: Chào hỏi hằng ngày/i,
+    focus: /Trọng tâm: bảng chữ, nói/i
   }
 ];
 
@@ -397,6 +424,21 @@ for (const scenario of personalizedPathwayCases) {
     await expect(page.getByText(scenario.focus)).toBeVisible();
   });
 }
+
+test("same JLPT pathway changes early support lessons by weak skill", async ({ page }) => {
+  await seedAuthenticatedLearner(page, "jlpt-grammar-support-user");
+  await mockMvpApi(page, {
+    learningPathway: "jlpt_foundation",
+    weakSkills: ["grammar"],
+    dailyStudyMinutes: 20
+  });
+
+  await page.goto("/learner/study");
+  await expect(page.getByRole("heading", { name: /Pathway JLPT/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Bài 1: Giới thiệu bản thân/i })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Bài 2: Làm ở đâu, vào lúc nào/i })).toBeDisabled();
+  await expect(page.getByRole("button", { name: /Bài 3: Thời gian và tần suất/i })).toBeDisabled();
+});
 
 test("learner can understand the MVP study loop", async ({ page }) => {
   await seedAuthenticatedLearner(page);

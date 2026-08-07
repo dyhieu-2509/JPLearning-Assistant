@@ -659,9 +659,10 @@ export function buildStudyChapters(profile?: StudyProfile | null): StudyChapter[
   const pathway = normalizePathway(profile?.learningPathway);
   const wantsN4 = wantsN4Bridge(profile);
   const entryLesson = pathwayEntryLessons[pathway] ?? pathwayEntryLessons.jlpt_foundation;
-  const corePathChapters = pathway === "jlpt_foundation"
-    ? coreChapters
-    : [buildPersonalizedEntryChapter(pathway, entryLesson), ...coreChapters];
+  const corePathChapters = [
+    buildPersonalizedEntryChapter(pathway, entryLesson, profile),
+    ...coreChapters
+  ];
   const selectedChapters = isZeroBeginner(profile)
     ? [kanaFoundationChapter, ...corePathChapters]
     : corePathChapters;
@@ -679,10 +680,11 @@ export function flattenStudyChapters(chapters: StudyChapter[]): StudyLesson[] {
 
 export function studyPathwayIntro(profile?: StudyProfile | null): StudyPathwayIntro {
   if (isZeroBeginner(profile)) {
+    const nextPathway = pathwayIntros[normalizePathway(profile?.learningPathway)] ?? pathwayIntros.jlpt_foundation;
     return {
-      label: "Số 0 đến N5",
-      title: "Pathway số 0: học bảng chữ trước, rồi mới vào N5.",
-      description: "VAJA mở đầu bằng hiragana và katakana. Khi đọc được kana cơ bản, bạn mới sang mẫu câu N5 theo pathway đã chọn."
+      label: `Số 0 → ${nextPathway.label}`,
+      title: "Pathway số 0: học bảng chữ trước, rồi vào pathway đã chọn.",
+      description: `VAJA mở đầu bằng hiragana và katakana. Sau phần chữ cái, bạn sẽ đi tiếp theo ${nextPathway.label.toLowerCase()}.`
     };
   }
   return pathwayIntros[normalizePathway(profile?.learningPathway)] ?? pathwayIntros.jlpt_foundation;
@@ -693,17 +695,86 @@ export function weakSkillSummary(profile?: StudyProfile | null): string {
   return weakSkills.slice(0, 3).map(weakSkillLabel).join(", ");
 }
 
-function buildPersonalizedEntryChapter(pathway: string, entryLesson: StudyLesson): StudyChapter {
-  const secondLesson = pathway === "reading" ? n5KanjiDays : n5DesuWa;
-  const thirdLesson = pathway === "work" ? n4Nakereba : n5OE;
+function buildPersonalizedEntryChapter(
+  pathway: string,
+  entryLesson: StudyLesson,
+  profile?: StudyProfile | null
+): StudyChapter {
+  const weakLessons = lessonsForWeakSkills(profile?.weakSkills, isZeroBeginner(profile));
+  const fallbackLessons = pathway === "reading"
+    ? [n5KanjiDays, n5DesuWa, n5OE]
+    : pathway === "work"
+      ? [n4Nakereba, n5DesuWa, n5OE]
+      : [n5DesuWa, n5OE, n5Classroom];
+  const lessonCandidates = [entryLesson, ...weakLessons, ...fallbackLessons];
+  const lessons = uniqueLessons(lessonCandidates).slice(0, 3);
+  const usesDefaultCoreOpening = lessons.map((lesson) => lesson.id).join("|") === "n5-desu-wa|n5-o-e|n5-classroom";
   return {
     id: `${pathway}-entry`,
-    title: "Khởi động cá nhân",
-    level: entryLesson.level,
-    focus: entryLesson.focus,
-    description: "Chương đầu được đổi theo câu trả lời onboarding để người học vào đúng nhu cầu trước.",
-    lessons: [entryLesson, secondLesson, thirdLesson]
+    title: usesDefaultCoreOpening ? "Câu nền tảng N5" : "Khởi động cá nhân",
+    level: lessons[0]?.level ?? entryLesson.level,
+    focus: chapterFocus(lessons, entryLesson.focus),
+    description: usesDefaultCoreOpening
+      ? "Chương mở đầu giúp người học nói câu đơn giản và không bị lạc trong lớp."
+      : "Chương đầu được đổi theo câu trả lời onboarding để người học vào đúng nhu cầu trước.",
+    lessons
   };
+}
+
+function lessonsForWeakSkills(weakSkills?: string[], skipKana = false): StudyLesson[] {
+  const lessons: StudyLesson[] = [];
+  for (const skill of weakSkills ?? []) {
+    const normalized = skill.trim().toLowerCase();
+    if (isKanaSkill(normalized)) {
+      if (skipKana) {
+        continue;
+      }
+      lessons.push(kanaKatakanaEntry, n5DesuWa);
+      continue;
+    }
+    if (normalized === "grammar") {
+      lessons.push(n5DesuWa, n5DeNi, n5TimeFrequency, n5VerbsMasu);
+      continue;
+    }
+    if (normalized === "vocabulary") {
+      lessons.push(n5OE, n5Classroom, n5Adjectives);
+      continue;
+    }
+    if (normalized === "kanji") {
+      lessons.push(n5KanjiDays, n5ReadingShort, n5CountersMoney);
+      continue;
+    }
+    if (normalized === "reading") {
+      lessons.push(n5ReadingShort, n5KanjiDays, n5MockReview);
+      continue;
+    }
+    if (normalized === "listening") {
+      lessons.push(n5ListeningCues, conversationEntry, n5Classroom);
+      continue;
+    }
+    if (normalized === "speaking") {
+      lessons.push(conversationEntry, n5Classroom, n5Requests);
+    }
+  }
+  return lessons;
+}
+
+function uniqueLessons(lessons: StudyLesson[]): StudyLesson[] {
+  const seen = new Set<string>();
+  return lessons.filter((lesson) => {
+    if (seen.has(lesson.id)) {
+      return false;
+    }
+    seen.add(lesson.id);
+    return true;
+  });
+}
+
+function chapterFocus(lessons: StudyLesson[], fallback: string): string {
+  const focusParts = uniqueLessons(lessons)
+    .map((lesson) => lesson.focus)
+    .filter(Boolean);
+  return focusParts.slice(0, 3).join(", ") || fallback;
 }
 
 function removeDuplicateLessons(chapters: StudyChapter[]): StudyChapter[] {
@@ -742,8 +813,7 @@ function wantsN4Bridge(profile?: StudyProfile | null): boolean {
 
 function isZeroBeginner(profile?: StudyProfile | null): boolean {
   const currentLevel = (profile?.currentLevel ?? "").trim().toUpperCase();
-  const weakSkills = profile?.weakSkills ?? [];
-  return currentLevel === "ZERO" || currentLevel === "N0" || weakSkills.some(isKanaSkill);
+  return currentLevel === "ZERO" || currentLevel === "N0";
 }
 
 function isKanaSkill(skill: string): boolean {

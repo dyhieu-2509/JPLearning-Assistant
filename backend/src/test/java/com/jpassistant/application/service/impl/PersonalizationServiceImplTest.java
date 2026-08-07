@@ -25,6 +25,7 @@ import com.jpassistant.infrastructure.persistence.jpa.StudentProfileJpaRepositor
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 class PersonalizationServiceImplTest {
 
@@ -231,7 +232,47 @@ class PersonalizationServiceImplTest {
     }
 
     @Test
-    void recordStudyFeedbackDoesNotMutateMasteryProgress() {
+    void recordStudyFeedbackCreatesExplicitWeakSignalWhenLearnerRequestsReview() {
+        when(feedbackRepository.save(any(StudyFeedback.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(progressRepository.findByUserIdAndKnowledgeTypeAndKnowledgeId(
+                "user-1",
+                "StudyFeedback",
+                "n5-desu-wa"
+        )).thenReturn(Optional.empty());
+        when(progressRepository.save(any(KnowledgeProgress.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        service.recordStudyFeedback(
+                "user-1",
+                new StudyFeedbackRequest(
+                        StudyFeedbackMoment.QUIZ,
+                        "study_lesson",
+                        "n5-desu-wa",
+                        "Bai 1",
+                        2,
+                        null,
+                        null,
+                        "TOO_HARD",
+                        "STEADY",
+                        "REVIEW_AGAIN",
+                        null
+                )
+        );
+
+        ArgumentCaptor<KnowledgeProgress> progressCaptor = ArgumentCaptor.forClass(KnowledgeProgress.class);
+        verify(progressRepository).save(progressCaptor.capture());
+        KnowledgeProgress savedProgress = progressCaptor.getValue();
+        assertThat(savedProgress.getUserId()).isEqualTo("user-1");
+        assertThat(savedProgress.getKnowledgeType()).isEqualTo("StudyFeedback");
+        assertThat(savedProgress.getKnowledgeId()).isEqualTo("n5-desu-wa");
+        assertThat(savedProgress.getTitle()).isEqualTo("Bai 1");
+        assertThat(savedProgress.getLevel()).isEqualTo("N5");
+        assertThat(savedProgress.getWrongCount()).isEqualTo(1);
+        assertThat(savedProgress.getCorrectCount()).isZero();
+        assertThat(savedProgress.getMasteryScore()).isZero();
+    }
+
+    @Test
+    void recordStudyFeedbackDoesNotCreateWeakSignalForPositiveFeedback() {
         when(feedbackRepository.save(any(StudyFeedback.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         service.recordStudyFeedback(

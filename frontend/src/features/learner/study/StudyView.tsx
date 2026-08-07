@@ -19,7 +19,7 @@ import { useAuth } from "../../../app/providers/AuthProvider";
 import { apiRequest, ApiError } from "../../../shared/api";
 import { IconTextButton, LoadingPanel, Panel, PrimaryButton, TopicChip } from "../../../shared/components";
 import { displayLearningLevel } from "../../../shared/levels";
-import type { ChatResponse, StudentProfileResponse } from "../../../shared/models";
+import type { ChatResponse, StudentProfileResponse, StudyFeedbackRequest } from "../../../shared/models";
 import { StudyFeedbackPrompt } from "../feedback/StudyFeedbackPrompt";
 import {
   buildStudyChapters,
@@ -44,6 +44,13 @@ type LessonProgress = {
   lastScore?: number;
   recentScores?: number[];
   completedAt?: string;
+  feedbackDifficultyFit?: string | null;
+  feedbackActionChoice?: string | null;
+  feedbackPaceChoice?: string | null;
+  feedbackRating?: number | null;
+  feedbackSupportCount?: number;
+  feedbackFastCount?: number;
+  feedbackUpdatedAt?: string;
 };
 
 type StudyProgress = Record<string, LessonProgress>;
@@ -308,6 +315,10 @@ export function StudyView() {
       };
     });
     setPhase("result");
+  }
+
+  function applySubmittedFeedback(feedback: StudyFeedbackRequest) {
+    setProgress((current) => applyFeedbackToProgress(current, lesson, currentScore, feedback));
   }
 
   function reviewMistakes() {
@@ -632,6 +643,7 @@ export function StudyView() {
                       }}
                       defaultActionChoice={currentScore >= passThreshold ? "MOVE_ON" : "REVIEW_AGAIN"}
                       defaultPaceChoice={adaptiveState.pace.toUpperCase()}
+                      onSubmitted={applySubmittedFeedback}
                     />
                   )}
                   <div className="study-action-row">
@@ -904,6 +916,48 @@ async function recordStudyQuizSignals(
   );
 }
 
+function applyFeedbackToProgress(
+  progress: StudyProgress,
+  lesson: StudyLesson,
+  score: number,
+  feedback: StudyFeedbackRequest
+): StudyProgress {
+  const previous = progress[lesson.id];
+  const support = feedbackSuggestsSupport(feedback);
+  const fast = feedbackSuggestsFast(feedback);
+  return {
+    ...progress,
+    [lesson.id]: {
+      bestScore: Math.max(previous?.bestScore ?? 0, score),
+      passed: Boolean(previous?.passed || score >= passThreshold),
+      attempts: previous?.attempts ?? 0,
+      failCount: previous?.failCount ?? 0,
+      lastScore: previous?.lastScore ?? score,
+      recentScores: previous?.recentScores,
+      completedAt: previous?.completedAt,
+      feedbackDifficultyFit: feedback.difficultyFit ?? null,
+      feedbackActionChoice: feedback.actionChoice ?? null,
+      feedbackPaceChoice: feedback.paceChoice ?? null,
+      feedbackRating: feedback.rating ?? null,
+      feedbackSupportCount: (previous?.feedbackSupportCount ?? 0) + (support ? 1 : 0),
+      feedbackFastCount: (previous?.feedbackFastCount ?? 0) + (fast ? 1 : 0),
+      feedbackUpdatedAt: new Date().toISOString()
+    }
+  };
+}
+
+function feedbackSuggestsSupport(feedback: StudyFeedbackRequest): boolean {
+  const difficulty = feedback.difficultyFit?.toUpperCase();
+  const action = feedback.actionChoice?.toUpperCase();
+  return difficulty === "TOO_HARD" || action === "REVIEW_AGAIN" || (feedback.rating ?? 5) <= 2;
+}
+
+function feedbackSuggestsFast(feedback: StudyFeedbackRequest): boolean {
+  const difficulty = feedback.difficultyFit?.toUpperCase();
+  const action = feedback.actionChoice?.toUpperCase();
+  return difficulty === "TOO_EASY" || (action === "MOVE_ON" && (feedback.rating ?? 0) >= 4);
+}
+
 function knowledgeTypeForLesson(lesson: StudyLesson): string {
   const searchable = `${lesson.focus} ${lesson.title}`.toLowerCase();
   if (isKanaLesson(lesson)) {
@@ -982,22 +1036,28 @@ function getAdaptiveState(
   const minutes = profile?.dailyStudyMinutes ?? 30;
   const strongCurrentScore = (lessonProgress?.lastScore ?? lessonProgress?.bestScore ?? 0) >= 95;
   const strongRecentScores = recentScores.length >= 2 && recentScores.every((score) => score >= 90);
+  const feedbackSupportCount = lessonProgress?.feedbackSupportCount ?? 0;
+  const feedbackFastCount = lessonProgress?.feedbackFastCount ?? 0;
 
-  if (currentFailCount >= 2 || (!lessonProgress?.passed && (lessonProgress?.lastScore ?? 100) < 60)) {
+  if (feedbackSupportCount > 0 || currentFailCount >= 2 || (!lessonProgress?.passed && (lessonProgress?.lastScore ?? 100) < 60)) {
     return {
       pace: "support",
       label: "Nhịp củng cố",
-      summary: "Bạn đang rớt hoặc sai nhiều ở bài này, nên VAJA giữ nhịp chậm lại.",
+      summary: feedbackSupportCount > 0
+        ? "Bạn vừa báo bài này hơi khó hoặc muốn ôn lại, nên VAJA giữ nhịp chậm lại."
+        : "Bạn đang rớt hoặc sai nhiều ở bài này, nên VAJA giữ nhịp chậm lại.",
       target: "Mục tiêu hôm nay: 1 bài, ôn thẻ kỹ rồi làm lại quiz.",
       detail: "Khi điểm ổn hơn, pathway tự mở bài tiếp theo. Nếu tiếp tục rớt, app vẫn giữ bạn ở chương hiện tại để tránh hổng nền."
     };
   }
 
-  if (strongCurrentScore || strongRecentScores || (minutes >= 45 && recentAverage >= passThreshold)) {
+  if ((feedbackFastCount > 0 && lessonProgress?.passed) || strongCurrentScore || strongRecentScores || (minutes >= 45 && recentAverage >= passThreshold)) {
     return {
       pace: "fast",
       label: "Nhịp nhanh",
-      summary: "Bạn đang qua bài khá chắc, VAJA có thể đẩy nhanh tiến độ.",
+      summary: feedbackFastCount > 0
+        ? "Bạn vừa báo bài này dễ hoặc muốn đi tiếp, nên VAJA có thể đẩy nhanh tiến độ."
+        : "Bạn đang qua bài khá chắc, VAJA có thể đẩy nhanh tiến độ.",
       target: `Mục tiêu hôm nay: ${minutes >= 60 ? "2-3" : "2"} bài nếu vẫn giữ điểm từ ${passThreshold}%.`,
       detail: "Nếu điểm giảm, nhịp học sẽ tự quay về ổn định hoặc củng cố. Pathway không ép bạn chạy nhanh mãi."
     };
