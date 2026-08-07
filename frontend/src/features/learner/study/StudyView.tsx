@@ -468,6 +468,18 @@ export function StudyView() {
                     <span>{lesson.example}</span>
                     <small>{lesson.translation}</small>
                   </div>
+                  {lesson.practiceTasks?.length ? (
+                    <div className="study-practice-grid" aria-label="Bài tập cá nhân theo pathway">
+                      {lesson.practiceTasks.map((task) => (
+                        <article className="study-practice-card" key={task.id}>
+                          <TopicChip>{task.label}</TopicChip>
+                          <strong>{task.title}</strong>
+                          <p>{task.prompt}</p>
+                          <small>{task.exampleAnswer}</small>
+                        </article>
+                      ))}
+                    </div>
+                  ) : null}
                   <div className="study-tutor-brief">
                     <Lightbulb size={20} />
                     <span>

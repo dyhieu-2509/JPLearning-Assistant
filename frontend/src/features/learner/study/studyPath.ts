@@ -12,6 +12,14 @@ export type StudyQuestion = {
   explanation: string;
 };
 
+export type StudyPracticeTask = {
+  id: string;
+  label: string;
+  title: string;
+  prompt: string;
+  exampleAnswer: string;
+};
+
 export type StudyLesson = {
   id: string;
   level: "N5" | "N4";
@@ -23,6 +31,7 @@ export type StudyLesson = {
   translation: string;
   flashcards: StudyFlashcard[];
   questions: StudyQuestion[];
+  practiceTasks?: StudyPracticeTask[];
 };
 
 export type StudyChapter = {
@@ -667,7 +676,7 @@ export function buildStudyChapters(profile?: StudyProfile | null): StudyChapter[
     ? [kanaFoundationChapter, ...corePathChapters]
     : corePathChapters;
   const withBridge = wantsN4 ? [...selectedChapters, n4BridgeChapter] : selectedChapters;
-  return renumberChapters(removeDuplicateLessons(withBridge));
+  return personalizeChapters(renumberChapters(removeDuplicateLessons(withBridge)), profile, pathway);
 }
 
 export function buildStudyLessons(profile?: StudyProfile | null): StudyLesson[] {
@@ -775,6 +784,222 @@ function chapterFocus(lessons: StudyLesson[], fallback: string): string {
     .map((lesson) => lesson.focus)
     .filter(Boolean);
   return focusParts.slice(0, 3).join(", ") || fallback;
+}
+
+function personalizeChapters(
+  chapters: StudyChapter[],
+  profile: StudyProfile | null | undefined,
+  pathway: string
+): StudyChapter[] {
+  return chapters.map((chapter, chapterIndex) => ({
+    ...chapter,
+    lessons: chapter.lessons.map((lesson, lessonIndex) =>
+      personalizeLesson(lesson, profile, pathway, chapterIndex, lessonIndex)
+    )
+  }));
+}
+
+function personalizeLesson(
+  lesson: StudyLesson,
+  profile: StudyProfile | null | undefined,
+  pathway: string,
+  chapterIndex: number,
+  lessonIndex: number
+): StudyLesson {
+  const weakSkills = normalizedWeakSkills(profile?.weakSkills);
+  const taskLimit = practiceTaskLimit(profile?.dailyStudyMinutes);
+  const tasks = uniquePracticeTasks([
+    pathwayPracticeTask(pathway, lesson, lessonIndex),
+    ...weakSkills.flatMap((skill) => weakSkillPracticeTasks(skill, lesson)),
+    timePracticeTask(profile?.dailyStudyMinutes, lesson),
+    chapterPracticeTask(chapterIndex, lesson)
+  ]).slice(0, taskLimit);
+
+  return {
+    ...lesson,
+    practiceTasks: tasks
+  };
+}
+
+function pathwayPracticeTask(pathway: string, lesson: StudyLesson, lessonIndex: number): StudyPracticeTask {
+  const firstCard = lesson.flashcards[0];
+  switch (pathway) {
+    case "conversation":
+      return {
+        id: `${lesson.id}-practice-conversation`,
+        label: "Giao tiếp",
+        title: "Đóng vai hội thoại 2 lượt",
+        prompt: `Nói thành tiếng một câu dùng ${lesson.focus}, rồi tự đáp lại bằng một câu ngắn.`,
+        exampleAnswer: `${lesson.example} / Mình đổi tên, địa điểm hoặc đồ vật để nói lại.`
+      };
+    case "school":
+      return {
+        id: `${lesson.id}-practice-school`,
+        label: "Trên lớp",
+        title: "Hỏi lại phần chưa rõ",
+        prompt: `Viết một câu hỏi cho giáo viên hoặc bạn học về ${lesson.focus}.`,
+        exampleAnswer: "もう一度お願いします。Từ này nghĩa là gì ạ?"
+      };
+    case "work":
+      return {
+        id: `${lesson.id}-practice-work`,
+        label: "Công việc",
+        title: "Đổi sang câu lịch sự",
+        prompt: `Dùng mẫu ${lesson.pattern} để viết một câu dùng được trong email, họp hoặc tự giới thiệu.`,
+        exampleAnswer: "Tên + と申します。よろしくお願いいたします。"
+      };
+    case "reading":
+      return {
+        id: `${lesson.id}-practice-reading`,
+        label: "Đọc hiểu",
+        title: "Tìm từ khóa trong câu",
+        prompt: `Gạch 2 từ khóa trong ví dụ, rồi đoán ý chính trước khi nhìn nghĩa tiếng Việt.`,
+        exampleAnswer: `${firstCard?.front ?? "Từ khóa"} = ${firstCard?.back ?? "ý chính trong câu"}`
+      };
+    default:
+      return {
+        id: `${lesson.id}-practice-jlpt-${lessonIndex}`,
+        label: "JLPT",
+        title: lessonIndex % 2 === 0 ? "Nhận ra mẫu câu" : "Tự đổi 1 chi tiết",
+        prompt: lessonIndex % 2 === 0
+          ? `Khoanh mẫu ${lesson.pattern} trong ví dụ, rồi đọc lại ý nghĩa của mẫu.`
+          : "Đổi một từ trong câu ví dụ nhưng giữ nguyên mẫu ngữ pháp.",
+        exampleAnswer: lessonIndex % 2 === 0 ? lesson.pattern : lesson.example
+      };
+  }
+}
+
+function weakSkillPracticeTasks(skill: string, lesson: StudyLesson): StudyPracticeTask[] {
+  const firstCard = lesson.flashcards[0];
+  const secondCard = lesson.flashcards[1] ?? firstCard;
+  switch (skill) {
+    case "grammar":
+      return [{
+        id: `${lesson.id}-practice-weak-grammar`,
+        label: "Ngữ pháp",
+        title: "Tách mẫu và ý nghĩa",
+        prompt: `Tách câu ví dụ thành 2 phần: mẫu chính và phần từ vựng thay được.`,
+        exampleAnswer: `${lesson.pattern} là khung câu; ${firstCard?.front ?? "từ mới"} là phần có thể thay.`
+      }];
+    case "vocabulary":
+      return [{
+        id: `${lesson.id}-practice-weak-vocabulary`,
+        label: "Từ vựng",
+        title: "Tạo cặp từ riêng",
+        prompt: "Chọn 2 thẻ khó nhất của bài và tự đặt một câu rất ngắn cho mỗi thẻ.",
+        exampleAnswer: `${firstCard?.front ?? "Từ 1"} = ${firstCard?.back ?? "nghĩa"}; ${secondCard?.front ?? "Từ 2"} = ${secondCard?.back ?? "nghĩa"}`
+      }];
+    case "kana":
+      return [{
+        id: `${lesson.id}-practice-weak-kana`,
+        label: "Bảng chữ",
+        title: "Che romaji, đọc kana",
+        prompt: "Nhìn mặt trước thẻ, đọc chậm 3 lần trước khi lật đáp án.",
+        exampleAnswer: `${firstCard?.front ?? lesson.example} → đọc âm trước, xem nghĩa sau.`
+      }];
+    case "kanji":
+      return [{
+        id: `${lesson.id}-practice-weak-kanji`,
+        label: "Kanji",
+        title: "Nhìn chữ, đoán âm",
+        prompt: "Tìm chữ Hán trong ví dụ hoặc thẻ, đoán cách đọc trước khi xem nghĩa.",
+        exampleAnswer: `${firstCard?.front ?? "日"} → cách đọc và nghĩa.`
+      }];
+    case "reading":
+      return [{
+        id: `${lesson.id}-practice-weak-reading`,
+        label: "Đọc",
+        title: "Chia câu thành cụm nhỏ",
+        prompt: "Chia câu ví dụ thành từng cụm, dịch từng cụm trước khi dịch cả câu.",
+        exampleAnswer: `${lesson.example} → chủ đề / hành động / thời gian hoặc nơi chốn.`
+      }];
+    case "listening":
+      return [{
+        id: `${lesson.id}-practice-weak-listening`,
+        label: "Nghe",
+        title: "Đọc theo 3 nhịp",
+        prompt: "Đọc câu ví dụ 3 lần: chậm, bình thường, rồi che nghĩa và đọc lại.",
+        exampleAnswer: "Lần 1 rõ từng âm, lần 2 tự nhiên, lần 3 nhớ nghĩa."
+      }];
+    case "speaking":
+      return [{
+        id: `${lesson.id}-practice-weak-speaking`,
+        label: "Nói",
+        title: "Nói lại bằng thông tin của mình",
+        prompt: "Thay tên, địa điểm hoặc đồ vật trong câu ví dụ rồi nói thành tiếng.",
+        exampleAnswer: lesson.example
+      }];
+    default:
+      return [];
+  }
+}
+
+function timePracticeTask(minutes: number | null | undefined, lesson: StudyLesson): StudyPracticeTask {
+  const dailyMinutes = minutes ?? 30;
+  if (dailyMinutes <= 15) {
+    return {
+      id: `${lesson.id}-practice-time-short`,
+      label: "10 phút",
+      title: "Chỉ làm phần cốt lõi",
+      prompt: "Học mẫu chính, lật 3 thẻ đầu, rồi vào quiz. Phần mở rộng để sau.",
+      exampleAnswer: `Mẫu cần nhớ hôm nay: ${lesson.pattern}`
+    };
+  }
+  if (dailyMinutes >= 45) {
+    return {
+      id: `${lesson.id}-practice-time-long`,
+      label: "Mở rộng",
+      title: "Tạo thêm 2 câu mới",
+      prompt: "Sau khi hiểu ví dụ, tự viết thêm 2 câu cùng mẫu nhưng đổi từ vựng.",
+      exampleAnswer: "Một câu về bản thân, một câu về lớp học/công việc."
+    };
+  }
+  return {
+    id: `${lesson.id}-practice-time-normal`,
+    label: "20-30 phút",
+    title: "Làm đủ vòng học",
+    prompt: "Đọc mẫu, học hết thẻ, làm quiz. Nếu sai thì hỏi VAJA ở câu đó.",
+    exampleAnswer: "Học → thẻ nhớ → quiz → sửa sai."
+  };
+}
+
+function chapterPracticeTask(chapterIndex: number, lesson: StudyLesson): StudyPracticeTask {
+  return {
+    id: `${lesson.id}-practice-chapter-${chapterIndex}`,
+    label: "Ôn chương",
+    title: chapterIndex === 0 ? "Ghi một lỗi dễ sai" : "Nối với bài trước",
+    prompt: chapterIndex === 0
+      ? "Trước khi làm quiz, ghi ra một điểm dễ nhầm trong bài này."
+      : "Tìm một điểm giống hoặc khác với bài trước trong cùng pathway.",
+    exampleAnswer: chapterIndex === 0 ? `Điểm dễ nhầm: ${lesson.focus}` : "Giống mẫu cũ ở trợ từ, khác ở ý nghĩa."
+  };
+}
+
+function practiceTaskLimit(minutes: number | null | undefined): number {
+  const dailyMinutes = minutes ?? 30;
+  if (dailyMinutes <= 15) {
+    return 2;
+  }
+  if (dailyMinutes >= 45) {
+    return 4;
+  }
+  return 3;
+}
+
+function normalizedWeakSkills(weakSkills?: string[]): string[] {
+  return Array.from(new Set((weakSkills ?? []).map((skill) => skill.trim().toLowerCase()).filter(Boolean)));
+}
+
+function uniquePracticeTasks(tasks: StudyPracticeTask[]): StudyPracticeTask[] {
+  const seen = new Set<string>();
+  return tasks.filter((task) => {
+    const key = `${task.label}:${task.title}`;
+    if (seen.has(key)) {
+      return false;
+    }
+    seen.add(key);
+    return true;
+  });
 }
 
 function removeDuplicateLessons(chapters: StudyChapter[]): StudyChapter[] {

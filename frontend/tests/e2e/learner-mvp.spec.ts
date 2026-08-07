@@ -367,49 +367,56 @@ const personalizedPathwayCases = [
     profile: { currentLevel: "ZERO", targetLevel: "N5", weakSkills: ["kana"], dailyStudyMinutes: 10 },
     heading: /Pathway số 0/i,
     lesson: /Bài 1: Hiragana hàng あ/i,
-    focus: /Trọng tâm: bảng chữ/i
+    focus: /Trọng tâm: bảng chữ/i,
+    practice: /Che romaji, đọc kana/i
   },
   {
     name: "JLPT",
     profile: { learningPathway: "jlpt_foundation", weakSkills: ["grammar"], dailyStudyMinutes: 20 },
     heading: /Pathway JLPT/i,
     lesson: /Bài 1: Giới thiệu bản thân/i,
-    focus: /Trọng tâm: ngữ pháp/i
+    focus: /Trọng tâm: ngữ pháp/i,
+    practice: /Tách mẫu và ý nghĩa/i
   },
   {
     name: "conversation",
     profile: { learningPathway: "conversation", weakSkills: ["speaking"], dailyStudyMinutes: 10 },
     heading: /Pathway giao tiếp/i,
     lesson: /Bài 1: Chào hỏi hằng ngày/i,
-    focus: /Trọng tâm: nói/i
+    focus: /Trọng tâm: nói/i,
+    practice: /Đóng vai hội thoại 2 lượt/i
   },
   {
     name: "school",
     profile: { learningPathway: "school", weakSkills: ["vocabulary"], dailyStudyMinutes: 30 },
     heading: /Pathway trên lớp/i,
     lesson: /Bài 1: Hỏi bài trên lớp/i,
-    focus: /Trọng tâm: từ vựng/i
+    focus: /Trọng tâm: từ vựng/i,
+    practice: /Hỏi lại phần chưa rõ/i
   },
   {
     name: "work",
     profile: { currentLevel: "N4", learningPathway: "work", weakSkills: ["listening"], dailyStudyMinutes: 60 },
     heading: /Pathway công việc/i,
     lesson: /Bài 1: Tự giới thiệu nơi làm việc/i,
-    focus: /Trọng tâm: nghe/i
+    focus: /Trọng tâm: nghe/i,
+    practice: /Đổi sang câu lịch sự/i
   },
   {
     name: "reading",
     profile: { learningPathway: "reading", weakSkills: ["kanji", "reading"], dailyStudyMinutes: 20 },
     heading: /Pathway đọc hiểu/i,
     lesson: /Bài 1: Đọc đoạn ngắn N5/i,
-    focus: /Trọng tâm: kanji, đọc/i
+    focus: /Trọng tâm: kanji, đọc/i,
+    practice: /Tìm từ khóa trong câu/i
   },
   {
     name: "N5 kana review without zero reset",
     profile: { currentLevel: "N5", learningPathway: "conversation", weakSkills: ["kana", "speaking"], dailyStudyMinutes: 25 },
     heading: /Pathway giao tiếp/i,
     lesson: /Bài 1: Chào hỏi hằng ngày/i,
-    focus: /Trọng tâm: bảng chữ, nói/i
+    focus: /Trọng tâm: bảng chữ, nói/i,
+    practice: /Che romaji, đọc kana/i
   }
 ];
 
@@ -422,6 +429,7 @@ for (const scenario of personalizedPathwayCases) {
     await expect(page.getByRole("heading", { name: scenario.heading })).toBeVisible();
     await expect(page.getByRole("heading", { name: scenario.lesson })).toBeVisible();
     await expect(page.getByText(scenario.focus)).toBeVisible();
+    await expect(page.getByText(scenario.practice)).toBeVisible();
   });
 }
 
@@ -438,6 +446,7 @@ test("same JLPT pathway changes early support lessons by weak skill", async ({ p
   await expect(page.getByRole("heading", { name: /Bài 1: Giới thiệu bản thân/i })).toBeVisible();
   await expect(page.getByRole("button", { name: /Bài 2: Làm ở đâu, vào lúc nào/i })).toBeDisabled();
   await expect(page.getByRole("button", { name: /Bài 3: Thời gian và tần suất/i })).toBeDisabled();
+  await expect(page.getByText(/Tách mẫu và ý nghĩa/i)).toBeVisible();
 });
 
 test("learner can understand the MVP study loop", async ({ page }) => {
