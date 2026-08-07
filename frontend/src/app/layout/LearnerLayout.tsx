@@ -43,6 +43,8 @@ type LearnerTourStep = {
   route: string;
   title: string;
   body: string;
+  primaryLabel?: string;
+  completion?: "close" | "start-study";
 };
 
 type TourBox = {
@@ -100,6 +102,14 @@ const learnerTourSteps: LearnerTourStep[] = [
     route: "/learner/study",
     title: "Tra cứu khi gặp từ lạ",
     body: "Tra cứu hoạt động như từ điển ngắn: nghĩa, cách dùng, ví dụ và ngữ cảnh nên dùng."
+  },
+  {
+    target: "study-next-action",
+    route: "/learner/study",
+    title: "Bây giờ vào học",
+    body: "Tour xong thì không cần đoán nữa. Bấm nút này, VAJA sẽ đưa bạn vào thẻ đầu tiên của bài đang mở.",
+    primaryLabel: "Bắt đầu học",
+    completion: "start-study"
   }
 ];
 
@@ -280,6 +290,17 @@ export function LearnerLayout() {
     setTourOpen(false);
   }, [tourStorageKey]);
 
+  const startStudyFromTour = useCallback(() => {
+    markLearnerTourSeen(tourStorageKey);
+    setTourOpen(false);
+    if (location.pathname !== "/learner/study") {
+      navigate("/learner/study");
+    }
+    window.setTimeout(() => {
+      window.dispatchEvent(new CustomEvent("vaja:start-study-lesson"));
+    }, 260);
+  }, [location.pathname, navigate, tourStorageKey]);
+
   const openTour = useCallback(() => {
     setTourStepIndex(0);
     setTourOpen(true);
@@ -291,11 +312,15 @@ export function LearnerLayout() {
 
   const goToNextTourStep = useCallback(() => {
     if (tourStepIndex >= learnerTourSteps.length - 1) {
+      if (tourStep.completion === "start-study") {
+        startStudyFromTour();
+        return;
+      }
       closeTour();
       return;
     }
     setTourStepIndex((current) => Math.min(learnerTourSteps.length - 1, current + 1));
-  }, [closeTour, tourStepIndex]);
+  }, [closeTour, startStudyFromTour, tourStep, tourStepIndex]);
 
   useEffect(() => {
     if (!tourOpen) {
@@ -477,7 +502,7 @@ function LearnerTourOverlay({
               Quay lại
             </button>
             <button className="primary-button" type="button" onClick={onNext}>
-              {lastStep ? "Xong" : "Tiếp"}
+              {lastStep ? step.primaryLabel ?? "Xong" : "Tiếp"}
               {!lastStep && <ArrowRight size={16} />}
             </button>
           </div>

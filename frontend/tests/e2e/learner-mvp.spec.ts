@@ -489,8 +489,14 @@ test("new learner can follow the guided app tour", async ({ page }) => {
   await expect(tour).toContainText("Tra cứu khi gặp từ lạ");
   await expect(page.locator('[data-tour="nav-lookup"]')).toHaveClass(/tour-target-active/);
 
-  await tour.getByRole("button", { name: "Xong", exact: true }).click();
+  await tour.getByRole("button", { name: "Tiếp", exact: true }).click();
+  await expect(tour).toContainText("Bây giờ vào học");
+  await expect(page.locator('[data-tour="study-next-action"]')).toHaveClass(/tour-target-active/);
+
+  await tour.getByRole("button", { name: "Bắt đầu học", exact: true }).click();
   await expect(tour).toHaveCount(0);
+  await expect(page.locator(".study-flashcard")).toBeVisible();
+  await expect(page.getByText("Thẻ 1/4", { exact: true })).toBeVisible();
   await expect.poll(async () =>
     page.evaluate((currentUserId) => window.localStorage.getItem(`vaja.learnerTour.seen.v1.${currentUserId}`), userId)
   ).toBe("true");

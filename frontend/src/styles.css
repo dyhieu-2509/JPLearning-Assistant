@@ -2197,13 +2197,13 @@ progress::-webkit-progress-value {
 }
 
 .learner-tour-progress {
-  display: grid;
-  grid-template-columns: repeat(8, minmax(0, 1fr));
+  display: flex;
   gap: 5px;
 }
 
 .learner-tour-progress span {
   display: block;
+  flex: 1;
   height: 5px;
   border-radius: 999px;
   background: #dbe5f1;

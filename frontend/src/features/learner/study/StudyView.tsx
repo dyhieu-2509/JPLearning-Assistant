@@ -207,6 +207,30 @@ export function StudyView() {
     return () => window.clearTimeout(timer);
   }, [activeQuizQuestion, activeQuizQuestionIndex, adaptiveState, answers, lesson, phase, unlocked]);
 
+  useEffect(() => {
+    function handleTourStartLesson() {
+      if (!unlocked) {
+        return;
+      }
+      setPhase("flashcards");
+      setCardIndex(0);
+      setFlipped(false);
+      setAnswers({});
+      setLastSubmittedAnswers({});
+      setLastScore(null);
+      setTutorInsight(null);
+      setTutorInsightError(null);
+      setLoadingTutorInsight(false);
+      setActiveSupportQuestionId(null);
+      window.setTimeout(() => {
+        document.querySelector(".study-flashcard")?.scrollIntoView({ block: "center", behavior: "smooth" });
+      }, 80);
+    }
+
+    window.addEventListener("vaja:start-study-lesson", handleTourStartLesson);
+    return () => window.removeEventListener("vaja:start-study-lesson", handleTourStartLesson);
+  }, [lesson.id, unlocked]);
+
   if (loadingProfile) {
     return <LoadingPanel>Đang cá nhân hóa pathway học của bạn...</LoadingPanel>;
   }
@@ -439,7 +463,7 @@ export function StudyView() {
                       Hôm nay tập trung vào {lesson.focus}. Nếu quiz sai, VAJA sẽ giữ bài này và đưa phần cần ôn ra trước.
                     </span>
                   </div>
-                  <div className="study-action-row">
+                  <div className="study-action-row" data-tour="study-next-action">
                     <PrimaryButton type="button" onClick={startFlashcards}>
                       <Layers3 size={18} />
                       Học thẻ của bài này
