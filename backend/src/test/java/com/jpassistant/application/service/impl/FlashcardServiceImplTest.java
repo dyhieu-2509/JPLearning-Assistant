@@ -87,4 +87,30 @@ class FlashcardServiceImplTest {
             return true;
         }));
     }
+
+    @Test
+    void listDecksSeedsStarterDecksForNewLearner() {
+        List<FlashcardDeck> decks = new java.util.ArrayList<>();
+        when(deckRepository.findByUserIdOrderByUpdatedAtDesc("user-1")).thenReturn(decks);
+        when(deckRepository.save(org.mockito.Mockito.any(FlashcardDeck.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+        when(cardRepository.countByDeckId(org.mockito.Mockito.any())).thenReturn(8L);
+        when(knowledgeGraphRepository.searchVocabulary("", "N5", 8)).thenReturn(List.of(starterItem("Vocabulary", "taberu:N5", "食べる", "eat", "N5")));
+        when(knowledgeGraphRepository.searchGrammar("", "N5", 8)).thenReturn(List.of(starterItem("GrammarPoint", "desu:N5", "です", "to be", "N5")));
+        when(knowledgeGraphRepository.searchKanji("", "N5", 8)).thenReturn(List.of(starterItem("Kanji", "日", "日", "sun", "N5")));
+        when(knowledgeGraphRepository.searchVocabulary("", "N4", 8)).thenReturn(List.of(starterItem("Vocabulary", "kaigi:N4", "会議", "meeting", "N4")));
+        when(knowledgeGraphRepository.searchGrammar("", "N4", 8)).thenReturn(List.of(starterItem("GrammarPoint", "node:N4", "ので", "because", "N4")));
+        when(knowledgeGraphRepository.searchKanji("", "N4", 8)).thenReturn(List.of(starterItem("Kanji", "会", "会", "meeting", "N4")));
+
+        var response = service.listDecks("user-1");
+
+        assertThat(response).hasSize(6);
+        assertThat(response).extracting("level").contains("N5", "N4");
+        assertThat(response).extracting("category").contains("vocabulary", "grammar", "kanji");
+        verify(cardRepository, org.mockito.Mockito.times(6)).saveAll(org.mockito.Mockito.any());
+    }
+
+    private KnowledgeItem starterItem(String type, String id, String title, String meaning, String level) {
+        return new KnowledgeItem(type, id, title, title, meaning, meaning, level, "seed");
+    }
 }

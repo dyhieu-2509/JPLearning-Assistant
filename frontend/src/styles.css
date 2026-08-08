@@ -4775,6 +4775,13 @@ progress::-webkit-progress-value {
   box-shadow: 0 12px 28px rgba(23, 32, 51, 0.08);
 }
 
+.pilot-survey.compact {
+  gap: 12px;
+  border-color: rgba(37, 99, 235, 0.14);
+  background: #f8fafc;
+  box-shadow: none;
+}
+
 .pilot-survey-heading {
   display: grid;
   grid-template-columns: 38px minmax(0, 1fr);

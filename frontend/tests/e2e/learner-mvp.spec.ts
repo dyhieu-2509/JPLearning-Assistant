@@ -269,6 +269,7 @@ test("study metrics records lesson attempt and SUS survey after quiz", async ({ 
 
   const survey = page.locator(".pilot-survey");
   await expect(survey).toBeVisible();
+  await survey.getByRole("button", { name: "Mở khảo sát", exact: true }).click();
   const susScores = [5, 1, 4, 2, 5, 1, 4, 2, 5, 1];
   for (let index = 0; index < susScores.length; index += 1) {
     await survey

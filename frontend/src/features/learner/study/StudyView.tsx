@@ -703,6 +703,22 @@ export function StudyView() {
                       );
                     })}
                   </div>
+                  <div className="study-action-row">
+                    {currentScore >= passThreshold && nextLesson ? (
+                      <PrimaryButton type="button" onClick={goNextLesson}>
+                        {nextChapter && nextChapter.id !== currentChapter.id ? "Sang chương tiếp theo" : "Học bài tiếp theo"}
+                        <ArrowRight size={18} />
+                      </PrimaryButton>
+                    ) : (
+                      <PrimaryButton type="button" onClick={reviewMistakes}>
+                        <RotateCcw size={18} />
+                        Ôn câu sai trước
+                      </PrimaryButton>
+                    )}
+                    <IconTextButton type="button" variant="ghost" onClick={retryQuiz}>
+                      Làm lại quiz
+                    </IconTextButton>
+                  </div>
                   {accessToken && (
                     <>
                       <StudyFeedbackPrompt
@@ -732,22 +748,6 @@ export function StudyView() {
                       />
                     </>
                   )}
-                  <div className="study-action-row">
-                    {currentScore >= passThreshold && nextLesson ? (
-                      <PrimaryButton type="button" onClick={goNextLesson}>
-                        {nextChapter && nextChapter.id !== currentChapter.id ? "Sang chương tiếp theo" : "Học bài tiếp theo"}
-                        <ArrowRight size={18} />
-                      </PrimaryButton>
-                    ) : (
-                      <PrimaryButton type="button" onClick={reviewMistakes}>
-                        <RotateCcw size={18} />
-                        Ôn câu sai trước
-                      </PrimaryButton>
-                    )}
-                    <IconTextButton type="button" variant="ghost" onClick={retryQuiz}>
-                      Làm lại quiz
-                    </IconTextButton>
-                  </div>
                 </div>
               )}
             </>

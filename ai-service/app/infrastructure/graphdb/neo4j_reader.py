@@ -177,6 +177,41 @@ class Neo4jReader:
         "hoc tieng nhat": ("nihongo", "benkyou", "tai"),
         "h\u1ecdc ti\u1ebfng nh\u1eadt": ("nihongo", "benkyou", "tai"),
     }
+    _VIETNAMESE_ASCII_STOP_TERMS = {
+        "ban",
+        "bat",
+        "cach",
+        "cai",
+        "cau",
+        "cho",
+        "co",
+        "dau",
+        "du",
+        "duoc",
+        "giai",
+        "gi",
+        "hoc",
+        "khong",
+        "la",
+        "lam",
+        "minh",
+        "moi",
+        "nao",
+        "nay",
+        "nguoi",
+        "nhu",
+        "o",
+        "sao",
+        "the",
+        "thi",
+        "thich",
+        "toi",
+        "trong",
+        "tu",
+        "ve",
+        "vi",
+        "voi",
+    }
 
     def __init__(self, settings: Settings) -> None:
         self._settings = settings
@@ -232,14 +267,17 @@ class Neo4jReader:
             return []
 
         terms: list[str] = []
-        self._add_term_with_kana_variant(terms, normalized)
+        self._add_term(terms, normalized)
         for phrase, expansion_terms in self._QUERY_EXPANSIONS.items():
             if self._contains_query_phrase(normalized, phrase):
                 for expansion_term in expansion_terms:
                     self._add_term_with_kana_variant(terms, expansion_term)
         for part in normalized.split():
             if len(part) >= 2:
-                self._add_term_with_kana_variant(terms, part)
+                if self._should_add_kana_variant(part):
+                    self._add_term_with_kana_variant(terms, part)
+                else:
+                    self._add_term(terms, part)
         return terms
 
     def _contains_query_phrase(self, normalized: str, phrase: str) -> bool:
@@ -250,14 +288,26 @@ class Neo4jReader:
         return phrase in normalized
 
     def _add_term_with_kana_variant(self, terms: list[str], term: str) -> None:
-        if term not in terms:
-            terms.append(term)
+        self._add_term(terms, term)
 
         hiragana = self._romaji_to_hiragana(term)
         if hiragana != term and hiragana not in terms:
             terms.append(hiragana)
         self._add_polite_verb_variants(terms, term)
         self._add_polite_verb_variants(terms, hiragana)
+
+    def _add_term(self, terms: list[str], term: str) -> None:
+        if term and term not in terms:
+            terms.append(term)
+
+    def _should_add_kana_variant(self, term: str) -> bool:
+        if term in self._VIETNAMESE_ASCII_STOP_TERMS:
+            return False
+        if not term.isascii():
+            return True
+        if term in {"wa", "ha", "ga", "wo", "ni", "de", "e", "he", "to", "mo", "no"}:
+            return True
+        return bool(re.search(r"(masu|desu|nai|suru|kuru|iru|aru|eru|eru|uru|oru|ru|te|ta)$", term))
 
     def _add_polite_verb_variants(self, terms: list[str], term: str) -> None:
         if term.endswith("ru") and len(term) > 2 and term.replace("-", "").isascii():

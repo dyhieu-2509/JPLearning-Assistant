@@ -124,8 +124,11 @@ export function FlashcardsView() {
       setDecks(deckData);
       setDueCards(dueData);
       setWeakProgress(weakData);
-      const nextDeckId = deckId ?? deckData[0]?.id ?? null;
-      const nextDeck = deckData.find((deck) => deck.id === nextDeckId) ?? deckData[0];
+      const preferredDeck = deckData.find((deck) => deckMatchesFilter(deck, selectedLevel, categoryFilter))
+        ?? deckData.find((deck) => deck.level === "N5")
+        ?? deckData[0];
+      const nextDeckId = deckId ?? preferredDeck?.id ?? null;
+      const nextDeck = deckData.find((deck) => deck.id === nextDeckId) ?? preferredDeck;
       if (nextDeck?.level) {
         setSelectedLevel(nextDeck.level);
       }

@@ -1,5 +1,5 @@
 import { BookOpenText, DatabaseZap, Search, Sparkles } from "lucide-react";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { ApiError, apiRequest } from "../../../shared/api";
 import { IconTextButton, LoadingPanel, Panel, TopicChip } from "../../../shared/components";
 import type { KnowledgeItemResponse } from "../../../shared/models";
@@ -23,6 +23,10 @@ export function KnowledgeLookupView() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const requestSequence = useRef(0);
+  const displayItems = useMemo(
+    () => mergeCuratedItems(category === "grammar" ? particleFallbackItems(submittedQuery, level) : [], items),
+    [category, items, level, submittedQuery]
+  );
 
   useEffect(() => {
     void searchKnowledge(submittedQuery);
@@ -61,12 +65,23 @@ export function KnowledgeLookupView() {
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const normalizedQuery = normalizeGrammarParticleQuery(query.trim());
+    if (normalizedQuery) {
+      setCategory("grammar");
+      setQuery(normalizedQuery);
+      setSubmittedQuery(normalizedQuery);
+      return;
+    }
     setSubmittedQuery(query.trim());
   }
 
   function chooseQuickQuery(value: string) {
-    setQuery(value);
-    setSubmittedQuery(value);
+    const normalizedQuery = normalizeGrammarParticleQuery(value) ?? value;
+    if (normalizeGrammarParticleQuery(value)) {
+      setCategory("grammar");
+    }
+    setQuery(normalizedQuery);
+    setSubmittedQuery(normalizedQuery);
   }
 
   return (
@@ -133,9 +148,9 @@ export function KnowledgeLookupView() {
         {error && <p className="form-error">{error}</p>}
         {loading ? (
           <LoadingPanel>Đang tra từ điển...</LoadingPanel>
-        ) : items.length ? (
+        ) : displayItems.length ? (
           <div className="knowledge-result-grid">
-            {items.map((item) => (
+            {displayItems.map((item) => (
               <KnowledgeCard item={item} key={`${item.type}-${item.id}`} />
             ))}
           </div>
@@ -201,4 +216,103 @@ function usageContext(item: KnowledgeItemResponse): string {
     return "Dùng để nhận diện từ có kanji này. Nên học kèm âm đọc và một vài từ ghép thường gặp.";
   }
   return "Dùng để tra nhanh nghĩa và ngữ cảnh cơ bản. Nếu cần hỏi sâu hơn, dùng bong bóng VAJA ở góc màn hình.";
+}
+
+function normalizeGrammarParticleQuery(value: string): string | null {
+  const normalized = value.trim().toLowerCase();
+  const particles: Record<string, string> = {
+    ha: "は",
+    wa: "は",
+    "は": "は",
+    ga: "が",
+    "が": "が",
+    wo: "を",
+    o: "を",
+    "を": "を",
+    ni: "に",
+    "に": "に",
+    de: "で",
+    "で": "で",
+    he: "へ",
+    e: "へ",
+    "へ": "へ",
+    to: "と",
+    "と": "と",
+    mo: "も",
+    "も": "も"
+  };
+  return particles[normalized] ?? null;
+}
+
+function particleFallbackItems(query: string, level: string): KnowledgeItemResponse[] {
+  const particle = normalizeGrammarParticleQuery(query);
+  if (!particle) {
+    return [];
+  }
+
+  const meanings: Record<string, { reading: string; meaningVi: string }> = {
+    "は": {
+      reading: "wa",
+      meaningVi: "Trợ từ nêu chủ đề. Khi là trợ từ thì đọc là wa. Ví dụ: わたしは学生です。"
+    },
+    "が": {
+      reading: "ga",
+      meaningVi: "Trợ từ nêu chủ ngữ hoặc nhấn mạnh điều mới. Ví dụ: 雨が降ります。"
+    },
+    "を": {
+      reading: "o",
+      meaningVi: "Trợ từ đứng sau tân ngữ của hành động. Ví dụ: 水を飲みます。"
+    },
+    "に": {
+      reading: "ni",
+      meaningVi: "Trợ từ chỉ thời điểm, nơi đến hoặc người nhận. Ví dụ: 学校に行きます。"
+    },
+    "で": {
+      reading: "de",
+      meaningVi: "Trợ từ chỉ nơi làm hành động hoặc phương tiện. Ví dụ: バスで行きます。"
+    },
+    "へ": {
+      reading: "e",
+      meaningVi: "Trợ từ chỉ hướng đi. Khi là trợ từ thì đọc là e. Ví dụ: 日本へ行きます。"
+    },
+    "と": {
+      reading: "to",
+      meaningVi: "Trợ từ nghĩa là và, với, hoặc dùng khi trích lời. Ví dụ: 友だちと行きます。"
+    },
+    "も": {
+      reading: "mo",
+      meaningVi: "Trợ từ nghĩa là cũng. Ví dụ: わたしも行きます。"
+    }
+  };
+  const item = meanings[particle];
+  if (!item) {
+    return [];
+  }
+  return [
+    {
+      type: "GrammarPoint",
+      id: `starter-particle-${particle}:${level}`,
+      title: `Trợ từ ${particle}`,
+      reading: item.reading,
+      meaningVi: item.meaningVi,
+      meaningEn: "",
+      level,
+      source: "VAJA starter dictionary"
+    }
+  ];
+}
+
+function mergeCuratedItems(curatedItems: KnowledgeItemResponse[], remoteItems: KnowledgeItemResponse[]) {
+  const seen = new Set(curatedItems.map((item) => `${item.type}:${item.id}`));
+  return [
+    ...curatedItems,
+    ...remoteItems.filter((item) => {
+      const key = `${item.type}:${item.id}`;
+      if (seen.has(key)) {
+        return false;
+      }
+      seen.add(key);
+      return true;
+    })
+  ];
 }

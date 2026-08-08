@@ -34,6 +34,15 @@ public class FlashcardServiceImpl implements FlashcardService {
 
     private static final int DEFAULT_LIMIT = 20;
     private static final int MAX_LIMIT = 100;
+    private static final int STARTER_DECK_LIMIT = 8;
+    private static final List<StarterDeckSpec> STARTER_DECKS = List.of(
+            new StarterDeckSpec("N5", "vocabulary", "N5 - Từ vựng nhập môn"),
+            new StarterDeckSpec("N5", "grammar", "N5 - Mẫu câu cơ bản"),
+            new StarterDeckSpec("N5", "kanji", "N5 - Kanji cơ bản"),
+            new StarterDeckSpec("N4", "vocabulary", "N4 - Từ vựng ôn tiếp"),
+            new StarterDeckSpec("N4", "grammar", "N4 - Mẫu câu ôn tiếp"),
+            new StarterDeckSpec("N4", "kanji", "N4 - Kanji ôn tiếp")
+    );
 
     private final PersonalizationService personalizationService;
     private final FlashcardDeckJpaRepository deckRepository;
@@ -53,9 +62,11 @@ public class FlashcardServiceImpl implements FlashcardService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public List<FlashcardDeckResponse> listDecks(String userId) {
         String normalizedUserId = normalizeRequired(userId, "userId");
+        List<FlashcardDeck> existingDecks = deckRepository.findByUserIdOrderByUpdatedAtDesc(normalizedUserId);
+        ensureStarterDecks(normalizedUserId, existingDecks);
         return deckRepository.findByUserIdOrderByUpdatedAtDesc(normalizedUserId)
                 .stream()
                 .map(this::toDeckResponse)
@@ -209,6 +220,41 @@ public class FlashcardServiceImpl implements FlashcardService {
         ));
     }
 
+    private void ensureStarterDecks(String userId, List<FlashcardDeck> existingDecks) {
+        for (StarterDeckSpec starterDeck : STARTER_DECKS) {
+            if (hasDeck(existingDecks, starterDeck.level(), starterDeck.category())) {
+                continue;
+            }
+            try {
+                FlashcardDeck deck = deckRepository.save(new FlashcardDeck(
+                        userId,
+                        starterDeck.title(),
+                        starterDeck.level(),
+                        starterDeck.category()
+                ));
+                List<FlashcardCard> cards = generateCardsFromKnowledgeGraph(
+                        deck,
+                        starterDeck.category(),
+                        starterDeck.level(),
+                        STARTER_DECK_LIMIT
+                );
+                if (!cards.isEmpty()) {
+                    cardRepository.saveAll(cards);
+                    deck.touch();
+                    existingDecks.add(deckRepository.save(deck));
+                }
+            } catch (InvalidRequestException ignored) {
+                // Starter decks are optional. Do not break the flashcard page if a KG slice is empty.
+            }
+        }
+    }
+
+    private boolean hasDeck(List<FlashcardDeck> decks, String level, String category) {
+        return decks.stream().anyMatch(deck ->
+                level.equalsIgnoreCase(deck.getLevel()) && category.equalsIgnoreCase(deck.getCategory())
+        );
+    }
+
     private void validateFlashcardRating(LearningSignalResult rating) {
         if (!EnumSet.of(
                 LearningSignalResult.AGAIN,
@@ -308,5 +354,8 @@ public class FlashcardServiceImpl implements FlashcardService {
             return value;
         }
         return third;
+    }
+
+    private record StarterDeckSpec(String level, String category, String title) {
     }
 }

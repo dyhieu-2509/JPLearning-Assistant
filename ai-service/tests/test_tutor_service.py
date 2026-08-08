@@ -11,6 +11,7 @@ from app.domain.schemas import (
     StudentProfileContext,
     TutorChatRequest,
 )
+from app.infrastructure.graphdb.neo4j_reader import Neo4jReader
 from app.infrastructure.llm.langchain_client import LangChainClient
 
 
@@ -131,6 +132,29 @@ def test_profile_context_rejects_levels_outside_mvp_scope() -> None:
         StudentProfileContext(userId="user-1", currentLevel="N3", targetLevel="N3")
 
 
+def test_zero_level_profile_is_accepted_and_retrieves_n5_sources() -> None:
+    neo4j_reader = FakeNeo4jReader()
+    qdrant_client = FakeQdrantClient()
+    service = TutorServiceImpl(neo4j_reader, qdrant_client, LangChainClient(FakeSettings()))
+
+    response = service.chat(
+        TutorChatRequest(
+            message="Toi moi bat dau thi hoc nhu the nao?",
+            profile=StudentProfileContext(
+                userId="user-zero",
+                currentLevel="ZERO",
+                targetLevel="N5",
+                learningPathway="conversation",
+            ),
+        )
+    )
+
+    assert neo4j_reader.last_level == "N5"
+    assert qdrant_client.last_level == "N5"
+    assert response.sources
+    assert "ZERO -> N5" in response.answer
+
+
 def test_tutor_merges_kg_and_vector_sources_without_duplicates() -> None:
     service = TutorServiceImpl(DuplicateNeo4jReader(), DuplicateQdrantClient(), LangChainClient(FakeSettings()))
 
@@ -153,6 +177,17 @@ def test_tutor_confidence_drops_when_retrieval_has_less_evidence() -> None:
     assert empty_response.confidence == 0.3
     assert empty_response.sources == []
     assert "Minh chua co nguon" in empty_response.answer
+
+
+def test_neo4j_query_terms_do_not_convert_vietnamese_words_to_kana() -> None:
+    reader = Neo4jReader(FakeSettings())
+
+    terms = reader._build_search_terms("Toi moi bat dau thi hoc nhu the nao?")
+
+    assert "とい" not in terms
+    assert "もい" not in terms
+    assert "はじめる" in terms
+    assert "はじめます" in terms
 
 
 def test_planner_prioritizes_the_learner_pathway() -> None:

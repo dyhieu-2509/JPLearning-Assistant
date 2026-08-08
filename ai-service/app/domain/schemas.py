@@ -1,17 +1,19 @@
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
-SUPPORTED_MVP_LEVELS = {"N5", "N4"}
+SUPPORTED_MVP_LEVELS = {"ZERO", "N5", "N4"}
 SUPPORTED_LEARNING_PATHWAYS = {"jlpt_foundation", "conversation", "school", "work", "reading"}
 
 
 def normalize_mvp_level(value: str | None, default: str) -> str:
-    """Normalize JLPT level to the N5/N4 MVP scope."""
+    """Normalize the learner level to the ZERO/N5/N4 MVP scope."""
     if value is None or str(value).strip() == "":
         return default
     normalized = str(value).strip().upper()
+    if normalized == "N0":
+        return "ZERO"
     if normalized not in SUPPORTED_MVP_LEVELS:
-        raise ValueError("level must be N5 or N4 for the MVP scope")
+        raise ValueError("level must be ZERO, N5 or N4 for the MVP scope")
     return normalized
 
 

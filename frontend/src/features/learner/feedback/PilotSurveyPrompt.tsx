@@ -1,4 +1,4 @@
-import { CheckCircle2, ClipboardList, Loader2 } from "lucide-react";
+import { CheckCircle2, ChevronDown, ClipboardList, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { apiRequest, ApiError } from "../../../shared/api";
 import type { PilotSurveyRequest } from "../../../shared/models";
@@ -34,6 +34,7 @@ export function PilotSurveyPrompt({ token, surveyKey, baseSurvey, onSubmitted }:
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     setHidden(localStorage.getItem(storageKey) === "done");
@@ -43,6 +44,7 @@ export function PilotSurveyPrompt({ token, surveyKey, baseSurvey, onSubmitted }:
     setSending(false);
     setSent(false);
     setError(null);
+    setExpanded(false);
   }, [storageKey]);
 
   if (hidden) {
@@ -50,6 +52,29 @@ export function PilotSurveyPrompt({ token, surveyKey, baseSurvey, onSubmitted }:
   }
 
   const ready = scores.every((score) => score !== null) && trustRating !== null;
+
+  if (!expanded) {
+    return (
+      <div className="pilot-survey compact">
+        <div className="pilot-survey-heading">
+          <ClipboardList size={18} />
+          <div>
+            <strong>Khảo sát 1 phút</strong>
+            <span>Chấm nhanh sau khi học để VAJA có số liệu SUS/trust cho user test.</span>
+          </div>
+        </div>
+        <div className="study-feedback-actions">
+          <button type="button" onClick={skip}>
+            Bỏ qua
+          </button>
+          <button type="button" onClick={() => setExpanded(true)}>
+            Mở khảo sát
+            <ChevronDown size={15} />
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   async function submit() {
     if (!ready || sending) {
