@@ -23,7 +23,7 @@ class TutorServiceImpl(TutorService):
         level = self._profile_level(request)
         graph_sources = self._neo4j_reader.search(request.message, level=level, limit=5)
         vector_sources = self._qdrant_client.search(request.message, level=level, limit=5)
-        sources = self._merge_sources(vector_sources, graph_sources, limit=8)
+        sources = self._merge_sources(graph_sources, vector_sources, limit=8)
         answer = self._llm_client.generate_tutor_answer(
             request.message,
             sources,

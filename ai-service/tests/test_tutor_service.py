@@ -121,8 +121,8 @@ def test_tutor_service_returns_grounded_personalized_answer() -> None:
     assert neo4j_reader.last_level == "N4"
     assert qdrant_client.last_level == "N4"
     assert response.confidence == 0.78
-    assert response.sources[0].title == "\u98df\u3079\u307e\u3059"
-    assert response.sources[1].title == "te form"
+    assert response.sources[0].title == "te form"
+    assert response.sources[1].title == "\u98df\u3079\u307e\u3059"
     assert "Ho so hoc" in response.answer
 
 
@@ -137,7 +137,7 @@ def test_tutor_merges_kg_and_vector_sources_without_duplicates() -> None:
     response = service.chat(TutorChatRequest(message="\u3066 form la gi?"))
 
     assert response.confidence == 0.78
-    assert [source.id for source in response.sources] == ["duplicate-vector:N5", "graph-only:N5"]
+    assert [source.id for source in response.sources] == ["duplicate-kg:N5", "graph-only:N5"]
     assert len({(source.type, source.title, source.reading) for source in response.sources}) == len(response.sources)
 
 

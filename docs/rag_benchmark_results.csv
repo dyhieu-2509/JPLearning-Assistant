@@ -1,0 +1,1101 @@
+﻿question_id,level,category,mode,question,expected_terms,precision_at_3,source_recall,top_sources,answer,correctness_0_2,faithfulness_0_2,clarity_0_2,reviewer_note
+Q001,N5,particle,llm_only,Khi nao dung は va が?,は|が|particle|chu de,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q001,N5,particle,vector_only,Khi nao dung は va が?,は|が|particle|chu de,0.0,1,Vocabulary:いみ:N5:lesson-25:意味:いみ | Vocabulary:いみ:N5:lesson-24:意味:いみ | Vocabulary:ふるさと:N5:lesson-18:故郷:ふるさと | GrammarPoint:toki:N5:toki: | Vocabulary:あ:N5:lesson-2:あ:あ,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- 意味 (いみ): meaning.
+- 意味 (いみ): meaning.
+- 故郷 (ふるさと): Furusato (a song title meaning 'Home Town').
+Cau hoi cua ban: Khi nao dung は va が?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q001,N5,particle,kg_only,Khi nao dung は va が?,は|が|particle|chu de,0.33,1,GrammarPoint:wa - topic marker:wa - topic marker: | Vocabulary:なおします:直します:なおします | Vocabulary:だれ（どなた）::だれ（どなた） | Vocabulary:～で ございます。::～で ございます。 | Vocabulary:いろいろ［な］::いろいろ［な］,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- wa - topic marker: topic marker.
+- 直します (なおします): repair, correct.
+-  (だれ（どなた）): who (どなた is the polite equivalent of だれ).
+Cau hoi cua ban: Khi nao dung は va が?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q001,N5,particle,kg_vector,Khi nao dung は va が?,は|が|particle|chu de,0.33,1,GrammarPoint:wa - topic marker:wa - topic marker: | Vocabulary:なおします:直します:なおします | Vocabulary:だれ（どなた）::だれ（どなた） | Vocabulary:～で ございます。::～で ございます。 | Vocabulary:いろいろ［な］::いろいろ［な］ | Vocabulary:いみ:N5:lesson-25:意味:いみ | Vocabulary:ふるさと:N5:lesson-18:故郷:ふるさと | GrammarPoint:toki:N5:toki:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- wa - topic marker: topic marker.
+- 直します (なおします): repair, correct.
+-  (だれ（どなた）): who (どなた is the polite equivalent of だれ).
+Cau hoi cua ban: Khi nao dung は va が?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q002,N5,particle,llm_only,を dung trong cau tieng Nhat nhu the nao?,を|object|tan ngu,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q002,N5,particle,vector_only,を dung trong cau tieng Nhat nhu the nao?,を|object|tan ngu,0.0,0,Vocabulary:にほんご:N5:lesson-2:日本語:にほんご | GrammarPoint:cha ikenai / ja ikenai:N5:cha ikenai / ja ikenai: | Vocabulary:いみ:N5:lesson-24:意味:いみ | Vocabulary:アニメ:N5:lesson-21:アニメ:アニメ | Vocabulary:きもの:N5:lesson-20:着物:きもの,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- 日本語 (にほんご): the Japanese language.
+- cha ikenai / ja ikenai: không được làm (nói tiếng Nhật).
+- 意味 (いみ): meaning.
+Cau hoi cua ban: を dung trong cau tieng Nhat nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q002,N5,particle,kg_only,を dung trong cau tieng Nhat nhu the nao?,を|object|tan ngu,0.33,1,GrammarPoint:o / wo:o / wo: | Vocabulary:あの ～::あの ～ | Vocabulary:だれ（どなた）::だれ（どなた） | Vocabulary:その ～::その ～ | Vocabulary:～から::～から,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- o / wo: hạt đánh dấu đối tượng.
+-  (あの ～): that ～, that ～ over there.
+-  (だれ（どなた）): who (どなた is the polite equivalent of だれ).
+Cau hoi cua ban: を dung trong cau tieng Nhat nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q002,N5,particle,kg_vector,を dung trong cau tieng Nhat nhu the nao?,を|object|tan ngu,0.33,1,GrammarPoint:o / wo:o / wo: | Vocabulary:あの ～::あの ～ | Vocabulary:だれ（どなた）::だれ（どなた） | Vocabulary:その ～::その ～ | Vocabulary:～から::～から | Vocabulary:にほんご:N5:lesson-2:日本語:にほんご | GrammarPoint:cha ikenai / ja ikenai:N5:cha ikenai / ja ikenai: | Vocabulary:いみ:N5:lesson-24:意味:いみ,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- o / wo: hạt đánh dấu đối tượng.
+-  (あの ～): that ～, that ～ over there.
+-  (だれ（どなた）): who (どなた is the polite equivalent of だれ).
+Cau hoi cua ban: を dung trong cau tieng Nhat nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q003,N5,particle,llm_only,に va で khac nhau the nao?,に|で|place,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q003,N5,particle,vector_only,に va で khac nhau the nao?,に|で|place,0.67,1,GrammarPoint:ichiban:N5:ichiban: | GrammarPoint:issho ni:N5:issho ni: | Vocabulary:ききます［せんせいに～］:N5:lesson-23:聞きます［先生に～］:ききます［せんせいに～］ | Vocabulary:に:N5:二:に | Vocabulary:－だんめ:N5:lesson-10:－段目:－だんめ,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- ichiban: nhiều nhất; the best.
+- issho ni: cùng nhau.
+- 聞きます［先生に～］ (ききます［せんせいに～］): ask [the teacher].
+Cau hoi cua ban: に va で khac nhau the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q003,N5,particle,kg_only,に va で khac nhau the nao?,に|で|place,1.0,1,GrammarPoint:ni:ni: | Vocabulary:～までに::～までに | Vocabulary:いっしょに いかがですか。::いっしょに いかがですか。 | Vocabulary:いい［お］てんきですね。:いい［お］天気ですね。:いい［お］てんきですね。 | Vocabulary:おにいさん:お兄さん:おにいさん,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- ni: hạt đích; TRONG; Tại; TRÊN; to.
+-  (～までに): before ～, by ～ (indicating time limit).
+-  (いっしょに いかがですか。): Won't you join me (us)?.
+Cau hoi cua ban: に va で khac nhau the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q003,N5,particle,kg_vector,に va で khac nhau the nao?,に|で|place,1.0,1,GrammarPoint:ni:ni: | Vocabulary:～までに::～までに | Vocabulary:いっしょに いかがですか。::いっしょに いかがですか。 | Vocabulary:いい［お］てんきですね。:いい［お］天気ですね。:いい［お］てんきですね。 | Vocabulary:おにいさん:お兄さん:おにいさん | GrammarPoint:ichiban:N5:ichiban: | GrammarPoint:issho ni:N5:issho ni: | Vocabulary:ききます［せんせいに～］:N5:lesson-23:聞きます［先生に～］:ききます［せんせいに～］,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- ni: hạt đích; TRONG; Tại; TRÊN; to.
+-  (～までに): before ～, by ～ (indicating time limit).
+-  (いっしょに いかがですか。): Won't you join me (us)?.
+Cau hoi cua ban: に va で khac nhau the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q004,N5,particle,llm_only,へ co giong に khi noi ve huong di khong?,へ|に|direction,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q004,N5,particle,vector_only,へ co giong に khi noi ve huong di khong?,へ|に|direction,0.67,1,GrammarPoint:ni/e:N5:ni/e: | GrammarPoint:ni:N5:ni: | GrammarPoint:janai / dewa nai:N5:janai / dewa nai: | GrammarPoint:ne:N5:ne: | GrammarPoint:masen ka:N5:masen ka:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- ni/e: to (biểu thị hướng/đích đến).
+- ni: hạt đích; TRONG; Tại; TRÊN; to.
+- janai / dewa nai: じゃない・ではないkhông tồn tại (không phải; không phải; không phải).
+Cau hoi cua ban: へ co giong に khi noi ve huong di khong?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q004,N5,particle,kg_only,へ co giong に khi noi ve huong di khong?,へ|に|direction,1.0,1,GrammarPoint:ni/e:ni/e: | GrammarPoint:ni:ni: | Vocabulary:コンビニ::コンビニ | Vocabulary:にぎやか［な］::にぎやか［な］ | Vocabulary:～までに::～までに,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- ni/e: to (biểu thị hướng/đích đến).
+- ni: hạt đích; TRONG; Tại; TRÊN; to.
+-  (コンビニ): convenience store.
+Cau hoi cua ban: へ co giong に khi noi ve huong di khong?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q004,N5,particle,kg_vector,へ co giong に khi noi ve huong di khong?,へ|に|direction,1.0,1,GrammarPoint:ni/e:ni/e: | GrammarPoint:ni:ni: | Vocabulary:コンビニ::コンビニ | Vocabulary:にぎやか［な］::にぎやか［な］ | Vocabulary:～までに::～までに | GrammarPoint:janai / dewa nai:N5:janai / dewa nai: | GrammarPoint:ne:N5:ne: | GrammarPoint:masen ka:N5:masen ka:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- ni/e: to (biểu thị hướng/đích đến).
+- ni: hạt đích; TRONG; Tại; TRÊN; to.
+-  (コンビニ): convenience store.
+Cau hoi cua ban: へ co giong に khi noi ve huong di khong?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q005,N5,particle,llm_only,も dung de noi cung vay nhu the nao?,も|also|cung,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q005,N5,particle,vector_only,も dung de noi cung vay nhu the nao?,も|also|cung,0.67,1,GrammarPoint:mo:N5:mo: | GrammarPoint:ichiban:N5:ichiban: | Vocabulary:いみ:N5:lesson-25:意味:いみ | Vocabulary:いみ:N5:lesson-24:意味:いみ | Vocabulary:おかあさん:N5:lesson-7:お母さん:おかあさん,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- mo: cũng vậy; Mà còn; cũng.
+- ichiban: nhiều nhất; the best.
+- 意味 (いみ): meaning.
+Cau hoi cua ban: も dung de noi cung vay nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q005,N5,particle,kg_only,も dung de noi cung vay nhu the nao?,も|also|cung,1.0,1,Vocabulary:それは おもしろいですね。::それは おもしろいですね。 | Vocabulary:いくら［～でも］::いくら［～でも］ | Vocabulary:でも:でも:でも | Vocabulary:ほんの きもちです。:ほんの 気持ちです。:ほんの きもちです。 | Vocabulary:［～、］もう いっぱい いかがですか。:［～、］もう 一杯 いかがですか。:［～、］もう いっぱい いかがですか。,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (それは おもしろいですね。): That's interesting, isn't it?.
+-  (いくら［～でも］): however ～, even if ～.
+- でも (でも): but.
+Cau hoi cua ban: も dung de noi cung vay nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q005,N5,particle,kg_vector,も dung de noi cung vay nhu the nao?,も|also|cung,1.0,1,Vocabulary:それは おもしろいですね。::それは おもしろいですね。 | Vocabulary:いくら［～でも］::いくら［～でも］ | Vocabulary:でも:でも:でも | Vocabulary:ほんの きもちです。:ほんの 気持ちです。:ほんの きもちです。 | Vocabulary:［～、］もう いっぱい いかがですか。:［～、］もう 一杯 いかがですか。:［～、］もう いっぱい いかがですか。 | GrammarPoint:mo:N5:mo: | GrammarPoint:ichiban:N5:ichiban: | Vocabulary:いみ:N5:lesson-25:意味:いみ,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (それは おもしろいですね。): That's interesting, isn't it?.
+-  (いくら［～でも］): however ～, even if ～.
+- でも (でも): but.
+Cau hoi cua ban: も dung de noi cung vay nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q006,N5,particle,llm_only,と dung de noi di voi ai nhu the nao?,と|with|cung voi,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q006,N5,particle,vector_only,と dung de noi di voi ai nhu the nao?,と|with|cung voi,0.0,1,Vocabulary:いみ:N5:lesson-24:意味:いみ | Vocabulary:いみ:N5:lesson-25:意味:いみ | GrammarPoint:ichiban:N5:ichiban: | Vocabulary:しんかんせん:N5:lesson-5:新幹線:しんかんせん | Vocabulary:ふるさと:N5:lesson-18:故郷:ふるさと,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- 意味 (いみ): meaning.
+- 意味 (いみ): meaning.
+- ichiban: nhiều nhất; the best.
+Cau hoi cua ban: と dung de noi di voi ai nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q006,N5,particle,kg_only,と dung de noi di voi ai nhu the nao?,と|with|cung voi,1.0,1,Vocabulary:みんなで::みんなで | Vocabulary:おめでとう［ございます］。::おめでとう［ございます］。 | Vocabulary:これで おねがいします。:これで お願いします。:これで おねがいします。 | Vocabulary:また こんど おねがいします。:また 今度 お願いします。:また こんど おねがいします。 | Vocabulary:［～、］もう いっぱい いかがですか。:［～、］もう 一杯 いかがですか。:［～、］もう いっぱい いかがですか。,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (みんなで): all together.
+-  (おめでとう［ございます］。): Congratulations. (used on birthdays, at weddings, New Year's Day, etc.).
+- これで お願いします。 (これで おねがいします。): I'd like to pay with this.
+Cau hoi cua ban: と dung de noi di voi ai nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q006,N5,particle,kg_vector,と dung de noi di voi ai nhu the nao?,と|with|cung voi,1.0,1,Vocabulary:みんなで::みんなで | Vocabulary:おめでとう［ございます］。::おめでとう［ございます］。 | Vocabulary:これで おねがいします。:これで お願いします。:これで おねがいします。 | Vocabulary:また こんど おねがいします。:また 今度 お願いします。:また こんど おねがいします。 | Vocabulary:［～、］もう いっぱい いかがですか。:［～、］もう 一杯 いかがですか。:［～、］もう いっぱい いかがですか。 | Vocabulary:いみ:N5:lesson-24:意味:いみ | GrammarPoint:ichiban:N5:ichiban: | Vocabulary:しんかんせん:N5:lesson-5:新幹線:しんかんせん,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (みんなで): all together.
+-  (おめでとう［ございます］。): Congratulations. (used on birthdays, at weddings, New Year's Day, etc.).
+- これで お願いします。 (これで おねがいします。): I'd like to pay with this.
+Cau hoi cua ban: と dung de noi di voi ai nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q007,N5,particle,llm_only,から va まで dung trong thoi gian ra sao?,から|まで|from,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q007,N5,particle,vector_only,から va まで dung trong thoi gian ra sao?,から|まで|from,0.33,1,GrammarPoint:naito ikenai:N5:naito ikenai: | Vocabulary:～じん:N5:lesson-1:～人:～じん | Vocabulary:～から:N5:lesson-4:～から:～から | Vocabulary:～まで:N5:lesson-4:～まで:～まで | Vocabulary:～から きました。:N5:lesson-1:～から 来ました。:～から きました。,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- naito ikenai: phải làm; có nghĩa vụ phải làm ~.
+- ～人 (～じん): (suffix meaning 'a national of'; e.g. アメリカじん, an American).
+- ～から (～から): from ～.
+Cau hoi cua ban: から va まで dung trong thoi gian ra sao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q007,N5,particle,kg_only,から va まで dung trong thoi gian ra sao?,から|まで|from,1.0,1,Vocabulary:これから::これから | Vocabulary:これから おせわに なります。:これから お世話に なります。:これから おせわに なります。 | Vocabulary:～から きました。:～から 来ました。:～から きました。 | Vocabulary:～から::～から | Vocabulary:ですから::ですから,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (これから): from now on, soon.
+- これから お世話に なります。 (これから おせわに なります。): Thank you in advance for your kindness..
+- ～から 来ました。 (～から きました。): I'm from ～ (country).
+Cau hoi cua ban: から va まで dung trong thoi gian ra sao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q007,N5,particle,kg_vector,から va まで dung trong thoi gian ra sao?,から|まで|from,1.0,1,Vocabulary:これから::これから | Vocabulary:これから おせわに なります。:これから お世話に なります。:これから おせわに なります。 | Vocabulary:～から きました。:～から 来ました。:～から きました。 | Vocabulary:～から::～から | Vocabulary:ですから::ですから | GrammarPoint:naito ikenai:N5:naito ikenai: | Vocabulary:～じん:N5:lesson-1:～人:～じん | Vocabulary:～から:N5:lesson-4:～から:～から,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (これから): from now on, soon.
+- これから お世話に なります。 (これから おせわに なります。): Thank you in advance for your kindness..
+- ～から 来ました。 (～から きました。): I'm from ～ (country).
+Cau hoi cua ban: から va まで dung trong thoi gian ra sao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q008,N5,particle,llm_only,の dung de noi so huu nhu the nao?,の|possessive|so huu,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q008,N5,particle,vector_only,の dung de noi so huu nhu the nao?,の|possessive|so huu,1.0,1,GrammarPoint:no:N5:no: | Vocabulary:いみ:N5:lesson-25:意味:いみ | Vocabulary:いみ:N5:lesson-24:意味:いみ | Vocabulary:「しちにんの さむらい」:N5:lesson-8:「七人の 侍」:「しちにんの さむらい」 | Vocabulary:ふるさと:N5:lesson-18:故郷:ふるさと,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- no: trợ từ sở hữu.
+- 意味 (いみ): meaning.
+- 意味 (いみ): meaning.
+Cau hoi cua ban: の dung de noi so huu nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q008,N5,particle,kg_only,の dung de noi so huu nhu the nao?,の|possessive|so huu,1.0,1,GrammarPoint:no:no: | Vocabulary:その ～::その ～ | Vocabulary:～でも のみませんか。:～でも 飲みませんか。:～でも のみませんか。 | Vocabulary:ですから::ですから | Vocabulary:それは おもしろいですね。::それは おもしろいですね。,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- no: trợ từ sở hữu.
+-  (その ～): that ～, that ～ near the listener.
+- ～でも 飲みませんか。 (～でも のみませんか。): How about drinking ～ or something?.
+Cau hoi cua ban: の dung de noi so huu nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q008,N5,particle,kg_vector,の dung de noi so huu nhu the nao?,の|possessive|so huu,1.0,1,GrammarPoint:no:no: | Vocabulary:その ～::その ～ | Vocabulary:～でも のみませんか。:～でも 飲みませんか。:～でも のみませんか。 | Vocabulary:ですから::ですから | Vocabulary:それは おもしろいですね。::それは おもしろいですね。 | Vocabulary:いみ:N5:lesson-25:意味:いみ | Vocabulary:「しちにんの さむらい」:N5:lesson-8:「七人の 侍」:「しちにんの さむらい」 | Vocabulary:ふるさと:N5:lesson-18:故郷:ふるさと,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- no: trợ từ sở hữu.
+-  (その ～): that ～, that ～ near the listener.
+- ～でも 飲みませんか。 (～でも のみませんか。): How about drinking ～ or something?.
+Cau hoi cua ban: の dung de noi so huu nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q009,N4,particle,llm_only,より dung khi so sanh nhu the nao?,より|comparison|so sanh,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q009,N4,particle,vector_only,より dung khi so sanh nhu the nao?,より|comparison|so sanh,0.33,1,GrammarPoint:wa~ga... wa:N4:wa~ga... wa: | GrammarPoint:tara dou:N4:tara dou: | GrammarPoint:to:N4:to: | GrammarPoint:yori:N4:yori: | GrammarPoint:koto:N4:koto:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- wa~ga... wa: [A] nhưng [B]; Tuy nhiên; so sánh.
+- tara dou: tại sao bạn không; Thế còn ~ (dùng để đưa ra lời khuyên).
+- to: bất cứ khi nào [A] xảy ra, [B] cũng xảy ra.
+Cau hoi cua ban: より dung khi so sanh nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q009,N4,particle,kg_only,より dung khi so sanh nhu the nao?,より|comparison|so sanh,0.0,1,Vocabulary:それでも::それでも | Vocabulary:そのままに します::そのままに します | Vocabulary:そんな ～::そんな ～ | GrammarPoint:yori:yori: | Vocabulary:そんなに:そんなに:そんなに,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (それでも): nevertheless, for all that.
+-  (そのままに します): leave thing as they are.
+-  (そんな ～): ～ like that (near the listener).
+Cau hoi cua ban: より dung khi so sanh nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q009,N4,particle,kg_vector,より dung khi so sanh nhu the nao?,より|comparison|so sanh,0.0,1,Vocabulary:それでも::それでも | Vocabulary:そのままに します::そのままに します | Vocabulary:そんな ～::そんな ～ | GrammarPoint:yori:yori: | Vocabulary:そんなに:そんなに:そんなに | GrammarPoint:wa~ga... wa:N4:wa~ga... wa: | GrammarPoint:tara dou:N4:tara dou: | GrammarPoint:to:N4:to:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (それでも): nevertheless, for all that.
+-  (そのままに します): leave thing as they are.
+-  (そんな ～): ～ like that (near the listener).
+Cau hoi cua ban: より dung khi so sanh nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q010,N4,particle,llm_only,しか dung voi phu dinh co nghia gi?,しか|only|phu dinh,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q010,N4,particle,vector_only,しか dung voi phu dinh co nghia gi?,しか|only|phu dinh,0.0,1,GrammarPoint:koto:N4:koto: | GrammarPoint:tara dou:N4:tara dou: | GrammarPoint:to:N4:to: | Vocabulary:～しか:N4:lesson-27:～しか:～しか | GrammarPoint:zenzen~nai:N4:zenzen~nai:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- koto: Động từ danh nghĩa.
+- tara dou: tại sao bạn không; Thế còn ~ (dùng để đưa ra lời khuyên).
+- to: bất cứ khi nào [A] xảy ra, [B] cũng xảy ra.
+Cau hoi cua ban: しか dung voi phu dinh co nghia gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q010,N4,particle,kg_only,しか dung voi phu dinh co nghia gi?,しか|only|phu dinh,0.67,1,Vocabulary:～しか::～しか | Vocabulary:しかります::しかります | Vocabulary:かないます［ゆめが～］:かないます［夢が～］:かないます［ゆめが～］ | Vocabulary:ほしうらない:星占い:ほしうらない | Vocabulary:たしかめます:確かめます:たしかめます,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (～しか): only ～ (used with negatives).
+-  (しかります): scold.
+- かないます［夢が～］ (かないます［ゆめが～］): [dream] be realized, come true.
+Cau hoi cua ban: しか dung voi phu dinh co nghia gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q010,N4,particle,kg_vector,しか dung voi phu dinh co nghia gi?,しか|only|phu dinh,0.67,1,Vocabulary:～しか::～しか | Vocabulary:しかります::しかります | Vocabulary:かないます［ゆめが～］:かないます［夢が～］:かないます［ゆめが～］ | Vocabulary:ほしうらない:星占い:ほしうらない | Vocabulary:たしかめます:確かめます:たしかめます | GrammarPoint:koto:N4:koto: | GrammarPoint:tara dou:N4:tara dou: | GrammarPoint:to:N4:to:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (～しか): only ～ (used with negatives).
+-  (しかります): scold.
+- かないます［夢が～］ (かないます［ゆめが～］): [dream] be realized, come true.
+Cau hoi cua ban: しか dung voi phu dinh co nghia gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q011,N5,verb,llm_only,ます form la gi?,ます|polite|verb,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q011,N5,verb,vector_only,ます form la gi?,ます|polite|verb,0.0,1,GrammarPoint:da / desu:N5:da / desu: | GrammarPoint:no ga jouzu:N5:no ga jouzu: | GrammarPoint:no desu:N5:no desu: | GrammarPoint:ga imasu:N5:ga imasu: | GrammarPoint:wa dou desu ka:N5:wa dou desu ka:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- da / desu: chỉ là (am, is, are, were, used to).
+- no ga jouzu: giỏi.
+- no desu: để giải thích điều gì đó; thể hiện sự nhấn mạnh.
+Cau hoi cua ban: ます form la gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q011,N5,verb,kg_only,ます form la gi?,ます|polite|verb,1.0,1,Vocabulary:～で ございます。::～で ございます。 | Vocabulary:おめでとう［ございます］。::おめでとう［ございます］。 | Vocabulary:します::します | Vocabulary:あります［おまつりが～］:あります［お祭りが～］:あります［おまつりが～］ | Vocabulary:かけます［めがねを～］:かけます［眼鏡を～］:かけます［めがねを～］,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (～で ございます。): (polite equivalent of です).
+-  (おめでとう［ございます］。): Congratulations. (used on birthdays, at weddings, New Year's Day, etc.).
+-  (します): do, play.
+Cau hoi cua ban: ます form la gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q011,N5,verb,kg_vector,ます form la gi?,ます|polite|verb,1.0,1,Vocabulary:～で ございます。::～で ございます。 | Vocabulary:おめでとう［ございます］。::おめでとう［ございます］。 | Vocabulary:します::します | Vocabulary:あります［おまつりが～］:あります［お祭りが～］:あります［おまつりが～］ | Vocabulary:かけます［めがねを～］:かけます［眼鏡を～］:かけます［めがねを～］ | GrammarPoint:da / desu:N5:da / desu: | GrammarPoint:no ga jouzu:N5:no ga jouzu: | GrammarPoint:no desu:N5:no desu:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (～で ございます。): (polite equivalent of です).
+-  (おめでとう［ございます］。): Congratulations. (used on birthdays, at weddings, New Year's Day, etc.).
+-  (します): do, play.
+Cau hoi cua ban: ます form la gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q012,N5,verb,llm_only,Dictionary form cua たべます la gi?,食べる|たべる|dictionary,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q012,N5,verb,vector_only,Dictionary form cua たべます la gi?,食べる|たべる|dictionary,0.0,0,GrammarPoint:da / desu:N5:da / desu: | GrammarPoint:no ga jouzu:N5:no ga jouzu: | GrammarPoint:no desu:N5:no desu: | GrammarPoint:wa dou desu ka:N5:wa dou desu ka: | GrammarPoint:ga imasu:N5:ga imasu:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- da / desu: chỉ là (am, is, are, were, used to).
+- no ga jouzu: giỏi.
+- no desu: để giải thích điều gì đó; thể hiện sự nhấn mạnh.
+Cau hoi cua ban: Dictionary form cua たべます la gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q012,N5,verb,kg_only,Dictionary form cua たべます la gi?,食べる|たべる|dictionary,0.0,0,Vocabulary:～で ございます。::～で ございます。 | Vocabulary:します::します | Vocabulary:おめでとう［ございます］。::おめでとう［ございます］。 | Vocabulary:あります［おまつりが～］:あります［お祭りが～］:あります［おまつりが～］ | Vocabulary:かけます［めがねを～］:かけます［眼鏡を～］:かけます［めがねを～］,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (～で ございます。): (polite equivalent of です).
+-  (します): do, play.
+-  (おめでとう［ございます］。): Congratulations. (used on birthdays, at weddings, New Year's Day, etc.).
+Cau hoi cua ban: Dictionary form cua たべます la gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q012,N5,verb,kg_vector,Dictionary form cua たべます la gi?,食べる|たべる|dictionary,0.0,0,Vocabulary:～で ございます。::～で ございます。 | Vocabulary:します::します | Vocabulary:おめでとう［ございます］。::おめでとう［ございます］。 | Vocabulary:あります［おまつりが～］:あります［お祭りが～］:あります［おまつりが～］ | Vocabulary:かけます［めがねを～］:かけます［眼鏡を～］:かけます［めがねを～］ | GrammarPoint:da / desu:N5:da / desu: | GrammarPoint:no ga jouzu:N5:no ga jouzu: | GrammarPoint:no desu:N5:no desu:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (～で ございます。): (polite equivalent of です).
+-  (します): do, play.
+-  (おめでとう［ございます］。): Congratulations. (used on birthdays, at weddings, New Year's Day, etc.).
+Cau hoi cua ban: Dictionary form cua たべます la gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q013,N5,verb,llm_only,The past polite form cua いきます la gi?,行きました|いきました|past,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q013,N5,verb,vector_only,The past polite form cua いきます la gi?,行きました|いきました|past,0.0,0,GrammarPoint:da / desu:N5:da / desu: | GrammarPoint:no ga jouzu:N5:no ga jouzu: | GrammarPoint:no desu:N5:no desu: | GrammarPoint:wa dou desu ka:N5:wa dou desu ka: | GrammarPoint:ga imasu:N5:ga imasu:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- da / desu: chỉ là (am, is, are, were, used to).
+- no ga jouzu: giỏi.
+- no desu: để giải thích điều gì đó; thể hiện sự nhấn mạnh.
+Cau hoi cua ban: The past polite form cua いきます la gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q013,N5,verb,kg_only,The past polite form cua いきます la gi?,行きました|いきました|past,0.0,0,Vocabulary:おなかが すきます::おなかが すきます | Vocabulary:します::します | Vocabulary:のどが かわきます::のどが かわきます | Vocabulary:～で ございます。::～で ございます。 | Vocabulary:おめでとう［ございます］。::おめでとう［ございます］。,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (おなかが すきます): get hungry (when expressing the condition of being hungry, おなかが すきました is used).
+-  (します): do, play.
+-  (のどが かわきます): get thirsty (when expressing the condition of being thirsty, のどが かわきました is used).
+Cau hoi cua ban: The past polite form cua いきます la gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q013,N5,verb,kg_vector,The past polite form cua いきます la gi?,行きました|いきました|past,0.0,0,Vocabulary:おなかが すきます::おなかが すきます | Vocabulary:します::します | Vocabulary:のどが かわきます::のどが かわきます | Vocabulary:～で ございます。::～で ございます。 | Vocabulary:おめでとう［ございます］。::おめでとう［ございます］。 | GrammarPoint:da / desu:N5:da / desu: | GrammarPoint:no ga jouzu:N5:no ga jouzu: | GrammarPoint:no desu:N5:no desu:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (おなかが すきます): get hungry (when expressing the condition of being hungry, おなかが すきました is used).
+-  (します): do, play.
+-  (のどが かわきます): get thirsty (when expressing the condition of being thirsty, のどが かわきました is used).
+Cau hoi cua ban: The past polite form cua いきます la gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q014,N5,verb,llm_only,ない form dung de noi khong lam gi?,ない|negative|verb,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q014,N5,verb,vector_only,ない form dung de noi khong lam gi?,ない|negative|verb,0.33,1,GrammarPoint:ne:N5:ne: | GrammarPoint:janai / dewa nai:N5:janai / dewa nai: | GrammarPoint:ga arimasu:N5:ga arimasu: | GrammarPoint:masen ka:N5:masen ka: | GrammarPoint:te wa ikenai:N5:te wa ikenai:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- ne: phải không? Phải? eh?.
+- janai / dewa nai: じゃない・ではないkhông tồn tại (không phải; không phải; không phải).
+- ga arimasu: có; là (vật không sống).
+Cau hoi cua ban: ない form dung de noi khong lam gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q014,N5,verb,kg_only,ない form dung de noi khong lam gi?,ない|negative|verb,0.33,1,GrammarPoint:janai / dewa nai:janai / dewa nai: | Vocabulary:しつれいですが:失礼ですが:しつれいですが | Vocabulary:そうですか。::そうですか。 | Vocabulary:こちらは ～さんです。::こちらは ～さんです。 | Vocabulary:～で ございます。::～で ございます。,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- janai / dewa nai: じゃない・ではないkhông tồn tại (không phải; không phải; không phải).
+- 失礼ですが (しつれいですが): Excuse me, but (used when asking someone for personal information such as their name or address).
+-  (そうですか。): I see..
+Cau hoi cua ban: ない form dung de noi khong lam gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q014,N5,verb,kg_vector,ない form dung de noi khong lam gi?,ない|negative|verb,0.33,1,GrammarPoint:janai / dewa nai:janai / dewa nai: | Vocabulary:しつれいですが:失礼ですが:しつれいですが | Vocabulary:そうですか。::そうですか。 | Vocabulary:こちらは ～さんです。::こちらは ～さんです。 | Vocabulary:～で ございます。::～で ございます。 | GrammarPoint:ne:N5:ne: | GrammarPoint:ga arimasu:N5:ga arimasu: | GrammarPoint:masen ka:N5:masen ka:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- janai / dewa nai: じゃない・ではないkhông tồn tại (không phải; không phải; không phải).
+- 失礼ですが (しつれいですが): Excuse me, but (used when asking someone for personal information such as their name or address).
+-  (そうですか。): I see..
+Cau hoi cua ban: ない form dung de noi khong lam gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q015,N5,verb,llm_only,て form dung de noi ket noi hanh dong nhu the nao?,て|te-form|connect,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q015,N5,verb,vector_only,て form dung de noi ket noi hanh dong nhu the nao?,て|te-form|connect,0.0,0,Vocabulary:いみ:N5:lesson-25:意味:いみ | Vocabulary:いみ:N5:lesson-24:意味:いみ | Vocabulary:ふるさと:N5:lesson-18:故郷:ふるさと | Vocabulary:にほんご:N5:lesson-2:日本語:にほんご | Vocabulary:はじめ:N5:lesson-20:初め:はじめ,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- 意味 (いみ): meaning.
+- 意味 (いみ): meaning.
+- 故郷 (ふるさと): Furusato (a song title meaning 'Home Town').
+Cau hoi cua ban: て form dung de noi ket noi hanh dong nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q015,N5,verb,kg_only,て form dung de noi ket noi hanh dong nhu the nao?,て|te-form|connect,0.0,1,Vocabulary:しつれいですが:失礼ですが:しつれいですが | Vocabulary:みんなで::みんなで | Vocabulary:ですから::ですから | Vocabulary:いい［お］てんきですね。:いい［お］天気ですね。:いい［お］てんきですね。 | Vocabulary:では:では:では,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- 失礼ですが (しつれいですが): Excuse me, but (used when asking someone for personal information such as their name or address).
+-  (みんなで): all together.
+-  (ですから): therefore, so.
+Cau hoi cua ban: て form dung de noi ket noi hanh dong nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q015,N5,verb,kg_vector,て form dung de noi ket noi hanh dong nhu the nao?,て|te-form|connect,0.0,1,Vocabulary:しつれいですが:失礼ですが:しつれいですが | Vocabulary:みんなで::みんなで | Vocabulary:ですから::ですから | Vocabulary:いい［お］てんきですね。:いい［お］天気ですね。:いい［お］てんきですね。 | Vocabulary:では:では:では | Vocabulary:いみ:N5:lesson-25:意味:いみ | Vocabulary:ふるさと:N5:lesson-18:故郷:ふるさと | Vocabulary:にほんご:N5:lesson-2:日本語:にほんご,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- 失礼ですが (しつれいですが): Excuse me, but (used when asking someone for personal information such as their name or address).
+-  (みんなで): all together.
+-  (ですから): therefore, so.
+Cau hoi cua ban: て form dung de noi ket noi hanh dong nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q016,N4,verb,llm_only,たい form dung de noi muon lam gi?,たい|want|verb,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q016,N4,verb,vector_only,たい form dung de noi muon lam gi?,たい|want|verb,0.33,1,GrammarPoint:tara dou:N4:tara dou: | GrammarPoint:to:N4:to: | GrammarPoint:tagaru:N4:tagaru: | GrammarPoint:ukemi kei:N4:ukemi kei: | GrammarPoint:koto:N4:koto:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- tara dou: tại sao bạn không; Thế còn ~ (dùng để đưa ra lời khuyên).
+- to: bất cứ khi nào [A] xảy ra, [B] cũng xảy ra.
+- tagaru: muốn làm ~ (người thứ ba).
+Cau hoi cua ban: たい form dung de noi muon lam gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q016,N4,verb,kg_only,たい form dung de noi muon lam gi?,たい|want|verb,0.0,0,Vocabulary:それは いいですね。::それは いいですね。 | Vocabulary:だれでも::だれでも | Vocabulary:どこでも::どこでも | Vocabulary:いつでも::いつでも | Vocabulary:いくら［～でも］::いくら［～でも］,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (それは いいですね。): That's a good idea./That sounds nice..
+-  (だれでも): anybody.
+-  (どこでも): anywhere.
+Cau hoi cua ban: たい form dung de noi muon lam gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q016,N4,verb,kg_vector,たい form dung de noi muon lam gi?,たい|want|verb,0.0,1,Vocabulary:それは いいですね。::それは いいですね。 | Vocabulary:だれでも::だれでも | Vocabulary:どこでも::どこでも | Vocabulary:いつでも::いつでも | Vocabulary:いくら［～でも］::いくら［～でも］ | GrammarPoint:tara dou:N4:tara dou: | GrammarPoint:to:N4:to: | GrammarPoint:tagaru:N4:tagaru:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (それは いいですね。): That's a good idea./That sounds nice..
+-  (だれでも): anybody.
+-  (どこでも): anywhere.
+Cau hoi cua ban: たい form dung de noi muon lam gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q017,N4,verb,llm_only,たことがある co nghia gi?,ことがある|experience|kinh nghiem,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q017,N4,verb,vector_only,たことがある co nghia gi?,ことがある|experience|kinh nghiem,0.0,0,GrammarPoint:koto:N4:koto: | Vocabulary:かならず:N4:lesson-36:必ず:かならず | Vocabulary:のりもの:N4:lesson-36:乗り物:のりもの | GrammarPoint:aida:N4:aida: | GrammarPoint:zehi:N4:zehi:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- koto: Động từ danh nghĩa.
+- 必ず (かならず): without fail, by any means.
+- 乗り物 (のりもの): vehicle, means of transportation.
+Cau hoi cua ban: たことがある co nghia gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q017,N4,verb,kg_only,たことがある co nghia gi?,ことがある|experience|kinh nghiem,0.33,1,GrammarPoint:koto ga aru:koto ga aru: | Vocabulary:ゲーム::ゲーム | Vocabulary:マンション::マンション | Vocabulary:NHK::NHK | Vocabulary:ひきます［かぜを～］::ひきます［かぜを～］,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- koto ga aru: có những lúc.
+-  (ゲーム): (computer) game.
+-  (マンション): condominium, apartment house, blocks of flats.
+Cau hoi cua ban: たことがある co nghia gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q017,N4,verb,kg_vector,たことがある co nghia gi?,ことがある|experience|kinh nghiem,0.33,1,GrammarPoint:koto ga aru:koto ga aru: | Vocabulary:ゲーム::ゲーム | Vocabulary:マンション::マンション | Vocabulary:NHK::NHK | Vocabulary:ひきます［かぜを～］::ひきます［かぜを～］ | GrammarPoint:koto:N4:koto: | Vocabulary:かならず:N4:lesson-36:必ず:かならず | Vocabulary:のりもの:N4:lesson-36:乗り物:のりもの,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- koto ga aru: có những lúc.
+-  (ゲーム): (computer) game.
+-  (マンション): condominium, apartment house, blocks of flats.
+Cau hoi cua ban: たことがある co nghia gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q018,N4,verb,llm_only,てもいい dung de xin phep nhu the nao?,てもいい|permission|duoc,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q018,N4,verb,vector_only,てもいい dung de xin phep nhu the nao?,てもいい|permission|duoc,0.33,1,GrammarPoint:tara dou:N4:tara dou: | GrammarPoint:to:N4:to: | Vocabulary:きょか:N4:lesson-35:許可:きょか | Vocabulary:とちゅうで:N4:lesson-39:途中で:とちゅうで | GrammarPoint:koto:N4:koto:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- tara dou: tại sao bạn không; Thế còn ~ (dùng để đưa ra lời khuyên).
+- to: bất cứ khi nào [A] xảy ra, [B] cũng xảy ra.
+- 許可 (きょか): permission.
+Cau hoi cua ban: てもいい dung de xin phep nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q018,N4,verb,kg_only,てもいい dung de xin phep nhu the nao?,てもいい|permission|duoc,0.33,1,GrammarPoint:to ittemo ii:to ittemo ii: | Vocabulary:それでも::それでも | Vocabulary:では::では | Vocabulary:ところで::ところで | Vocabulary:かかります［でんわが～］:かかります［電話が～］:かかります［でんわが～］,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- to ittemo ii: bạn có thể nói; người ta có thể nói; Tôi muốn nói ~.
+-  (それでも): nevertheless, for all that.
+-  (では): well, then (polite equivalent of じゃ).
+Cau hoi cua ban: てもいい dung de xin phep nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q018,N4,verb,kg_vector,てもいい dung de xin phep nhu the nao?,てもいい|permission|duoc,0.33,1,GrammarPoint:to ittemo ii:to ittemo ii: | Vocabulary:それでも::それでも | Vocabulary:では::では | Vocabulary:ところで::ところで | Vocabulary:かかります［でんわが～］:かかります［電話が～］:かかります［でんわが～］ | GrammarPoint:tara dou:N4:tara dou: | GrammarPoint:to:N4:to: | Vocabulary:きょか:N4:lesson-35:許可:きょか,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- to ittemo ii: bạn có thể nói; người ta có thể nói; Tôi muốn nói ~.
+-  (それでも): nevertheless, for all that.
+-  (では): well, then (polite equivalent of じゃ).
+Cau hoi cua ban: てもいい dung de xin phep nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q019,N4,verb,llm_only,なければならない co nghia gi?,なければならない|must|phai,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q019,N4,verb,vector_only,なければならない co nghia gi?,なければならない|must|phai,0.0,0,GrammarPoint:koto:N4:koto: | Vocabulary:かならず:N4:lesson-36:必ず:かならず | GrammarPoint:aida:N4:aida: | Vocabulary:のりもの:N4:lesson-36:乗り物:のりもの | GrammarPoint:ukemi kei:N4:ukemi kei:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- koto: Động từ danh nghĩa.
+- 必ず (かならず): without fail, by any means.
+- aida: trong khi; trong lúc; giữa ~.
+Cau hoi cua ban: なければならない co nghia gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q019,N4,verb,kg_only,なければならない co nghia gi?,なければならない|must|phai,0.33,1,GrammarPoint:nakereba naranai:nakereba naranai: | Vocabulary:かないます［ゆめが～］:かないます［夢が～］:かないます［ゆめが～］ | Vocabulary:ほしうらない:星占い:ほしうらない | Vocabulary:［あ、］いけない。::［あ、］いけない。 | Vocabulary:つまらない::つまらない,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- nakereba naranai: phải làm điều gì đó; phải làm gì đó.
+- かないます［夢が～］ (かないます［ゆめが～］): [dream] be realized, come true.
+- 星占い (ほしうらない): horoscope.
+Cau hoi cua ban: なければならない co nghia gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q019,N4,verb,kg_vector,なければならない co nghia gi?,なければならない|must|phai,0.33,1,GrammarPoint:nakereba naranai:nakereba naranai: | Vocabulary:かないます［ゆめが～］:かないます［夢が～］:かないます［ゆめが～］ | Vocabulary:ほしうらない:星占い:ほしうらない | Vocabulary:［あ、］いけない。::［あ、］いけない。 | Vocabulary:つまらない::つまらない | GrammarPoint:koto:N4:koto: | Vocabulary:かならず:N4:lesson-36:必ず:かならず | GrammarPoint:aida:N4:aida:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- nakereba naranai: phải làm điều gì đó; phải làm gì đó.
+- かないます［夢が～］ (かないます［ゆめが～］): [dream] be realized, come true.
+- 星占い (ほしうらない): horoscope.
+Cau hoi cua ban: なければならない co nghia gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q020,N4,verb,llm_only,てしまう dung trong ngu canh nao?,てしまう|complete|regret,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q020,N4,verb,vector_only,てしまう dung trong ngu canh nao?,てしまう|complete|regret,0.0,0,GrammarPoint:to:N4:to: | GrammarPoint:tara dou:N4:tara dou: | GrammarPoint:no naka de:N4:no naka de: | GrammarPoint:nagara:N4:nagara: | GrammarPoint:aida:N4:aida:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- to: bất cứ khi nào [A] xảy ra, [B] cũng xảy ra.
+- tara dou: tại sao bạn không; Thế còn ~ (dùng để đưa ra lời khuyên).
+- no naka de: TRONG; trong số ~.
+Cau hoi cua ban: てしまう dung trong ngu canh nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q020,N4,verb,kg_only,てしまう dung trong ngu canh nao?,てしまう|complete|regret,0.33,1,GrammarPoint:te shimau / chau:te shimau / chau: | Vocabulary:ばんぐみ:番組:ばんぐみ | Vocabulary:クリーニング::クリーニング | Vocabulary:ミーティング::ミーティング | Vocabulary:ハイキング::ハイキング,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- te shimau / chau: vô tình làm điều gì đó, hoàn thành hoàn toàn.
+- 番組 (ばんぐみ): programme.
+-  (クリーニング): (dry) cleaning, laundry.
+Cau hoi cua ban: てしまう dung trong ngu canh nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q020,N4,verb,kg_vector,てしまう dung trong ngu canh nao?,てしまう|complete|regret,0.33,1,GrammarPoint:te shimau / chau:te shimau / chau: | Vocabulary:ばんぐみ:番組:ばんぐみ | Vocabulary:クリーニング::クリーニング | Vocabulary:ミーティング::ミーティング | Vocabulary:ハイキング::ハイキング | GrammarPoint:to:N4:to: | GrammarPoint:tara dou:N4:tara dou: | GrammarPoint:no naka de:N4:no naka de:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- te shimau / chau: vô tình làm điều gì đó, hoàn thành hoàn toàn.
+- 番組 (ばんぐみ): programme.
+-  (クリーニング): (dry) cleaning, laundry.
+Cau hoi cua ban: てしまう dung trong ngu canh nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q021,N5,grammar,llm_only,です dung nhu the nao trong cau co ban?,です|copula|la,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q021,N5,grammar,vector_only,です dung nhu the nao trong cau co ban?,です|copula|la,0.67,1,GrammarPoint:no naka de [A] ga ichiban:N5:no naka de [A] ga ichiban: | GrammarPoint:no ga heta:N5:no ga heta: | Vocabulary:もう ～です［ね］。:N5:lesson-8:もう ～です［ね］。:もう ～です［ね］。 | GrammarPoint:ga arimasu:N5:ga arimasu: | Vocabulary:だめですか。:N5:lesson-9:だめですか。:だめですか。,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- no naka de [A] ga ichiban: trong nhóm này, [A] là best.
+- no ga heta: làm việc gì đó dở.
+- もう ～です［ね］。 (もう ～です［ね］。): It's already ～[, isn't it?].
+Cau hoi cua ban: です dung nhu the nao trong cau co ban?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q021,N5,grammar,kg_only,です dung nhu the nao trong cau co ban?,です|copula|la,1.0,1,GrammarPoint:da / desu:da / desu: | GrammarPoint:ga imasu:ga imasu: | GrammarPoint:naru:naru: | GrammarPoint:no ga heta:no ga heta: | GrammarPoint:no ga jouzu:no ga jouzu:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- da / desu: chỉ là (am, is, are, were, used to).
+- ga imasu: có; được ; là (sinh vật sống).
+- naru: to Become.
+Cau hoi cua ban: です dung nhu the nao trong cau co ban?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q021,N5,grammar,kg_vector,です dung nhu the nao trong cau co ban?,です|copula|la,1.0,1,GrammarPoint:da / desu:da / desu: | GrammarPoint:ga imasu:ga imasu: | GrammarPoint:naru:naru: | GrammarPoint:no ga heta:no ga heta: | GrammarPoint:no ga jouzu:no ga jouzu: | GrammarPoint:no naka de [A] ga ichiban:N5:no naka de [A] ga ichiban: | Vocabulary:もう ～です［ね］。:N5:lesson-8:もう ～です［ね］。:もう ～です［ね］。 | GrammarPoint:ga arimasu:N5:ga arimasu:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- da / desu: chỉ là (am, is, are, were, used to).
+- ga imasu: có; được ; là (sinh vật sống).
+- naru: to Become.
+Cau hoi cua ban: です dung nhu the nao trong cau co ban?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q022,N5,grammar,llm_only,あります va います khac nhau the nao?,あります|います|exist,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q022,N5,grammar,vector_only,あります va います khac nhau the nao?,あります|います|exist,0.33,1,Vocabulary:あります:N5:lesson-9:あります:あります | GrammarPoint:ichiban:N5:ichiban: | GrammarPoint:issho ni:N5:issho ni: | Vocabulary:しって います:N5:lesson-15:知って います:しって います | Vocabulary:あります:N5:lesson-10:あります:あります,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- あります (あります): have.
+- ichiban: nhiều nhất; the best.
+- issho ni: cùng nhau.
+Cau hoi cua ban: あります va います khac nhau the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q022,N5,grammar,kg_only,あります va います khac nhau the nao?,あります|います|exist,1.0,1,Vocabulary:～で ございます。::～で ございます。 | Vocabulary:あります::あります | Vocabulary:あります［おまつりが～］:あります［お祭りが～］:あります［おまつりが～］ | Vocabulary:います::います | Vocabulary:いらっしゃいます::いらっしゃいます,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (～で ございます。): (polite equivalent of です).
+-  (あります): exist, be (referring to inanimate things).
+- あります［お祭りが～］ (あります［おまつりが～］): [a festival] be held, take place.
+Cau hoi cua ban: あります va います khac nhau the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q022,N5,grammar,kg_vector,あります va います khac nhau the nao?,あります|います|exist,1.0,1,Vocabulary:～で ございます。::～で ございます。 | Vocabulary:あります::あります | Vocabulary:あります［おまつりが～］:あります［お祭りが～］:あります［おまつりが～］ | Vocabulary:います::います | Vocabulary:いらっしゃいます::いらっしゃいます | Vocabulary:あります:N5:lesson-9:あります:あります | GrammarPoint:ichiban:N5:ichiban: | GrammarPoint:issho ni:N5:issho ni:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (～で ございます。): (polite equivalent of です).
+-  (あります): exist, be (referring to inanimate things).
+- あります［お祭りが～］ (あります［おまつりが～］): [a festival] be held, take place.
+Cau hoi cua ban: あります va います khac nhau the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q023,N5,grammar,llm_only,ここ そこ あそこ khac nhau nhu the nao?,ここ|そこ|あそこ,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q023,N5,grammar,vector_only,ここ そこ あそこ khac nhau nhu the nao?,ここ|そこ|あそこ,1.0,1,Vocabulary:あそこ:N5:あそこ:あそこ | Vocabulary:そこ:N5:そこ:そこ | Vocabulary:そこ:N5:lesson-3:そこ:そこ | Vocabulary:ここ:N5:ここ:ここ | Vocabulary:あそこ:N5:lesson-3:あそこ:あそこ,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- あそこ (あそこ): chua co nghia chi tiet.
+- そこ (そこ): chua co nghia chi tiet.
+- そこ (そこ): there, that place near the listener.
+Cau hoi cua ban: ここ そこ あそこ khac nhau nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q023,N5,grammar,kg_only,ここ そこ あそこ khac nhau nhu the nao?,ここ|そこ|あそこ,0.67,1,Vocabulary:あそこ:あそこ:あそこ | Vocabulary:あちら:あちら:あちら | GrammarPoint:issho ni:issho ni: | Vocabulary:そこ:そこ:そこ | Vocabulary:だれ（どなた）::だれ（どなた）,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- あそこ (あそこ): that place over there.
+- あちら (あちら): that way, that place over there (polite equivalent of あそこ).
+- issho ni: cùng nhau.
+Cau hoi cua ban: ここ そこ あそこ khac nhau nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q023,N5,grammar,kg_vector,ここ そこ あそこ khac nhau nhu the nao?,ここ|そこ|あそこ,0.67,1,Vocabulary:あそこ:あそこ:あそこ | Vocabulary:あちら:あちら:あちら | GrammarPoint:issho ni:issho ni: | Vocabulary:そこ:そこ:そこ | Vocabulary:だれ（どなた）::だれ（どなた） | Vocabulary:ここ:N5:ここ:ここ,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- あそこ (あそこ): that place over there.
+- あちら (あちら): that way, that place over there (polite equivalent of あそこ).
+- issho ni: cùng nhau.
+Cau hoi cua ban: ここ そこ あそこ khac nhau nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q024,N5,grammar,llm_only,これはなんですか co cau truc ra sao?,なん|ですか|what,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q024,N5,grammar,vector_only,これはなんですか co cau truc ra sao?,なん|ですか|what,0.33,1,GrammarPoint:douyatte:N5:douyatte: | Kanji:話:話: | Vocabulary:はなし:N5:話:はなし | Vocabulary:はなす:N5:話す:はなす | Vocabulary:ラジオ:N5:lesson-2:ラジオ:ラジオ,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- douyatte: Làm sao; bằng cách nào; bằng cách​.
+- 話: chua co nghia chi tiet.
+- 話 (はなし): chua co nghia chi tiet.
+Cau hoi cua ban: これはなんですか co cau truc ra sao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q024,N5,grammar,kg_only,これはなんですか co cau truc ra sao?,なん|ですか|what,0.0,0,GrammarPoint:da / desu:da / desu: | GrammarPoint:naru:naru: | GrammarPoint:ga imasu:ga imasu: | GrammarPoint:no ga heta:no ga heta: | GrammarPoint:no ga jouzu:no ga jouzu:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- da / desu: chỉ là (am, is, are, were, used to).
+- naru: to Become.
+- ga imasu: có; được ; là (sinh vật sống).
+Cau hoi cua ban: これはなんですか co cau truc ra sao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q024,N5,grammar,kg_vector,これはなんですか co cau truc ra sao?,なん|ですか|what,0.0,1,GrammarPoint:da / desu:da / desu: | GrammarPoint:naru:naru: | GrammarPoint:ga imasu:ga imasu: | GrammarPoint:no ga heta:no ga heta: | GrammarPoint:no ga jouzu:no ga jouzu: | GrammarPoint:douyatte:N5:douyatte: | Kanji:話:話: | Vocabulary:はなし:N5:話:はなし,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- da / desu: chỉ là (am, is, are, were, used to).
+- naru: to Become.
+- ga imasu: có; được ; là (sinh vật sống).
+Cau hoi cua ban: これはなんですか co cau truc ra sao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q025,N5,grammar,llm_only,A は B です co nghia gi?,は|です|sentence,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q025,N5,grammar,vector_only,A は B です co nghia gi?,は|です|sentence,0.67,1,GrammarPoint:no naka de [A] ga ichiban:N5:no naka de [A] ga ichiban: | Vocabulary:ざんねんです［ね］。:N5:lesson-9:残念です［ね］。:ざんねんです［ね］。 | GrammarPoint:no desu:N5:no desu: | Vocabulary:もう ～です［ね］。:N5:lesson-8:もう ～です［ね］。:もう ～です［ね］。 | GrammarPoint:douyatte:N5:douyatte:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- no naka de [A] ga ichiban: trong nhóm này, [A] là best.
+- 残念です［ね］。 (ざんねんです［ね］。): I'm sorry (to hear that)./That's a pity..
+- no desu: để giải thích điều gì đó; thể hiện sự nhấn mạnh.
+Cau hoi cua ban: A は B です co nghia gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q025,N5,grammar,kg_only,A は B です co nghia gi?,は|です|sentence,1.0,1,GrammarPoint:da / desu:da / desu: | GrammarPoint:wa - topic marker:wa - topic marker: | GrammarPoint:naru:naru: | GrammarPoint:ga imasu:ga imasu: | GrammarPoint:no ga heta:no ga heta:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- da / desu: chỉ là (am, is, are, were, used to).
+- wa - topic marker: topic marker.
+- naru: to Become.
+Cau hoi cua ban: A は B です co nghia gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q025,N5,grammar,kg_vector,A は B です co nghia gi?,は|です|sentence,1.0,1,GrammarPoint:da / desu:da / desu: | GrammarPoint:wa - topic marker:wa - topic marker: | GrammarPoint:naru:naru: | GrammarPoint:ga imasu:ga imasu: | GrammarPoint:no ga heta:no ga heta: | GrammarPoint:no naka de [A] ga ichiban:N5:no naka de [A] ga ichiban: | Vocabulary:ざんねんです［ね］。:N5:lesson-9:残念です［ね］。:ざんねんです［ね］。 | GrammarPoint:no desu:N5:no desu:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- da / desu: chỉ là (am, is, are, were, used to).
+- wa - topic marker: topic marker.
+- naru: to Become.
+Cau hoi cua ban: A は B です co nghia gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q026,N5,grammar,llm_only,い adjective chia phu dinh nhu the nao?,い|adjective|negative,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q026,N5,grammar,vector_only,い adjective chia phu dinh nhu the nao?,い|adjective|negative,0.67,1,GrammarPoint:i-adjectives:N5:i-adjectives: | GrammarPoint:na-adjectives:N5:na-adjectives: | GrammarPoint:ne:N5:ne: | GrammarPoint:darou:N5:darou: | GrammarPoint:deshou:N5:deshou:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- i-adjectives: i-tính từ.
+- na-adjectives: na-tính từ.
+- ne: phải không? Phải? eh?.
+Cau hoi cua ban: い adjective chia phu dinh nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q026,N5,grammar,kg_only,い adjective chia phu dinh nhu the nao?,い|adjective|negative,0.33,1,Vocabulary:しかたが ありません。::しかたが ありません。 | Vocabulary:あんないします:案内します:あんないします | Vocabulary:［どうも］すみません。::［どうも］すみません。 | Vocabulary:すみません。::すみません。 | Vocabulary:すみません::すみません,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (しかたが ありません。): There is no other choice./It can't be helped..
+- 案内します (あんないします): show around, show the way.
+-  (［どうも］すみません。): Thank you..
+Cau hoi cua ban: い adjective chia phu dinh nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q026,N5,grammar,kg_vector,い adjective chia phu dinh nhu the nao?,い|adjective|negative,0.33,1,Vocabulary:しかたが ありません。::しかたが ありません。 | Vocabulary:あんないします:案内します:あんないします | Vocabulary:［どうも］すみません。::［どうも］すみません。 | Vocabulary:すみません。::すみません。 | Vocabulary:すみません::すみません | GrammarPoint:i-adjectives:N5:i-adjectives: | GrammarPoint:na-adjectives:N5:na-adjectives: | GrammarPoint:ne:N5:ne:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (しかたが ありません。): There is no other choice./It can't be helped..
+- 案内します (あんないします): show around, show the way.
+-  (［どうも］すみません。): Thank you..
+Cau hoi cua ban: い adjective chia phu dinh nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q027,N5,grammar,llm_only,な adjective dung truoc danh tu nhu the nao?,な|adjective|noun,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q027,N5,grammar,vector_only,な adjective dung truoc danh tu nhu the nao?,な|adjective|noun,1.0,1,GrammarPoint:na-adjectives:N5:na-adjectives: | GrammarPoint:i-adjectives:N5:i-adjectives: | GrammarPoint:wa ~yori... desu:N5:wa ~yori... desu: | Vocabulary:しんかんせん:N5:lesson-5:新幹線:しんかんせん | Vocabulary:いみ:N5:lesson-25:意味:いみ,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- na-adjectives: na-tính từ.
+- i-adjectives: i-tính từ.
+- wa ~yori... desu: [Danh từ-1] nhiều hơn ~ hơn [Danh từ-2].
+Cau hoi cua ban: な adjective dung truoc danh tu nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q027,N5,grammar,kg_only,な adjective dung truoc danh tu nhu the nao?,な|adjective|noun,0.0,1,Vocabulary:しんごうを みぎへ まがって ください。:信号を 右へ 曲がって ください。:しんごうを みぎへ まがって ください。 | Vocabulary:じつは:実は:じつは | Vocabulary:まがります［みぎへ～］:曲がります［右へ～］:まがります［みぎへ～］ | Vocabulary:ほうりゅうじ:法隆寺:ほうりゅうじ | Vocabulary:だれ（どなた）::だれ（どなた）,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- 信号を 右へ 曲がって ください。 (しんごうを みぎへ まがって ください。): Turn right at the traffic lights..
+- 実は (じつは): actually, to tell the truth.
+- 曲がります［右へ～］ (まがります［みぎへ～］): turn [to the right].
+Cau hoi cua ban: な adjective dung truoc danh tu nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q027,N5,grammar,kg_vector,な adjective dung truoc danh tu nhu the nao?,な|adjective|noun,0.0,1,Vocabulary:しんごうを みぎへ まがって ください。:信号を 右へ 曲がって ください。:しんごうを みぎへ まがって ください。 | Vocabulary:じつは:実は:じつは | Vocabulary:まがります［みぎへ～］:曲がります［右へ～］:まがります［みぎへ～］ | Vocabulary:ほうりゅうじ:法隆寺:ほうりゅうじ | Vocabulary:だれ（どなた）::だれ（どなた） | GrammarPoint:na-adjectives:N5:na-adjectives: | GrammarPoint:i-adjectives:N5:i-adjectives: | GrammarPoint:wa ~yori... desu:N5:wa ~yori... desu:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- 信号を 右へ 曲がって ください。 (しんごうを みぎへ まがって ください。): Turn right at the traffic lights..
+- 実は (じつは): actually, to tell the truth.
+- 曲がります［右へ～］ (まがります［みぎへ～］): turn [to the right].
+Cau hoi cua ban: な adjective dung truoc danh tu nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q028,N4,grammar,llm_only,ので va から khac nhau the nao?,ので|から|reason,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q028,N4,grammar,vector_only,ので va から khac nhau the nao?,ので|から|reason,0.33,1,Vocabulary:あんな ～:N4:lesson-26:あんな ～:あんな ～ | Vocabulary:そんな ～:N4:lesson-26:そんな ～:そんな ～ | Vocabulary:あいて:N4:lesson-47:相手:あいて | Vocabulary:おととし:N4:lesson-38:おととし:おととし | Vocabulary:せんじつ:N4:lesson-41:先日:せんじつ,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- あんな ～ (あんな ～): ~ like that (far from both the speaker and the listener).
+- そんな ～ (そんな ～): ～ like that (near the listener).
+- 相手 (あいて): the other person.
+Cau hoi cua ban: ので va から khac nhau the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q028,N4,grammar,kg_only,ので va から khac nhau the nao?,ので|から|reason,0.67,1,Vocabulary:こころから:心から:こころから | Vocabulary:では::では | Vocabulary:あんな ～::あんな ～ | GrammarPoint:kara tsukuru:kara tsukuru: | GrammarPoint:nowa~da:nowa~da:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- 心から (こころから): from one's heart, sincerely.
+-  (では): well, then (polite equivalent of じゃ).
+-  (あんな ～): ~ like that (far from both the speaker and the listener).
+Cau hoi cua ban: ので va から khac nhau the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q028,N4,grammar,kg_vector,ので va から khac nhau the nao?,ので|から|reason,0.67,1,Vocabulary:こころから:心から:こころから | Vocabulary:では::では | Vocabulary:あんな ～::あんな ～ | GrammarPoint:kara tsukuru:kara tsukuru: | GrammarPoint:nowa~da:nowa~da: | Vocabulary:あんな ～:N4:lesson-26:あんな ～:あんな ～ | Vocabulary:そんな ～:N4:lesson-26:そんな ～:そんな ～ | Vocabulary:あいて:N4:lesson-47:相手:あいて,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- 心から (こころから): from one's heart, sincerely.
+-  (では): well, then (polite equivalent of じゃ).
+-  (あんな ～): ~ like that (far from both the speaker and the listener).
+Cau hoi cua ban: ので va から khac nhau the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q029,N4,grammar,llm_only,ながら dung de noi lam hai viec ra sao?,ながら|while|two actions,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q029,N4,grammar,vector_only,ながら dung de noi lam hai viec ra sao?,ながら|while|two actions,0.0,1,GrammarPoint:to:N4:to: | GrammarPoint:tara dou:N4:tara dou: | GrammarPoint:koto:N4:koto: | Vocabulary:カップラーメン:N4:lesson-42:カップラーメン:カップラーメン | GrammarPoint:aida ni:N4:aida ni:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- to: bất cứ khi nào [A] xảy ra, [B] cũng xảy ra.
+- tara dou: tại sao bạn không; Thế còn ~ (dùng để đưa ra lời khuyên).
+- koto: Động từ danh nghĩa.
+Cau hoi cua ban: ながら dung de noi lam hai viec ra sao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q029,N4,grammar,kg_only,ながら dung de noi lam hai viec ra sao?,ながら|while|two actions,0.0,0,Vocabulary:～で いらっしゃいます::～で いらっしゃいます | Vocabulary:おげんきで いらっしゃいますか。:お元気で いらっしゃいますか。:おげんきで いらっしゃいますか。 | Vocabulary:いくら［～でも］::いくら［～でも］ | Vocabulary:どちらさまでしょうか。:どちら様でしょうか。:どちらさまでしょうか。 | Vocabulary:つかって いらっしゃるんですね。:使って いらっしゃるんですね。:つかって いらっしゃるんですね。,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (～で いらっしゃいます): be (respectful equivalent of です).
+- お元気で いらっしゃいますか。 (おげんきで いらっしゃいますか。): How are you doing? (respectful equivalent of おげんきですか).
+-  (いくら［～でも］): however ～, even if ～.
+Cau hoi cua ban: ながら dung de noi lam hai viec ra sao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q029,N4,grammar,kg_vector,ながら dung de noi lam hai viec ra sao?,ながら|while|two actions,0.0,0,Vocabulary:～で いらっしゃいます::～で いらっしゃいます | Vocabulary:おげんきで いらっしゃいますか。:お元気で いらっしゃいますか。:おげんきで いらっしゃいますか。 | Vocabulary:いくら［～でも］::いくら［～でも］ | Vocabulary:どちらさまでしょうか。:どちら様でしょうか。:どちらさまでしょうか。 | Vocabulary:つかって いらっしゃるんですね。:使って いらっしゃるんですね。:つかって いらっしゃるんですね。 | GrammarPoint:to:N4:to: | GrammarPoint:tara dou:N4:tara dou: | GrammarPoint:koto:N4:koto:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (～で いらっしゃいます): be (respectful equivalent of です).
+- お元気で いらっしゃいますか。 (おげんきで いらっしゃいますか。): How are you doing? (respectful equivalent of おげんきですか).
+-  (いくら［～でも］): however ～, even if ～.
+Cau hoi cua ban: ながら dung de noi lam hai viec ra sao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q030,N4,grammar,llm_only,そうです dung khi nghe noi nhu the nao?,そうです|heard|seem,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q030,N4,grammar,vector_only,そうです dung khi nghe noi nhu the nao?,そうです|heard|seem,1.0,1,GrammarPoint:to kiita:N4:to kiita: | GrammarPoint:rashii:N4:rashii: | GrammarPoint:sou da [1]:N4:sou da [1]: | GrammarPoint:tara ii desu ka:N4:tara ii desu ka: | GrammarPoint:ni mieru:N4:ni mieru:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- to kiita: Tôi nghe nói....
+- rashii: có vẻ như; Tôi đã nghe; rõ ràng là ~.
+- sou da [1]: Tôi đã nghe điều đó; người ta nói rằng ~.
+Cau hoi cua ban: そうです dung khi nghe noi nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q030,N4,grammar,kg_only,そうです dung khi nghe noi nhu the nao?,そうです|heard|seem,0.0,0,GrammarPoint:gozaimasu:gozaimasu: | GrammarPoint:you ni naru:you ni naru: | GrammarPoint:dasu:dasu: | GrammarPoint:de gozaimasu:de gozaimasu: | GrammarPoint:hajimeru:hajimeru:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- gozaimasu: tồn tại, tồn tại (dạng lịch sự của いる/ある).
+- you ni naru: để đạt đến điểm đó; trở thành cái đó; biến thành ~.
+- dasu: bắt đầu ; bắt đầu ; xông vào; ... out (ví dụ: nhảy ra, biểu diễn)​.
+Cau hoi cua ban: そうです dung khi nghe noi nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q030,N4,grammar,kg_vector,そうです dung khi nghe noi nhu the nao?,そうです|heard|seem,0.0,1,GrammarPoint:gozaimasu:gozaimasu: | GrammarPoint:you ni naru:you ni naru: | GrammarPoint:dasu:dasu: | GrammarPoint:de gozaimasu:de gozaimasu: | GrammarPoint:hajimeru:hajimeru: | GrammarPoint:to kiita:N4:to kiita: | GrammarPoint:rashii:N4:rashii: | GrammarPoint:sou da [1]:N4:sou da [1]:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- gozaimasu: tồn tại, tồn tại (dạng lịch sự của いる/ある).
+- you ni naru: để đạt đến điểm đó; trở thành cái đó; biến thành ~.
+- dasu: bắt đầu ; bắt đầu ; xông vào; ... out (ví dụ: nhảy ra, biểu diễn)​.
+Cau hoi cua ban: そうです dung khi nghe noi nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q031,N4,grammar,llm_only,ようになる co nghia gi?,ようになる|become|change,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q031,N4,grammar,vector_only,ようになる co nghia gi?,ようになる|become|change,0.0,0,GrammarPoint:koto:N4:koto: | Vocabulary:かならず:N4:lesson-36:必ず:かならず | Vocabulary:のりもの:N4:lesson-36:乗り物:のりもの | GrammarPoint:aida:N4:aida: | GrammarPoint:to:N4:to:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- koto: Động từ danh nghĩa.
+- 必ず (かならず): without fail, by any means.
+- 乗り物 (のりもの): vehicle, means of transportation.
+Cau hoi cua ban: ようになる co nghia gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q031,N4,grammar,kg_only,ようになる co nghia gi?,ようになる|become|change,1.0,1,GrammarPoint:you ni naru:you ni naru: | GrammarPoint:te kuru:te kuru: | Vocabulary:きが つきます:気が つきます:きが つきます | Vocabulary:きが つきます［わすれものに～］:気が つきます［忘れ物に～］:きが つきます［わすれものに～］ | Vocabulary:きんちょうします:緊張します:きんちょうします,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- you ni naru: để đạt đến điểm đó; trở thành cái đó; biến thành ~.
+- te kuru: làm… và quay lại; trở thành; tiếp tục; bắt đầu ~.
+- 気が つきます (きが つきます): notice, become aware of.
+Cau hoi cua ban: ようになる co nghia gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q031,N4,grammar,kg_vector,ようになる co nghia gi?,ようになる|become|change,1.0,1,GrammarPoint:you ni naru:you ni naru: | GrammarPoint:te kuru:te kuru: | Vocabulary:きが つきます:気が つきます:きが つきます | Vocabulary:きが つきます［わすれものに～］:気が つきます［忘れ物に～］:きが つきます［わすれものに～］ | Vocabulary:きんちょうします:緊張します:きんちょうします | GrammarPoint:koto:N4:koto: | Vocabulary:かならず:N4:lesson-36:必ず:かならず | Vocabulary:のりもの:N4:lesson-36:乗り物:のりもの,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- you ni naru: để đạt đến điểm đó; trở thành cái đó; biến thành ~.
+- te kuru: làm… và quay lại; trở thành; tiếp tục; bắt đầu ~.
+- 気が つきます (きが つきます): notice, become aware of.
+Cau hoi cua ban: ようになる co nghia gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q032,N4,grammar,llm_only,ほうがいい dung de khuyen nhu the nao?,ほうがいい|advice|should,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q032,N4,grammar,vector_only,ほうがいい dung de khuyen nhu the nao?,ほうがいい|advice|should,0.33,1,GrammarPoint:tara dou:N4:tara dou: | GrammarPoint:to:N4:to: | Vocabulary:るすばん:N4:lesson-33:留守番:るすばん | GrammarPoint:wa~ga... wa:N4:wa~ga... wa: | GrammarPoint:koto:N4:koto:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- tara dou: tại sao bạn không; Thế còn ~ (dùng để đưa ra lời khuyên).
+- to: bất cứ khi nào [A] xảy ra, [B] cũng xảy ra.
+- 留守番 (るすばん): looking after the house during the owner's absence.
+Cau hoi cua ban: ほうがいい dung de khuyen nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q032,N4,grammar,kg_only,ほうがいい dung de khuyen nhu the nao?,ほうがいい|advice|should,0.0,0,Vocabulary:では::では | Vocabulary:それでも::それでも | Vocabulary:ところで::ところで | Vocabulary:かかります［でんわが～］:かかります［電話が～］:かかります［でんわが～］ | Vocabulary:いま いいでしょうか。:今 いいでしょうか。:いま いいでしょうか。,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (では): well, then (polite equivalent of じゃ).
+-  (それでも): nevertheless, for all that.
+-  (ところで): by the way.
+Cau hoi cua ban: ほうがいい dung de khuyen nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q032,N4,grammar,kg_vector,ほうがいい dung de khuyen nhu the nao?,ほうがいい|advice|should,0.0,1,Vocabulary:では::では | Vocabulary:それでも::それでも | Vocabulary:ところで::ところで | Vocabulary:かかります［でんわが～］:かかります［電話が～］:かかります［でんわが～］ | Vocabulary:いま いいでしょうか。:今 いいでしょうか。:いま いいでしょうか。 | GrammarPoint:tara dou:N4:tara dou: | GrammarPoint:to:N4:to: | Vocabulary:るすばん:N4:lesson-33:留守番:るすばん,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (では): well, then (polite equivalent of じゃ).
+-  (それでも): nevertheless, for all that.
+-  (ところで): by the way.
+Cau hoi cua ban: ほうがいい dung de khuyen nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q033,N5,vocabulary,llm_only,たべる nghia la gi va dung khi nao?,食べる|たべる|eat,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q033,N5,vocabulary,vector_only,たべる nghia la gi va dung khi nao?,食べる|たべる|eat,0.0,0,GrammarPoint:da / desu:N5:da / desu: | GrammarPoint:no desu:N5:no desu: | GrammarPoint:no ga jouzu:N5:no ga jouzu: | GrammarPoint:wa dou desu ka:N5:wa dou desu ka: | GrammarPoint:no ga heta:N5:no ga heta:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- da / desu: chỉ là (am, is, are, were, used to).
+- no desu: để giải thích điều gì đó; thể hiện sự nhấn mạnh.
+- no ga jouzu: giỏi.
+Cau hoi cua ban: たべる nghia la gi va dung khi nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q033,N5,vocabulary,kg_only,たべる nghia la gi va dung khi nao?,食べる|たべる|eat,0.0,0,Vocabulary:ぎおんまつり:祇園祭:ぎおんまつり | Vocabulary:にぎやか［な］::にぎやか［な］ | GrammarPoint:ndesu:ndesu: | GrammarPoint:no desu:no desu: | Vocabulary:あちら:あちら:あちら,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- 祇園祭 (ぎおんまつり): the Gion Festival (the most famous festival in Kyoto).
+-  (にぎやか［な］): lively.
+- ndesu: để giải thích điều gì đó; show nhấn mạnh.
+Cau hoi cua ban: たべる nghia la gi va dung khi nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q033,N5,vocabulary,kg_vector,たべる nghia la gi va dung khi nao?,食べる|たべる|eat,0.0,0,Vocabulary:ぎおんまつり:祇園祭:ぎおんまつり | Vocabulary:にぎやか［な］::にぎやか［な］ | GrammarPoint:ndesu:ndesu: | GrammarPoint:no desu:no desu: | Vocabulary:あちら:あちら:あちら | GrammarPoint:da / desu:N5:da / desu: | GrammarPoint:no ga jouzu:N5:no ga jouzu: | GrammarPoint:wa dou desu ka:N5:wa dou desu ka:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- 祇園祭 (ぎおんまつり): the Gion Festival (the most famous festival in Kyoto).
+-  (にぎやか［な］): lively.
+- ndesu: để giải thích điều gì đó; show nhấn mạnh.
+Cau hoi cua ban: たべる nghia la gi va dung khi nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q034,N5,vocabulary,llm_only,のむ nghia la gi?,飲む|のむ|drink,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q034,N5,vocabulary,vector_only,のむ nghia la gi?,飲む|のむ|drink,0.0,0,GrammarPoint:da / desu:N5:da / desu: | GrammarPoint:no ga jouzu:N5:no ga jouzu: | GrammarPoint:no desu:N5:no desu: | GrammarPoint:ga imasu:N5:ga imasu: | GrammarPoint:wa dou desu ka:N5:wa dou desu ka:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- da / desu: chỉ là (am, is, are, were, used to).
+- no ga jouzu: giỏi.
+- no desu: để giải thích điều gì đó; thể hiện sự nhấn mạnh.
+Cau hoi cua ban: のむ nghia la gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q034,N5,vocabulary,kg_only,のむ nghia la gi?,飲む|のむ|drink,0.0,0,Vocabulary:スイス::スイス | Vocabulary:チョコレート::チョコレート | Vocabulary:タイ::タイ | Vocabulary:エスカレーター::エスカレーター | Vocabulary:します::します,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (スイス): Switzerland.
+-  (チョコレート): chocolate.
+-  (タイ): Thailand.
+Cau hoi cua ban: のむ nghia la gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q034,N5,vocabulary,kg_vector,のむ nghia la gi?,飲む|のむ|drink,0.0,0,Vocabulary:スイス::スイス | Vocabulary:チョコレート::チョコレート | Vocabulary:タイ::タイ | Vocabulary:エスカレーター::エスカレーター | Vocabulary:します::します | GrammarPoint:da / desu:N5:da / desu: | GrammarPoint:no ga jouzu:N5:no ga jouzu: | GrammarPoint:no desu:N5:no desu:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (スイス): Switzerland.
+-  (チョコレート): chocolate.
+-  (タイ): Thailand.
+Cau hoi cua ban: のむ nghia la gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q035,N5,vocabulary,llm_only,いく va くる khac nhau the nao?,行く|来る|go,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q035,N5,vocabulary,vector_only,いく va くる khac nhau the nao?,行く|来る|go,0.33,1,GrammarPoint:ichiban:N5:ichiban: | GrammarPoint:issho ni:N5:issho ni: | Vocabulary:くる:N5:来る:くる | Vocabulary:いちばん ～:N5:lesson-10:いちばん ～:いちばん ～ | Vocabulary:－だんめ:N5:lesson-10:－段目:－だんめ,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- ichiban: nhiều nhất; the best.
+- issho ni: cùng nhau.
+- 来る (くる): chua co nghia chi tiet.
+Cau hoi cua ban: いく va くる khac nhau the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q035,N5,vocabulary,kg_only,いく va くる khac nhau the nao?,行く|来る|go,0.0,0,Vocabulary:なんさい（おいくつ）:何歳:なんさい（おいくつ） | Vocabulary:だれ（どなた）::だれ（どなた） | GrammarPoint:issho ni:issho ni: | Vocabulary:あちら:あちら:あちら | Vocabulary:あっち:あっち:あっち,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- 何歳 (なんさい（おいくつ）): how old (おいくつ is the polite equivalent of なんさい).
+-  (だれ（どなた）): who (どなた is the polite equivalent of だれ).
+- issho ni: cùng nhau.
+Cau hoi cua ban: いく va くる khac nhau the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q035,N5,vocabulary,kg_vector,いく va くる khac nhau the nao?,行く|来る|go,0.0,1,Vocabulary:なんさい（おいくつ）:何歳:なんさい（おいくつ） | Vocabulary:だれ（どなた）::だれ（どなた） | GrammarPoint:issho ni:issho ni: | Vocabulary:あちら:あちら:あちら | Vocabulary:あっち:あっち:あっち | GrammarPoint:ichiban:N5:ichiban: | Vocabulary:くる:N5:来る:くる | Vocabulary:いちばん ～:N5:lesson-10:いちばん ～:いちばん ～,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- 何歳 (なんさい（おいくつ）): how old (おいくつ is the polite equivalent of なんさい).
+-  (だれ（どなた）): who (どなた is the polite equivalent of だれ).
+- issho ni: cùng nhau.
+Cau hoi cua ban: いく va くる khac nhau the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q036,N5,vocabulary,llm_only,みる dung de noi xem hay nhin nhu the nao?,見る|みる|see,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q036,N5,vocabulary,vector_only,みる dung de noi xem hay nhin nhu the nao?,見る|みる|see,0.33,1,Vocabulary:みます:N5:lesson-6:見ます:みます | Vocabulary:いみ:N5:lesson-24:意味:いみ | Vocabulary:つかいます:N5:lesson-15:使います:つかいます | Vocabulary:つかいます:N5:lesson-14:使います:つかいます | Vocabulary:いみ:N5:lesson-25:意味:いみ,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- 見ます (みます): see, look at, watch.
+- 意味 (いみ): meaning.
+- 使います (つかいます): use.
+Cau hoi cua ban: みる dung de noi xem hay nhin nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q036,N5,vocabulary,kg_only,みる dung de noi xem hay nhin nhu the nao?,見る|みる|see,0.67,1,Vocabulary:しばらくですね。::しばらくですね。 | Vocabulary:そうですか。::そうですか。 | Vocabulary:ですから::ですから | Vocabulary:みんなで::みんなで | Vocabulary:いい［お］てんきですね。:いい［お］天気ですね。:いい［お］てんきですね。,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (しばらくですね。): It's been a long time (since I last saw you)./Long time no see..
+-  (そうですか。): I see..
+-  (ですから): therefore, so.
+Cau hoi cua ban: みる dung de noi xem hay nhin nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q036,N5,vocabulary,kg_vector,みる dung de noi xem hay nhin nhu the nao?,見る|みる|see,0.67,1,Vocabulary:しばらくですね。::しばらくですね。 | Vocabulary:そうですか。::そうですか。 | Vocabulary:ですから::ですから | Vocabulary:みんなで::みんなで | Vocabulary:いい［お］てんきですね。:いい［お］天気ですね。:いい［お］てんきですね。 | Vocabulary:みます:N5:lesson-6:見ます:みます | Vocabulary:いみ:N5:lesson-24:意味:いみ | Vocabulary:つかいます:N5:lesson-15:使います:つかいます,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (しばらくですね。): It's been a long time (since I last saw you)./Long time no see..
+-  (そうですか。): I see..
+-  (ですから): therefore, so.
+Cau hoi cua ban: みる dung de noi xem hay nhin nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q037,N5,vocabulary,llm_only,きく co the co nghia nghe va hoi khong?,聞く|きく|listen,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q037,N5,vocabulary,vector_only,きく co the co nghia nghe va hoi khong?,聞く|きく|listen,1.0,1,GrammarPoint:mashouka:N5:mashouka: | Vocabulary:ききます:N5:lesson-6:聞きます:ききます | Vocabulary:ききます［せんせいに～］:N5:lesson-23:聞きます［先生に～］:ききます［せんせいに～］ | GrammarPoint:janai / dewa nai:N5:janai / dewa nai: | GrammarPoint:ka:N5:ka:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- mashouka: tôi sẽ ~; cũng được sử dụng để đề nghị trợ giúp cho người nghe.
+- 聞きます (ききます): hear, listen.
+- 聞きます［先生に～］ (ききます［せんせいに～］): ask [the teacher].
+Cau hoi cua ban: きく co the co nghia nghe va hoi khong?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q037,N5,vocabulary,kg_only,きく co the co nghia nghe va hoi khong?,聞く|きく|listen,1.0,1,GrammarPoint:mashouka:mashouka: | Vocabulary:そっち:そっち:そっち | Vocabulary:また こんど おねがいします。:また 今度 お願いします。:また こんど おねがいします。 | Vocabulary:だれ（どなた）::だれ（どなた） | Vocabulary:その ～::その ～,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- mashouka: tôi sẽ ~; cũng được sử dụng để đề nghị trợ giúp cho người nghe.
+- そっち (そっち): that way, that place near the listener (an informal equivalent of そちら).
+- また 今度 お願いします。 (また こんど おねがいします。): Please ask me again some other time. (used when refusing an invitation indirectly, considering someone's feelings).
+Cau hoi cua ban: きく co the co nghia nghe va hoi khong?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q037,N5,vocabulary,kg_vector,きく co the co nghia nghe va hoi khong?,聞く|きく|listen,1.0,1,GrammarPoint:mashouka:mashouka: | Vocabulary:そっち:そっち:そっち | Vocabulary:また こんど おねがいします。:また 今度 お願いします。:また こんど おねがいします。 | Vocabulary:だれ（どなた）::だれ（どなた） | Vocabulary:その ～::その ～ | Vocabulary:ききます:N5:lesson-6:聞きます:ききます | Vocabulary:ききます［せんせいに～］:N5:lesson-23:聞きます［先生に～］:ききます［せんせいに～］ | GrammarPoint:janai / dewa nai:N5:janai / dewa nai:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- mashouka: tôi sẽ ~; cũng được sử dụng để đề nghị trợ giúp cho người nghe.
+- そっち (そっち): that way, that place near the listener (an informal equivalent of そちら).
+- また 今度 お願いします。 (また こんど おねがいします。): Please ask me again some other time. (used when refusing an invitation indirectly, considering someone's feelings).
+Cau hoi cua ban: きく co the co nghia nghe va hoi khong?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q038,N4,vocabulary,llm_only,はじめる dung voi dong tu nhu the nao?,始める|はじめる|start,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q038,N4,vocabulary,vector_only,はじめる dung voi dong tu nhu the nao?,始める|はじめる|start,0.0,0,GrammarPoint:tara dou:N4:tara dou: | GrammarPoint:to:N4:to: | GrammarPoint:koto:N4:koto: | Vocabulary:るすばん:N4:lesson-33:留守番:るすばん | Vocabulary:あと:N4:lesson-42:あと:あと,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- tara dou: tại sao bạn không; Thế còn ~ (dùng để đưa ra lời khuyên).
+- to: bất cứ khi nào [A] xảy ra, [B] cũng xảy ra.
+- koto: Động từ danh nghĩa.
+Cau hoi cua ban: はじめる dung voi dong tu nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q038,N4,vocabulary,kg_only,はじめる dung voi dong tu nhu the nao?,始める|はじめる|start,0.0,0,GrammarPoint:you ni naru:you ni naru: | Vocabulary:いれます［でんげんを～］:入れます［電源を～］:いれます［でんげんを～］ | Vocabulary:きります［でんげんを～］:切ります［電源を～］:きります［でんげんを～］ | Vocabulary:むらさきしきぶ:紫式部:むらさきしきぶ | Vocabulary:そんな ～::そんな ～,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- you ni naru: để đạt đến điểm đó; trở thành cái đó; biến thành ~.
+- 入れます［電源を～］ (いれます［でんげんを～］): turn on [the power switch].
+- 切ります［電源を～］ (きります［でんげんを～］): turn off [the power switch].
+Cau hoi cua ban: はじめる dung voi dong tu nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q038,N4,vocabulary,kg_vector,はじめる dung voi dong tu nhu the nao?,始める|はじめる|start,0.0,0,GrammarPoint:you ni naru:you ni naru: | Vocabulary:いれます［でんげんを～］:入れます［電源を～］:いれます［でんげんを～］ | Vocabulary:きります［でんげんを～］:切ります［電源を～］:きります［でんげんを～］ | Vocabulary:むらさきしきぶ:紫式部:むらさきしきぶ | Vocabulary:そんな ～::そんな ～ | GrammarPoint:tara dou:N4:tara dou: | GrammarPoint:to:N4:to: | GrammarPoint:koto:N4:koto:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- you ni naru: để đạt đến điểm đó; trở thành cái đó; biến thành ~.
+- 入れます［電源を～］ (いれます［でんげんを～］): turn on [the power switch].
+- 切ります［電源を～］ (きります［でんげんを～］): turn off [the power switch].
+Cau hoi cua ban: はじめる dung voi dong tu nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q039,N4,vocabulary,llm_only,おわる dung trong cau ra sao?,終わる|おわる|finish,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q039,N4,vocabulary,vector_only,おわる dung trong cau ra sao?,終わる|おわる|finish,0.0,0,GrammarPoint:tara dou:N4:tara dou: | GrammarPoint:to:N4:to: | GrammarPoint:aida ni:N4:aida ni: | GrammarPoint:koto:N4:koto: | GrammarPoint:no naka de:N4:no naka de:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- tara dou: tại sao bạn không; Thế còn ~ (dùng để đưa ra lời khuyên).
+- to: bất cứ khi nào [A] xảy ra, [B] cũng xảy ra.
+- aida ni: trong khi; trong~ có chuyện gì đó đã xảy ra.
+Cau hoi cua ban: おわる dung trong cau ra sao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q039,N4,vocabulary,kg_only,おわる dung trong cau ra sao?,終わる|おわる|finish,0.0,0,Vocabulary:あきらめます::あきらめます | Vocabulary:もしかしたら::もしかしたら | Vocabulary:このくらい::このくらい | Vocabulary:すばらしさ::すばらしさ | Vocabulary:いくら［～でも］::いくら［～でも］,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (あきらめます): give up.
+-  (もしかしたら): possibly, perhaps.
+-  (このくらい): about this (big).
+Cau hoi cua ban: おわる dung trong cau ra sao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q039,N4,vocabulary,kg_vector,おわる dung trong cau ra sao?,終わる|おわる|finish,0.0,0,Vocabulary:あきらめます::あきらめます | Vocabulary:もしかしたら::もしかしたら | Vocabulary:このくらい::このくらい | Vocabulary:すばらしさ::すばらしさ | Vocabulary:いくら［～でも］::いくら［～でも］ | GrammarPoint:tara dou:N4:tara dou: | GrammarPoint:to:N4:to: | GrammarPoint:aida ni:N4:aida ni:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (あきらめます): give up.
+-  (もしかしたら): possibly, perhaps.
+-  (このくらい): about this (big).
+Cau hoi cua ban: おわる dung trong cau ra sao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q040,N4,vocabulary,llm_only,つかれる nghia la gi?,疲れる|つかれる|tired,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q040,N4,vocabulary,vector_only,つかれる nghia la gi?,疲れる|つかれる|tired,0.0,0,GrammarPoint:mitai da:N4:mitai da: | GrammarPoint:yotei da:N4:yotei da: | GrammarPoint:de gozaimasu:N4:de gozaimasu: | GrammarPoint:hazu da:N4:hazu da: | GrammarPoint:nowa~da:N4:nowa~da:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- mitai da: giống; tương tự như; giống ~.
+- yotei da: dự định, có ý định.
+- de gozaimasu: là (kính trọng).
+Cau hoi cua ban: つかれる nghia la gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q040,N4,vocabulary,kg_only,つかれる nghia la gi?,疲れる|つかれる|tired,0.0,0,Vocabulary:コップ::コップ | Vocabulary:クリーニング::クリーニング | Vocabulary:やります::やります | Vocabulary:マンション::マンション | Vocabulary:バリ::バリ,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (コップ): glass (vessel).
+-  (クリーニング): (dry) cleaning, laundry.
+-  (やります): give (to a younger person, subordinate, animals or plants).
+Cau hoi cua ban: つかれる nghia la gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q040,N4,vocabulary,kg_vector,つかれる nghia la gi?,疲れる|つかれる|tired,0.0,0,Vocabulary:コップ::コップ | Vocabulary:クリーニング::クリーニング | Vocabulary:やります::やります | Vocabulary:マンション::マンション | Vocabulary:バリ::バリ | GrammarPoint:mitai da:N4:mitai da: | GrammarPoint:yotei da:N4:yotei da: | GrammarPoint:de gozaimasu:N4:de gozaimasu:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (コップ): glass (vessel).
+-  (クリーニング): (dry) cleaning, laundry.
+-  (やります): give (to a younger person, subordinate, animals or plants).
+Cau hoi cua ban: つかれる nghia la gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q041,N5,kanji,llm_only,日 co nhung cach doc co ban nao?,日|にち|ひ,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q041,N5,kanji,vector_only,日 co nhung cach doc co ban nao?,日|にち|ひ,0.0,0,GrammarPoint:naito ikenai:N5:naito ikenai: | Vocabulary:いただきます。:N5:lesson-7:いただきます。:いただきます。 | Vocabulary:～じん:N5:lesson-1:～人:～じん | Vocabulary:しつれいします。:N5:lesson-7:失礼します。:しつれいします。 | Vocabulary:ごちそうさま［でした］。:N5:lesson-23:ごちそうさま［でした］。:ごちそうさま［でした］。,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- naito ikenai: phải làm; có nghĩa vụ phải làm ~.
+- いただきます。 (いただきます。): Thank you./I accept. (said before starting to eat or drink).
+- ～人 (～じん): (suffix meaning 'a national of'; e.g. アメリカじん, an American).
+Cau hoi cua ban: 日 co nhung cach doc co ban nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q041,N5,kanji,kg_only,日 co nhung cach doc co ban nao?,日|にち|ひ,0.0,0,Vocabulary:いちばん ～::いちばん ～ | Vocabulary:いちばん:いちばん:いちばん | Vocabulary:いちばん した:いちばん 下:いちばん した | Vocabulary:おといあわせのばんごう:お問い合わせの番号:おといあわせのばんごう | Vocabulary:かばん:かばん:かばん,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (いちばん ～): the most ～ (いちばん うえ : the top).
+- いちばん (いちばん): the most.
+- いちばん 下 (いちばん した): the bottom.
+Cau hoi cua ban: 日 co nhung cach doc co ban nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q041,N5,kanji,kg_vector,日 co nhung cach doc co ban nao?,日|にち|ひ,0.0,0,Vocabulary:いちばん ～::いちばん ～ | Vocabulary:いちばん:いちばん:いちばん | Vocabulary:いちばん した:いちばん 下:いちばん した | Vocabulary:おといあわせのばんごう:お問い合わせの番号:おといあわせのばんごう | Vocabulary:かばん:かばん:かばん | GrammarPoint:naito ikenai:N5:naito ikenai: | Vocabulary:いただきます。:N5:lesson-7:いただきます。:いただきます。 | Vocabulary:～じん:N5:lesson-1:～人:～じん,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (いちばん ～): the most ～ (いちばん うえ : the top).
+- いちばん (いちばん): the most.
+- いちばん 下 (いちばん した): the bottom.
+Cau hoi cua ban: 日 co nhung cach doc co ban nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q042,N5,kanji,llm_only,月 co nghia gi va doc la gi?,月|げつ|つき,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q042,N5,kanji,vector_only,月 co nghia gi va doc la gi?,月|げつ|つき,0.0,0,GrammarPoint:da / desu:N5:da / desu: | GrammarPoint:no ga jouzu:N5:no ga jouzu: | GrammarPoint:no desu:N5:no desu: | GrammarPoint:wa dou desu ka:N5:wa dou desu ka: | GrammarPoint:ga imasu:N5:ga imasu:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- da / desu: chỉ là (am, is, are, were, used to).
+- no ga jouzu: giỏi.
+- no desu: để giải thích điều gì đó; thể hiện sự nhấn mạnh.
+Cau hoi cua ban: 月 co nghia gi va doc la gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q042,N5,kanji,kg_only,月 co nghia gi va doc la gi?,月|げつ|つき,0.0,0,Vocabulary:かいぎ:会議:かいぎ | Vocabulary:かいぎしつ:会議室:かいぎしつ | Vocabulary:ぎおんまつり:祇園祭:ぎおんまつり | Vocabulary:チョコレート::チョコレート | Vocabulary:にぎやか［な］::にぎやか［な］,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- 会議 (かいぎ): meeting, conference (～を します : hold a conference).
+- 会議室 (かいぎしつ): conference room, meeting room.
+- 祇園祭 (ぎおんまつり): the Gion Festival (the most famous festival in Kyoto).
+Cau hoi cua ban: 月 co nghia gi va doc la gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q042,N5,kanji,kg_vector,月 co nghia gi va doc la gi?,月|げつ|つき,0.0,0,Vocabulary:かいぎ:会議:かいぎ | Vocabulary:かいぎしつ:会議室:かいぎしつ | Vocabulary:ぎおんまつり:祇園祭:ぎおんまつり | Vocabulary:チョコレート::チョコレート | Vocabulary:にぎやか［な］::にぎやか［な］ | GrammarPoint:da / desu:N5:da / desu: | GrammarPoint:no ga jouzu:N5:no ga jouzu: | GrammarPoint:no desu:N5:no desu:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- 会議 (かいぎ): meeting, conference (～を します : hold a conference).
+- 会議室 (かいぎしつ): conference room, meeting room.
+- 祇園祭 (ぎおんまつり): the Gion Festival (the most famous festival in Kyoto).
+Cau hoi cua ban: 月 co nghia gi va doc la gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q043,N5,kanji,llm_only,人 doc la ひと hay じん khi nao?,人|ひと|じん,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q043,N5,kanji,vector_only,人 doc la ひと hay じん khi nao?,人|ひと|じん,0.0,0,GrammarPoint:da / desu:N5:da / desu: | GrammarPoint:ga imasu:N5:ga imasu: | GrammarPoint:no ga jouzu:N5:no ga jouzu: | GrammarPoint:wa dou desu ka:N5:wa dou desu ka: | Vocabulary:もう ～です［ね］。:N5:lesson-8:もう ～です［ね］。:もう ～です［ね］。,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- da / desu: chỉ là (am, is, are, were, used to).
+- ga imasu: có; được ; là (sinh vật sống).
+- no ga jouzu: giỏi.
+Cau hoi cua ban: 人 doc la ひと hay じん khi nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q043,N5,kanji,kg_only,人 doc la ひと hay じん khi nao?,人|ひと|じん,0.0,0,Vocabulary:スイス::スイス | Vocabulary:チョコレート::チョコレート | Vocabulary:エスカレーター::エスカレーター | Vocabulary:タイ::タイ | Vocabulary:します::します,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (スイス): Switzerland.
+-  (チョコレート): chocolate.
+-  (エスカレーター): escalator.
+Cau hoi cua ban: 人 doc la ひと hay じん khi nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q043,N5,kanji,kg_vector,人 doc la ひと hay じん khi nao?,人|ひと|じん,0.0,0,Vocabulary:スイス::スイス | Vocabulary:チョコレート::チョコレート | Vocabulary:エスカレーター::エスカレーター | Vocabulary:タイ::タイ | Vocabulary:します::します | GrammarPoint:da / desu:N5:da / desu: | GrammarPoint:ga imasu:N5:ga imasu: | GrammarPoint:no ga jouzu:N5:no ga jouzu:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (スイス): Switzerland.
+-  (チョコレート): chocolate.
+-  (エスカレーター): escalator.
+Cau hoi cua ban: 人 doc la ひと hay じん khi nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q044,N5,kanji,llm_only,学 trong 学生 co nghia gi?,学|学生|study,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q044,N5,kanji,vector_only,学 trong 学生 co nghia gi?,学|学生|study,0.0,0,Vocabulary:いみ:N5:lesson-24:意味:いみ | Vocabulary:いみ:N5:lesson-25:意味:いみ | Vocabulary:ぜひ:N5:lesson-18:ぜひ:ぜひ | GrammarPoint:naito ikenai:N5:naito ikenai: | Vocabulary:ふるさと:N5:lesson-18:故郷:ふるさと,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- 意味 (いみ): meaning.
+- 意味 (いみ): meaning.
+- ぜひ (ぜひ): by all means, really.
+Cau hoi cua ban: 学 trong 学生 co nghia gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q044,N5,kanji,kg_only,学 trong 学生 co nghia gi?,学|学生|study,0.0,0,Vocabulary:チョコレート::チョコレート | Vocabulary:あ::あ | Vocabulary:コンピューター::コンピューター | Vocabulary:CD::CD | Vocabulary:いらっしゃいませ。::いらっしゃいませ。,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (チョコレート): chocolate.
+-  (あ): Oh! (used when becoming aware of something).
+-  (コンピューター): computer.
+Cau hoi cua ban: 学 trong 学生 co nghia gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q044,N5,kanji,kg_vector,学 trong 学生 co nghia gi?,学|学生|study,0.0,0,Vocabulary:チョコレート::チョコレート | Vocabulary:あ::あ | Vocabulary:コンピューター::コンピューター | Vocabulary:CD::CD | Vocabulary:いらっしゃいませ。::いらっしゃいませ。 | Vocabulary:いみ:N5:lesson-24:意味:いみ | Vocabulary:ぜひ:N5:lesson-18:ぜひ:ぜひ | GrammarPoint:naito ikenai:N5:naito ikenai:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (チョコレート): chocolate.
+-  (あ): Oh! (used when becoming aware of something).
+-  (コンピューター): computer.
+Cau hoi cua ban: 学 trong 学生 co nghia gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q045,N5,kanji,llm_only,行 trong 行きます doc nhu the nao?,行|いきます|go,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q045,N5,kanji,vector_only,行 trong 行きます doc nhu the nao?,行|いきます|go,1.0,1,Kanji:行:行: | Vocabulary:もって いきます:N5:lesson-17:持って 行きます:もって いきます | Vocabulary:つれて いきます:N5:lesson-24:連れて 行きます:つれて いきます | Vocabulary:ききます［せんせいに～］:N5:lesson-23:聞きます［先生に～］:ききます［せんせいに～］ | Vocabulary:いって きます。:N5:lesson-11:行って きます。:いって きます。,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- 行: chua co nghia chi tiet.
+- 持って 行きます (もって いきます): take (something).
+- 連れて 行きます (つれて いきます): take (someone).
+Cau hoi cua ban: 行 trong 行きます doc nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q045,N5,kanji,kg_only,行 trong 行きます doc nhu the nao?,行|いきます|go,0.0,1,Vocabulary:おなかが すきます::おなかが すきます | Vocabulary:のどが かわきます::のどが かわきます | Vocabulary:～で ございます。::～で ございます。 | Vocabulary:また こんど おねがいします。:また 今度 お願いします。:また こんど おねがいします。 | Vocabulary:もって いきます:持って 行きます:もって いきます,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (おなかが すきます): get hungry (when expressing the condition of being hungry, おなかが すきました is used).
+-  (のどが かわきます): get thirsty (when expressing the condition of being thirsty, のどが かわきました is used).
+-  (～で ございます。): (polite equivalent of です).
+Cau hoi cua ban: 行 trong 行きます doc nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q045,N5,kanji,kg_vector,行 trong 行きます doc nhu the nao?,行|いきます|go,0.0,1,Vocabulary:おなかが すきます::おなかが すきます | Vocabulary:のどが かわきます::のどが かわきます | Vocabulary:～で ございます。::～で ございます。 | Vocabulary:また こんど おねがいします。:また 今度 お願いします。:また こんど おねがいします。 | Vocabulary:もって いきます:持って 行きます:もって いきます | Kanji:行:行: | Vocabulary:つれて いきます:N5:lesson-24:連れて 行きます:つれて いきます | Vocabulary:ききます［せんせいに～］:N5:lesson-23:聞きます［先生に～］:ききます［せんせいに～］,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (おなかが すきます): get hungry (when expressing the condition of being hungry, おなかが すきました is used).
+-  (のどが かわきます): get thirsty (when expressing the condition of being thirsty, のどが かわきました is used).
+-  (～で ございます。): (polite equivalent of です).
+Cau hoi cua ban: 行 trong 行きます doc nhu the nao?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q046,N4,kanji,llm_only,駅 co nghia gi?,駅|えき|station,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q046,N4,kanji,vector_only,駅 co nghia gi?,駅|えき|station,0.33,1,GrammarPoint:koto:N4:koto: | Kanji:駅:駅: | Vocabulary:かならず:N4:lesson-36:必ず:かならず | Vocabulary:のりもの:N4:lesson-36:乗り物:のりもの | GrammarPoint:aida:N4:aida:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- koto: Động từ danh nghĩa.
+- 駅: chua co nghia chi tiet.
+- 必ず (かならず): without fail, by any means.
+Cau hoi cua ban: 駅 co nghia gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q046,N4,kanji,kg_only,駅 co nghia gi?,駅|えき|station,0.0,0,Vocabulary:ひきます［かぜを～］::ひきます［かぜを～］ | Vocabulary:マンション::マンション | Vocabulary:NHK::NHK | Vocabulary:ゲーム::ゲーム | Vocabulary:あんなに::あんなに,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (ひきます［かぜを～］): catch [a cold].
+-  (マンション): condominium, apartment house, blocks of flats.
+-  (NHK): Nippon Hoso Kyokai (broadcasting company).
+Cau hoi cua ban: 駅 co nghia gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q046,N4,kanji,kg_vector,駅 co nghia gi?,駅|えき|station,0.0,1,Vocabulary:ひきます［かぜを～］::ひきます［かぜを～］ | Vocabulary:マンション::マンション | Vocabulary:NHK::NHK | Vocabulary:ゲーム::ゲーム | Vocabulary:あんなに::あんなに | GrammarPoint:koto:N4:koto: | Kanji:駅:駅: | Vocabulary:かならず:N4:lesson-36:必ず:かならず,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (ひきます［かぜを～］): catch [a cold].
+-  (マンション): condominium, apartment house, blocks of flats.
+-  (NHK): Nippon Hoso Kyokai (broadcasting company).
+Cau hoi cua ban: 駅 co nghia gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q047,N4,kanji,llm_only,会 trong 会社 co nghia gi?,会|会社|company,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q047,N4,kanji,vector_only,会 trong 会社 co nghia gi?,会|会社|company,0.0,1,GrammarPoint:koto:N4:koto: | GrammarPoint:aida:N4:aida: | GrammarPoint:no naka de:N4:no naka de: | Kanji:会:会: | GrammarPoint:aida ni:N4:aida ni:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- koto: Động từ danh nghĩa.
+- aida: trong khi; trong lúc; giữa ~.
+- no naka de: TRONG; trong số ~.
+Cau hoi cua ban: 会 trong 会社 co nghia gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q047,N4,kanji,kg_only,会 trong 会社 co nghia gi?,会|会社|company,0.67,1,Vocabulary:つとめます［かいしゃに～］:勤めます［会社に～］:つとめます［かいしゃに～］ | Vocabulary:こい:濃い:こい | Vocabulary:～がいしゃ:～会社:～がいしゃ | Vocabulary:NHK::NHK | Vocabulary:マンション::マンション,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- 勤めます［会社に～］ (つとめます［かいしゃに～］): work [for a company].
+- 濃い (こい): strong (taste), dark (color), thick (liquid).
+- ～会社 (～がいしゃ): ～ company.
+Cau hoi cua ban: 会 trong 会社 co nghia gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q047,N4,kanji,kg_vector,会 trong 会社 co nghia gi?,会|会社|company,0.67,1,Vocabulary:つとめます［かいしゃに～］:勤めます［会社に～］:つとめます［かいしゃに～］ | Vocabulary:こい:濃い:こい | Vocabulary:～がいしゃ:～会社:～がいしゃ | Vocabulary:NHK::NHK | Vocabulary:マンション::マンション | GrammarPoint:koto:N4:koto: | GrammarPoint:aida:N4:aida: | GrammarPoint:no naka de:N4:no naka de:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- 勤めます［会社に～］ (つとめます［かいしゃに～］): work [for a company].
+- 濃い (こい): strong (taste), dark (color), thick (liquid).
+- ～会社 (～がいしゃ): ～ company.
+Cau hoi cua ban: 会 trong 会社 co nghia gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q048,N4,kanji,llm_only,電 trong 電車 co nghia gi?,電|電車|electric,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q048,N4,kanji,vector_only,電 trong 電車 co nghia gi?,電|電車|electric,0.0,0,GrammarPoint:koto:N4:koto: | GrammarPoint:aida:N4:aida: | GrammarPoint:no naka de:N4:no naka de: | GrammarPoint:aida ni:N4:aida ni: | GrammarPoint:nagara:N4:nagara:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- koto: Động từ danh nghĩa.
+- aida: trong khi; trong lúc; giữa ~.
+- no naka de: TRONG; trong số ~.
+Cau hoi cua ban: 電 trong 電車 co nghia gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q048,N4,kanji,kg_only,電 trong 電車 co nghia gi?,電|電車|electric,0.0,0,Vocabulary:こい:濃い:こい | Vocabulary:ゲーム::ゲーム | Vocabulary:マンション::マンション | Vocabulary:NHK::NHK | Vocabulary:ひきます［かぜを～］::ひきます［かぜを～］,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- 濃い (こい): strong (taste), dark (color), thick (liquid).
+-  (ゲーム): (computer) game.
+-  (マンション): condominium, apartment house, blocks of flats.
+Cau hoi cua ban: 電 trong 電車 co nghia gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q048,N4,kanji,kg_vector,電 trong 電車 co nghia gi?,電|電車|electric,0.0,0,Vocabulary:こい:濃い:こい | Vocabulary:ゲーム::ゲーム | Vocabulary:マンション::マンション | Vocabulary:NHK::NHK | Vocabulary:ひきます［かぜを～］::ひきます［かぜを～］ | GrammarPoint:koto:N4:koto: | GrammarPoint:aida:N4:aida: | GrammarPoint:no naka de:N4:no naka de:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- 濃い (こい): strong (taste), dark (color), thick (liquid).
+-  (ゲーム): (computer) game.
+-  (マンション): condominium, apartment house, blocks of flats.
+Cau hoi cua ban: 電 trong 電車 co nghia gi?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q049,N4,usage,llm_only,Lam sao noi toi muon hoc tieng Nhat?,日本語|勉強|たい,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q049,N4,usage,vector_only,Lam sao noi toi muon hoc tieng Nhat?,日本語|勉強|たい,1.0,1,Vocabulary:わしょく:N4:lesson-44:和食:わしょく | Vocabulary:ほしであきひこ:N4:lesson-26:星出彰彦:ほしであきひこ | Vocabulary:どいたかお:N4:lesson-26:土井隆雄:どいたかお | Vocabulary:りょかん:N4:lesson-49:旅館:りょかん | Vocabulary:あんどうももふく:N4:lesson-42:安藤百福:あんどうももふく,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- 和食 (わしょく): Japanese dish.
+- 星出彰彦 (ほしであきひこ): Japanese astronaut (1968-).
+- 土井隆雄 (どいたかお): Japanese astronaut (1955-).
+Cau hoi cua ban: Lam sao noi toi muon hoc tieng Nhat?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q049,N4,usage,kg_only,Lam sao noi toi muon hoc tieng Nhat?,日本語|勉強|たい,1.0,1,Vocabulary:～みたいに して ください。::～みたいに して ください。 | Vocabulary:たいてい:たいてい:たいてい | Vocabulary:たったいま:たった今:たったいま | Vocabulary:たいおんけい:体温計:たいおんけい | Vocabulary:たいいくかん:体育館:たいいくかん,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (～みたいに して ください。): Do it like ～..
+- たいてい (たいてい): usually, mostly.
+- たった今 (たったいま): just now (used with the past tense; indicates completion).
+Cau hoi cua ban: Lam sao noi toi muon hoc tieng Nhat?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q049,N4,usage,kg_vector,Lam sao noi toi muon hoc tieng Nhat?,日本語|勉強|たい,1.0,1,Vocabulary:～みたいに して ください。::～みたいに して ください。 | Vocabulary:たいてい:たいてい:たいてい | Vocabulary:たったいま:たった今:たったいま | Vocabulary:たいおんけい:体温計:たいおんけい | Vocabulary:たいいくかん:体育館:たいいくかん | Vocabulary:わしょく:N4:lesson-44:和食:わしょく | Vocabulary:ほしであきひこ:N4:lesson-26:星出彰彦:ほしであきひこ | Vocabulary:どいたかお:N4:lesson-26:土井隆雄:どいたかお,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+-  (～みたいに して ください。): Do it like ～..
+- たいてい (たいてい): usually, mostly.
+- たった今 (たったいま): just now (used with the past tense; indicates completion).
+Cau hoi cua ban: Lam sao noi toi muon hoc tieng Nhat?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q050,N4,usage,llm_only,Lam sao hoi nha ga o dau?,駅|どこ|ですか,0.0,0,,"Minh chua co nguon hoc du ro cho cau nay. Ban hay thu viet lai bang mot tu, mau cau, hoac noi ro bai dang hoc de minh tra loi chac hon.",,,,
+Q050,N4,usage,vector_only,Lam sao hoi nha ga o dau?,駅|どこ|ですか,0.0,0,GrammarPoint:ga suru:N4:ga suru: | GrammarPoint:ka shira:N4:ka shira: | GrammarPoint:to kiita:N4:to kiita: | GrammarPoint:kai:N4:kai: | GrammarPoint:kana:N4:kana:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- ga suru: ngửi; nghe; hương vị.
+- ka shira: Tôi tự hỏi (nữ tính).
+- to kiita: Tôi nghe nói....
+Cau hoi cua ban: Lam sao hoi nha ga o dau?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q050,N4,usage,kg_only,Lam sao hoi nha ga o dau?,駅|どこ|ですか,0.33,1,Vocabulary:できます［みちが～］:できます［道が～］:できます［みちが～］ | Vocabulary:うかがいます:伺います:うかがいます | Vocabulary:えきまえ:駅前:えきまえ | Vocabulary:えきいん:駅員:えきいん | Vocabulary:［ちょっと］おねがいが あるんですが。:［ちょっと］お願いが あるんですが。:［ちょっと］おねがいが あるんですが。,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- できます［道が～］ (できます［みちが～］): [a road] be made, be completed, come into existence.
+- 伺います (うかがいます): ask, hear, visit (humble equivalent of ききます and いきます).
+- 駅前 (えきまえ): the area in front of the station.
+Cau hoi cua ban: Lam sao hoi nha ga o dau?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,
+Q050,N4,usage,kg_vector,Lam sao hoi nha ga o dau?,駅|どこ|ですか,0.33,1,Vocabulary:できます［みちが～］:できます［道が～］:できます［みちが～］ | Vocabulary:うかがいます:伺います:うかがいます | Vocabulary:えきまえ:駅前:えきまえ | Vocabulary:えきいん:駅員:えきいん | Vocabulary:［ちょっと］おねがいが あるんですが。:［ちょっと］お願いが あるんですが。:［ちょっと］おねがいが あるんですが。 | GrammarPoint:ga suru:N4:ga suru: | GrammarPoint:ka shira:N4:ka shira: | GrammarPoint:to kiita:N4:to kiita:,"Chot nhanh: day la phan ban nen nam truoc.
+Ho so hoc: N5 -> N4, pathway: jlpt_foundation, muc tieu: JLPT preparation, cach giai thich: concise.
+- できます［道が～］ (できます［みちが～］): [a road] be made, be completed, come into existence.
+- 伺います (うかがいます): ask, hear, visit (humble equivalent of ききます and いきます).
+- 駅前 (えきまえ): the area in front of the station.
+Cau hoi cua ban: Lam sao hoi nha ga o dau?
+Buoc tiep theo: dat 1 cau ngan voi muc nay, roi lam lai quiz neu vua sai.",,,,

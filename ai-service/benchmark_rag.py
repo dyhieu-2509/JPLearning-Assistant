@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import unicodedata
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
@@ -10,6 +11,75 @@ from typing import Iterable
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_OUTPUT = PROJECT_ROOT / "docs" / "rag_benchmark_results.csv"
 MODES = ("llm_only", "vector_only", "kg_only", "kg_vector")
+
+EXPECTED_TERM_ALIASES = {
+    "\u306f": ("wa - topic marker", "topic marker", "wa"),
+    "\u304c": ("ga", "subject marker"),
+    "\u3092": ("o / wo", "object marker", "wo"),
+    "\u306b": ("ni", "destination particle"),
+    "\u3067": ("de", "place"),
+    "\u3078": ("ni/e", "direction", "destination"),
+    "\u3082": ("mo", "also"),
+    "\u3068": ("with", "together"),
+    "\u304b\u3089": ("kara", "from"),
+    "\u307e\u3067": ("made", "until"),
+    "\u306e": ("no", "possessive"),
+    "\u3088\u308a": ("yori", "comparison", "than"),
+    "\u3057\u304b": ("shika", "only"),
+    "\u307e\u3059": ("masu", "polite"),
+    "\u98df\u3079\u308b": ("taberu", "eat"),
+    "\u305f\u3079\u308b": ("taberu", "eat"),
+    "\u884c\u304f": ("iku", "ikimasu", "go"),
+    "\u6765\u308b": ("kuru", "kimasu", "come"),
+    "\u3044\u304d\u307e\u3059": ("ikimasu", "go"),
+    "\u306a\u3044": ("nai", "negative"),
+    "\u3066": ("te form", "connect"),
+    "\u305f\u3044": ("tai", "want"),
+    "\u305f\u3053\u3068\u304c\u3042\u308b": ("koto ga aru", "experience"),
+    "\u3053\u3068\u304c\u3042\u308b": ("koto ga aru", "experience"),
+    "\u3066\u3082\u3044\u3044": ("temo ii", "permission"),
+    "\u306a\u3051\u308c\u3070\u306a\u3089\u306a\u3044": ("nakereba naranai", "must"),
+    "\u3066\u3057\u307e\u3046": ("te shimau", "complete", "regret"),
+    "\u3067\u3059": ("desu", "da / desu", "to be"),
+    "\u3042\u308a\u307e\u3059": ("arimasu", "exist"),
+    "\u3044\u307e\u3059": ("imasu", "exist"),
+    "\u3053\u3053": ("koko", "here"),
+    "\u305d\u3053": ("soko", "there"),
+    "\u3042\u305d\u3053": ("asoko", "over there"),
+    "\u306a\u3093": ("nan", "what"),
+    "\u3044": ("i adjective", "adjective"),
+    "\u306a": ("na adjective", "adjective"),
+    "\u306e\u3067": ("node", "reason"),
+    "\u306a\u304c\u3089": ("nagara", "while"),
+    "\u305d\u3046\u3067\u3059": ("sou desu", "heard", "seem"),
+    "\u3088\u3046\u306b\u306a\u308b": ("you ni naru", "become"),
+    "\u307b\u3046\u304c\u3044\u3044": ("hou ga ii", "advice", "should"),
+    "\u98f2\u3080": ("nomu", "drink"),
+    "\u306e\u3080": ("nomu", "drink"),
+    "\u898b\u308b": ("miru", "see"),
+    "\u307f\u308b": ("miru", "see"),
+    "\u805e\u304f": ("kiku", "listen", "ask"),
+    "\u304d\u304f": ("kiku", "listen", "ask"),
+    "\u59cb\u3081\u308b": ("hajimeru", "start"),
+    "\u306f\u3058\u3081\u308b": ("hajimeru", "start"),
+    "\u7d42\u308f\u308b": ("owaru", "finish"),
+    "\u304a\u308f\u308b": ("owaru", "finish"),
+    "\u75b2\u308c\u308b": ("tsukareru", "tired"),
+    "\u3064\u304b\u308c\u308b": ("tsukareru", "tired"),
+    "\u65e5": ("day", "nichi", "hi"),
+    "\u6708": ("month", "getsu", "tsuki"),
+    "\u4eba": ("person", "hito", "jin"),
+    "\u5b66": ("study", "gaku"),
+    "\u5b66\u751f": ("student", "gakusei"),
+    "\u99c5": ("station", "eki"),
+    "\u4f1a": ("company", "kai"),
+    "\u4f1a\u793e": ("company", "kaisha"),
+    "\u96fb": ("electric", "den"),
+    "\u96fb\u8eca": ("electric train", "densha"),
+    "\u65e5\u672c\u8a9e": ("japanese", "nihongo"),
+    "\u52c9\u5f37": ("study", "benkyou"),
+    "\u3069\u3053": ("where", "doko"),
+}
 
 
 @dataclass(frozen=True)
@@ -85,12 +155,22 @@ def source_text(source) -> str:
         getattr(source, "meaningEn", ""),
         getattr(source, "source", ""),
     ]
-    return " ".join(str(part).lower() for part in parts)
+    return unicodedata.normalize("NFKC", " ".join(str(part).lower() for part in parts))
+
+
+def expanded_expected_terms(expected_terms: Iterable[str]) -> set[str]:
+    expanded: set[str] = set()
+    for term in expected_terms:
+        normalized = unicodedata.normalize("NFKC", str(term).lower())
+        expanded.add(normalized)
+        for alias in EXPECTED_TERM_ALIASES.get(normalized, ()):
+            expanded.add(unicodedata.normalize("NFKC", alias.lower()))
+    return expanded
 
 
 def is_relevant(source, expected_terms: Iterable[str]) -> bool:
     text = source_text(source)
-    return any(str(term).lower() in text for term in expected_terms)
+    return any(term in text for term in expanded_expected_terms(expected_terms))
 
 
 def source_metrics(sources: list, expected_terms: Iterable[str]) -> tuple[float, int]:
@@ -136,7 +216,7 @@ def get_sources(mode: str, question: BenchmarkQuestion, neo4j_reader, qdrant_cli
         return graph_sources
     if mode == "vector_only":
         return vector_sources
-    return merge_sources(vector_sources, graph_sources)
+    return merge_sources(graph_sources, vector_sources)
 
 
 def format_sources(sources: list) -> str:

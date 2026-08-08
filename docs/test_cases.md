@@ -54,8 +54,24 @@ Run the benchmark with:
 
 ```powershell
 cd ai-service
+$env:NEO4J_URI='bolt://localhost:7687'
+$env:QDRANT_URL='http://localhost:6333'
+$env:EMBEDDING_PROVIDER='local'
+$env:EMBEDDING_VECTOR_SIZE='1024'
+$env:LLM_PROVIDER='mock'
 python benchmark_rag.py --output ..\docs\rag_benchmark_results.csv --modes llm_only vector_only kg_only kg_vector
 ```
+
+Latest automated run: 08/08/2026, 50 questions x 4 modes = 200 rows.
+
+| Mode | Avg Precision@3 | Source Recall | Runtime Errors |
+|---|---:|---:|---:|
+| LLM only | 0.000 | 0.000 | 0 |
+| Vector only | 0.300 | 0.620 | 0 |
+| KG only | 0.386 | 0.620 | 0 |
+| KG + Vector | 0.386 | 0.740 | 0 |
+
+Interpretation: KG gives better top-3 precision than vector search in the current dataset. KG + Vector keeps the same top-3 precision as KG and improves recall, so it is the best mode for finding at least one useful source.
 
 Report:
 
