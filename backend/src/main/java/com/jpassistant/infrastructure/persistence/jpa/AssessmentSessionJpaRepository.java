@@ -19,4 +19,11 @@ public interface AssessmentSessionJpaRepository extends JpaRepository<Assessment
             AssessmentSessionStatus status,
             Pageable pageable
     );
+
+    List<AssessmentSession> findByUserIdAndStatusOrderBySubmittedAtAsc(
+            String userId,
+            AssessmentSessionStatus status
+    );
+
+    List<AssessmentSession> findByStatusOrderBySubmittedAtAsc(AssessmentSessionStatus status);
 }

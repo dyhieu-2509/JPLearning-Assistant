@@ -13,12 +13,13 @@ This file lists the main test cases used to prove the system after teacher feedb
 | TC-07 | Adaptive study flow | Learner must pass before next lesson opens | Finish lesson flashcards and pass quiz with at least 85% | Next lesson is unlocked | `learner can start a lesson, review flashcards, pass the quiz, and unlock the next lesson` |
 | TC-08 | Adaptive support flow | If learner fails, pathway slows down | Fail quiz below 85% | Next lesson stays locked; mistake review and Tutor explanation appear | `learner cannot unlock the next lesson below the pass score` |
 | TC-09 | Pilot user study | Add small user test data collection | Submit in-lesson feedback after quiz result | `/personalization/me/feedback` receives rating, difficulty fit, pace, and action choice | `study pilot feedback captures user-test signal after a lesson result` |
-| TC-10 | Feedback is not mastery | User survey is not a learning signal | Save study feedback | Feedback is stored but mastery/progress is not changed | `PersonalizationServiceImplTest.recordStudyFeedbackDoesNotMutateMasteryProgress` |
+| TC-10 | Feedback-based adaptation | Feedback must affect pathway only when it is an explicit support signal | Save hard/review feedback for a study lesson | Feedback is stored and creates a weak `StudyFeedback` progress signal; positive feedback does not create a weak signal | `PersonalizationServiceImplTest.recordStudyFeedbackCreatesExplicitWeakSignalWhenLearnerRequestsReview` |
 | TC-11 | Learning signal contract | Mastery must use structured evidence only | Submit invalid source/result pair, such as ASSESSMENT + EASY | Backend rejects request and does not save progress | `PersonalizationServiceImplTest.recordLearningSignalRejectsInvalidSourceResultPair` |
 | TC-12 | Flashcard learning | Quizlet-like review with SRS | Create deck, review by `cardId + rating` | Card schedule and mastery are updated; reviewed card is no longer due immediately | `ApiIntegrationTest.flashcardDeckLifecycleCreatesCardsTracksDueCardsAndReviewsByCardId` |
 | TC-13 | Assessment integrity | Answer key must be backend-side | Start assessment then submit answers | Start response hides answer; submit grades from stored answer key and rejects resubmission | `ApiIntegrationTest.assessmentSessionStoresAnswerKeyAndUpdatesMasteryOnSubmit` |
 | TC-14 | End-user usability | Learner should understand app without many buttons | New learner follows dashboard, study, flashcards, lookup, floating tutor | Main loop is visible and old separate roadmap/help menu does not appear | `learner can understand the MVP study loop` |
 | TC-15 | Mobile usability | UI must work on small screens | Open study on mobile viewport | Active lesson appears before full pathway list | `mobile study view shows the active lesson before the full pathway` |
+| TC-16 | Pilot metrics | Teacher requested completion time, score, SUS, trust, and pre/post data | Complete a lesson attempt, submit SUS survey, and run pre/post assessment | `/personalization/me/metrics` returns duration, pass rate, average score, SUS, trust, and score gain | `pilotStudyMetricsCaptureLessonSurveyAndAssessmentPairs`, `study metrics records lesson attempt and SUS survey after quiz` |
 
 ## Pilot User Test Plan
 
@@ -31,18 +32,21 @@ Steps:
 3. User flips flashcards and completes quiz.
 4. If score is below 85%, user reviews mistakes with VAJA Tutor.
 5. User submits the short in-lesson feedback survey.
-6. Collect time-to-complete, quiz score, feedback rating, difficulty fit, trust/clarity for Tutor, and comments.
+6. User submits the SUS/trust pilot survey after the lesson result.
+7. Collect time-to-complete, quiz score, feedback rating, difficulty fit, trust/clarity for Tutor, SUS score, and comments.
 
 Minimum reported metrics:
 
 | Metric | Source |
 |---|---|
-| Time to complete one lesson | Screen recording or observer timer |
-| Quiz score | Study result screen |
-| Pass/fail rate | Study result screen |
+| Time to complete one lesson | `/personalization/me/study-attempts` start/complete |
+| Quiz score | `/personalization/me/study-attempts/{attemptId}/complete` |
+| Pass/fail rate | `/personalization/me/metrics` or admin `/personalization/pilot-study/metrics` |
 | Difficulty fit | `/personalization/me/feedback` |
 | Tutor clarity and trust | Tutor feedback prompt |
-| Main issue found by learner | Feedback comment or interview note |
+| SUS score | `/personalization/me/pilot-surveys` and `/personalization/me/metrics` |
+| Pre-test/Post-test gain | `/assessment/sessions` submitted before and after a study period |
+| Main issue found by learner | Feedback/survey comment or interview note |
 
 ## RAG Benchmark Plan
 

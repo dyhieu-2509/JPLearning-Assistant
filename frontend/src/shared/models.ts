@@ -92,6 +92,73 @@ export type StudyFeedbackResponse = StudyFeedbackRequest & {
   createdAt: string;
 };
 
+export type StudyLessonAttemptStartRequest = {
+  lessonId: string;
+  lessonTitle?: string | null;
+  level?: string | null;
+  chapterId?: string | null;
+  chapterTitle?: string | null;
+};
+
+export type StudyLessonAttemptCompleteRequest = {
+  scorePercent: number;
+  correctCount: number;
+  totalQuestions: number;
+  passed: boolean;
+};
+
+export type StudyLessonAttemptResponse = StudyLessonAttemptStartRequest &
+  Partial<StudyLessonAttemptCompleteRequest> & {
+    id: string;
+    userId: string;
+    status: "STARTED" | "COMPLETED";
+    durationSeconds?: number | null;
+    startedAt: string;
+    submittedAt?: string | null;
+    updatedAt: string;
+  };
+
+export type PilotSurveyRequest = {
+  contextType: string;
+  contextId?: string | null;
+  contextTitle?: string | null;
+  susScores: number[];
+  trustRating?: number | null;
+  comment?: string | null;
+};
+
+export type PilotSurveyResponse = PilotSurveyRequest & {
+  id: string;
+  userId: string;
+  susScore: number;
+  createdAt: string;
+};
+
+export type PilotStudyMetricsResponse = {
+  learnerCount: number;
+  completedLessonAttempts: number;
+  passedLessonAttempts: number;
+  passRatePercent: number;
+  averageLessonScorePercent: number;
+  averageCompletionSeconds: number;
+  feedbackResponses: number;
+  averageStudyRating: number;
+  averageTutorClarity: number;
+  averageTutorTrust: number;
+  surveyResponses: number;
+  averageSusScore: number;
+  averageSurveyTrust: number;
+  assessmentPairCount: number;
+  averagePreTestScorePercent: number;
+  averagePostTestScorePercent: number;
+  averageAssessmentGainPercent: number;
+  difficultyFitCounts: Record<string, number>;
+  actionChoiceCounts: Record<string, number>;
+  paceChoiceCounts: Record<string, number>;
+  recentComments: string[];
+  generatedAt: string;
+};
+
 export type FlashcardCardResponse = {
   id: string;
   deckId: string;

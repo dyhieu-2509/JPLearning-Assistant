@@ -1,5 +1,7 @@
 import { expect, type Page, type Route, test } from "@playwright/test";
 
+test.setTimeout(60_000);
+
 const profile = {
   id: "profile-1",
   userId: "user-1",
@@ -117,6 +119,9 @@ const dashboard = {
 type MockMvpOptions = {
   onFeedback?: (feedback: Record<string, unknown>) => void;
   onLearningSignal?: (signal: Record<string, unknown>) => void;
+  onLessonAttemptStart?: (attempt: Record<string, unknown>) => void;
+  onLessonAttemptComplete?: (attempt: Record<string, unknown>) => void;
+  onPilotSurvey?: (survey: Record<string, unknown>) => void;
 };
 
 type SeedOptions = {
@@ -228,6 +233,66 @@ test("study pilot feedback captures user-test signal after a lesson result", asy
     difficultyFit: "JUST_RIGHT",
     actionChoice: "MOVE_ON",
     paceChoice: "FAST"
+  });
+});
+
+test("study metrics records lesson attempt and SUS survey after quiz", async ({ page }) => {
+  const attemptStarts: Array<Record<string, unknown>> = [];
+  const attemptCompletions: Array<Record<string, unknown>> = [];
+  const surveyRequests: Array<Record<string, unknown>> = [];
+  await seedAuthenticatedLearner(page, "pilot-metrics-user");
+  await mockMvpApi(page, {}, {
+    onLessonAttemptStart: (attempt) => attemptStarts.push(attempt),
+    onLessonAttemptComplete: (attempt) => attemptCompletions.push(attempt),
+    onPilotSurvey: (survey) => surveyRequests.push(survey)
+  });
+
+  await page.goto("/learner/study");
+  await walkThroughLessonOneFlashcards(page);
+  await expect.poll(() => attemptStarts.length).toBe(1);
+  await answerLessonOneCorrectly(page);
+  await page.getByRole("button", { name: /Nộp quiz cuối bài/i }).click();
+
+  await expect.poll(() => attemptCompletions.length).toBe(1);
+  expect(attemptStarts[0]).toMatchObject({
+    lessonId: "n5-desu-wa",
+    lessonTitle: "Bài 1: Giới thiệu bản thân",
+    level: "N5",
+    chapterId: "jlpt_foundation-entry"
+  });
+  expect(attemptCompletions[0]).toMatchObject({
+    scorePercent: 100,
+    correctCount: 5,
+    totalQuestions: 5,
+    passed: true
+  });
+
+  const survey = page.locator(".pilot-survey");
+  await expect(survey).toBeVisible();
+  const susScores = [5, 1, 4, 2, 5, 1, 4, 2, 5, 1];
+  for (let index = 0; index < susScores.length; index += 1) {
+    await survey
+      .locator(".pilot-survey-question")
+      .nth(index)
+      .getByRole("button", { name: new RegExp(`${susScores[index]}$`) })
+      .click();
+  }
+  await survey
+    .locator(".pilot-survey-question")
+    .last()
+    .getByRole("button", { name: /Độ tin cậy vào VAJA Tutor 4$/ })
+    .click();
+  await survey.getByRole("textbox", { name: /Ghi chú ngắn/i }).fill("Path clear enough for a new learner");
+  await survey.getByRole("button", { name: "Gửi khảo sát", exact: true }).click();
+
+  await expect.poll(() => surveyRequests.length).toBe(1);
+  expect(surveyRequests[0]).toMatchObject({
+    contextType: "study_lesson",
+    contextId: "n5-desu-wa",
+    contextTitle: "Bài 1: Giới thiệu bản thân",
+    susScores,
+    trustRating: 4,
+    comment: "Path clear enough for a new learner"
   });
 });
 
@@ -743,6 +808,7 @@ async function seedAuthenticatedLearner(page: Page, userId = "user-1", options: 
       .filter((key) =>
         key.startsWith("vaja.studyPathProgress") ||
         key.startsWith("vaja.studyFeedback") ||
+        key.startsWith("vaja.pilotSurvey") ||
         key.startsWith("vaja.learnerTour.seen")
       )
       .forEach((key) => window.localStorage.removeItem(key));
@@ -801,6 +867,54 @@ async function mockMvpApi(page: Page, profileOverride: Partial<typeof profile> =
         userId: activeProfile.userId,
         createdAt: "2026-05-20T08:00:00Z",
         ...feedback
+      });
+      return;
+    }
+
+    if (method === "POST" && path === "/personalization/me/study-attempts") {
+      const attempt = JSON.parse(request.postData() || "{}");
+      options.onLessonAttemptStart?.(attempt);
+      await json(route, {
+        id: "attempt-1",
+        userId: activeProfile.userId,
+        status: "STARTED",
+        startedAt: "2026-05-20T08:00:00Z",
+        updatedAt: "2026-05-20T08:00:00Z",
+        ...attempt
+      });
+      return;
+    }
+
+    if (method === "POST" && path === "/personalization/me/study-attempts/attempt-1/complete") {
+      const attempt = JSON.parse(request.postData() || "{}");
+      options.onLessonAttemptComplete?.(attempt);
+      await json(route, {
+        id: "attempt-1",
+        userId: activeProfile.userId,
+        lessonId: "n5-desu-wa",
+        lessonTitle: "Bài 1: Giới thiệu bản thân",
+        level: "N5",
+        chapterId: "jlpt_foundation-entry",
+        chapterTitle: "Chương 1: Câu nền tảng N5",
+        status: "COMPLETED",
+        durationSeconds: 420,
+        startedAt: "2026-05-20T08:00:00Z",
+        submittedAt: "2026-05-20T08:07:00Z",
+        updatedAt: "2026-05-20T08:07:00Z",
+        ...attempt
+      });
+      return;
+    }
+
+    if (method === "POST" && path === "/personalization/me/pilot-surveys") {
+      const survey = JSON.parse(request.postData() || "{}");
+      options.onPilotSurvey?.(survey);
+      await json(route, {
+        id: "survey-1",
+        userId: activeProfile.userId,
+        susScore: 90,
+        createdAt: "2026-05-20T08:08:00Z",
+        ...survey
       });
       return;
     }

@@ -22,14 +22,17 @@ import com.jpassistant.application.dto.response.AiPlannerResponse;
 import com.jpassistant.application.dto.response.ChatResponse;
 import com.jpassistant.application.dto.response.SourceResponse;
 import com.jpassistant.application.dto.response.StudyPlanItemResponse;
+import com.jpassistant.domain.auth.UserRole;
 import com.jpassistant.application.port.out.AiServiceClient;
 import com.jpassistant.domain.auth.AuthProvider;
 import com.jpassistant.domain.knowledge.KnowledgeGraphRepository;
 import com.jpassistant.domain.knowledge.KnowledgeItem;
 import com.jpassistant.infrastructure.persistence.jpa.UserAuthProviderJpaRepository;
+import com.jpassistant.infrastructure.persistence.jpa.UserJpaRepository;
 import com.jpassistant.infrastructure.security.JwtTokenProvider;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -64,6 +67,9 @@ class ApiIntegrationTest {
 
     @Autowired
     private UserAuthProviderJpaRepository providerRepository;
+
+    @Autowired
+    private UserJpaRepository userRepository;
 
     @MockBean
     private AiServiceClient aiServiceClient;
@@ -532,6 +538,152 @@ class ApiIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].contextId").value("n5-foundation-lesson-1"))
                 .andExpect(jsonPath("$[0].actionChoice").value("MOVE_ON"));
+    }
+
+    @Test
+    void pilotStudyMetricsCaptureLessonSurveyAndAssessmentPairs() throws Exception {
+        when(aiServiceClient.generateAssessment(any())).thenReturn(new AiAssessmentGenerateResponse(List.of(
+                new AiAssessmentQuestionResponse(
+                        "pilot-q1",
+                        "Choose the topic particle.",
+                        List.of("は", "を"),
+                        "は",
+                        "は marks the topic."
+                )
+        )));
+        JsonNode authResponse = register(uniqueEmail("pilot-metrics"));
+        String accessToken = authResponse.get("accessToken").asText();
+
+        MvcResult attemptResult = mockMvc.perform(post("/api/v1/personalization/me/study-attempts")
+                        .header(HttpHeaders.AUTHORIZATION, bearer(accessToken))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json(Map.of(
+                                "lessonId", "n5-desu-wa",
+                                "lessonTitle", "Bai 1",
+                                "level", "N5",
+                                "chapterId", "n5-foundation",
+                                "chapterTitle", "Chapter 1"
+                        ))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.lessonId").value("n5-desu-wa"))
+                .andExpect(jsonPath("$.status").value("STARTED"))
+                .andReturn();
+
+        String attemptId = readJson(attemptResult).get("id").asText();
+        mockMvc.perform(post("/api/v1/personalization/me/study-attempts/{attemptId}/complete", attemptId)
+                        .header(HttpHeaders.AUTHORIZATION, bearer(accessToken))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json(Map.of(
+                                "scorePercent", 100,
+                                "correctCount", 5,
+                                "totalQuestions", 5,
+                                "passed", true
+                        ))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("COMPLETED"))
+                .andExpect(jsonPath("$.passed").value(true))
+                .andExpect(jsonPath("$.scorePercent").value(100))
+                .andExpect(jsonPath("$.durationSeconds").isNumber());
+
+        mockMvc.perform(post("/api/v1/personalization/me/feedback")
+                        .header(HttpHeaders.AUTHORIZATION, bearer(accessToken))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json(Map.of(
+                                "moment", "QUIZ",
+                                "contextType", "study_lesson",
+                                "contextId", "n5-desu-wa",
+                                "contextTitle", "Bai 1",
+                                "rating", 4,
+                                "difficultyFit", "JUST_RIGHT",
+                                "paceChoice", "FAST",
+                                "actionChoice", "MOVE_ON",
+                                "comment", "Easy to follow"
+                        ))))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/api/v1/personalization/me/pilot-surveys")
+                        .header(HttpHeaders.AUTHORIZATION, bearer(accessToken))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json(Map.of(
+                                "contextType", "study_lesson",
+                                "contextId", "n5-desu-wa",
+                                "contextTitle", "Bai 1",
+                                "susScores", List.of(5, 1, 4, 2, 5, 1, 4, 2, 5, 1),
+                                "trustRating", 4,
+                                "comment", "The path is clear"
+                        ))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.susScore").value(90.0))
+                .andExpect(jsonPath("$.trustRating").value(4));
+
+        MvcResult preTest = mockMvc.perform(post("/api/v1/assessment/sessions")
+                        .header(HttpHeaders.AUTHORIZATION, bearer(accessToken))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json(Map.of(
+                                "level", "N5",
+                                "category", "grammar",
+                                "questionCount", 1
+                        ))))
+                .andExpect(status().isOk())
+                .andReturn();
+        mockMvc.perform(post("/api/v1/assessment/sessions/{sessionId}/submit", readJson(preTest).get("sessionId").asText())
+                        .header(HttpHeaders.AUTHORIZATION, bearer(accessToken))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json(Map.of("answers", Map.of("pilot-q1", "を")))))
+                .andExpect(status().isOk());
+
+        MvcResult postTest = mockMvc.perform(post("/api/v1/assessment/sessions")
+                        .header(HttpHeaders.AUTHORIZATION, bearer(accessToken))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json(Map.of(
+                                "level", "N5",
+                                "category", "grammar",
+                                "questionCount", 1
+                        ))))
+                .andExpect(status().isOk())
+                .andReturn();
+        mockMvc.perform(post("/api/v1/assessment/sessions/{sessionId}/submit", readJson(postTest).get("sessionId").asText())
+                        .header(HttpHeaders.AUTHORIZATION, bearer(accessToken))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json(Map.of("answers", Map.of("pilot-q1", "は")))))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/api/v1/personalization/me/metrics")
+                        .header(HttpHeaders.AUTHORIZATION, bearer(accessToken)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.learnerCount").value(1))
+                .andExpect(jsonPath("$.completedLessonAttempts").value(1))
+                .andExpect(jsonPath("$.passedLessonAttempts").value(1))
+                .andExpect(jsonPath("$.passRatePercent").value(100.0))
+                .andExpect(jsonPath("$.averageLessonScorePercent").value(100.0))
+                .andExpect(jsonPath("$.feedbackResponses").value(1))
+                .andExpect(jsonPath("$.averageStudyRating").value(4.0))
+                .andExpect(jsonPath("$.surveyResponses").value(1))
+                .andExpect(jsonPath("$.averageSusScore").value(90.0))
+                .andExpect(jsonPath("$.assessmentPairCount").value(1))
+                .andExpect(jsonPath("$.averagePreTestScorePercent").value(0.0))
+                .andExpect(jsonPath("$.averagePostTestScorePercent").value(100.0))
+                .andExpect(jsonPath("$.averageAssessmentGainPercent").value(100.0))
+                .andExpect(jsonPath("$.difficultyFitCounts.JUST_RIGHT").value(1))
+                .andExpect(jsonPath("$.recentComments[0]").value("The path is clear"));
+
+        mockMvc.perform(get("/api/v1/personalization/pilot-study/metrics")
+                        .header(HttpHeaders.AUTHORIZATION, bearer(accessToken)))
+                .andExpect(status().isForbidden());
+
+        JsonNode adminResponse = register(uniqueEmail("pilot-admin"));
+        String adminAccessToken = adminResponse.get("accessToken").asText();
+        userRepository.findById(UUID.fromString(adminResponse.get("user").get("id").asText()))
+                .ifPresent(user -> {
+                    user.setRole(UserRole.ADMIN);
+                    userRepository.save(user);
+                });
+
+        mockMvc.perform(get("/api/v1/personalization/pilot-study/metrics")
+                        .header(HttpHeaders.AUTHORIZATION, bearer(adminAccessToken)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.completedLessonAttempts", greaterThan(0)))
+                .andExpect(jsonPath("$.surveyResponses", greaterThan(0)));
     }
 
     @Test

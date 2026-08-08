@@ -19,7 +19,8 @@ import { useAuth } from "../../../app/providers/AuthProvider";
 import { apiRequest, ApiError } from "../../../shared/api";
 import { IconTextButton, LoadingPanel, Panel, PrimaryButton, TopicChip } from "../../../shared/components";
 import { displayLearningLevel } from "../../../shared/levels";
-import type { ChatResponse, StudentProfileResponse, StudyFeedbackRequest } from "../../../shared/models";
+import type { ChatResponse, StudentProfileResponse, StudyFeedbackRequest, StudyLessonAttemptResponse } from "../../../shared/models";
+import { PilotSurveyPrompt } from "../feedback/PilotSurveyPrompt";
 import { StudyFeedbackPrompt } from "../feedback/StudyFeedbackPrompt";
 import {
   buildStudyChapters,
@@ -108,6 +109,7 @@ export function StudyView() {
   const [loadingTutorInsight, setLoadingTutorInsight] = useState(false);
   const [tutorInsightError, setTutorInsightError] = useState<string | null>(null);
   const [activeSupportQuestionId, setActiveSupportQuestionId] = useState<string | null>(null);
+  const [activeAttemptId, setActiveAttemptId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!accessToken) {
@@ -149,6 +151,7 @@ export function StudyView() {
     setAnswers({});
     setLastScore(null);
     setActiveSupportQuestionId(null);
+    setActiveAttemptId(null);
   }, [lessons, progressKey]);
 
   useEffect(() => {
@@ -229,6 +232,8 @@ export function StudyView() {
       setTutorInsightError(null);
       setLoadingTutorInsight(false);
       setActiveSupportQuestionId(null);
+      setActiveAttemptId(null);
+      void startCurrentLessonAttempt();
       window.setTimeout(() => {
         document.querySelector(".study-flashcard")?.scrollIntoView({ block: "center", behavior: "smooth" });
       }, 80);
@@ -262,10 +267,12 @@ export function StudyView() {
     setTutorInsightError(null);
     setLoadingTutorInsight(false);
     setActiveSupportQuestionId(null);
+    setActiveAttemptId(null);
   }
 
   function startFlashcards() {
     resetLessonState("flashcards");
+    void startCurrentLessonAttempt();
   }
 
   function nextCard() {
@@ -297,6 +304,7 @@ export function StudyView() {
     setTutorInsightError(null);
     if (accessToken) {
       void recordStudyQuizSignals(accessToken, lesson, answers);
+      void completeCurrentLessonAttempt(score, correct);
     }
     setProgress((current) => {
       const previous = current[lesson.id];
@@ -317,6 +325,55 @@ export function StudyView() {
     setPhase("result");
   }
 
+  async function startCurrentLessonAttempt(): Promise<string | null> {
+    if (!accessToken) {
+      return null;
+    }
+    try {
+      const response = await apiRequest<StudyLessonAttemptResponse>("/personalization/me/study-attempts", {
+        method: "POST",
+        token: accessToken,
+        body: {
+          lessonId: lesson.id,
+          lessonTitle: lesson.title,
+          level: lesson.level,
+          chapterId: currentChapter.id,
+          chapterTitle: currentChapter.title
+        }
+      });
+      setActiveAttemptId(response.id);
+      return response.id;
+    } catch {
+      return null;
+    }
+  }
+
+  async function completeCurrentLessonAttempt(score: number, correct: number) {
+    if (!accessToken) {
+      return;
+    }
+    const attemptId = activeAttemptId ?? (await startCurrentLessonAttempt());
+    if (!attemptId) {
+      return;
+    }
+    try {
+      await apiRequest<StudyLessonAttemptResponse>(`/personalization/me/study-attempts/${attemptId}/complete`, {
+        method: "POST",
+        token: accessToken,
+        body: {
+          scorePercent: score,
+          correctCount: correct,
+          totalQuestions: lesson.questions.length,
+          passed: score >= passThreshold
+        }
+      });
+    } catch {
+      // Metrics collection should not interrupt the lesson flow.
+    } finally {
+      setActiveAttemptId(null);
+    }
+  }
+
   function applySubmittedFeedback(feedback: StudyFeedbackRequest) {
     setProgress((current) => applyFeedbackToProgress(current, lesson, currentScore, feedback));
   }
@@ -329,6 +386,12 @@ export function StudyView() {
     if (accessToken && missedQuestions.length) {
       void requestTutorMistakeHelp();
     }
+  }
+
+  function retryQuiz() {
+    resetLessonState("quiz");
+    setActiveSupportQuestionId(lesson.questions[0]?.id ?? null);
+    void startCurrentLessonAttempt();
   }
 
   async function requestTutorMistakeHelp() {
@@ -601,7 +664,7 @@ export function StudyView() {
                     ))}
                   </div>
                   <div className="study-action-row">
-                    <PrimaryButton type="button" onClick={() => resetLessonState("quiz")}>
+                    <PrimaryButton type="button" onClick={retryQuiz}>
                       <ClipboardCheck size={18} />
                       Làm lại quiz
                     </PrimaryButton>
@@ -641,22 +704,33 @@ export function StudyView() {
                     })}
                   </div>
                   {accessToken && (
-                    <StudyFeedbackPrompt
-                      token={accessToken}
-                      feedbackKey={`study.${lesson.id}.${lessonProgress?.attempts ?? 0}.${currentScore}`}
-                      mode="study"
-                      title={currentChapterComplete ? "Chương này có hợp với bạn không?" : "Bài này có hợp với bạn không?"}
-                      description="Trả lời nhanh để VAJA có dữ liệu cho user test và chỉnh pathway."
-                      baseFeedback={{
-                        moment: currentChapterComplete ? "CHAPTER" : "QUIZ",
-                        contextType: currentChapterComplete ? "study_chapter" : "study_lesson",
-                        contextId: currentChapterComplete ? currentChapter.id : lesson.id,
-                        contextTitle: currentChapterComplete ? currentChapter.title : lesson.title
-                      }}
-                      defaultActionChoice={currentScore >= passThreshold ? "MOVE_ON" : "REVIEW_AGAIN"}
-                      defaultPaceChoice={adaptiveState.pace.toUpperCase()}
-                      onSubmitted={applySubmittedFeedback}
-                    />
+                    <>
+                      <StudyFeedbackPrompt
+                        token={accessToken}
+                        feedbackKey={`study.${lesson.id}.${lessonProgress?.attempts ?? 0}.${currentScore}`}
+                        mode="study"
+                        title={currentChapterComplete ? "Chương này có hợp với bạn không?" : "Bài này có hợp với bạn không?"}
+                        description="Trả lời nhanh để VAJA có dữ liệu cho user test và chỉnh pathway."
+                        baseFeedback={{
+                          moment: currentChapterComplete ? "CHAPTER" : "QUIZ",
+                          contextType: currentChapterComplete ? "study_chapter" : "study_lesson",
+                          contextId: currentChapterComplete ? currentChapter.id : lesson.id,
+                          contextTitle: currentChapterComplete ? currentChapter.title : lesson.title
+                        }}
+                        defaultActionChoice={currentScore >= passThreshold ? "MOVE_ON" : "REVIEW_AGAIN"}
+                        defaultPaceChoice={adaptiveState.pace.toUpperCase()}
+                        onSubmitted={applySubmittedFeedback}
+                      />
+                      <PilotSurveyPrompt
+                        token={accessToken}
+                        surveyKey={`study.${lesson.id}.${lessonProgress?.attempts ?? 0}`}
+                        baseSurvey={{
+                          contextType: currentChapterComplete ? "study_chapter" : "study_lesson",
+                          contextId: currentChapterComplete ? currentChapter.id : lesson.id,
+                          contextTitle: currentChapterComplete ? currentChapter.title : lesson.title
+                        }}
+                      />
+                    </>
                   )}
                   <div className="study-action-row">
                     {currentScore >= passThreshold && nextLesson ? (
@@ -670,7 +744,7 @@ export function StudyView() {
                         Ôn câu sai trước
                       </PrimaryButton>
                     )}
-                    <IconTextButton type="button" variant="ghost" onClick={() => resetLessonState("quiz")}>
+                    <IconTextButton type="button" variant="ghost" onClick={retryQuiz}>
                       Làm lại quiz
                     </IconTextButton>
                   </div>

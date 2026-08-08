@@ -533,6 +533,11 @@ graph LR
 | POST | `/api/v1/personalization/me/progress/signals` | Ghi nhận learning signal từ quiz/assessment/flashcard để cập nhật mastery |
 | POST | `/api/v1/personalization/me/feedback` | Ghi feedback ngắn trong lúc học cho pilot user test |
 | GET | `/api/v1/personalization/me/feedback` | Xem feedback gần đây của learner đang đăng nhập |
+| POST | `/api/v1/personalization/me/study-attempts` | Bắt đầu đo một lượt học bài để lấy completion time |
+| POST | `/api/v1/personalization/me/study-attempts/{attemptId}/complete` | Kết thúc lượt học, lưu điểm quiz, pass/fail và duration |
+| POST | `/api/v1/personalization/me/pilot-surveys` | Lưu khảo sát SUS/trust sau bài học cho pilot user test |
+| GET | `/api/v1/personalization/me/metrics` | Tổng hợp metrics của learner hiện tại |
+| GET | `/api/v1/personalization/pilot-study/metrics` | Admin tổng hợp pilot-study metrics cho appendix |
 | GET | `/api/v1/flashcards/decks` | List decks |
 | POST | `/api/v1/flashcards/decks` | Tạo deck; có thể auto-generate cards từ KG theo `level + category` |
 | GET | `/api/v1/flashcards/decks/{deckId}/cards` | Lấy cards trong deck của learner hiện tại |

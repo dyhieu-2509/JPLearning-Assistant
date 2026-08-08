@@ -11,6 +11,9 @@ export type {
   KnowledgeItemResponse,
   KnowledgeProgressResponse,
   LearnerDashboardResponse,
+  PilotStudyMetricsResponse,
+  PilotSurveyRequest,
+  PilotSurveyResponse,
   PlannerContextResponse,
   PlannerRecommendationResponse,
   SavedStudyPlanResponse,
@@ -19,6 +22,9 @@ export type {
   StudentProfileResponse,
   StudyFeedbackRequest,
   StudyFeedbackResponse,
+  StudyLessonAttemptCompleteRequest,
+  StudyLessonAttemptResponse,
+  StudyLessonAttemptStartRequest,
   UserResponse
 } from "./models";
 import { apiBaseUrl } from "./config";

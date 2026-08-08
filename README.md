@@ -13,6 +13,7 @@ Implemented:
 - React/Vite frontend under `frontend/`
 - Neo4j/PostgreSQL/Qdrant Docker Compose services
 - REST endpoints for auth, knowledge lookup, tutor chat, personalization dashboard, study feedback, flashcards, assessment, and planner
+- Pilot-study metrics endpoints for lesson attempt time, quiz score, SUS/trust survey, and aggregate appendix reporting
 
 ## Run Infrastructure
 
@@ -54,6 +55,11 @@ Useful endpoints:
 - `GET /api/v1/knowledge/grammar?q=desu&level=N5`
 - `GET /api/v1/knowledge/kanji?q=日&level=N5`
 - `POST /api/v1/chat`
+- `POST /api/v1/personalization/me/study-attempts`
+- `POST /api/v1/personalization/me/study-attempts/{attemptId}/complete`
+- `POST /api/v1/personalization/me/pilot-surveys`
+- `GET /api/v1/personalization/me/metrics`
+- `GET /api/v1/personalization/pilot-study/metrics`
 
 ## Run With Docker Compose
 
