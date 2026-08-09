@@ -2712,6 +2712,11 @@ progress::-webkit-progress-value {
   background: var(--sky-50);
 }
 
+.pronunciation-action-row button:disabled {
+  opacity: 0.58;
+  cursor: not-allowed;
+}
+
 .pronunciation-score-row button:first-child {
   border-color: rgba(31, 157, 115, 0.24);
   color: var(--green-600);
@@ -2730,6 +2735,59 @@ progress::-webkit-progress-value {
 .pronunciation-audio {
   width: 100%;
   min-height: 38px;
+}
+
+.pronunciation-result {
+  display: grid;
+  gap: 7px;
+  padding: 10px;
+  border: 1px solid rgba(31, 157, 115, 0.22);
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.pronunciation-result.again {
+  border-color: rgba(225, 29, 72, 0.2);
+  background: #fff7f7;
+}
+
+.pronunciation-result.hard {
+  border-color: rgba(242, 140, 40, 0.24);
+  background: var(--sun-50);
+}
+
+.pronunciation-result-heading {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.pronunciation-result-heading strong {
+  color: var(--blue-950);
+  font-size: 18px;
+  line-height: 1;
+}
+
+.pronunciation-result-heading span,
+.pronunciation-result-heading small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.pronunciation-result p,
+.pronunciation-result small,
+.pronunciation-result ul {
+  margin: 0;
+  color: var(--blue-950);
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1.45;
+}
+
+.pronunciation-result ul {
+  padding-left: 18px;
 }
 
 .study-practice-card .pronunciation-status {

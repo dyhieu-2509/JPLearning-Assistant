@@ -9,6 +9,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -19,6 +20,7 @@ import com.jpassistant.application.dto.request.GoogleOAuth2LoginRequest;
 import com.jpassistant.application.dto.response.AiAssessmentGenerateResponse;
 import com.jpassistant.application.dto.response.AiAssessmentQuestionResponse;
 import com.jpassistant.application.dto.response.AiPlannerResponse;
+import com.jpassistant.application.dto.response.AiPronunciationScoreResponse;
 import com.jpassistant.application.dto.response.ChatResponse;
 import com.jpassistant.application.dto.response.SourceResponse;
 import com.jpassistant.application.dto.response.StudyPlanItemResponse;
@@ -40,6 +42,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -400,6 +403,51 @@ class ApiIntegrationTest {
                         .header(HttpHeaders.AUTHORIZATION, bearer(accessToken)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(planId));
+    }
+
+    @Test
+    void pronunciationScoreRequiresJwtAndRecordsProgressSignal() throws Exception {
+        JsonNode authResponse = register(uniqueEmail("pronunciation"));
+        String accessToken = authResponse.get("accessToken").asText();
+        when(aiServiceClient.scorePronunciation(
+                eq("はじめまして。"),
+                eq("Chào hỏi"),
+                eq("N5"),
+                any(byte[].class),
+                eq("voice.webm"),
+                eq(MediaType.parseMediaType("audio/webm"))
+        )).thenReturn(new AiPronunciationScoreResponse(
+                "はじめまして。",
+                88,
+                "GOOD",
+                "Bạn đọc rõ. Giữ nhịp này.",
+                List.of("Ổn"),
+                0.86
+        ));
+        MockMultipartFile audio = new MockMultipartFile(
+                "audio",
+                "voice.webm",
+                "audio/webm",
+                new byte[] {1, 2, 3}
+        );
+
+        mockMvc.perform(multipart("/api/v1/pronunciation/score")
+                        .file(audio)
+                        .param("targetText", "はじめまして。")
+                        .param("lessonId", "conversation-greetings")
+                        .param("lessonTitle", "Chào hỏi")
+                        .param("taskId", "conversation-greetings-practice")
+                        .param("taskTitle", "Đóng vai hội thoại")
+                        .param("level", "N5")
+                        .header(HttpHeaders.AUTHORIZATION, bearer(accessToken)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.transcript").value("はじめまして。"))
+                .andExpect(jsonPath("$.scorePercent").value(88))
+                .andExpect(jsonPath("$.verdict").value("GOOD"))
+                .andExpect(jsonPath("$.progress.knowledgeType").value("Pronunciation"))
+                .andExpect(jsonPath("$.progress.knowledgeId").value(
+                        "conversation-greetings:conversation-greetings-practice"
+                ));
     }
 
     @Test

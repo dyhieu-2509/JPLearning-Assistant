@@ -2,10 +2,12 @@ from functools import lru_cache
 
 from app.application.services.assessment_service_impl import AssessmentServiceImpl
 from app.application.services.planner_service_impl import PlannerServiceImpl
+from app.application.services.pronunciation_service_impl import PronunciationServiceImpl
 from app.application.services.tutor_service_impl import TutorServiceImpl
 from app.config.settings import get_settings
 from app.domain.services.assessment_service import AssessmentService
 from app.domain.services.planner_service import PlannerService
+from app.domain.services.pronunciation_service import PronunciationService
 from app.domain.services.tutor_service import TutorService
 from app.infrastructure.graphdb.neo4j_reader import Neo4jReader
 from app.infrastructure.llm.langchain_client import LangChainClient
@@ -46,3 +48,9 @@ def get_planner_service() -> PlannerService:
 def get_assessment_service() -> AssessmentService:
     """Return the Assessment Agent service."""
     return AssessmentServiceImpl()
+
+
+@lru_cache
+def get_pronunciation_service() -> PronunciationService:
+    """Return the Pronunciation Tutor service."""
+    return PronunciationServiceImpl(get_settings())

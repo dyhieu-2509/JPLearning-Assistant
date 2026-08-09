@@ -114,6 +114,19 @@ class TutorChatResponse(BaseModel):
     confidence: float = Field(ge=0.0, le=1.0)
 
 
+class PronunciationScoreResponse(BaseModel):
+    """Pronunciation feedback generated from learner audio."""
+
+    transcript: str = ""
+    score_percent: int = Field(default=0, ge=0, le=100, alias="scorePercent")
+    verdict: str = "AGAIN"
+    feedback: str
+    issues: list[str] = Field(default_factory=list)
+    confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+
+    model_config = ConfigDict(populate_by_name=True)
+
+
 class PlannerRequest(BaseModel):
     """Input data for generating a learning roadmap."""
 

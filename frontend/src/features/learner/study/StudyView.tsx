@@ -20,10 +20,10 @@ import {
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../app/providers/AuthProvider";
-import { apiRequest, ApiError } from "../../../shared/api";
+import { apiFormRequest, apiRequest, ApiError } from "../../../shared/api";
 import { IconTextButton, LoadingPanel, Panel, PrimaryButton, TopicChip } from "../../../shared/components";
 import { displayLearningLevel } from "../../../shared/levels";
-import type { ChatResponse, StudentProfileResponse, StudyFeedbackRequest, StudyLessonAttemptResponse } from "../../../shared/models";
+import type { ChatResponse, PronunciationScoreResponse, StudentProfileResponse, StudyFeedbackRequest, StudyLessonAttemptResponse } from "../../../shared/models";
 import { PilotSurveyPrompt } from "../feedback/PilotSurveyPrompt";
 import { StudyFeedbackPrompt } from "../feedback/StudyFeedbackPrompt";
 import {
@@ -879,8 +879,11 @@ function PronunciationPractice({
   const recordingUrlRef = useRef<string | null>(null);
   const [recording, setRecording] = useState(false);
   const [recordingUrl, setRecordingUrl] = useState<string | null>(null);
+  const [recordingBlob, setRecordingBlob] = useState<Blob | null>(null);
+  const [scoring, setScoring] = useState(false);
+  const [scoreResult, setScoreResult] = useState<PronunciationScoreResponse | null>(null);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState("Nghe mẫu, ghi âm lại, rồi tự chấm nhanh.");
+  const [message, setMessage] = useState("Nghe mẫu, ghi âm lại, rồi bấm AI chấm.");
 
   useEffect(() => {
     return () => {
@@ -897,12 +900,15 @@ function PronunciationPractice({
     };
   }, []);
 
-  function replaceRecordingUrl(nextUrl: string) {
+  function replaceRecording(nextBlob: Blob) {
     if (recordingUrlRef.current) {
       URL.revokeObjectURL(recordingUrlRef.current);
     }
+    const nextUrl = URL.createObjectURL(nextBlob);
     recordingUrlRef.current = nextUrl;
     setRecordingUrl(nextUrl);
+    setRecordingBlob(nextBlob);
+    setScoreResult(null);
   }
 
   function playSample() {
@@ -951,14 +957,16 @@ function PronunciationPractice({
       };
       recorder.onstop = () => {
         const blob = new Blob(chunks, { type: recorder.mimeType || "audio/webm" });
-        replaceRecordingUrl(URL.createObjectURL(blob));
+        replaceRecording(blob);
         stopMediaStream(stream);
         mediaStreamRef.current = null;
         mediaRecorderRef.current = null;
         setRecording(false);
-        setMessage("Đã ghi âm. Nghe lại rồi chọn kết quả.");
+        setMessage("Đã ghi âm. Nghe lại rồi bấm AI chấm.");
       };
       recorder.start();
+      setRecordingBlob(null);
+      setScoreResult(null);
       setRecording(true);
       setMessage("Đang ghi âm. Đọc chậm và rõ.");
     } catch {
@@ -975,6 +983,43 @@ function PronunciationPractice({
     }
     recorder.stop();
     setMessage("Đang lưu bản ghi trên máy...");
+  }
+
+  async function scoreRecording() {
+    if (!accessToken) {
+      setMessage("Đăng nhập để AI chấm phát âm và lưu vào pathway.");
+      return;
+    }
+    if (!recordingBlob) {
+      setMessage("Ghi âm trước, rồi AI mới chấm được.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("audio", recordingBlob, "pronunciation.webm");
+    formData.append("targetText", targetText);
+    formData.append("lessonId", lesson.id);
+    formData.append("lessonTitle", lesson.title);
+    formData.append("taskId", task.id);
+    formData.append("taskTitle", task.title);
+    formData.append("level", lesson.level);
+
+    setScoring(true);
+    setScoreResult(null);
+    setMessage("AI đang nghe bản ghi và so với câu mẫu...");
+    try {
+      const response = await apiFormRequest<PronunciationScoreResponse>("/pronunciation/score", {
+        method: "POST",
+        token: accessToken,
+        body: formData
+      });
+      setScoreResult(response);
+      setMessage("Đã chấm phát âm và lưu vào pathway.");
+    } catch (caught) {
+      setMessage(caught instanceof ApiError ? caught.message : "AI chưa chấm được phát âm lúc này.");
+    } finally {
+      setScoring(false);
+    }
   }
 
   async function savePronunciationSignal(result: "GOOD" | "AGAIN") {
@@ -1026,19 +1071,61 @@ function PronunciationPractice({
             Ghi âm
           </button>
         )}
+        <button type="button" disabled={!recordingBlob || scoring} onClick={scoreRecording}>
+          {scoring ? <Loader2 className="spin" size={16} /> : <Bot size={16} />}
+          AI chấm
+        </button>
       </div>
       {recordingUrl && <audio className="pronunciation-audio" controls src={recordingUrl} />}
+      {scoreResult && <PronunciationScoreResult result={scoreResult} />}
       <div className="pronunciation-score-row">
-        <button type="button" disabled={saving} onClick={() => savePronunciationSignal("GOOD")}>
+        <button type="button" disabled={saving || scoring} onClick={() => savePronunciationSignal("GOOD")}>
           Đọc được
         </button>
-        <button type="button" disabled={saving} onClick={() => savePronunciationSignal("AGAIN")}>
+        <button type="button" disabled={saving || scoring} onClick={() => savePronunciationSignal("AGAIN")}>
           Chưa rõ
         </button>
       </div>
       <small className="pronunciation-status">{message}</small>
     </div>
   );
+}
+
+function PronunciationScoreResult({ result }: { result: PronunciationScoreResponse }) {
+  const verdictLabel = pronunciationVerdictLabel(result.verdict);
+  return (
+    <div className={`pronunciation-result ${result.verdict.toLowerCase()}`}>
+      <div className="pronunciation-result-heading">
+        <strong>{result.scorePercent}%</strong>
+        <span>{verdictLabel}</span>
+        <small>Độ tin cậy {Math.round(result.confidence * 100)}%</small>
+      </div>
+      <p>{result.feedback}</p>
+      {result.transcript && (
+        <small>
+          AI nghe được: <b>{result.transcript}</b>
+        </small>
+      )}
+      {result.issues.length ? (
+        <ul>
+          {result.issues.slice(0, 3).map((issue) => (
+            <li key={issue}>{issue}</li>
+          ))}
+        </ul>
+      ) : null}
+    </div>
+  );
+}
+
+function pronunciationVerdictLabel(value: string): string {
+  switch (value.toUpperCase()) {
+    case "GOOD":
+      return "Ổn";
+    case "HARD":
+      return "Gần đúng";
+    default:
+      return "Cần luyện lại";
+  }
 }
 
 function isPronunciationPracticeTask(task: StudyPracticeTask): boolean {

@@ -19,6 +19,7 @@ import com.jpassistant.application.dto.request.StudentProfileRequest;
 import com.jpassistant.application.dto.request.StudyFeedbackRequest;
 import com.jpassistant.application.dto.response.AiAssessmentGenerateResponse;
 import com.jpassistant.application.dto.response.AiPlannerResponse;
+import com.jpassistant.application.dto.response.AiPronunciationScoreResponse;
 import com.jpassistant.application.dto.response.ChatResponse;
 import com.jpassistant.application.dto.response.KnowledgeProgressResponse;
 import com.jpassistant.application.dto.response.SourceResponse;
@@ -38,6 +39,7 @@ import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.springframework.http.MediaType;
 import org.springframework.test.util.ReflectionTestUtils;
 
 class ChatServiceImplTest {
@@ -165,6 +167,18 @@ class ChatServiceImplTest {
 
         @Override
         public AiPlannerResponse recommendPlan(AiPlannerRequest request) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public AiPronunciationScoreResponse scorePronunciation(
+                String targetText,
+                String lessonTitle,
+                String level,
+                byte[] audioBytes,
+                String filename,
+                MediaType contentType
+        ) {
             throw new UnsupportedOperationException();
         }
     }

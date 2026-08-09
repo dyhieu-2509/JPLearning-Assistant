@@ -5,7 +5,9 @@ import com.jpassistant.application.dto.request.AiPlannerRequest;
 import com.jpassistant.application.dto.request.AiTutorChatRequest;
 import com.jpassistant.application.dto.response.AiAssessmentGenerateResponse;
 import com.jpassistant.application.dto.response.AiPlannerResponse;
+import com.jpassistant.application.dto.response.AiPronunciationScoreResponse;
 import com.jpassistant.application.dto.response.ChatResponse;
+import org.springframework.http.MediaType;
 
 public interface AiServiceClient {
 
@@ -20,4 +22,13 @@ public interface AiServiceClient {
     AiAssessmentGenerateResponse generateAssessment(AiAssessmentGenerateRequest request);
 
     AiPlannerResponse recommendPlan(AiPlannerRequest request);
+
+    AiPronunciationScoreResponse scorePronunciation(
+            String targetText,
+            String lessonTitle,
+            String level,
+            byte[] audioBytes,
+            String filename,
+            MediaType contentType
+    );
 }

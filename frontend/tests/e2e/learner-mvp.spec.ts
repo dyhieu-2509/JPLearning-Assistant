@@ -122,6 +122,7 @@ type MockMvpOptions = {
   onLessonAttemptStart?: (attempt: Record<string, unknown>) => void;
   onLessonAttemptComplete?: (attempt: Record<string, unknown>) => void;
   onPilotSurvey?: (survey: Record<string, unknown>) => void;
+  onPronunciationScore?: (formData: Record<string, string>) => void;
 };
 
 type SeedOptions = {
@@ -427,15 +428,16 @@ test("zero beginner can finish the kana chapter before opening N5", async ({ pag
   await expect(page.getByRole("heading", { name: /Bài 4: Giới thiệu bản thân/i })).toBeVisible();
 });
 
-test("conversation lessons include pronunciation sample, recording, and progress signal", async ({ page }) => {
-  const learningSignals: Record<string, unknown>[] = [];
+test("conversation lessons include pronunciation sample, recording, AI score, and progress signal", async ({ page }) => {
+  const pronunciationRequests: Record<string, string>[] = [];
+  await mockBrowserRecording(page);
   await seedAuthenticatedLearner(page, "pronunciation-practice-user");
   await mockMvpApi(page, {
     learningPathway: "conversation",
     weakSkills: ["speaking"],
     dailyStudyMinutes: 10
   }, {
-    onLearningSignal: (signal) => learningSignals.push(signal)
+    onPronunciationScore: (request) => pronunciationRequests.push(request)
   });
 
   await page.goto("/learner/study");
@@ -443,15 +445,19 @@ test("conversation lessons include pronunciation sample, recording, and progress
   await expect(page.locator(".pronunciation-practice").first()).toBeVisible();
   await expect(page.getByRole("button", { name: /Nghe mẫu/i }).first()).toBeVisible();
   await expect(page.getByRole("button", { name: /Ghi âm/i }).first()).toBeVisible();
+  await expect(page.getByRole("button", { name: /AI chấm/i }).first()).toBeDisabled();
   await expect(page.locator(".pronunciation-target").first()).toContainText(/[\u3040-\u30ff\u3400-\u9fff]/u);
 
-  await page.getByRole("button", { name: /Đọc được/i }).first().click();
-  await expect.poll(() => learningSignals.length).toBeGreaterThan(0);
-  expect(learningSignals).toContainEqual(expect.objectContaining({
-    knowledgeType: "Pronunciation",
-    source: "EXPLICIT_FEEDBACK",
-    result: "GOOD"
-  }));
+  await page.getByRole("button", { name: /Ghi âm/i }).first().click();
+  await page.getByRole("button", { name: /Dừng/i }).first().click();
+  await expect(page.getByRole("button", { name: /AI chấm/i }).first()).toBeEnabled();
+  await page.getByRole("button", { name: /AI chấm/i }).first().click();
+
+  await expect.poll(() => pronunciationRequests.length).toBeGreaterThan(0);
+  await expect(page.locator(".pronunciation-result").first()).toContainText("88%");
+  await expect(page.locator(".pronunciation-result").first()).toContainText("はじめまして。");
+  await expect(page.locator(".pronunciation-result").first()).toContainText(/Bạn đọc rõ/i);
+  expect(pronunciationRequests[0].raw).toContain("targetText");
 });
 
 const personalizedPathwayCases = [
@@ -814,6 +820,42 @@ async function answerKanaLessonThreeCorrectly(page: Page) {
   await page.locator(".study-question").nth(4).getByRole("button", { name: "từ mượn và tên riêng", exact: true }).click();
 }
 
+async function mockBrowserRecording(page: Page) {
+  await page.addInitScript(() => {
+    class FakeMediaRecorder {
+      ondataavailable: ((event: BlobEvent) => void) | null = null;
+      onstop: (() => void) | null = null;
+      readonly mimeType = "audio/webm";
+      state: RecordingState = "inactive";
+
+      constructor(_stream: MediaStream) {}
+
+      start() {
+        this.state = "recording";
+      }
+
+      stop() {
+        this.state = "inactive";
+        this.ondataavailable?.({ data: new Blob(["voice"], { type: "audio/webm" }) } as BlobEvent);
+        this.onstop?.();
+      }
+    }
+
+    Object.defineProperty(window.navigator, "mediaDevices", {
+      configurable: true,
+      value: {
+        getUserMedia: async () => ({
+          getTracks: () => [{ stop: () => undefined }]
+        })
+      }
+    });
+    Object.defineProperty(window, "MediaRecorder", {
+      configurable: true,
+      value: FakeMediaRecorder
+    });
+  });
+}
+
 async function answerLessonOneCorrectly(page: Page) {
   await page.getByRole("button", { name: "わたしは学生です。", exact: true }).click();
   await page.getByRole("button", { name: "Đánh dấu chủ đề", exact: true }).click();
@@ -963,6 +1005,33 @@ async function mockMvpApi(page: Page, profileOverride: Partial<typeof profile> =
         wrongCount: signal.result === "WRONG" ? 1 : 0,
         nextReviewAt: "2026-05-21T08:00:00Z",
         updatedAt: "2026-05-20T08:00:00Z"
+      });
+      return;
+    }
+
+    if (method === "POST" && path === "/pronunciation/score") {
+      options.onPronunciationScore?.({ raw: request.postData() || "" });
+      await json(route, {
+        transcript: "はじめまして。",
+        scorePercent: 88,
+        verdict: "GOOD",
+        feedback: "Bạn đọc rõ. Giữ nhịp này.",
+        issues: ["Âm cuối nghe ổn"],
+        confidence: 0.86,
+        progress: {
+          id: "progress-pronunciation",
+          userId: activeProfile.userId,
+          knowledgeType: "Pronunciation",
+          knowledgeId: "conversation-greetings:conversation-greetings-practice",
+          title: "Chào hỏi: Đóng vai hội thoại",
+          level: "N5",
+          masteryScore: 0.44,
+          exposureCount: 0,
+          correctCount: 1,
+          wrongCount: 0,
+          nextReviewAt: "2026-05-21T08:00:00Z",
+          updatedAt: "2026-05-20T08:00:00Z"
+        }
       });
       return;
     }

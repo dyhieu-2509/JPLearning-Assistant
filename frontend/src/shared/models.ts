@@ -191,6 +191,16 @@ export type FlashcardReviewResponse = {
   masteryScore?: number;
 };
 
+export type PronunciationScoreResponse = {
+  transcript: string;
+  scorePercent: number;
+  verdict: "GOOD" | "HARD" | "AGAIN" | string;
+  feedback: string;
+  issues: string[];
+  confidence: number;
+  progress?: KnowledgeProgressResponse | null;
+};
+
 export type AssessmentSummaryResponse = {
   sessionId: string;
   level: string;
