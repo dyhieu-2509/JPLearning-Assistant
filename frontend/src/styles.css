@@ -43,7 +43,7 @@ html {
 
 body {
   margin: 0;
-  min-width: 320px;
+  min-width: 280px;
   min-height: 100dvh;
 }
 
@@ -526,6 +526,15 @@ a {
   padding: 22px;
 }
 
+.compact-auth {
+  grid-template-columns: minmax(0, 460px);
+  place-content: center;
+}
+
+.compact-auth .auth-panel {
+  width: 100%;
+}
+
 .segmented-control {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -620,6 +629,11 @@ a {
   border-color: var(--line);
   background: var(--white);
   color: var(--sky-700);
+}
+
+.google-auth-button {
+  width: 100%;
+  margin-top: 16px;
 }
 
 .icon-button {
@@ -4375,6 +4389,12 @@ progress::-webkit-progress-value {
     font-size: 32px;
   }
 
+  .auth-panel {
+    width: 100%;
+    max-width: 520px;
+    justify-self: center;
+  }
+
   .landing-copy h1 {
     font-size: 34px;
   }
@@ -5032,6 +5052,77 @@ progress::-webkit-progress-value {
   font: inherit;
   font-size: 0.92rem;
   font-weight: 750;
+}
+
+@media (max-width: 720px), (max-width: 940px) and (max-height: 480px) {
+  .auth-screen {
+    align-content: start;
+    gap: 14px;
+    padding: 12px;
+  }
+
+  .auth-panel {
+    order: 1;
+    padding: 16px;
+  }
+
+  .auth-visual {
+    order: 2;
+    gap: 12px;
+  }
+
+  .auth-visual img {
+    display: none;
+  }
+
+  .auth-visual h1 {
+    font-size: 24px;
+    line-height: 1.16;
+  }
+
+  .auth-visual p:not(.eyebrow) {
+    margin: 8px 0 0;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .form-stack {
+    gap: 12px;
+    margin-top: 14px;
+  }
+
+  .google-auth-button {
+    margin-top: 12px;
+  }
+
+  .input-shell,
+  .primary-button,
+  .icon-text-button {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .segmented-control {
+    min-height: 42px;
+  }
+
+  .compact-auth {
+    place-content: start center;
+  }
+}
+
+@media (max-width: 360px) {
+  .auth-screen {
+    padding: 10px;
+  }
+
+  .auth-panel {
+    padding: 14px;
+  }
+
+  .auth-visual h1 {
+    font-size: 22px;
+  }
 }
 
 @media (max-width: 720px) {

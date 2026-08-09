@@ -80,6 +80,11 @@ export function AuthView() {
           </button>
         </div>
 
+        <IconTextButton className="google-auth-button" type="button" variant="ghost" onClick={startGoogleLogin}>
+          <Chrome size={18} />
+          Tiếp tục với Google
+        </IconTextButton>
+
         <form onSubmit={submit} className="form-stack">
           {mode === "register" && (
             <label>
@@ -128,10 +133,6 @@ export function AuthView() {
             {loading && <Loader2 className="spin" size={18} />}
             {mode === "login" ? "Đăng nhập" : "Tạo tài khoản"}
           </PrimaryButton>
-          <IconTextButton type="button" variant="ghost" onClick={startGoogleLogin}>
-            <Chrome size={18} />
-            Tiếp tục với Google
-          </IconTextButton>
         </form>
       </section>
     </main>
