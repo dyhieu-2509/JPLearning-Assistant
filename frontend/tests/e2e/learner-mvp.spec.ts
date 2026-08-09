@@ -170,6 +170,7 @@ test("learner cannot unlock the next lesson below the pass score", async ({ page
   await page.goto("/learner/study");
   await walkThroughLessonOneFlashcards(page);
   await answerLessonOneIncorrectly(page);
+  await expect(page.locator(".study-question-explanation.wrong").first()).toBeVisible();
   await page.getByRole("button", { name: /Nộp quiz cuối bài/i }).click();
 
   await expect(page.getByRole("heading", { name: /Chưa qua bài này/i })).toBeVisible();
@@ -375,6 +376,8 @@ test("zero beginner starts with kana before N5 grammar", async ({ page }) => {
   });
 
   await page.goto("/learner/study");
+  await expect(page.locator(".kana-overview")).toBeVisible();
+  await expect(page.locator(".kana-overview-cell").first()).toBeVisible();
   await expect(page.getByRole("heading", { name: /Pathway số 0/i })).toBeVisible();
   await expect(page.getByRole("heading", { name: /Bài 1: Hiragana hàng あ/i })).toBeVisible();
   await expect(page.getByText(/Chương 1: Bảng chữ cái nhập môn/i)).toBeVisible();
@@ -779,6 +782,8 @@ async function walkThroughLessonOneFlashcards(page: Page, includeBackButton = fa
 
 async function walkThroughCurrentLessonFlashcards(page: Page, cardCount: number, includeBackButton = false) {
   await page.getByRole("button", { name: /Học thẻ của bài này/i }).click();
+
+  await expect(page.locator(".study-flashcard-toolbar")).toBeVisible();
 
   if (includeBackButton) {
     await page.locator(".study-flashcard").click();

@@ -92,6 +92,40 @@ const lessonPhaseSteps: Array<{ phase: Exclude<LessonPhase, "result">; label: st
   { phase: "review", label: "Tutor", hint: "Sửa sai" }
 ];
 
+const kanaOverviewRows = [
+  {
+    label: "Hiragana nguyên âm",
+    cells: [
+      { kana: "あ", romaji: "a", hint: "miệng mở" },
+      { kana: "い", romaji: "i", hint: "âm ngắn" },
+      { kana: "う", romaji: "u", hint: "môi khép nhẹ" },
+      { kana: "え", romaji: "e", hint: "âm e" },
+      { kana: "お", romaji: "o", hint: "âm o" }
+    ]
+  },
+  {
+    label: "Hiragana hay gặp",
+    cells: [
+      { kana: "か", romaji: "ka", hint: "hàng k" },
+      { kana: "き", romaji: "ki", hint: "hàng k" },
+      { kana: "さ", romaji: "sa", hint: "hàng s" },
+      { kana: "し", romaji: "shi", hint: "không đọc si" },
+      { kana: "た", romaji: "ta", hint: "hàng t" },
+      { kana: "ち", romaji: "chi", hint: "không đọc ti" }
+    ]
+  },
+  {
+    label: "Katakana nguyên âm",
+    cells: [
+      { kana: "ア", romaji: "a", hint: "nét góc" },
+      { kana: "イ", romaji: "i", hint: "nét góc" },
+      { kana: "ウ", romaji: "u", hint: "nét góc" },
+      { kana: "エ", romaji: "e", hint: "nét góc" },
+      { kana: "オ", romaji: "o", hint: "nét góc" }
+    ]
+  }
+];
+
 export function StudyView() {
   const navigate = useNavigate();
   const { accessToken, user } = useAuth();
@@ -115,6 +149,7 @@ export function StudyView() {
   const [tutorInsightError, setTutorInsightError] = useState<string | null>(null);
   const [activeSupportQuestionId, setActiveSupportQuestionId] = useState<string | null>(null);
   const [activeAttemptId, setActiveAttemptId] = useState<string | null>(null);
+  const [flashcardAudioMessage, setFlashcardAudioMessage] = useState("");
 
   useEffect(() => {
     if (!accessToken) {
@@ -157,6 +192,7 @@ export function StudyView() {
     setLastScore(null);
     setActiveSupportQuestionId(null);
     setActiveAttemptId(null);
+    setFlashcardAudioMessage("");
   }, [lessons, progressKey]);
 
   useEffect(() => {
@@ -273,6 +309,7 @@ export function StudyView() {
     setLoadingTutorInsight(false);
     setActiveSupportQuestionId(null);
     setActiveAttemptId(null);
+    setFlashcardAudioMessage("");
   }
 
   function startFlashcards() {
@@ -282,6 +319,7 @@ export function StudyView() {
 
   function nextCard() {
     setFlipped(false);
+    setFlashcardAudioMessage("");
     if (cardIndex < lesson.flashcards.length - 1) {
       setCardIndex((current) => current + 1);
       return;
@@ -399,6 +437,13 @@ export function StudyView() {
     void startCurrentLessonAttempt();
   }
 
+  function playCurrentCardAudio() {
+    if (!currentCard) {
+      return;
+    }
+    speakJapaneseText(currentCard.front, setFlashcardAudioMessage);
+  }
+
   async function requestTutorMistakeHelp() {
     if (!accessToken || loadingTutorInsight) {
       return;
@@ -495,7 +540,9 @@ export function StudyView() {
                           <strong>{item.title}</strong>
                           <small>{item.level} · {item.focus}</small>
                         </span>
-                        <em className={`study-lesson-status ${itemStatus.kind}`}>{itemStatus.label}</em>
+                        <em className={`study-lesson-status ${itemStatus.kind}`} aria-label={itemStatus.label}>
+                          {itemStatus.kind === "done" ? <CheckCircle2 size={16} /> : itemStatus.label}
+                        </em>
                       </button>
                     );
                   })}
@@ -527,6 +574,7 @@ export function StudyView() {
 
               {phase === "learn" && (
                 <div className="study-learn-step">
+                  {isKanaLesson(lesson) && <KanaOverview />}
                   <div className="study-pattern-card">
                     <TopicChip>{lessonPrimaryLabel(lesson)}</TopicChip>
                     <strong>{lesson.pattern}</strong>
@@ -577,10 +625,18 @@ export function StudyView() {
                     <strong>{flipped ? currentCard.back : currentCard.front}</strong>
                     <small>{flipped ? currentCard.hint : "Tự nhớ trước, rồi lật thẻ"}</small>
                   </button>
+                  <div className="study-flashcard-toolbar">
+                    <IconTextButton type="button" variant="ghost" onClick={playCurrentCardAudio}>
+                      <Volume2 size={18} />
+                      Nghe phát âm thẻ
+                    </IconTextButton>
+                    <small>{flashcardAudioMessage || "Nghe chữ, đọc lại một lần rồi mới qua thẻ tiếp theo."}</small>
+                  </div>
                   <div className="study-action-row">
                     <IconTextButton type="button" variant="ghost" disabled={cardIndex === 0} onClick={() => {
                       setFlipped(false);
                       setCardIndex((current) => Math.max(0, current - 1));
+                      setFlashcardAudioMessage("");
                     }}>
                       Quay lại
                     </IconTextButton>
@@ -618,6 +674,17 @@ export function StudyView() {
                           </button>
                         ))}
                       </div>
+                      <small className="study-question-help">{questionHelperText(lesson)}</small>
+                      {answers[question.id] && (
+                        <div className={answers[question.id] === question.answer ? "study-question-explanation correct" : "study-question-explanation wrong"}>
+                          {answers[question.id] === question.answer ? <CheckCircle2 size={17} /> : <CircleX size={17} />}
+                          <span>
+                            {answers[question.id] === question.answer
+                              ? `Đúng. ${question.explanation}`
+                              : `Chưa đúng. Đáp án: ${question.answer}. ${question.explanation}`}
+                          </span>
+                        </div>
+                      )}
                     </fieldset>
                   ))}
                   <PrimaryButton type="button" disabled={answeredCount < lesson.questions.length} onClick={submitQuiz}>
@@ -811,6 +878,42 @@ function LessonPhaseBadge({ phase }: { phase: LessonPhase }) {
   return <TopicChip>{labels[phase]}</TopicChip>;
 }
 
+function KanaOverview() {
+  return (
+    <section className="kana-overview" aria-label="Bảng chữ cái tổng quan">
+      <div className="kana-overview-heading">
+        <div>
+          <TopicChip>Bảng chữ cái</TopicChip>
+          <strong>Nhìn tổng thể trước, rồi học từng thẻ.</strong>
+        </div>
+        <small>Người mới nên bấm nghe từng âm. Người đã học rồi có thể lướt nhanh.</small>
+      </div>
+      <div className="kana-overview-rows">
+        {kanaOverviewRows.map((row) => (
+          <div className="kana-overview-row" key={row.label}>
+            <span>{row.label}</span>
+            <div className="kana-overview-cells">
+              {row.cells.map((cell) => (
+                <button
+                  aria-label={`Nghe ${cell.kana} đọc là ${cell.romaji}`}
+                  className="kana-overview-cell"
+                  key={`${row.label}-${cell.kana}`}
+                  type="button"
+                  onClick={() => speakJapaneseText(cell.kana)}
+                >
+                  <strong>{cell.kana}</strong>
+                  <small>{cell.romaji}</small>
+                  <em>{cell.hint}</em>
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function TutorMistakeInsight({
   error,
   insight,
@@ -862,6 +965,42 @@ function TutorMistakeInsight({
       )}
     </div>
   );
+}
+
+function questionHelperText(lesson: StudyLesson): string {
+  if (isKanaLesson(lesson)) {
+    return "Gợi ý: đọc chữ trước, so với romaji hoặc hàng chữ trong bảng ở trên.";
+  }
+  return "Gợi ý: tìm mẫu chính trong câu, rồi loại đáp án dùng sai trợ từ hoặc sai nghĩa.";
+}
+
+function speakJapaneseText(text: string, onStatus?: (message: string) => void): boolean {
+  const targetText = cleanPronunciationText(text);
+  if (!targetText || !hasJapaneseText(targetText)) {
+    onStatus?.("Thẻ này chưa có phần tiếng Nhật để phát âm.");
+    return false;
+  }
+  if (typeof window === "undefined" || typeof SpeechSynthesisUtterance === "undefined" || !("speechSynthesis" in window)) {
+    onStatus?.("Trình duyệt này chưa hỗ trợ phát âm mẫu.");
+    return false;
+  }
+
+  const utterance = new SpeechSynthesisUtterance(targetText);
+  utterance.lang = "ja-JP";
+  utterance.rate = 0.86;
+  utterance.pitch = 1;
+  const japaneseVoice = window.speechSynthesis
+    .getVoices()
+    .find((voice) => voice.lang.toLowerCase().startsWith("ja"));
+  if (japaneseVoice) {
+    utterance.voice = japaneseVoice;
+  }
+  utterance.onend = () => onStatus?.("Đã phát âm mẫu. Đọc lại một lần trước khi qua thẻ tiếp.");
+  utterance.onerror = () => onStatus?.("Không phát được mẫu trên trình duyệt này.");
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utterance);
+  onStatus?.("Đang phát âm mẫu tiếng Nhật...");
+  return true;
 }
 
 function PronunciationPractice({
@@ -1398,6 +1537,7 @@ function lessonPrimaryLabel(lesson: StudyLesson): string {
 function isKanaLesson(lesson: StudyLesson): boolean {
   const searchable = `${lesson.focus} ${lesson.title}`.toLowerCase();
   return (
+    lesson.id.startsWith("kana-") ||
     searchable.includes("kana") ||
     searchable.includes("hiragana") ||
     searchable.includes("katakana") ||

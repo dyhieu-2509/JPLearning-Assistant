@@ -2497,7 +2497,7 @@ progress::-webkit-progress-value {
 
 .study-lesson-row {
   display: grid;
-  grid-template-columns: 36px minmax(0, 1fr) auto;
+  grid-template-columns: 36px minmax(0, 1fr) 48px;
   gap: 10px;
   align-items: center;
   width: 100%;
@@ -2564,10 +2564,12 @@ progress::-webkit-progress-value {
 
 .study-lesson-status {
   display: inline-flex;
+  align-items: center;
   justify-content: center;
-  min-width: 70px;
+  min-width: 48px;
+  min-height: 30px;
   padding: 5px 8px;
-  border-radius: 999px;
+  border-radius: 8px;
   background: var(--sky-50);
 }
 
@@ -2579,6 +2581,10 @@ progress::-webkit-progress-value {
 .study-lesson-status.done {
   background: var(--mint-50);
   color: var(--green-600);
+}
+
+.study-lesson-status.done {
+  padding: 5px;
 }
 
 .study-lesson-status.review {
@@ -2598,6 +2604,105 @@ progress::-webkit-progress-value {
 .study-locked {
   display: grid;
   gap: 14px;
+}
+
+.kana-overview {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid rgba(37, 99, 235, 0.16);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(236, 251, 244, 0.82), rgba(238, 247, 255, 0.86)),
+    var(--white);
+}
+
+.kana-overview-heading {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: end;
+  justify-content: space-between;
+}
+
+.kana-overview-heading > div {
+  display: grid;
+  gap: 6px;
+}
+
+.kana-overview-heading strong {
+  color: var(--blue-950);
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+.kana-overview-heading small {
+  max-width: 360px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1.4;
+}
+
+.kana-overview-rows {
+  display: grid;
+  gap: 10px;
+}
+
+.kana-overview-row {
+  display: grid;
+  grid-template-columns: minmax(116px, 0.28fr) minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+}
+
+.kana-overview-row > span {
+  color: var(--blue-950);
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.25;
+}
+
+.kana-overview-cells {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(62px, 1fr));
+  gap: 7px;
+}
+
+.kana-overview-cell {
+  display: grid;
+  gap: 3px;
+  min-height: 82px;
+  padding: 8px;
+  border: 1px solid rgba(37, 99, 235, 0.14);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--blue-950);
+  text-align: center;
+}
+
+.kana-overview-cell:hover {
+  border-color: rgba(37, 99, 235, 0.34);
+  background: var(--sky-50);
+}
+
+.kana-overview-cell strong {
+  font-size: 27px;
+  line-height: 1;
+}
+
+.kana-overview-cell small {
+  color: var(--sky-700);
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.kana-overview-cell em {
+  color: var(--muted);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 1.2;
 }
 
 .study-pattern-card,
@@ -2880,6 +2985,24 @@ progress::-webkit-progress-value {
   font-weight: 850;
 }
 
+.study-flashcard-toolbar {
+  display: grid;
+  grid-template-columns: minmax(170px, auto) minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+}
+
+.study-flashcard-toolbar .icon-text-button {
+  width: 100%;
+}
+
+.study-flashcard-toolbar small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1.4;
+}
+
 .study-question {
   display: grid;
   gap: 10px;
@@ -2925,6 +3048,41 @@ progress::-webkit-progress-value {
   border-color: var(--sky-600);
   background: var(--sky-600);
   color: var(--white);
+}
+
+.study-question-help {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1.4;
+}
+
+.study-question-explanation {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+  padding: 10px;
+  border: 1px solid rgba(31, 157, 115, 0.22);
+  border-radius: 8px;
+  background: var(--mint-50);
+  color: var(--blue-950);
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1.45;
+}
+
+.study-question-explanation.wrong {
+  border-color: rgba(225, 29, 72, 0.2);
+  background: #fff1f2;
+}
+
+.study-question-explanation.correct svg {
+  color: var(--green-600);
+}
+
+.study-question-explanation.wrong svg {
+  color: var(--rose-600);
 }
 
 .study-result {
@@ -5127,6 +5285,11 @@ progress::-webkit-progress-value {
 
 @media (max-width: 720px) {
   .study-feedback-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kana-overview-row,
+  .study-flashcard-toolbar {
     grid-template-columns: 1fr;
   }
 
