@@ -9,11 +9,15 @@ import {
   Lightbulb,
   Loader2,
   Lock,
+  Mic,
+  Play,
   RotateCcw,
+  Square,
   Target,
-  Trophy
+  Trophy,
+  Volume2
 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../app/providers/AuthProvider";
 import { apiRequest, ApiError } from "../../../shared/api";
@@ -31,6 +35,7 @@ import {
   type StudyChapter,
   type StudyLesson,
   type StudyProfile,
+  type StudyPracticeTask,
   type StudyQuestion
 } from "./studyPath";
 
@@ -539,6 +544,9 @@ export function StudyView() {
                           <strong>{task.title}</strong>
                           <p>{task.prompt}</p>
                           <small>{task.exampleAnswer}</small>
+                          {isPronunciationPracticeTask(task) && (
+                            <PronunciationPractice accessToken={accessToken} lesson={lesson} task={task} />
+                          )}
                         </article>
                       ))}
                     </div>
@@ -854,6 +862,244 @@ function TutorMistakeInsight({
       )}
     </div>
   );
+}
+
+function PronunciationPractice({
+  accessToken,
+  lesson,
+  task
+}: {
+  accessToken: string | null;
+  lesson: StudyLesson;
+  task: StudyPracticeTask;
+}) {
+  const targetText = useMemo(() => pronunciationTargetText(lesson, task), [lesson, task]);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const mediaStreamRef = useRef<MediaStream | null>(null);
+  const recordingUrlRef = useRef<string | null>(null);
+  const [recording, setRecording] = useState(false);
+  const [recordingUrl, setRecordingUrl] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState("Nghe mẫu, ghi âm lại, rồi tự chấm nhanh.");
+
+  useEffect(() => {
+    return () => {
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+        mediaRecorderRef.current.stop();
+      }
+      stopMediaStream(mediaStreamRef.current);
+      if (recordingUrlRef.current) {
+        URL.revokeObjectURL(recordingUrlRef.current);
+      }
+    };
+  }, []);
+
+  function replaceRecordingUrl(nextUrl: string) {
+    if (recordingUrlRef.current) {
+      URL.revokeObjectURL(recordingUrlRef.current);
+    }
+    recordingUrlRef.current = nextUrl;
+    setRecordingUrl(nextUrl);
+  }
+
+  function playSample() {
+    if (!targetText) {
+      setMessage("Bài này chưa có câu mẫu để phát âm.");
+      return;
+    }
+    if (typeof SpeechSynthesisUtterance === "undefined" || !("speechSynthesis" in window)) {
+      setMessage("Trình duyệt này chưa hỗ trợ phát âm mẫu.");
+      return;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(targetText);
+    utterance.lang = "ja-JP";
+    utterance.rate = 0.86;
+    utterance.pitch = 1;
+    const japaneseVoice = window.speechSynthesis
+      .getVoices()
+      .find((voice) => voice.lang.toLowerCase().startsWith("ja"));
+    if (japaneseVoice) {
+      utterance.voice = japaneseVoice;
+    }
+    utterance.onend = () => setMessage("Đã phát mẫu. Ghi âm rồi nghe lại để so.");
+    utterance.onerror = () => setMessage("Không phát được mẫu trên trình duyệt này.");
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+    setMessage("Đang phát mẫu tiếng Nhật...");
+  }
+
+  async function startRecording() {
+    if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
+      setMessage("Trình duyệt này chưa hỗ trợ ghi âm.");
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      const chunks: Blob[] = [];
+      mediaStreamRef.current = stream;
+      mediaRecorderRef.current = recorder;
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          chunks.push(event.data);
+        }
+      };
+      recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: recorder.mimeType || "audio/webm" });
+        replaceRecordingUrl(URL.createObjectURL(blob));
+        stopMediaStream(stream);
+        mediaStreamRef.current = null;
+        mediaRecorderRef.current = null;
+        setRecording(false);
+        setMessage("Đã ghi âm. Nghe lại rồi chọn kết quả.");
+      };
+      recorder.start();
+      setRecording(true);
+      setMessage("Đang ghi âm. Đọc chậm và rõ.");
+    } catch {
+      setRecording(false);
+      setMessage("Không mở được micro. Kiểm tra quyền micro của trình duyệt.");
+    }
+  }
+
+  function stopRecording() {
+    const recorder = mediaRecorderRef.current;
+    if (!recorder || recorder.state === "inactive") {
+      setRecording(false);
+      return;
+    }
+    recorder.stop();
+    setMessage("Đang lưu bản ghi trên máy...");
+  }
+
+  async function savePronunciationSignal(result: "GOOD" | "AGAIN") {
+    if (!accessToken) {
+      setMessage("Đăng nhập để lưu kết quả phát âm vào pathway.");
+      return;
+    }
+    setSaving(true);
+    try {
+      await apiRequest("/personalization/me/progress/signals", {
+        method: "POST",
+        token: accessToken,
+        body: {
+          knowledgeType: "Pronunciation",
+          knowledgeId: `${lesson.id}:${task.id}`,
+          title: truncateTitle(`${lesson.title}: ${task.title}`),
+          level: lesson.level,
+          source: "EXPLICIT_FEEDBACK",
+          result
+        }
+      });
+      setMessage(result === "GOOD" ? "Đã lưu: phát âm ổn." : "Đã lưu: cần luyện phát âm lại.");
+    } catch (caught) {
+      setMessage(caught instanceof ApiError ? caught.message : "Chưa lưu được kết quả phát âm.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div className="pronunciation-practice" aria-label="Luyện phát âm">
+      <div className="pronunciation-target">
+        <Volume2 size={17} />
+        <span>{targetText}</span>
+      </div>
+      <div className="pronunciation-action-row">
+        <button type="button" onClick={playSample}>
+          <Play size={16} />
+          Nghe mẫu
+        </button>
+        {recording ? (
+          <button type="button" onClick={stopRecording}>
+            <Square size={16} />
+            Dừng
+          </button>
+        ) : (
+          <button type="button" onClick={startRecording}>
+            <Mic size={16} />
+            Ghi âm
+          </button>
+        )}
+      </div>
+      {recordingUrl && <audio className="pronunciation-audio" controls src={recordingUrl} />}
+      <div className="pronunciation-score-row">
+        <button type="button" disabled={saving} onClick={() => savePronunciationSignal("GOOD")}>
+          Đọc được
+        </button>
+        <button type="button" disabled={saving} onClick={() => savePronunciationSignal("AGAIN")}>
+          Chưa rõ
+        </button>
+      </div>
+      <small className="pronunciation-status">{message}</small>
+    </div>
+  );
+}
+
+function isPronunciationPracticeTask(task: StudyPracticeTask): boolean {
+  const searchable = `${task.id} ${task.label} ${task.title}`.toLowerCase();
+  return [
+    "conversation",
+    "listening",
+    "speaking",
+    "kana",
+    "school",
+    "work",
+    "giao",
+    "nghe",
+    "nói",
+    "noi",
+    "bảng",
+    "bang"
+  ].some((keyword) => searchable.includes(keyword));
+}
+
+function pronunciationTargetText(lesson: StudyLesson, task: StudyPracticeTask): string {
+  const candidates = [
+    lesson.example,
+    task.exampleAnswer,
+    lesson.pattern,
+    ...lesson.flashcards.flatMap((card) => [card.front, card.hint])
+  ];
+  for (const candidate of candidates) {
+    const fragment = extractJapaneseFragment(candidate);
+    if (fragment) {
+      return fragment;
+    }
+  }
+  return lesson.example || task.exampleAnswer || lesson.pattern;
+}
+
+function extractJapaneseFragment(value: string | undefined): string | null {
+  if (!value) {
+    return null;
+  }
+  const parts = value
+    .split(/[\/|;；,，\n]/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+  const fragment = parts.find((part) => hasJapaneseText(part)) ?? (hasJapaneseText(value) ? value.trim() : null);
+  return fragment ? cleanPronunciationText(fragment) : null;
+}
+
+function cleanPronunciationText(value: string): string {
+  return value
+    .replace(/^[A-Za-zÀ-ỹ\s+]+(?=[\u3040-\u30ff\u3400-\u9fff])/u, "")
+    .replace(/\s*(?:->|=>|→).*/u, "")
+    .trim();
+}
+
+function hasJapaneseText(value: string): boolean {
+  return /[\u3040-\u30ff\u3400-\u9fff]/u.test(value);
+}
+
+function stopMediaStream(stream: MediaStream | null) {
+  stream?.getTracks().forEach((track) => track.stop());
 }
 
 function lessonStatus(

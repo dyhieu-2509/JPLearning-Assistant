@@ -427,6 +427,33 @@ test("zero beginner can finish the kana chapter before opening N5", async ({ pag
   await expect(page.getByRole("heading", { name: /Bài 4: Giới thiệu bản thân/i })).toBeVisible();
 });
 
+test("conversation lessons include pronunciation sample, recording, and progress signal", async ({ page }) => {
+  const learningSignals: Record<string, unknown>[] = [];
+  await seedAuthenticatedLearner(page, "pronunciation-practice-user");
+  await mockMvpApi(page, {
+    learningPathway: "conversation",
+    weakSkills: ["speaking"],
+    dailyStudyMinutes: 10
+  }, {
+    onLearningSignal: (signal) => learningSignals.push(signal)
+  });
+
+  await page.goto("/learner/study");
+  await expect(page.getByRole("heading", { name: /Pathway giao tiếp/i })).toBeVisible();
+  await expect(page.locator(".pronunciation-practice").first()).toBeVisible();
+  await expect(page.getByRole("button", { name: /Nghe mẫu/i }).first()).toBeVisible();
+  await expect(page.getByRole("button", { name: /Ghi âm/i }).first()).toBeVisible();
+  await expect(page.locator(".pronunciation-target").first()).toContainText(/[\u3040-\u30ff\u3400-\u9fff]/u);
+
+  await page.getByRole("button", { name: /Đọc được/i }).first().click();
+  await expect.poll(() => learningSignals.length).toBeGreaterThan(0);
+  expect(learningSignals).toContainEqual(expect.objectContaining({
+    knowledgeType: "Pronunciation",
+    source: "EXPLICIT_FEEDBACK",
+    result: "GOOD"
+  }));
+});
+
 const personalizedPathwayCases = [
   {
     name: "zero beginner",
