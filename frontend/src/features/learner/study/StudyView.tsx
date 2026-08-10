@@ -182,18 +182,42 @@ export function StudyView() {
   }, [accessToken]);
 
   useEffect(() => {
+    let active = true;
     const nextProgress = readProgress(progressKey);
-    setProgress(nextProgress);
-    setActiveLessonId(firstUnlockedLesson(nextProgress, lessons).id);
-    setPhase("learn");
-    setCardIndex(0);
-    setFlipped(false);
-    setAnswers({});
-    setLastScore(null);
-    setActiveSupportQuestionId(null);
-    setActiveAttemptId(null);
-    setFlashcardAudioMessage("");
-  }, [lessons, progressKey]);
+    applyLoadedStudyProgress(nextProgress);
+
+    if (accessToken) {
+      apiRequest<StudyLessonAttemptResponse[]>("/personalization/me/study-attempts?limit=200", { token: accessToken })
+        .then((attempts) => {
+          if (!active) {
+            return;
+          }
+          const restoredProgress = mergeStudyAttemptProgress(nextProgress, attempts, lessons);
+          applyLoadedStudyProgress(restoredProgress);
+          writeProgress(progressKey, restoredProgress);
+        })
+        .catch(() => {
+          // Local progress is still usable if server-side attempt history is unavailable.
+        });
+    }
+
+    function applyLoadedStudyProgress(nextLoadedProgress: StudyProgress) {
+      setProgress(nextLoadedProgress);
+      setActiveLessonId(firstUnlockedLesson(nextLoadedProgress, lessons).id);
+      setPhase("learn");
+      setCardIndex(0);
+      setFlipped(false);
+      setAnswers({});
+      setLastScore(null);
+      setActiveSupportQuestionId(null);
+      setActiveAttemptId(null);
+      setFlashcardAudioMessage("");
+    }
+
+    return () => {
+      active = false;
+    };
+  }, [accessToken, lessons, progressKey]);
 
   useEffect(() => {
     writeProgress(progressKey, progress);
@@ -1651,6 +1675,64 @@ function readProgress(storageKey: string): StudyProgress {
 
 function writeProgress(storageKey: string, progress: StudyProgress) {
   localStorage.setItem(storageKey, JSON.stringify(progress));
+}
+
+function mergeStudyAttemptProgress(
+  localProgress: StudyProgress,
+  attempts: StudyLessonAttemptResponse[],
+  lessons: StudyLesson[]
+): StudyProgress {
+  const lessonIds = new Set(lessons.map((lesson) => lesson.id));
+  const attemptProgress = attempts
+    .filter((attempt) => attempt.status === "COMPLETED")
+    .filter((attempt) => attempt.lessonId && lessonIds.has(attempt.lessonId))
+    .slice()
+    .sort((first, second) => Date.parse(first.submittedAt ?? first.updatedAt) - Date.parse(second.submittedAt ?? second.updatedAt))
+    .reduce<StudyProgress>((current, attempt) => {
+      const score = attempt.scorePercent ?? 0;
+      const previous = current[attempt.lessonId];
+      const recentScores = [...(previous?.recentScores ?? []), score].slice(-5);
+      const passed = Boolean(attempt.passed || score >= passThreshold);
+      return {
+        ...current,
+        [attempt.lessonId]: {
+          bestScore: Math.max(previous?.bestScore ?? 0, score),
+          passed: Boolean(previous?.passed || passed),
+          attempts: (previous?.attempts ?? 0) + 1,
+          failCount: passed ? previous?.failCount ?? 0 : (previous?.failCount ?? 0) + 1,
+          lastScore: score,
+          recentScores,
+          completedAt: passed ? attempt.submittedAt ?? attempt.updatedAt : previous?.completedAt
+        }
+      };
+    }, {});
+
+  return Object.entries(attemptProgress).reduce<StudyProgress>((current, [lessonId, restored]) => {
+    const previous = current[lessonId];
+    return {
+      ...current,
+      [lessonId]: {
+        ...previous,
+        ...restored,
+        bestScore: Math.max(previous?.bestScore ?? 0, restored.bestScore),
+        passed: Boolean(previous?.passed || restored.passed),
+        attempts: Math.max(previous?.attempts ?? 0, restored.attempts ?? 0),
+        failCount: Math.max(previous?.failCount ?? 0, restored.failCount ?? 0),
+        recentScores: restored.recentScores?.length ? restored.recentScores : previous?.recentScores,
+        completedAt: latestIsoDate(previous?.completedAt, restored.completedAt)
+      }
+    };
+  }, localProgress);
+}
+
+function latestIsoDate(first?: string, second?: string): string | undefined {
+  if (!first) {
+    return second;
+  }
+  if (!second) {
+    return first;
+  }
+  return Date.parse(second) > Date.parse(first) ? second : first;
 }
 
 function isLessonUnlocked(index: number, progress: StudyProgress, lessons: StudyLesson[]): boolean {

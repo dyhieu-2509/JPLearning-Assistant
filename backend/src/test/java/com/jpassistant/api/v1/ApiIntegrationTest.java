@@ -633,6 +633,14 @@ class ApiIntegrationTest {
                 .andExpect(jsonPath("$.scorePercent").value(100))
                 .andExpect(jsonPath("$.durationSeconds").isNumber());
 
+        mockMvc.perform(get("/api/v1/personalization/me/study-attempts")
+                        .header(HttpHeaders.AUTHORIZATION, bearer(accessToken)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].lessonId").value("n5-desu-wa"))
+                .andExpect(jsonPath("$[0].status").value("COMPLETED"))
+                .andExpect(jsonPath("$[0].passed").value(true))
+                .andExpect(jsonPath("$[0].scorePercent").value(100));
+
         mockMvc.perform(post("/api/v1/personalization/me/feedback")
                         .header(HttpHeaders.AUTHORIZATION, bearer(accessToken))
                         .contentType(MediaType.APPLICATION_JSON)

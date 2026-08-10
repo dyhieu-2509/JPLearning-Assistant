@@ -130,6 +130,14 @@ public class PersonalizationController {
         );
     }
 
+    @GetMapping("/me/study-attempts")
+    public List<StudyLessonAttemptResponse> getLessonAttempts(
+            @RequestParam(defaultValue = "100") Integer limit,
+            Authentication authentication
+    ) {
+        return pilotStudyMetricsService.getLessonAttempts(authenticatedUserId(authentication), limit);
+    }
+
     @PostMapping("/me/pilot-surveys")
     public PilotSurveyResponse recordPilotSurvey(
             @Valid @RequestBody PilotSurveyRequest request,

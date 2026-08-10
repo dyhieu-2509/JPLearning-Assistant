@@ -121,6 +121,7 @@ type MockMvpOptions = {
   onLearningSignal?: (signal: Record<string, unknown>) => void;
   onLessonAttemptStart?: (attempt: Record<string, unknown>) => void;
   onLessonAttemptComplete?: (attempt: Record<string, unknown>) => void;
+  studyAttempts?: Array<Record<string, unknown>>;
   onPilotSurvey?: (survey: Record<string, unknown>) => void;
   onPronunciationScore?: (formData: Record<string, string>) => void;
 };
@@ -394,6 +395,48 @@ test("zero beginner starts with kana before N5 grammar", async ({ page }) => {
   await expect(page.getByRole("heading", { name: /Qua bài rồi/i })).toBeVisible();
   await expect(page.getByRole("button", { name: /Bài 2: Hiragana hàng か-さ-た/i })).toBeEnabled();
   await expect(page.getByRole("button", { name: /Bài 4: Giới thiệu bản thân/i })).toBeDisabled();
+});
+
+test("study path restores completed lessons from backend attempts", async ({ page }) => {
+  const userId = "restore-study-progress-user";
+  await seedAuthenticatedLearner(page, userId);
+  await mockMvpApi(page, {
+    currentLevel: "ZERO",
+    targetLevel: "N5",
+    dailyStudyMinutes: 10,
+    weakSkills: ["kana"]
+  }, {
+    studyAttempts: [
+      {
+        id: "attempt-restore-1",
+        userId,
+        lessonId: "kana-hiragana-vowels",
+        lessonTitle: "Hiragana vowels",
+        level: "N5",
+        chapterId: "zero-kana",
+        chapterTitle: "Kana",
+        status: "COMPLETED",
+        scorePercent: 100,
+        correctCount: 5,
+        totalQuestions: 5,
+        passed: true,
+        durationSeconds: 180,
+        startedAt: "2026-05-20T08:00:00Z",
+        submittedAt: "2026-05-20T08:03:00Z",
+        updatedAt: "2026-05-20T08:03:00Z"
+      }
+    ]
+  });
+
+  await page.goto("/learner/study");
+
+  await expect(page.locator(".study-path-score strong")).toHaveText(/^1\/\d+$/);
+  await expect(page.locator(".study-lesson-row").nth(1)).toBeEnabled();
+  await expect(page.locator(".study-lesson-row.active")).toContainText("2");
+  await expect.poll(async () =>
+    page.evaluate(() => Object.values(window.localStorage)
+      .some((value) => typeof value === "string" && value.includes("\"kana-hiragana-vowels\"") && value.includes("\"passed\":true")))
+  ).toBe(true);
 });
 
 test("zero beginner can finish the kana chapter before opening N5", async ({ page }) => {
@@ -931,6 +974,11 @@ async function mockMvpApi(page: Page, profileOverride: Partial<typeof profile> =
 
     if (method === "GET" && path === "/personalization/me/progress") {
       await json(route, activeDashboard.progress.weakestItems);
+      return;
+    }
+
+    if (method === "GET" && path === "/personalization/me/study-attempts") {
+      await json(route, options.studyAttempts ?? []);
       return;
     }
 

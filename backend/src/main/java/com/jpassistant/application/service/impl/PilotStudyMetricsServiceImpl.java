@@ -95,6 +95,17 @@ public class PilotStudyMetricsServiceImpl implements PilotStudyMetricsService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<StudyLessonAttemptResponse> getLessonAttempts(String userId, Integer limit) {
+        int safeLimit = limit == null ? 100 : Math.max(1, Math.min(limit, 500));
+        return attemptRepository.findByUserIdOrderByStartedAtDesc(normalizeRequired(userId, "userId"))
+                .stream()
+                .limit(safeLimit)
+                .map(this::toAttemptResponse)
+                .toList();
+    }
+
+    @Override
     @Transactional
     public PilotSurveyResponse recordPilotSurvey(String userId, PilotSurveyRequest request) {
         validateSusScores(request.susScores());
