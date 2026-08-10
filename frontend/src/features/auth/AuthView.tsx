@@ -7,7 +7,7 @@ import { IconTextButton, PrimaryButton } from "../../shared/components";
 import { logoUrl } from "../../shared/assets";
 import { googleOAuthStartUrl } from "../../shared/config";
 import { homePathForUser } from "../../shared/auth";
-import { hasOnboardingDraft } from "../../shared/onboardingDraft";
+import { hasOnboardingDraft, saveOAuthOnboardingMode } from "../../shared/onboardingDraft";
 
 export function AuthView() {
   const { isAuthenticated, login, register, user } = useAuth();
@@ -21,6 +21,10 @@ export function AuthView() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const hasDraft = params.get("onboarding") === "1" || hasOnboardingDraft();
+  const draftMessage =
+    mode === "register"
+      ? "8 câu làm quen đã được lưu tạm. VAJA sẽ đưa vào tài khoản mới sau khi bạn tạo tài khoản."
+      : "Bạn đang đăng nhập tài khoản đã có. VAJA sẽ giữ lộ trình hiện tại. Muốn dùng 8 câu vừa chọn, hãy bấm Tạo tài khoản.";
 
   useEffect(() => {
     setMode(requestedMode);
@@ -50,6 +54,7 @@ export function AuthView() {
   }
 
   function startGoogleLogin() {
+    saveOAuthOnboardingMode(mode);
     window.location.assign(googleOAuthStartUrl);
   }
 
@@ -125,7 +130,7 @@ export function AuthView() {
           {error && <p className="form-error">{error}</p>}
           {hasDraft && (
             <p className="form-success">
-              8 câu làm quen đã được lưu tạm. VAJA sẽ đưa vào góc học sau khi bạn đăng nhập.
+              {draftMessage}
             </p>
           )}
 

@@ -22,8 +22,8 @@ export function PreAuthOnboardingView() {
       <OnboardingWizard
         eyebrow="Người học mới"
         title="Trả lời 8 câu trước khi đăng nhập"
-        description="Các lựa chọn này được lưu tạm trên trình duyệt. Sau khi đăng nhập hoặc tạo tài khoản, VAJA sẽ đưa chúng vào góc học của bạn."
-        completeLabel="Tiếp tục đăng nhập"
+        description="Các lựa chọn này được lưu tạm trên trình duyệt. VAJA sẽ đưa chúng vào góc học khi bạn tạo tài khoản mới."
+        completeLabel="Tiếp tục tạo tài khoản"
         onComplete={saveDraft}
       />
     </div>

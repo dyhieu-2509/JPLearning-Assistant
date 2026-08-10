@@ -2,6 +2,9 @@ import { apiRequest } from "./api";
 import type { StudentProfileRequest, StudentProfileResponse } from "./models";
 
 const STORAGE_KEY = "vaja.pendingOnboardingProfile";
+const OAUTH_ONBOARDING_MODE_KEY = "vaja.oauthOnboardingMode";
+
+export type OAuthOnboardingMode = "login" | "register";
 
 export function saveOnboardingDraft(request: StudentProfileRequest) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(request));
@@ -19,6 +22,19 @@ export function readOnboardingDraft(): StudentProfileRequest | null {
 
 export function clearOnboardingDraft() {
   localStorage.removeItem(STORAGE_KEY);
+}
+
+export function saveOAuthOnboardingMode(mode: OAuthOnboardingMode) {
+  localStorage.setItem(OAUTH_ONBOARDING_MODE_KEY, mode);
+}
+
+export function readOAuthOnboardingMode(): OAuthOnboardingMode | null {
+  const value = localStorage.getItem(OAUTH_ONBOARDING_MODE_KEY);
+  return value === "login" || value === "register" ? value : null;
+}
+
+export function clearOAuthOnboardingMode() {
+  localStorage.removeItem(OAUTH_ONBOARDING_MODE_KEY);
 }
 
 export function hasOnboardingDraft(): boolean {

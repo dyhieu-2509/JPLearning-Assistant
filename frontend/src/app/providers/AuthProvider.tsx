@@ -1,13 +1,23 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { apiRequest, setAuthRefreshHandler } from "../../shared/api";
 import type { AuthResponse, UserResponse } from "../../shared/models";
-import { syncOnboardingDraft } from "../../shared/onboardingDraft";
+import {
+  clearOAuthOnboardingMode,
+  clearOnboardingDraft,
+  readOAuthOnboardingMode,
+  syncOnboardingDraft
+} from "../../shared/onboardingDraft";
 
 type StoredAuth = {
   accessToken: string;
   refreshToken: string;
   expiresAt: number;
   user: UserResponse;
+};
+
+type ApplyAuthOptions = {
+  syncPendingOnboarding?: boolean;
+  clearPendingOnboarding?: boolean;
 };
 
 type AuthContextValue = {
@@ -73,9 +83,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [auth, setAuth] = useState<StoredAuth | null>(() => readStoredAuth());
   const refreshPromiseRef = useRef<Promise<string | null> | null>(null);
 
-  const applyAuth = useCallback(async (response: AuthResponse) => {
+  const applyAuth = useCallback(async (response: AuthResponse, options: ApplyAuthOptions = {}) => {
     const next = toStoredAuth(response);
-    await syncOnboardingDraft(response.accessToken);
+    if (options.syncPendingOnboarding) {
+      await syncOnboardingDraft(response.accessToken);
+    } else if (options.clearPendingOnboarding) {
+      clearOnboardingDraft();
+    }
     persistAuth(next);
     setAuth(next);
   }, []);
@@ -86,7 +100,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         method: "POST",
         body: { email, password }
       });
-      await applyAuth(response);
+      await applyAuth(response, { clearPendingOnboarding: true });
     },
     [applyAuth]
   );
@@ -106,7 +120,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         status: "ACTIVE"
       }
     };
-    await syncOnboardingDraft(accessToken);
+    const onboardingMode = readOAuthOnboardingMode();
+    try {
+      if (onboardingMode === "login") {
+        clearOnboardingDraft();
+      } else {
+        await syncOnboardingDraft(accessToken);
+      }
+    } finally {
+      clearOAuthOnboardingMode();
+    }
     persistAuth(next);
     setAuth(next);
   }, []);
@@ -117,7 +140,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         method: "POST",
         body: { linkToken, password }
       });
-      await applyAuth(response);
+      await applyAuth(response, { clearPendingOnboarding: true });
     },
     [applyAuth]
   );
@@ -128,7 +151,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         method: "POST",
         body: { displayName, email, password }
       });
-      await applyAuth(response);
+      await applyAuth(response, { syncPendingOnboarding: true });
     },
     [applyAuth]
   );
