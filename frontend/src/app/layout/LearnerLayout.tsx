@@ -235,7 +235,7 @@ export function LearnerLayout() {
       }
 
       if (shouldScroll) {
-        target.scrollIntoView({ block: "center", inline: "center", behavior: "smooth" });
+        target.scrollIntoView({ block: "center", inline: "center", behavior: "auto" });
       }
       target.classList.add("tour-target-active");
 
@@ -245,21 +245,45 @@ export function LearnerLayout() {
       measureTimer = window.setTimeout(() => {
         const rect = target.getBoundingClientRect();
         const padding = 10;
+        const paddedLeft = rect.left - padding;
+        const paddedTop = rect.top - padding;
+        const paddedRight = rect.right + padding;
+        const paddedBottom = rect.bottom + padding;
+        const boxLeft = clamp(paddedLeft, 10, Math.max(10, window.innerWidth - 30));
+        const boxTop = clamp(paddedTop, 10, Math.max(10, window.innerHeight - 30));
+        const boxRight = clamp(paddedRight, boxLeft + 20, window.innerWidth - 10);
+        const boxBottom = clamp(paddedBottom, boxTop + 20, window.innerHeight - 10);
         const nextBox = {
-          top: Math.max(10, rect.top - padding),
-          left: Math.max(10, rect.left - padding),
-          width: Math.min(window.innerWidth - 20, rect.width + padding * 2),
-          height: Math.min(window.innerHeight - 20, rect.height + padding * 2)
+          top: boxTop,
+          left: boxLeft,
+          width: boxRight - boxLeft,
+          height: boxBottom - boxTop
         };
         setTourBox(nextBox);
 
         const cardWidth = Math.min(380, window.innerWidth - 32);
+        const card = document.querySelector<HTMLElement>(".learner-tour-card");
+        const measuredCardHeight = Math.max(
+          card?.getBoundingClientRect().height ?? 0,
+          card?.scrollHeight ?? 0,
+          window.innerWidth < 360 ? 320 : 260
+        );
+        const cardHeight = Math.min(measuredCardHeight, window.innerHeight - 32);
         const belowTop = nextBox.top + nextBox.height + 14;
-        const aboveTop = nextBox.top - 238;
-        const top = belowTop + 224 < window.innerHeight ? belowTop : Math.max(16, aboveTop);
-        const left = clamp(nextBox.left, 16, window.innerWidth - cardWidth - 16);
-        setTourCardStyle({ top, left, width: cardWidth });
-      }, 180);
+        const aboveTop = nextBox.top - cardHeight - 14;
+        const belowSpace = window.innerHeight - belowTop - 16;
+        const aboveSpace = aboveTop - 16;
+        const preferredTop = belowSpace >= cardHeight
+          ? belowTop
+          : aboveSpace >= 0
+            ? aboveTop
+            : belowSpace >= aboveSpace
+              ? belowTop
+              : aboveTop;
+        const top = clamp(preferredTop, 16, Math.max(16, window.innerHeight - cardHeight - 16));
+        const left = clamp(nextBox.left, 16, Math.max(16, window.innerWidth - cardWidth - 16));
+        setTourCardStyle({ maxHeight: window.innerHeight - 32, overflowY: "auto", top, left, width: cardWidth });
+      }, 80);
     }
 
     function handleViewportChange() {

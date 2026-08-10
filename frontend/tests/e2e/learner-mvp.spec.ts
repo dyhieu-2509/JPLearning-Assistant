@@ -701,6 +701,30 @@ test("new learner can follow the guided app tour", async ({ page }) => {
   await expect(page.locator(".learner-tour-card")).toContainText("Bắt đầu ở đây");
 });
 
+test("mobile learner tour keeps card and highlight inside a narrow viewport", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 568 });
+  await seedAuthenticatedLearner(page, "mobile-tour-user", { tourSeen: false });
+  await mockMvpApi(page, {
+    currentLevel: "ZERO",
+    targetLevel: "N5",
+    dailyStudyMinutes: 10,
+    weakSkills: ["kana"]
+  });
+
+  await page.goto("/learner");
+  const tour = page.locator(".learner-tour-card");
+  await expect(tour).toBeVisible({ timeout: 15000 });
+
+  for (let step = 1; step <= 9; step += 1) {
+    await expectTourInViewport(page);
+    await tour.locator(".primary-button").click();
+    await page.waitForTimeout(350);
+  }
+
+  await expect(tour).toHaveCount(0);
+  await expect(page.locator(".study-flashcard")).toBeVisible();
+});
+
 test("learner session refreshes access token after a 401", async ({ page }) => {
   await page.addInitScript(() => {
     window.localStorage.setItem(
@@ -902,6 +926,52 @@ async function mockBrowserRecording(page: Page) {
       value: FakeMediaRecorder
     });
   });
+}
+
+async function expectTourInViewport(page: Page) {
+  await expect(page.locator(".learner-tour-card")).toBeVisible();
+  await expect(page.locator(".learner-tour-highlight")).toBeVisible();
+
+  const geometry = await page.evaluate(() => {
+    function rectFor(selector: string) {
+      const element = document.querySelector(selector);
+      if (!element) {
+        return null;
+      }
+      const rect = element.getBoundingClientRect();
+      return {
+        left: rect.left,
+        top: rect.top,
+        right: rect.right,
+        bottom: rect.bottom,
+        width: rect.width,
+        height: rect.height
+      };
+    }
+
+    return {
+      viewportWidth: window.innerWidth,
+      viewportHeight: window.innerHeight,
+      card: rectFor(".learner-tour-card"),
+      highlight: rectFor(".learner-tour-highlight"),
+      documentWidth: document.documentElement.scrollWidth
+    };
+  });
+
+  expect(geometry.documentWidth).toBeLessThanOrEqual(geometry.viewportWidth + 1);
+  expect(geometry.card).not.toBeNull();
+  expect(geometry.highlight).not.toBeNull();
+
+  const card = geometry.card!;
+  const highlight = geometry.highlight!;
+  expect(card.left).toBeGreaterThanOrEqual(0);
+  expect(card.top).toBeGreaterThanOrEqual(0);
+  expect(card.right).toBeLessThanOrEqual(geometry.viewportWidth + 1);
+  expect(card.bottom).toBeLessThanOrEqual(geometry.viewportHeight + 1);
+  expect(highlight.left).toBeGreaterThanOrEqual(0);
+  expect(highlight.top).toBeGreaterThanOrEqual(0);
+  expect(highlight.right).toBeLessThanOrEqual(geometry.viewportWidth + 1);
+  expect(highlight.bottom).toBeLessThanOrEqual(geometry.viewportHeight + 1);
 }
 
 async function answerLessonOneCorrectly(page: Page) {
