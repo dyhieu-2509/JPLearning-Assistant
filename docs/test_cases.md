@@ -44,6 +44,45 @@ These are the screen-by-screen checks for the current learner MVP. Run them with
 | Tutor | In-quiz support | Answer or focus a quiz question | Floating Tutor shows a contextual nudge for that exact question |
 | Mobile | Auth/study/tour | Test 360x740, 390x844, 430x932, 768x1024 | Buttons do not overlap; active lesson appears before full pathway; tour highlights the next useful action |
 
+## Full Regression Protocol
+
+Do not mark a learner-flow change as done after testing only the changed button or one happy path. For any change in onboarding, auth, study, guest mode, assessment, flashcards, lookup, Tutor, feedback, responsive UI, or deployment, run the whole relevant suite and record the result.
+
+Minimum for every frontend learner-flow change:
+
+```powershell
+cd frontend
+npm run build
+npm run test:e2e
+```
+
+This runs all current end-to-end specs:
+
+| Spec | Coverage |
+|---|---|
+| `landing.spec.ts` | Landing page, public entry points, first action |
+| `auth-mobile.spec.ts` | Mobile login/register layout and Google button usability |
+| `auth-onboarding.spec.ts` | Pre-auth onboarding, existing login, register, Google mode, zero beginner guest option |
+| `learner-mvp.spec.ts` | Dashboard, study, guest trial, chapter gate, assessment, flashcards, lookup, Tutor, feedback, pronunciation, tour, mobile study, refresh token |
+
+Extra suites when the touched area needs them:
+
+| Area Changed | Required Command |
+|---|---|
+| Backend API, auth, personalization, assessment, flashcards, planner | `cd backend; mvn test` |
+| AI service, RAG, pronunciation, planner model code | `cd ai-service; python -m pytest` |
+| RAG benchmark numbers for thesis appendix | `cd ai-service; python benchmark_rag.py --output ..\docs\rag_benchmark_results.csv --modes llm_only vector_only kg_only kg_vector` |
+
+Manual smoke after production deploy:
+
+| Flow | Must Check |
+|---|---|
+| Public site | Landing loads and API health returns `{"status":"ok","service":"backend"}` |
+| Zero beginner | Onboarding does not auto-enter guest; auth shows create account and optional guest trial |
+| Guest trial | Guest can study 3 lessons only; lesson 4 is locked; reload keeps the registration gate |
+| Registered study | Pass quiz opens next lesson; fail quiz keeps learner in review; chapter test blocks next chapter until 85% |
+| Mobile | 360x740, 390x844, 430x932, 768x1024 have no horizontal overflow and buttons do not overlap |
+
 ## Pilot User Test Plan
 
 Target: 10-12 Vietnamese university students learning Japanese N5/N4.
