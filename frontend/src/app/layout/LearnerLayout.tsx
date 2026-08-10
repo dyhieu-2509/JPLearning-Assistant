@@ -292,7 +292,6 @@ export function LearnerLayout() {
 
     placeTour(tourStep.target, true);
     window.addEventListener("resize", handleViewportChange);
-    window.addEventListener("scroll", handleViewportChange, true);
 
     return () => {
       if (retryTimer) {
@@ -302,7 +301,6 @@ export function LearnerLayout() {
         window.clearTimeout(measureTimer);
       }
       window.removeEventListener("resize", handleViewportChange);
-      window.removeEventListener("scroll", handleViewportChange, true);
       document.querySelectorAll(".tour-target-active").forEach((element) => {
         element.classList.remove("tour-target-active");
       });
