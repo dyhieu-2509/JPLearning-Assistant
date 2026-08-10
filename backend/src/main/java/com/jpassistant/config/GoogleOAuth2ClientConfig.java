@@ -22,6 +22,9 @@ public class GoogleOAuth2ClientConfig {
             "spring.security.oauth2.client.registration.google.client-id";
     private static final String CLIENT_SECRET_PROPERTY =
             "spring.security.oauth2.client.registration.google.client-secret";
+    private static final String REDIRECT_URI_PROPERTY =
+            "spring.security.oauth2.client.registration.google.redirect-uri";
+    private static final String DEFAULT_REDIRECT_URI = "{baseUrl}/login/oauth2/code/{registrationId}";
 
     @Bean
     public ClientRegistrationRepository clientRegistrationRepository(Environment environment) {
@@ -29,7 +32,7 @@ public class GoogleOAuth2ClientConfig {
                 .getBuilder("google")
                 .clientId(required(environment, CLIENT_ID_PROPERTY))
                 .clientSecret(required(environment, CLIENT_SECRET_PROPERTY))
-                .redirectUri("{baseUrl}/login/oauth2/code/{registrationId}")
+                .redirectUri(redirectUri(environment))
                 .build();
         return new InMemoryClientRegistrationRepository(google);
     }
@@ -45,6 +48,14 @@ public class GoogleOAuth2ClientConfig {
         String value = environment.getProperty(key);
         if (value == null || value.isBlank()) {
             throw new IllegalStateException(key + " must be configured when Google OAuth2 is enabled");
+        }
+        return value.trim();
+    }
+
+    private static String redirectUri(Environment environment) {
+        String value = environment.getProperty(REDIRECT_URI_PROPERTY);
+        if (value == null || value.isBlank()) {
+            return DEFAULT_REDIRECT_URI;
         }
         return value.trim();
     }
