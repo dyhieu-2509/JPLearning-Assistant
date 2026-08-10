@@ -1,0 +1,4 @@
+/api/* http://14.225.217.109:8084/api/:splat 200!
+/oauth2/* http://14.225.217.109:8084/oauth2/:splat 200!
+/login/oauth2/* http://14.225.217.109:8084/login/oauth2/:splat 200!
+/* /index.html 200
