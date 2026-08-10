@@ -1,19 +1,22 @@
-import { Chrome, Loader2, LockKeyhole, Mail, UserRound } from "lucide-react";
+import { BookOpenCheck, Chrome, Loader2, LockKeyhole, Mail, UserRound } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
-import { Navigate, useLocation, useSearchParams } from "react-router-dom";
+import { Navigate, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../app/providers/AuthProvider";
 import { ApiError } from "../../shared/api";
 import { IconTextButton, PrimaryButton } from "../../shared/components";
 import { logoUrl } from "../../shared/assets";
 import { googleOAuthStartUrl } from "../../shared/config";
 import { homePathForUser } from "../../shared/auth";
-import { hasOnboardingDraft, saveOAuthOnboardingMode } from "../../shared/onboardingDraft";
+import { hasOnboardingDraft, readOnboardingDraft, saveOAuthOnboardingMode } from "../../shared/onboardingDraft";
 
 export function AuthView() {
   const { isAuthenticated, login, register, user } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const [params] = useSearchParams();
-  const requestedMode = params.get("mode") === "register" ? "register" : "login";
+  const onboardingDraft = readOnboardingDraft();
+  const isZeroDraft = (onboardingDraft?.currentLevel ?? "").toUpperCase() === "ZERO";
+  const requestedMode = params.get("mode") === "register" || isZeroDraft ? "register" : "login";
   const [mode, setMode] = useState<"login" | "register">(requestedMode);
   const [displayName, setDisplayName] = useState("Người học VAJA");
   const [email, setEmail] = useState("learner@example.com");
@@ -22,7 +25,9 @@ export function AuthView() {
   const [loading, setLoading] = useState(false);
   const hasDraft = params.get("onboarding") === "1" || hasOnboardingDraft();
   const draftMessage =
-    mode === "register"
+    isZeroDraft
+      ? "Bạn đã học thử từ số 0. Hãy tạo tài khoản mới để lưu 3 bài chữ cái và tiếp tục pathway."
+      : mode === "register"
       ? "8 câu làm quen đã được lưu tạm. VAJA sẽ đưa vào tài khoản mới sau khi bạn tạo tài khoản."
       : "Bạn đang đăng nhập tài khoản đã có. VAJA sẽ giữ lộ trình hiện tại. Muốn dùng 8 câu vừa chọn, hãy bấm Tạo tài khoản.";
 
@@ -58,6 +63,10 @@ export function AuthView() {
     window.location.assign(googleOAuthStartUrl);
   }
 
+  function startGuestTrial() {
+    navigate("/guest/study");
+  }
+
   return (
     <main className="auth-screen">
       <section className="auth-visual">
@@ -72,23 +81,38 @@ export function AuthView() {
       </section>
 
       <section className="auth-panel" aria-label="Đăng nhập VAJA">
-        <div className="segmented-control">
-          <button className={mode === "login" ? "active" : ""} type="button" onClick={() => setMode("login")}>
-            Đăng nhập
-          </button>
-          <button
-            className={mode === "register" ? "active" : ""}
-            type="button"
-            onClick={() => setMode("register")}
-          >
-            Tạo tài khoản
-          </button>
-        </div>
+        {isZeroDraft ? (
+          <div className="segmented-control single">
+            <button className="active" type="button" onClick={() => setMode("register")}>
+              Tạo tài khoản mới
+            </button>
+          </div>
+        ) : (
+          <div className="segmented-control">
+            <button className={mode === "login" ? "active" : ""} type="button" onClick={() => setMode("login")}>
+              Đăng nhập
+            </button>
+            <button
+              className={mode === "register" ? "active" : ""}
+              type="button"
+              onClick={() => setMode("register")}
+            >
+              Tạo tài khoản
+            </button>
+          </div>
+        )}
 
         <IconTextButton className="google-auth-button" type="button" variant="ghost" onClick={startGoogleLogin}>
           <Chrome size={18} />
           Tiếp tục với Google
         </IconTextButton>
+
+        {isZeroDraft && (
+          <IconTextButton className="guest-study-button" type="button" variant="ghost" onClick={startGuestTrial}>
+            <BookOpenCheck size={18} />
+            Học thử 3 bài không đăng nhập
+          </IconTextButton>
+        )}
 
         <form onSubmit={submit} className="form-stack">
           {mode === "register" && (

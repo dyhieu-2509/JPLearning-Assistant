@@ -18,6 +18,17 @@ const profile = {
   updatedAt: "2026-05-20T08:00:00Z"
 };
 
+const zeroGuestDraft = {
+  currentLevel: "ZERO",
+  targetLevel: "N5",
+  goal: "Học từ số 0",
+  learningPathway: "jlpt_foundation",
+  dailyStudyMinutes: 10,
+  explanationStyle: "example-first",
+  romajiEnabled: true,
+  weakSkills: ["kana"]
+};
+
 const card = {
   id: "card-1",
   deckId: "deck-1",
@@ -469,9 +480,54 @@ test("zero beginner can finish the kana chapter before opening N5", async ({ pag
   await answerKanaLessonThreeCorrectly(page);
   await page.getByRole("button", { name: /Nộp quiz cuối bài/i }).click();
   await expect(page.getByRole("heading", { name: /Qua bài rồi/i })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Bài 4: Giới thiệu bản thân/i })).toBeDisabled();
+  await expect(page.locator(".study-mistake-plan.compact").filter({ hasText: /Cần làm test chương/i })).toBeVisible();
+  await page.getByRole("button", { name: /Làm test chương/i }).click();
+
+  await expect(page.locator(".chapter-assessment-heading")).toContainText(/Bảng chữ cái nhập môn/i);
+  await expect(page.locator(".chapter-question")).toHaveCount(20);
+  await answerKanaChapterAssessmentCorrectly(page);
+  await page.getByRole("button", { name: /Nộp test chương/i }).click();
+
+  await expect(page.getByRole("heading", { name: /Qua chương rồi/i })).toBeVisible();
+  await expect(page.locator(".study-result > strong")).toHaveText("100%");
   await expect(page.getByRole("button", { name: /Bài 4: Giới thiệu bản thân/i })).toBeEnabled();
-  await page.getByRole("button", { name: /Sang chương tiếp theo/i }).click();
+  await page.getByRole("button", { name: /Mở chương tiếp theo/i }).click();
   await expect(page.getByRole("heading", { name: /Bài 4: Giới thiệu bản thân/i })).toBeVisible();
+});
+
+test("guest trial is optional and stops after three study lessons", async ({ page }) => {
+  await seedGuestTrial(page);
+
+  await page.goto("/guest/study");
+  await expect(page.getByRole("heading", { name: /Pathway số 0/i })).toBeVisible();
+  await expect(page.locator(".study-guest-banner")).toContainText(/3 bài đầu/i);
+  await expect(page.getByRole("button", { name: /Bài 4: Giới thiệu bản thân/i })).toBeDisabled();
+
+  await walkThroughCurrentLessonFlashcards(page, 5);
+  await answerKanaLessonOneCorrectly(page);
+  await page.getByRole("button", { name: /Nộp quiz cuối bài/i }).click();
+  await page.getByRole("button", { name: /Học bài tiếp theo/i }).click();
+
+  await walkThroughCurrentLessonFlashcards(page, 6);
+  await answerKanaLessonTwoCorrectly(page);
+  await page.getByRole("button", { name: /Nộp quiz cuối bài/i }).click();
+  await page.getByRole("button", { name: /Học bài tiếp theo/i }).click();
+
+  await walkThroughCurrentLessonFlashcards(page, 6);
+  await answerKanaLessonThreeCorrectly(page);
+  await page.getByRole("button", { name: /Nộp quiz cuối bài/i }).click();
+
+  await expect(page.getByText(/Đã hết phần học thử/i)).toBeVisible();
+  await expect(page.getByRole("button", { name: /Bài 4: Giới thiệu bản thân/i })).toBeDisabled();
+  await expect(page.getByRole("button", { name: /Tạo tài khoản để học tiếp/i })).toBeVisible();
+
+  await page.reload();
+  await expect(page.getByRole("heading", { name: /Qua bài rồi/i })).toBeVisible();
+  await expect(page.getByText(/Đã hết phần học thử/i)).toBeVisible();
+
+  await page.getByRole("button", { name: /Tạo tài khoản để học tiếp/i }).click();
+  await expect(page).toHaveURL(/\/login\?mode=register&onboarding=1$/);
 });
 
 test("conversation lessons include pronunciation sample, recording, AI score, and progress signal", async ({ page }) => {
@@ -606,7 +662,7 @@ test("learner can understand the MVP study loop", async ({ page }) => {
   await expect(page.getByRole("link", { name: /Hỏi bài/i })).toHaveCount(0);
 
   await page.getByRole("link", { name: /Kiểm tra/i }).click();
-  await page.getByRole("button", { name: /Bắt đầu kiểm tra/i }).click();
+  await page.getByRole("button", { name: /Bắt đầu test/i }).click();
   await expect(page.getByRole("heading", { name: /Chọn dạng đúng/i })).toBeVisible();
   await page.getByRole("radio", { name: "食べる" }).click();
   await page.getByRole("button", { name: /Nộp bài/i }).click();
@@ -892,6 +948,37 @@ async function answerKanaLessonThreeCorrectly(page: Page) {
   await page.locator(".study-question").nth(4).getByRole("button", { name: "từ mượn và tên riêng", exact: true }).click();
 }
 
+async function answerKanaChapterAssessmentCorrectly(page: Page) {
+  const answers = [
+    "a",
+    "i",
+    "あ い う え お",
+    "e",
+    "o",
+    "ka",
+    "shi",
+    "ta",
+    "su + shi",
+    "chi",
+    "a",
+    "ア イ ウ エ オ",
+    "cà phê",
+    "bài kiểm tra",
+    "từ mượn và tên riêng",
+    "a",
+    "i",
+    "あ い う え お",
+    "e",
+    "o"
+  ];
+
+  const questions = page.locator(".chapter-question");
+  await expect(questions).toHaveCount(answers.length);
+  for (let index = 0; index < answers.length; index += 1) {
+    await questions.nth(index).getByRole("button", { name: answers[index], exact: true }).click();
+  }
+}
+
 async function mockBrowserRecording(page: Page) {
   await page.addInitScript(() => {
     class FakeMediaRecorder {
@@ -1020,6 +1107,25 @@ async function seedAuthenticatedLearner(page: Page, userId = "user-1", options: 
       })
     );
   }, { seedUserId: userId, tourSeen: options.tourSeen ?? true });
+}
+
+async function seedGuestTrial(page: Page) {
+  await page.addInitScript((draft) => {
+    if (window.localStorage.getItem("vaja.guestTrialSeeded") === "true") {
+      return;
+    }
+    Object.keys(window.localStorage)
+      .filter((key) =>
+        key.startsWith("vaja.studyPathProgress") ||
+        key.startsWith("vaja.studyFeedback") ||
+        key.startsWith("vaja.pilotSurvey") ||
+        key.startsWith("vaja.learnerTour.seen")
+      )
+      .forEach((key) => window.localStorage.removeItem(key));
+    window.localStorage.removeItem("vaja.auth");
+    window.localStorage.setItem("vaja.pendingOnboardingProfile", JSON.stringify(draft));
+    window.localStorage.setItem("vaja.guestTrialSeeded", "true");
+  }, zeroGuestDraft);
 }
 
 async function mockMvpApi(page: Page, profileOverride: Partial<typeof profile> = {}, options: MockMvpOptions = {}) {

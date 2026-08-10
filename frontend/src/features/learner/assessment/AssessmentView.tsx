@@ -1,5 +1,5 @@
 import { ArrowRight, BookOpenCheck, CheckCircle2, ClipboardCheck, Layers3, Play, RotateCcw, XCircle } from "lucide-react";
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../app/providers/AuthProvider";
 import { apiRequest, ApiError } from "../../../shared/api";
@@ -11,15 +11,18 @@ import {
   ProgressMeter,
   TopicChip
 } from "../../../shared/components";
-import type { AssessmentStartResponse, AssessmentSubmitResponse } from "../../../shared/models";
+import type { AssessmentStartResponse, AssessmentSubmitResponse, StudentProfileResponse } from "../../../shared/models";
+import { buildStudyChapters, chapterAssessmentQuestionCount, type StudyChapter } from "../study/studyPath";
 
 export function AssessmentView() {
   const { accessToken } = useAuth();
   const navigate = useNavigate();
   const token = accessToken ?? "";
+  const [profile, setProfile] = useState<StudentProfileResponse | null>(null);
   const [level, setLevel] = useState("N5");
   const [category, setCategory] = useState("vocabulary");
-  const [questionCount, setQuestionCount] = useState(5);
+  const [questionCount, setQuestionCount] = useState(chapterAssessmentQuestionCount);
+  const [selectedChapterId, setSelectedChapterId] = useState<string | null>(null);
   const [session, setSession] = useState<AssessmentStartResponse | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -27,6 +30,8 @@ export function AssessmentView() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const chapters = useMemo(() => buildStudyChapters(profile), [profile]);
+  const selectedChapter = chapters.find((chapter) => chapter.id === selectedChapterId) ?? chapters[0] ?? null;
   const currentQuestion = session?.questions[activeIndex] ?? null;
   const answeredCount = useMemo(
     () => (session ? session.questions.filter((question) => answers[question.id]).length : 0),
@@ -37,6 +42,35 @@ export function AssessmentView() {
   const hasAnsweredAll = Boolean(session && answeredCount === session.questions.length);
   const scorePercent = result ? Math.round((result.score / Math.max(result.total, 1)) * 100) : 0;
   const needsReview = Boolean(result && (result.score < result.total || result.weakAreas.length > 0));
+
+  useEffect(() => {
+    if (!accessToken) {
+      return;
+    }
+
+    let active = true;
+    apiRequest<StudentProfileResponse>("/personalization/me/profile", { token: accessToken })
+      .then((data) => {
+        if (active) {
+          setProfile(data);
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setProfile(null);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [accessToken]);
+
+  useEffect(() => {
+    if (!selectedChapter && chapters.length) {
+      applyChapter(chapters[0]);
+    }
+  }, [chapters, selectedChapter]);
 
   async function start(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -50,7 +84,7 @@ export function AssessmentView() {
       const data = await apiRequest<AssessmentStartResponse>("/assessment/sessions", {
         method: "POST",
         token,
-        body: { level, category, questionCount }
+        body: { level, category, questionCount: normalizedQuestionCount(questionCount) }
       });
       setSession(data);
     } catch (caught) {
@@ -95,21 +129,50 @@ export function AssessmentView() {
 
   function prepareNextChallenge() {
     resetSession();
-    setQuestionCount((current) => Math.min(10, current + 2));
-    if (level === "N5") {
-      setLevel("N4");
+    if (selectedChapter) {
+      const nextIndex = chapters.findIndex((chapter) => chapter.id === selectedChapter.id) + 1;
+      const nextChapter = chapters[nextIndex];
+      if (nextChapter) {
+        applyChapter(nextChapter);
+        return;
+      }
     }
+    setQuestionCount(chapterAssessmentQuestionCount);
+    setLevel("N4");
+  }
+
+  function applyChapter(chapter: StudyChapter) {
+    setSelectedChapterId(chapter.id);
+    setLevel(chapter.level);
+    setCategory(assessmentCategoryForChapter(chapter));
+    setQuestionCount(chapterAssessmentQuestionCount);
   }
 
   return (
     <section className="learning-grid assessment-workspace">
       <div className="section-heading full-span">
         <p className="eyebrow">確認テスト</p>
-        <h2>Kiểm tra ngắn để xếp bài ôn</h2>
+        <h2>Test lớn theo chương</h2>
       </div>
       {error && <div className="form-error full-span">{error}</div>}
 
-      <Panel className="assessment-setup-card" eyebrow="Bắt đầu" title="Chọn bài kiểm tra" action={<ClipboardCheck size={21} />}>
+      <Panel className="assessment-setup-card" eyebrow="Bắt đầu" title="Chọn test theo pathway" action={<ClipboardCheck size={21} />}>
+        <div className="assessment-chapter-grid" aria-label="Chương trong pathway">
+          {chapters.slice(0, 8).map((chapter, index) => (
+            <button
+              className={chapter.id === selectedChapter?.id ? "assessment-chapter-card active" : "assessment-chapter-card"}
+              key={chapter.id}
+              type="button"
+              onClick={() => applyChapter(chapter)}
+              disabled={loading}
+            >
+              <span>Chương {index + 1}</span>
+              <strong>{cleanChapterTitle(chapter.title)}</strong>
+              <small>{chapter.level} · {displayCategory(assessmentCategoryForChapter(chapter))} · 20 câu</small>
+            </button>
+          ))}
+        </div>
+
         <form className="profile-form single" onSubmit={start}>
           <label>
             Trình độ
@@ -129,8 +192,8 @@ export function AssessmentView() {
           <label>
             Số câu
             <input
-              min={3}
-              max={10}
+              min={10}
+              max={20}
               type="number"
               value={questionCount}
               onChange={(event) => setQuestionCount(Number(event.target.value))}
@@ -139,22 +202,22 @@ export function AssessmentView() {
           </label>
           <IconTextButton type="submit" disabled={loading}>
             <Play size={18} />
-            {hasStarted ? "Tạo lượt mới" : "Bắt đầu kiểm tra"}
+            {hasStarted ? "Tạo test mới" : "Bắt đầu test 20 câu"}
           </IconTextButton>
         </form>
 
         <div className="assessment-status-list" aria-label="Cách VAJA dùng bài kiểm tra">
           <span>
             <CheckCircle2 size={17} />
-            Kết quả đúng/sai giúp VAJA xếp bài ôn gần nhất.
+            Luồng Học bắt buộc qua test chương trước khi mở chương mới.
           </span>
           <span>
             <CheckCircle2 size={17} />
-            Chủ đề sai sẽ chuyển sang ôn thẻ và lộ trình.
+            Màn này cho bạn luyện hoặc làm lại test lớn theo pathway.
           </span>
           <span>
             <CheckCircle2 size={17} />
-            Nên làm ngắn, đều, không cần học dồn.
+            Kết quả được lưu về mastery để VAJA biết phần nào cần ôn.
           </span>
         </div>
       </Panel>
@@ -162,14 +225,14 @@ export function AssessmentView() {
       <Panel
         className="focus-panel quiz-shell"
         eyebrow="Bài làm"
-        title={result ? "Bài đã nộp" : session ? `${session.level} · ${displayCategory(session.category)}` : "Chưa có lượt kiểm tra"}
+        title={result ? "Bài đã nộp" : session ? `${session.level} · ${displayCategory(session.category)}` : selectedChapter ? cleanChapterTitle(selectedChapter.title) : "Chưa có lượt kiểm tra"}
         action={session ? <ProgressMeter current={answeredCount} total={session.questions.length} /> : undefined}
       >
         {result ? (
           <div className="quiz-complete-card">
             <CheckCircle2 size={34} />
             <h3>Đã xong lượt kiểm tra này.</h3>
-            <p>Bạn đạt {result.score}/{result.total}. Xem phần bên phải để biết nên ôn lại bằng thẻ hay quay về bài học chính.</p>
+            <p>Bạn đạt {result.score}/{result.total}. Nếu đang ở luồng Học, hãy quay lại đó để VAJA mở chương đúng theo tiến độ.</p>
             <div className="next-action-grid">
               {needsReview ? (
                 <>
@@ -243,7 +306,7 @@ export function AssessmentView() {
           </div>
         ) : (
           <EmptyState compact>
-            Chọn bài kiểm tra ngắn ở bên trái. Mỗi lượt chỉ vài câu để bạn biết hôm nay nên ôn gì.
+            Chọn chương ở bên trái. Mỗi test có 20 câu và được dùng như bài kiểm tra lớn cuối chương.
           </EmptyState>
         )}
       </Panel>
@@ -316,12 +379,31 @@ export function AssessmentView() {
           </div>
         ) : (
           <EmptyState compact>
-            Điểm kiểm tra giúp VAJA chọn bài ôn chính xác hơn. Chat và tra cứu chỉ dùng để gợi ý thêm khi cần.
+            Điểm test lớn giúp VAJA biết phần nào cần ôn thêm. Muốn mở chương mới, hãy làm test ngay trong luồng Học.
           </EmptyState>
         )}
       </Panel>
     </section>
   );
+}
+
+function normalizedQuestionCount(value: number): number {
+  return Math.min(20, Math.max(10, Number.isFinite(value) ? value : chapterAssessmentQuestionCount));
+}
+
+function assessmentCategoryForChapter(chapter: StudyChapter): string {
+  const text = `${chapter.focus} ${chapter.title} ${chapter.description}`.toLowerCase();
+  if (text.includes("kanji") || text.includes("chữ hán")) {
+    return "kanji";
+  }
+  if (text.includes("ngữ pháp") || text.includes("grammar") || text.includes("trợ từ") || text.includes("mẫu")) {
+    return "grammar";
+  }
+  return "vocabulary";
+}
+
+function cleanChapterTitle(value: string): string {
+  return value.replace(/^Chương\s+\d+:\s*/i, "");
 }
 
 function displayCategory(value: string): string {

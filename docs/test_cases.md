@@ -21,6 +21,29 @@ This file lists the main test cases used to prove the system after teacher feedb
 | TC-15 | Mobile usability | UI must work on small screens | Open study on mobile viewport | Active lesson appears before full pathway list | `mobile study view shows the active lesson before the full pathway` |
 | TC-16 | Pilot metrics | Teacher requested completion time, score, SUS, trust, and pre/post data | Complete a lesson attempt, submit SUS survey, and run pre/post assessment | `/personalization/me/metrics` returns duration, pass rate, average score, SUS, trust, and score gain | `pilotStudyMetricsCaptureLessonSurveyAndAssessmentPairs`, `study metrics records lesson attempt and SUS survey after quiz` |
 
+## End-User Flow Checklist
+
+These are the screen-by-screen checks for the current learner MVP. Run them with fresh storage, a normal registered account, and mobile viewports.
+
+| Screen | Case | Steps | Expected Result |
+|---|---|---|---|
+| Landing | New learner starts from zero | Open landing, choose beginner/onboarding | The app goes to onboarding, not directly into guest study |
+| Onboarding | Zero beginner | Answer 8 questions with current level = zero | Final step goes to register choice; copy explains create account or 3-lesson guest trial |
+| Auth | Zero draft + existing login | Open `/login?mode=register&onboarding=1` with zero draft | Login tab is not offered; create-account mode is active; guest trial button is visible |
+| Auth | Non-zero draft + login | Open auth with N5/N4 draft and choose login | Existing account keeps its current pathway; pending draft is not forced into that account |
+| Guest Study | Optional guest trial | Click "Học thử 3 bài không đăng nhập" | Study opens without protected tools; progress is stored locally |
+| Guest Study | Three-lesson limit | Pass the first 3 lesson quizzes | Lesson 4 stays locked and the primary CTA asks the learner to create an account |
+| Guest Study | Reload after limit | Reload after 3 passed guest lessons | The learner remains at the registration gate, not back at lesson 1 |
+| Register After Guest | Save progress | Create account from guest gate | Account receives the zero-beginner pathway and local first-3-lesson progress is migrated |
+| Study | Normal lesson pass | Study flashcards, pass quiz at >=85% | Next lesson opens; feedback prompt appears for user-study data |
+| Study | Normal lesson fail | Submit below 85% | Next lesson remains locked; review/Tutor repair path appears |
+| Study | End of chapter | Pass all 3 lesson quizzes in one chapter | App requires a 20-question chapter test before opening the next chapter |
+| Study | Chapter test fail | Submit chapter test below 85% | Next chapter remains locked; missed questions are shown; retry button appears |
+| Study | Chapter test pass | Submit chapter test at >=85% | Next chapter opens; chapter progress is counted as complete |
+| Assessment | Standalone chapter test | Open Assessment and choose a chapter card | A 20-question backend-graded session starts for that chapter level/category |
+| Tutor | In-quiz support | Answer or focus a quiz question | Floating Tutor shows a contextual nudge for that exact question |
+| Mobile | Auth/study/tour | Test 360x740, 390x844, 430x932, 768x1024 | Buttons do not overlap; active lesson appears before full pathway; tour highlights the next useful action |
+
 ## Pilot User Test Plan
 
 Target: 10-12 Vietnamese university students learning Japanese N5/N4.

@@ -11,6 +11,13 @@ const pendingDraft = {
   weakSkills: ["kana"]
 };
 
+const n5PendingDraft = {
+  ...pendingDraft,
+  currentLevel: "N5",
+  targetLevel: "N4",
+  weakSkills: ["grammar", "vocabulary"]
+};
+
 const existingProfile = {
   id: "profile-existing",
   currentLevel: "N4",
@@ -39,7 +46,7 @@ const newProfile = {
 
 test("login after pre-auth onboarding keeps the existing learning profile", async ({ page }) => {
   let profilePutCount = 0;
-  await seedPendingOnboardingDraft(page);
+  await seedPendingOnboardingDraft(page, n5PendingDraft);
   await mockAuthApi(page, {
     activeProfile: existingProfile,
     onProfilePut: () => {
@@ -65,6 +72,22 @@ test("login after pre-auth onboarding keeps the existing learning profile", asyn
   expect(storage.pendingDraft).toBeNull();
   expect(storage.oauthMode).toBeNull();
   expect(storage.authUserEmail).toBe("existing.learner@example.com");
+});
+
+test("zero beginner auth offers create account or optional guest trial only", async ({ page }) => {
+  await seedPendingOnboardingDraft(page);
+
+  await page.goto("/login?mode=register&onboarding=1");
+
+  await expect(page.locator(".segmented-control.single")).toBeVisible();
+  await expect(page.locator(".segmented-control button")).toHaveCount(1);
+  await expect(page.locator(".segmented-control button")).toContainText("Tạo tài khoản mới");
+  await expect(page.locator(".form-success")).toContainText("3 bài chữ cái");
+  await expect(page.getByRole("button", { name: /Học thử 3 bài không đăng nhập/i })).toBeVisible();
+
+  await page.getByRole("button", { name: /Học thử 3 bài không đăng nhập/i }).click();
+  await expect(page).toHaveURL(/\/guest\/study$/);
+  await expect(page.getByRole("heading", { name: /Pathway số 0/i })).toBeVisible();
 });
 
 test("register after pre-auth onboarding applies the saved draft to the new account", async ({ page }) => {
@@ -96,7 +119,7 @@ test("register after pre-auth onboarding applies the saved draft to the new acco
 });
 
 test("Google auth started from login mode does not mark the pending draft for sync", async ({ page }) => {
-  await seedPendingOnboardingDraft(page);
+  await seedPendingOnboardingDraft(page, n5PendingDraft);
   await page.goto("/login?mode=login&onboarding=1");
   const appOrigin = new URL(page.url()).origin;
 
@@ -111,12 +134,12 @@ test("Google auth started from login mode does not mark the pending draft for sy
   expect(oauthMode).toBe("login");
 });
 
-async function seedPendingOnboardingDraft(page: Page) {
+async function seedPendingOnboardingDraft(page: Page, draft = pendingDraft) {
   await page.addInitScript((draft) => {
     window.localStorage.removeItem("vaja.auth");
     window.localStorage.removeItem("vaja.oauthOnboardingMode");
     window.localStorage.setItem("vaja.pendingOnboardingProfile", JSON.stringify(draft));
-  }, pendingDraft);
+  }, draft);
 }
 
 async function readAuthStorage(page: Page) {

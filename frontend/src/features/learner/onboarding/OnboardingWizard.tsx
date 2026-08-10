@@ -9,7 +9,7 @@ type OnboardingWizardProps = {
   eyebrow: string;
   title: string;
   description: string;
-  completeLabel: string;
+  completeLabel: string | ((answers: OnboardingAnswers) => string);
   onComplete: (request: StudentProfileRequest) => Promise<void>;
 };
 
@@ -28,6 +28,7 @@ export function OnboardingWizard({
   const question = onboardingQuestions[step];
   const Icon = question.icon;
   const lastStep = step === onboardingQuestions.length - 1;
+  const finalCompleteLabel = typeof completeLabel === "function" ? completeLabel(answers) : completeLabel;
   const selectedWeakSkills = useMemo(() => {
     const labels = question.id === "weakSkills" ? question.options : onboardingQuestions[5].options;
     return answers.weakSkills.map((skill) => labels.find((option) => option.value === skill)?.label ?? skill);
@@ -121,7 +122,7 @@ export function OnboardingWizard({
           </IconTextButton>
           <PrimaryButton type="button" disabled={saving} onClick={next}>
             {saving ? <Loader2 className="spin" size={18} /> : <ArrowRight size={18} />}
-            {lastStep ? completeLabel : "Tiếp tục"}
+            {lastStep ? finalCompleteLabel : "Tiếp tục"}
           </PrimaryButton>
         </div>
       </Panel>

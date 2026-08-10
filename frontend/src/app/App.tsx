@@ -14,6 +14,7 @@ import { OnboardingPage } from "../pages/learner/OnboardingPage";
 import { StudyPage } from "../pages/learner/StudyPage";
 import { LandingPage } from "../pages/public/LandingPage";
 import { PreAuthOnboardingPage } from "../pages/public/PreAuthOnboardingPage";
+import { GuestStudyPage } from "../pages/public/GuestStudyPage";
 import { Headbar } from "../shared/components";
 
 export default function App() {
@@ -25,6 +26,7 @@ export default function App() {
           <Route path="/login" element={<AuthPage />} />
           <Route path="/auth/callback" element={<AuthCallbackPage />} />
           <Route path="/onboarding" element={<PreAuthOnboardingPage />} />
+          <Route path="/guest/study" element={<GuestStudyPage />} />
           <Route index element={<LandingPage />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/learner" element={<LearnerLayout />}>

@@ -58,6 +58,8 @@ export type StudyPathwayIntro = {
 };
 
 export const passThreshold = 85;
+export const chapterAssessmentPassThreshold = 85;
+export const chapterAssessmentQuestionCount = 20;
 
 function makeQuestion(
   id: string,
@@ -685,6 +687,33 @@ export function buildStudyLessons(profile?: StudyProfile | null): StudyLesson[] 
 
 export function flattenStudyChapters(chapters: StudyChapter[]): StudyLesson[] {
   return chapters.flatMap((chapter) => chapter.lessons);
+}
+
+export function buildChapterAssessmentQuestions(
+  chapter: StudyChapter,
+  questionCount = chapterAssessmentQuestionCount
+): StudyQuestion[] {
+  const sourceQuestions = chapter.lessons.flatMap((lesson) =>
+    lesson.questions.map((question) => ({ lesson, question }))
+  );
+
+  if (!sourceQuestions.length) {
+    return [];
+  }
+
+  return Array.from({ length: questionCount }, (_, index) => {
+    const source = sourceQuestions[index % sourceQuestions.length];
+    const round = Math.floor(index / sourceQuestions.length);
+    const lessonTitle = cleanLessonTitle(source.lesson.title);
+    return {
+      ...source.question,
+      id: `${chapter.id}-assessment-${index + 1}-${source.question.id}`,
+      prompt:
+        round === 0
+          ? `${lessonTitle}: ${source.question.prompt}`
+          : `Ôn lại ${lessonTitle} (${round + 1}): ${source.question.prompt}`
+    };
+  });
 }
 
 export function studyPathwayIntro(profile?: StudyProfile | null): StudyPathwayIntro {

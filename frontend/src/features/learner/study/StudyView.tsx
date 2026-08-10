@@ -15,6 +15,7 @@ import {
   Square,
   Target,
   Trophy,
+  UserPlus,
   Volume2
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -24,10 +25,14 @@ import { apiFormRequest, apiRequest, ApiError } from "../../../shared/api";
 import { IconTextButton, LoadingPanel, Panel, PrimaryButton, TopicChip } from "../../../shared/components";
 import { displayLearningLevel } from "../../../shared/levels";
 import type { ChatResponse, PronunciationScoreResponse, StudentProfileResponse, StudyFeedbackRequest, StudyLessonAttemptResponse } from "../../../shared/models";
+import { readOnboardingDraft } from "../../../shared/onboardingDraft";
 import { PilotSurveyPrompt } from "../feedback/PilotSurveyPrompt";
 import { StudyFeedbackPrompt } from "../feedback/StudyFeedbackPrompt";
 import {
+  buildChapterAssessmentQuestions,
   buildStudyChapters,
+  chapterAssessmentPassThreshold,
+  chapterAssessmentQuestionCount,
   flattenStudyChapters,
   passThreshold,
   studyPathwayIntro,
@@ -39,7 +44,7 @@ import {
   type StudyQuestion
 } from "./studyPath";
 
-type LessonPhase = "learn" | "flashcards" | "quiz" | "review" | "result";
+type LessonPhase = "learn" | "flashcards" | "quiz" | "review" | "result" | "chapterExam" | "chapterResult";
 type AdaptivePace = "support" | "steady" | "fast";
 
 type LessonProgress = {
@@ -60,6 +65,16 @@ type LessonProgress = {
 };
 
 type StudyProgress = Record<string, LessonProgress>;
+
+type ChapterAssessmentProgress = {
+  bestScore: number;
+  passed: boolean;
+  attempts: number;
+  lastScore?: number;
+  completedAt?: string;
+};
+
+type ChapterAssessmentProgressMap = Record<string, ChapterAssessmentProgress>;
 
 type AdaptiveState = {
   pace: AdaptivePace;
@@ -84,6 +99,8 @@ type TutorNudgeDetail = {
   actionLabel: string;
   contextTopic: string;
 };
+
+const guestTrialLessonLimit = 3;
 
 const lessonPhaseSteps: Array<{ phase: Exclude<LessonPhase, "result">; label: string; hint: string }> = [
   { phase: "learn", label: "Học", hint: "Mẫu câu" },
@@ -126,17 +143,26 @@ const kanaOverviewRows = [
   }
 ];
 
-export function StudyView() {
+export function StudyView({ guestMode = false }: { guestMode?: boolean } = {}) {
   const navigate = useNavigate();
   const { accessToken, user } = useAuth();
+  const guestDraft = useMemo(() => (guestMode ? readOnboardingDraft() : null), [guestMode]);
+  const isGuestTrial = guestMode && !accessToken;
   const [profile, setProfile] = useState<StudyProfile | null>(null);
   const [loadingProfile, setLoadingProfile] = useState(true);
   const chapters = useMemo(() => buildStudyChapters(profile), [profile]);
   const lessons = useMemo(() => flattenStudyChapters(chapters), [chapters]);
   const intro = useMemo(() => studyPathwayIntro(profile), [profile]);
-  const progressKey = useMemo(() => studyStorageKey(user?.id, profile), [profile, user?.id]);
+  const progressKey = useMemo(() => studyStorageKey(isGuestTrial ? undefined : user?.id, profile), [isGuestTrial, profile, user?.id]);
+  const chapterAssessmentKey = useMemo(() => chapterAssessmentStorageKey(progressKey), [progressKey]);
   const [progress, setProgress] = useState<StudyProgress>(() => readProgress("vaja.studyPathProgress.default"));
-  const firstOpenLesson = useMemo(() => firstUnlockedLesson(progress, lessons), [lessons, progress]);
+  const [chapterAssessments, setChapterAssessments] = useState<ChapterAssessmentProgressMap>(() =>
+    readChapterAssessmentProgress("vaja.chapterAssessmentProgress.default")
+  );
+  const firstOpenLesson = useMemo(
+    () => firstUnlockedLesson(progress, lessons, chapters, chapterAssessments, isGuestTrial),
+    [chapterAssessments, chapters, isGuestTrial, lessons, progress]
+  );
   const [activeLessonId, setActiveLessonId] = useState(firstOpenLesson.id);
   const [phase, setPhase] = useState<LessonPhase>("learn");
   const [cardIndex, setCardIndex] = useState(0);
@@ -150,8 +176,26 @@ export function StudyView() {
   const [activeSupportQuestionId, setActiveSupportQuestionId] = useState<string | null>(null);
   const [activeAttemptId, setActiveAttemptId] = useState<string | null>(null);
   const [flashcardAudioMessage, setFlashcardAudioMessage] = useState("");
+  const [chapterAnswers, setChapterAnswers] = useState<Record<string, string>>({});
+  const [chapterSubmittedAnswers, setChapterSubmittedAnswers] = useState<Record<string, string>>({});
+  const [chapterLastScore, setChapterLastScore] = useState<number | null>(null);
 
   useEffect(() => {
+    if (guestMode && accessToken) {
+      navigate("/learner/study", { replace: true });
+      return;
+    }
+
+    if (isGuestTrial) {
+      if (!isZeroBeginnerProfile(guestDraft)) {
+        navigate("/onboarding", { replace: true });
+        return;
+      }
+      setProfile(guestDraft);
+      setLoadingProfile(false);
+      return;
+    }
+
     if (!accessToken) {
       setLoadingProfile(false);
       return;
@@ -179,12 +223,23 @@ export function StudyView() {
     return () => {
       active = false;
     };
-  }, [accessToken]);
+  }, [accessToken, guestDraft, guestMode, isGuestTrial, navigate]);
 
   useEffect(() => {
     let active = true;
-    const nextProgress = readProgress(progressKey);
-    applyLoadedStudyProgress(nextProgress);
+    const savedProgress = readProgress(progressKey);
+    const savedChapterAssessments = readChapterAssessmentProgress(chapterAssessmentKey);
+    const guestProgress = !isGuestTrial && accessToken && isZeroBeginnerProfile(profile)
+      ? readProgress(studyStorageKey(undefined, profile))
+      : {};
+    const guestChapterAssessments = !isGuestTrial && accessToken && isZeroBeginnerProfile(profile)
+      ? readChapterAssessmentProgress(chapterAssessmentStorageKey(studyStorageKey(undefined, profile)))
+      : {};
+    const nextProgress = Object.keys(savedProgress).length ? savedProgress : guestProgress;
+    const nextChapterAssessments = Object.keys(savedChapterAssessments).length
+      ? savedChapterAssessments
+      : guestChapterAssessments;
+    applyLoadedStudyProgress(nextProgress, nextChapterAssessments);
 
     if (accessToken) {
       apiRequest<StudyLessonAttemptResponse[]>("/personalization/me/study-attempts?limit=200", { token: accessToken })
@@ -193,7 +248,7 @@ export function StudyView() {
             return;
           }
           const restoredProgress = mergeStudyAttemptProgress(nextProgress, attempts, lessons);
-          applyLoadedStudyProgress(restoredProgress);
+          applyLoadedStudyProgress(restoredProgress, nextChapterAssessments);
           writeProgress(progressKey, restoredProgress);
         })
         .catch(() => {
@@ -201,10 +256,27 @@ export function StudyView() {
         });
     }
 
-    function applyLoadedStudyProgress(nextLoadedProgress: StudyProgress) {
+    function applyLoadedStudyProgress(
+      nextLoadedProgress: StudyProgress,
+      nextLoadedChapterAssessments: ChapterAssessmentProgressMap
+    ) {
       setProgress(nextLoadedProgress);
-      setActiveLessonId(firstUnlockedLesson(nextLoadedProgress, lessons).id);
-      setPhase("learn");
+      setChapterAssessments(nextLoadedChapterAssessments);
+      const openLesson = firstUnlockedLesson(
+        nextLoadedProgress,
+        lessons,
+        chapters,
+        nextLoadedChapterAssessments,
+        isGuestTrial
+      );
+      setActiveLessonId(openLesson.id);
+      setPhase(
+        isGuestTrial && guestLessonLimitReached(nextLoadedProgress, lessons)
+          ? "result"
+          : findPendingChapterGate(nextLoadedProgress, chapters, nextLoadedChapterAssessments, isGuestTrial)
+            ? "chapterExam"
+            : "learn"
+      );
       setCardIndex(0);
       setFlipped(false);
       setAnswers({});
@@ -212,23 +284,30 @@ export function StudyView() {
       setActiveSupportQuestionId(null);
       setActiveAttemptId(null);
       setFlashcardAudioMessage("");
+      setChapterAnswers({});
+      setChapterSubmittedAnswers({});
+      setChapterLastScore(null);
     }
 
     return () => {
       active = false;
     };
-  }, [accessToken, lessons, progressKey]);
+  }, [accessToken, chapterAssessmentKey, chapters, isGuestTrial, lessons, profile, progressKey]);
 
   useEffect(() => {
     writeProgress(progressKey, progress);
   }, [progress, progressKey]);
+
+  useEffect(() => {
+    writeChapterAssessmentProgress(chapterAssessmentKey, chapterAssessments);
+  }, [chapterAssessmentKey, chapterAssessments]);
 
   const activeIndex = lessons.findIndex((item) => item.id === activeLessonId);
   const lesson = lessons[activeIndex] ?? lessons[0];
   const lessonProgress = progress[lesson.id];
   const currentChapter = findChapterForLesson(chapters, lesson.id) ?? chapters[0];
   const currentChapterIndex = chapters.findIndex((chapter) => chapter.id === currentChapter.id);
-  const unlocked = isLessonUnlocked(activeIndex, progress, lessons);
+  const unlocked = isLessonUnlocked(activeIndex, progress, lessons, chapters, chapterAssessments, isGuestTrial);
   const answeredCount = lesson.questions.filter((question) => answers[question.id]).length;
   const currentCard = lesson.flashcards[cardIndex] ?? lesson.flashcards[0];
   const currentScore = lastScore ?? lessonProgress?.bestScore ?? 0;
@@ -243,11 +322,30 @@ export function StudyView() {
   );
   const nextLesson = lessons[activeIndex + 1] ?? null;
   const nextChapter = nextLesson ? findChapterForLesson(chapters, nextLesson.id) : null;
+  const currentChapterAssessment = chapterAssessments[currentChapter.id];
+  const currentChapterComplete = currentChapter.lessons.every((item) => progress[item.id]?.passed);
+  const currentChapterGatePending = Boolean(
+    currentChapterComplete &&
+    nextChapter &&
+    nextChapter.id !== currentChapter.id &&
+    !currentChapterAssessment?.passed
+  );
+  const guestRegistrationGateReached = Boolean(isGuestTrial && guestLessonLimitReached(progress, lessons));
+  const chapterAssessmentQuestions = useMemo(
+    () => buildChapterAssessmentQuestions(currentChapter, chapterAssessmentQuestionCount),
+    [currentChapter]
+  );
+  const chapterAnsweredCount = chapterAssessmentQuestions.filter((question) => chapterAnswers[question.id]).length;
+  const chapterSubmitted = Object.keys(chapterSubmittedAnswers).length ? chapterSubmittedAnswers : chapterAnswers;
+  const chapterMissedQuestions = useMemo(
+    () => chapterAssessmentQuestions.filter((question) => chapterSubmitted[question.id] !== question.answer),
+    [chapterAssessmentQuestions, chapterSubmitted]
+  );
+  const chapterScore = chapterLastScore ?? currentChapterAssessment?.bestScore ?? 0;
   const adaptiveState = useMemo(
     () => getAdaptiveState(progress, lesson, lessons, profile),
     [lesson, lessons, profile, progress]
   );
-  const currentChapterComplete = currentChapter.lessons.every((item) => progress[item.id]?.passed);
   const activeQuizQuestion = useMemo(
     () =>
       lesson.questions.find((question) => question.id === activeSupportQuestionId) ??
@@ -314,7 +412,7 @@ export function StudyView() {
 
   function selectLesson(nextLessonId: string) {
     const nextIndex = lessons.findIndex((item) => item.id === nextLessonId);
-    if (!isLessonUnlocked(nextIndex, progress, lessons)) {
+    if (!isLessonUnlocked(nextIndex, progress, lessons, chapters, chapterAssessments, isGuestTrial)) {
       return;
     }
     setActiveLessonId(nextLessonId);
@@ -334,6 +432,9 @@ export function StudyView() {
     setActiveSupportQuestionId(null);
     setActiveAttemptId(null);
     setFlashcardAudioMessage("");
+    setChapterAnswers({});
+    setChapterSubmittedAnswers({});
+    setChapterLastScore(null);
   }
 
   function startFlashcards() {
@@ -390,6 +491,55 @@ export function StudyView() {
       };
     });
     setPhase("result");
+  }
+
+  function startChapterAssessment() {
+    setPhase("chapterExam");
+    setChapterAnswers({});
+    setChapterSubmittedAnswers({});
+    setChapterLastScore(null);
+    setTutorInsight(null);
+    setTutorInsightError(null);
+  }
+
+  function chooseChapterAnswer(questionId: string, option: string) {
+    setChapterAnswers((current) => ({ ...current, [questionId]: option }));
+  }
+
+  function submitChapterAssessment() {
+    if (!chapterAssessmentQuestions.length || chapterAnsweredCount < chapterAssessmentQuestions.length) {
+      return;
+    }
+
+    const correct = chapterAssessmentQuestions.filter((question) => chapterAnswers[question.id] === question.answer).length;
+    const score = Math.round((correct / chapterAssessmentQuestions.length) * 100);
+    setChapterLastScore(score);
+    setChapterSubmittedAnswers(chapterAnswers);
+    if (accessToken) {
+      void recordChapterAssessmentSignals(accessToken, currentChapter, chapterAssessmentQuestions, chapterAnswers);
+    }
+    setChapterAssessments((current) => {
+      const previous = current[currentChapter.id];
+      return {
+        ...current,
+        [currentChapter.id]: {
+          bestScore: Math.max(previous?.bestScore ?? 0, score),
+          passed: Boolean(previous?.passed || score >= chapterAssessmentPassThreshold),
+          attempts: (previous?.attempts ?? 0) + 1,
+          lastScore: score,
+          completedAt: score >= chapterAssessmentPassThreshold ? new Date().toISOString() : previous?.completedAt
+        }
+      };
+    });
+    setPhase("chapterResult");
+  }
+
+  function continueAfterChapterAssessment() {
+    if (!nextLesson || chapterScore < chapterAssessmentPassThreshold) {
+      return;
+    }
+    setActiveLessonId(nextLesson.id);
+    resetLessonState("learn");
   }
 
   async function startCurrentLessonAttempt(): Promise<string | null> {
@@ -500,12 +650,21 @@ export function StudyView() {
     if (!nextLesson) {
       return;
     }
+    if (guestRegistrationGateReached) {
+      navigate("/login?mode=register&onboarding=1");
+      return;
+    }
+    if (nextChapter && nextChapter.id !== currentChapter.id && !currentChapterAssessment?.passed) {
+      startChapterAssessment();
+      return;
+    }
     setActiveLessonId(nextLesson.id);
     resetLessonState("learn");
   }
 
   function resetPath() {
     setProgress({});
+    setChapterAssessments({});
     setActiveLessonId(lessons[0].id);
     resetLessonState("learn");
   }
@@ -517,7 +676,8 @@ export function StudyView() {
           <p className="eyebrow">Pathway học chính · {intro.label}</p>
           <h2>{intro.title}</h2>
           <p>
-            {intro.description} Mỗi chương có 3 bài. Mỗi bài gồm học ngắn, thẻ nhớ và quiz cuối bài. Đạt từ {passThreshold}% trở lên thì bài kế tiếp mới mở.
+            {intro.description} Mỗi chương có 3 bài. Mỗi bài gồm học ngắn, thẻ nhớ và quiz cuối bài. Đạt từ {passThreshold}% thì mở bài sau;
+            hết chương cần qua bài test {chapterAssessmentQuestionCount} câu để sang chương mới.
           </p>
           <div className="study-profile-chips">
             <TopicChip>{displayLearningLevel(profile?.currentLevel)} → {displayLearningLevel(profile?.targetLevel, "N4")}</TopicChip>
@@ -530,25 +690,43 @@ export function StudyView() {
           <Trophy size={24} />
           <span>Tiến độ</span>
           <strong>{completedLessons(progress, lessons)}/{lessons.length}</strong>
-          <small>{completedChapters(progress, chapters)}/{chapters.length} chương</small>
+          <small>{completedChapters(progress, chapters, chapterAssessments)}/{chapters.length} chương</small>
         </div>
       </section>
+
+      {isGuestTrial && (
+        <div className="study-guest-banner">
+          <BookOpenCheck size={20} />
+          <div>
+            <strong>Đang học thử không đăng nhập</strong>
+            <span>Bạn học được 3 bài đầu. Sau đó hãy tạo tài khoản mới để lưu tiến độ và học tiếp pathway.</span>
+          </div>
+          <button type="button" onClick={() => navigate("/login?mode=register&onboarding=1")}>
+            Tạo tài khoản
+          </button>
+        </div>
+      )}
 
       <div className="study-path-layout">
         <Panel className="study-lesson-rail" eyebrow="Pathway" title="Đường học theo chương" data-tour="study-roadmap">
           <div className="study-lesson-list">
             {chapters.map((chapter, chapterIndex) => {
               const chapterDone = chapter.lessons.filter((item) => progress[item.id]?.passed).length;
+              const chapterAssessment = chapterAssessments[chapter.id];
+              const hasNextChapter = chapterIndex < chapters.length - 1;
+              const chapterReadyForAssessment = chapterDone === chapter.lessons.length && hasNextChapter;
               return (
                 <div className="study-chapter-group" key={chapter.id}>
                   <div className={chapter.id === currentChapter.id ? "study-chapter-heading active" : "study-chapter-heading"}>
                     <span>Chương {chapterIndex + 1}</span>
                     <strong>{cleanChapterDisplay(chapter.title)}</strong>
-                    <small>{chapterDone}/{chapter.lessons.length} bài · {chapter.focus}</small>
+                    <small>
+                      {chapterDone}/{chapter.lessons.length} bài · Test chương {chapterAssessment?.passed ? "đã qua" : chapterReadyForAssessment ? "đang chờ" : "chưa mở"}
+                    </small>
                   </div>
                   {chapter.lessons.map((item) => {
                     const itemIndex = lessons.findIndex((candidate) => candidate.id === item.id);
-                    const itemUnlocked = isLessonUnlocked(itemIndex, progress, lessons);
+                    const itemUnlocked = isLessonUnlocked(itemIndex, progress, lessons, chapters, chapterAssessments, isGuestTrial);
                     const itemProgress = progress[item.id];
                     const itemStatus = lessonStatus(itemProgress, itemUnlocked, item.id === lesson.id);
                     return (
@@ -587,14 +765,16 @@ export function StudyView() {
             <LockedLesson previous={lessons[activeIndex - 1]} />
           ) : (
             <>
-              <div className="study-phase-track" aria-label="Luồng học trong bài">
-                {lessonPhaseSteps.map((step) => (
-                  <div className={`study-phase-node ${phaseStepState(step.phase, phase)}`} key={step.phase}>
-                    <span>{step.label}</span>
-                    <small>{step.hint}</small>
-                  </div>
-                ))}
-              </div>
+              {!isChapterAssessmentPhase(phase) && (
+                <div className="study-phase-track" aria-label="Luồng học trong bài">
+                  {lessonPhaseSteps.map((step) => (
+                    <div className={`study-phase-node ${phaseStepState(step.phase, phase)}`} key={step.phase}>
+                      <span>{step.label}</span>
+                      <small>{step.hint}</small>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               {phase === "learn" && (
                 <div className="study-learn-step">
@@ -775,12 +955,147 @@ export function StudyView() {
                 </div>
               )}
 
+              {phase === "chapterExam" && (
+                <div className="chapter-assessment-step">
+                  <div className="chapter-assessment-heading">
+                    <ClipboardCheck size={28} />
+                    <div>
+                      <TopicChip>Test qua chương</TopicChip>
+                      <h3>{cleanChapterDisplay(currentChapter.title)}</h3>
+                      <p>
+                        Bài test này gom kiến thức từ {currentChapter.lessons.length} bài trong chương. Trả lời đủ {chapterAssessmentQuestions.length} câu và đạt từ {chapterAssessmentPassThreshold}% để mở chương sau.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="study-step-meter">
+                    <TopicChip>{chapterAnsweredCount}/{chapterAssessmentQuestions.length} câu đã chọn</TopicChip>
+                    <TopicChip>Điểm qua chương: {chapterAssessmentPassThreshold}%</TopicChip>
+                    <TopicChip>Lần làm: {(currentChapterAssessment?.attempts ?? 0) + 1}</TopicChip>
+                  </div>
+                  <div className="chapter-question-list">
+                    {chapterAssessmentQuestions.map((question, index) => (
+                      <fieldset className="study-question chapter-question" key={question.id}>
+                        <legend>{index + 1}. {question.prompt}</legend>
+                        <div className="study-option-grid">
+                          {question.options.map((option) => (
+                            <button
+                              className={chapterAnswers[question.id] === option ? "study-option selected" : "study-option"}
+                              key={option}
+                              type="button"
+                              onClick={() => chooseChapterAnswer(question.id, option)}
+                            >
+                              {option}
+                            </button>
+                          ))}
+                        </div>
+                      </fieldset>
+                    ))}
+                  </div>
+                  <div className="study-action-row">
+                    <PrimaryButton
+                      type="button"
+                      disabled={chapterAnsweredCount < chapterAssessmentQuestions.length}
+                      onClick={submitChapterAssessment}
+                    >
+                      <ClipboardCheck size={18} />
+                      Nộp test chương
+                    </PrimaryButton>
+                    <IconTextButton type="button" variant="ghost" onClick={() => resetLessonState("result")}>
+                      Quay lại kết quả bài
+                    </IconTextButton>
+                  </div>
+                </div>
+              )}
+
+              {phase === "chapterResult" && (
+                <div className={chapterScore >= chapterAssessmentPassThreshold ? "study-result passed" : "study-result retry"}>
+                  <Trophy size={36} />
+                  <h3>{chapterScore >= chapterAssessmentPassThreshold ? "Qua chương rồi." : "Chưa qua test chương."}</h3>
+                  <strong>{chapterScore}%</strong>
+                  <p>
+                    {chapterScore >= chapterAssessmentPassThreshold
+                      ? "Chương tiếp theo đã mở. VAJA sẽ dùng kết quả này để giữ nhịp học phù hợp hơn."
+                      : "VAJA giữ bạn ở chương này thêm một nhịp. Xem lại các câu sai rồi làm lại test chương."}
+                  </p>
+                  <div className="study-mistake-plan compact">
+                    <Target size={22} />
+                    <div>
+                      <strong>{chapterMissedQuestions.length} câu cần xem lại</strong>
+                      <span>Đây là bài test lớn qua chương, nên câu sai sẽ được ưu tiên trong phần ôn tiếp theo.</span>
+                    </div>
+                  </div>
+                  <div className="study-answer-review">
+                    {chapterAssessmentQuestions.map((question) => {
+                      const selected = chapterSubmitted[question.id];
+                      const correct = selected === question.answer;
+                      return (
+                        <div className={correct ? "study-answer-row correct" : "study-answer-row wrong"} key={question.id}>
+                          {correct ? <CheckCircle2 size={16} /> : <CircleX size={16} />}
+                          <span>{question.explanation}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="study-action-row">
+                    {chapterScore >= chapterAssessmentPassThreshold && nextLesson ? (
+                      <PrimaryButton type="button" onClick={continueAfterChapterAssessment}>
+                        Mở chương tiếp theo
+                        <ArrowRight size={18} />
+                      </PrimaryButton>
+                    ) : (
+                      <PrimaryButton type="button" onClick={startChapterAssessment}>
+                        <RotateCcw size={18} />
+                        Làm lại test chương
+                      </PrimaryButton>
+                    )}
+                    <IconTextButton type="button" variant="ghost" onClick={() => resetLessonState("learn")}>
+                      Ôn lại bài trong chương
+                    </IconTextButton>
+                  </div>
+                  {accessToken && (
+                    <StudyFeedbackPrompt
+                      token={accessToken}
+                      feedbackKey={`chapter.${currentChapter.id}.${currentChapterAssessment?.attempts ?? 0}.${chapterScore}`}
+                      mode="study"
+                      title="Test chương này có vừa sức không?"
+                      description="Phản hồi này giúp VAJA biết nên giữ, giảm hay tăng nhịp ở chương sau."
+                      baseFeedback={{
+                        moment: "CHAPTER",
+                        contextType: "study_chapter_assessment",
+                        contextId: currentChapter.id,
+                        contextTitle: currentChapter.title
+                      }}
+                      defaultActionChoice={chapterScore >= chapterAssessmentPassThreshold ? "MOVE_ON" : "REVIEW_AGAIN"}
+                      defaultPaceChoice={adaptiveState.pace.toUpperCase()}
+                    />
+                  )}
+                </div>
+              )}
+
               {phase === "result" && (
                 <div className={currentScore >= passThreshold ? "study-result passed" : "study-result retry"}>
                   <Trophy size={36} />
                   <h3>{currentScore >= passThreshold ? "Qua bài rồi." : "Chưa qua bài này."}</h3>
                   <strong>{currentScore}%</strong>
-                  <p>{resultMessage(currentScore, nextLesson, nextChapter, currentChapter, adaptiveState)}</p>
+                  <p>{resultMessage(currentScore, nextLesson, nextChapter, currentChapter, adaptiveState, currentChapterGatePending, guestRegistrationGateReached)}</p>
+                  {currentScore >= passThreshold && currentChapterGatePending && !guestRegistrationGateReached && (
+                    <div className="study-mistake-plan compact">
+                      <ClipboardCheck size={22} />
+                      <div>
+                        <strong>Cần làm test chương trước khi qua chương mới</strong>
+                        <span>Test gồm {chapterAssessmentQuestions.length} câu, lấy từ 3 bài vừa học. Đạt từ {chapterAssessmentPassThreshold}% thì chương sau mới mở.</span>
+                      </div>
+                    </div>
+                  )}
+                  {currentScore >= passThreshold && guestRegistrationGateReached && (
+                    <div className="study-mistake-plan compact">
+                      <UserPlus size={22} />
+                      <div>
+                        <strong>Đã hết phần học thử</strong>
+                        <span>Bạn đã học xong 3 bài đầu. Tạo tài khoản mới để lưu tiến độ và học tiếp chương sau.</span>
+                      </div>
+                    </div>
+                  )}
                   {currentScore < passThreshold && (
                     <div className="study-mistake-plan compact">
                       <Target size={22} />
@@ -805,7 +1120,13 @@ export function StudyView() {
                   <div className="study-action-row">
                     {currentScore >= passThreshold && nextLesson ? (
                       <PrimaryButton type="button" onClick={goNextLesson}>
-                        {nextChapter && nextChapter.id !== currentChapter.id ? "Sang chương tiếp theo" : "Học bài tiếp theo"}
+                        {guestRegistrationGateReached
+                          ? "Tạo tài khoản để học tiếp"
+                          : nextChapter && nextChapter.id !== currentChapter.id && !currentChapterAssessment?.passed
+                            ? "Làm test chương"
+                            : nextChapter && nextChapter.id !== currentChapter.id
+                              ? "Sang chương tiếp theo"
+                              : "Học bài tiếp theo"}
                         <ArrowRight size={18} />
                       </PrimaryButton>
                     ) : (
@@ -872,18 +1193,30 @@ export function StudyView() {
           </Panel>
 
           <Panel className="study-support-panel" eyebrow="Công cụ phụ" title="Khi bị kẹt">
-            <button type="button" onClick={() => navigate("/learner/knowledge")}>
-              <BookOpenCheck size={18} />
-              Tra cứu khi bí
-            </button>
-            <button type="button" onClick={() => navigate("/learner/flashcards")}>
-              <Layers3 size={18} />
-              Xem kho thẻ riêng
-            </button>
-            <button type="button" onClick={resetPath}>
-              <RotateCcw size={18} />
-              Làm lại pathway
-            </button>
+            {isGuestTrial ? (
+              <>
+                <p className="muted-copy">Học thử chỉ mở luồng bài học chính. Tạo tài khoản để dùng tra cứu, thẻ nhớ riêng và lưu pathway dài hạn.</p>
+                <button type="button" onClick={() => navigate("/login?mode=register&onboarding=1")}>
+                  <UserPlus size={18} />
+                  Tạo tài khoản để mở đủ công cụ
+                </button>
+              </>
+            ) : (
+              <>
+                <button type="button" onClick={() => navigate("/learner/knowledge")}>
+                  <BookOpenCheck size={18} />
+                  Tra cứu khi bí
+                </button>
+                <button type="button" onClick={() => navigate("/learner/flashcards")}>
+                  <Layers3 size={18} />
+                  Xem kho thẻ riêng
+                </button>
+                <button type="button" onClick={resetPath}>
+                  <RotateCcw size={18} />
+                  Làm lại pathway
+                </button>
+              </>
+            )}
           </Panel>
         </div>
       </div>
@@ -897,7 +1230,9 @@ function LessonPhaseBadge({ phase }: { phase: LessonPhase }) {
     flashcards: "Thẻ nhớ",
     quiz: "Quiz",
     review: "Ôn sai",
-    result: "Kết quả"
+    result: "Kết quả",
+    chapterExam: "Test chương",
+    chapterResult: "Kết quả chương"
   };
   return <TopicChip>{labels[phase]}</TopicChip>;
 }
@@ -1402,13 +1737,21 @@ function resultMessage(
   nextLesson: StudyLesson | null,
   nextChapter: StudyChapter | null,
   currentChapter: StudyChapter,
-  adaptiveState: AdaptiveState
+  adaptiveState: AdaptiveState,
+  chapterGatePending = false,
+  guestGateReached = false
 ): string {
   if (score < passThreshold) {
     return "VAJA sẽ giữ bạn ở bài này, giảm nhịp và ưu tiên ôn lại thẻ trước khi làm quiz lại.";
   }
   if (!nextLesson) {
     return "Bạn đã hoàn thành pathway hiện tại. VAJA sẽ chuyển trọng tâm sang ôn tập và đề tổng hợp.";
+  }
+  if (guestGateReached) {
+    return "Bạn đã học xong 3 bài thử. Tạo tài khoản mới để lưu tiến độ và tiếp tục pathway.";
+  }
+  if (chapterGatePending) {
+    return "Bạn đã hoàn thành các bài trong chương. Cần làm test chương trước khi mở chương tiếp theo.";
   }
   if (nextChapter && nextChapter.id !== currentChapter.id) {
     return `Chương kế tiếp đã mở. ${adaptiveState.pace === "fast" ? "Bạn đang học tốt nên có thể đi tiếp ngay." : "Bạn có thể nghỉ một chút rồi sang chương mới."}`;
@@ -1498,6 +1841,30 @@ async function recordStudyQuizSignals(
   );
 }
 
+async function recordChapterAssessmentSignals(
+  token: string,
+  chapter: StudyChapter,
+  questions: StudyQuestion[],
+  submittedAnswers: Record<string, string>
+) {
+  await Promise.allSettled(
+    questions.map((question) =>
+      apiRequest("/personalization/me/progress/signals", {
+        method: "POST",
+        token,
+        body: {
+          knowledgeType: knowledgeTypeForChapter(chapter),
+          knowledgeId: `${chapter.id}:assessment:${question.id}`,
+          title: truncateTitle(`${cleanChapterDisplay(chapter.title)}: ${question.prompt}`),
+          level: chapter.level,
+          source: "CHAPTER_ASSESSMENT",
+          result: submittedAnswers[question.id] === question.answer ? "CORRECT" : "WRONG"
+        }
+      })
+    )
+  );
+}
+
 function applyFeedbackToProgress(
   progress: StudyProgress,
   lesson: StudyLesson,
@@ -1549,6 +1916,20 @@ function knowledgeTypeForLesson(lesson: StudyLesson): string {
     return "Kanji";
   }
   if (searchable.includes("từ") || searchable.includes("vocab") || searchable.includes("word")) {
+    return "Vocabulary";
+  }
+  return "GrammarPoint";
+}
+
+function knowledgeTypeForChapter(chapter: StudyChapter): string {
+  const searchable = `${chapter.focus} ${chapter.title}`.toLowerCase();
+  if (searchable.includes("kana") || searchable.includes("hiragana") || searchable.includes("katakana") || searchable.includes("bảng")) {
+    return "Kana";
+  }
+  if (searchable.includes("kanji") || searchable.includes("漢字")) {
+    return "Kanji";
+  }
+  if (searchable.includes("từ") || searchable.includes("vocab")) {
     return "Vocabulary";
   }
   return "GrammarPoint";
@@ -1663,6 +2044,10 @@ function studyStorageKey(userId?: string, profile?: StudyProfile | null): string
   return `vaja.studyPathProgress.${userId ?? "anonymous"}.${pathway}.${currentLevel}.${targetLevel}.${weakSkills}`;
 }
 
+function chapterAssessmentStorageKey(progressKey: string): string {
+  return `${progressKey}.chapterAssessments`;
+}
+
 function readProgress(storageKey: string): StudyProgress {
   try {
     const raw = localStorage.getItem(storageKey);
@@ -1674,6 +2059,20 @@ function readProgress(storageKey: string): StudyProgress {
 }
 
 function writeProgress(storageKey: string, progress: StudyProgress) {
+  localStorage.setItem(storageKey, JSON.stringify(progress));
+}
+
+function readChapterAssessmentProgress(storageKey: string): ChapterAssessmentProgressMap {
+  try {
+    const raw = localStorage.getItem(storageKey);
+    return raw ? (JSON.parse(raw) as ChapterAssessmentProgressMap) : {};
+  } catch {
+    localStorage.removeItem(storageKey);
+    return {};
+  }
+}
+
+function writeChapterAssessmentProgress(storageKey: string, progress: ChapterAssessmentProgressMap) {
   localStorage.setItem(storageKey, JSON.stringify(progress));
 }
 
@@ -1735,26 +2134,96 @@ function latestIsoDate(first?: string, second?: string): string | undefined {
   return Date.parse(second) > Date.parse(first) ? second : first;
 }
 
-function isLessonUnlocked(index: number, progress: StudyProgress, lessons: StudyLesson[]): boolean {
+function isLessonUnlocked(
+  index: number,
+  progress: StudyProgress,
+  lessons: StudyLesson[],
+  chapters: StudyChapter[],
+  chapterAssessments: ChapterAssessmentProgressMap,
+  guestTrial = false
+): boolean {
   if (index <= 0) {
     return true;
   }
-  return Boolean(progress[lessons[index - 1]?.id]?.passed);
+  if (guestTrial && index >= guestTrialLessonLimit) {
+    return false;
+  }
+  const previousLesson = lessons[index - 1];
+  const nextLesson = lessons[index];
+  if (!previousLesson || !nextLesson || !progress[previousLesson.id]?.passed) {
+    return false;
+  }
+  const previousChapter = findChapterForLesson(chapters, previousLesson.id);
+  const nextChapter = findChapterForLesson(chapters, nextLesson.id);
+  if (previousChapter && nextChapter && previousChapter.id !== nextChapter.id) {
+    return Boolean(chapterAssessments[previousChapter.id]?.passed);
+  }
+  return true;
 }
 
-function firstUnlockedLesson(progress: StudyProgress, lessons: StudyLesson[]): StudyLesson {
+function firstUnlockedLesson(
+  progress: StudyProgress,
+  lessons: StudyLesson[],
+  chapters: StudyChapter[],
+  chapterAssessments: ChapterAssessmentProgressMap,
+  guestTrial = false
+): StudyLesson {
+  if (guestTrial && guestLessonLimitReached(progress, lessons)) {
+    return lessons[Math.min(guestTrialLessonLimit - 1, lessons.length - 1)] ?? lessons[0];
+  }
+  const pendingGate = findPendingChapterGate(progress, chapters, chapterAssessments, guestTrial);
+  if (pendingGate) {
+    return pendingGate.lessons[pendingGate.lessons.length - 1] ?? lessons[0];
+  }
   return (
-    lessons.find((lesson, index) => isLessonUnlocked(index, progress, lessons) && !progress[lesson.id]?.passed) ??
-    lessons[lessons.length - 1]
+    lessons.find((lesson, index) => isLessonUnlocked(index, progress, lessons, chapters, chapterAssessments, guestTrial) && !progress[lesson.id]?.passed) ??
+    lessons.find((lesson, index) => isLessonUnlocked(index, progress, lessons, chapters, chapterAssessments, guestTrial)) ??
+    lessons[0]
   );
+}
+
+function findPendingChapterGate(
+  progress: StudyProgress,
+  chapters: StudyChapter[],
+  chapterAssessments: ChapterAssessmentProgressMap,
+  guestTrial = false
+): StudyChapter | null {
+  if (guestTrial) {
+    return null;
+  }
+  return chapters.find((chapter, index) =>
+    index < chapters.length - 1 &&
+    chapter.lessons.every((lesson) => progress[lesson.id]?.passed) &&
+    !chapterAssessments[chapter.id]?.passed
+  ) ?? null;
+}
+
+function isZeroBeginnerProfile(profile?: StudyProfile | null): boolean {
+  const currentLevel = (profile?.currentLevel ?? "").trim().toUpperCase();
+  return currentLevel === "ZERO" || currentLevel === "N0";
+}
+
+function isChapterAssessmentPhase(phase: LessonPhase): boolean {
+  return phase === "chapterExam" || phase === "chapterResult";
 }
 
 function completedLessons(progress: StudyProgress, lessons: StudyLesson[]): number {
   return lessons.filter((lesson) => progress[lesson.id]?.passed).length;
 }
 
-function completedChapters(progress: StudyProgress, chapters: StudyChapter[]): number {
-  return chapters.filter((chapter) => chapter.lessons.every((lesson) => progress[lesson.id]?.passed)).length;
+function guestLessonLimitReached(progress: StudyProgress, lessons: StudyLesson[]): boolean {
+  return completedLessons(progress, lessons) >= Math.min(guestTrialLessonLimit, lessons.length);
+}
+
+function completedChapters(
+  progress: StudyProgress,
+  chapters: StudyChapter[],
+  chapterAssessments: ChapterAssessmentProgressMap
+): number {
+  return chapters.filter((chapter, index) =>
+    chapter.lessons.every((lesson) => progress[lesson.id]?.passed) &&
+    (index === chapters.length - 1 || chapterAssessments[chapter.id]?.passed)
+  ).length;
 }
 
 function findChapterForLesson(chapters: StudyChapter[], lessonId: string): StudyChapter | null {
