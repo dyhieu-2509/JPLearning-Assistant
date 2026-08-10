@@ -14,7 +14,6 @@ import { useEffect, useRef, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../app/providers/AuthProvider";
 import { homePathForUser } from "../../../shared/auth";
-import { logoUrl } from "../../../shared/assets";
 import { ChoiceCard, IconTextButton, InfoCard, PrimaryButton, TopicChip } from "../../../shared/components";
 
 const productHighlights = [
@@ -39,13 +38,6 @@ const previewRows = [
   { label: "Bắt đầu", value: "8 câu hỏi", icon: <Sparkles size={18} /> },
   { label: "Trọng tâm JLPT", value: "N5-N4", icon: <ClipboardCheck size={18} /> },
   { label: "Gợi ý hôm nay", value: "Lộ trình", icon: <BarChart3 size={18} /> }
-];
-
-const lessonPath = [
-  { jp: "あ", vi: "Kana", state: "done" },
-  { jp: "こんにちは", vi: "Chào hỏi", state: "active" },
-  { jp: "です", vi: "Ngữ pháp", state: "locked" },
-  { jp: "日本", vi: "Kanji", state: "locked" }
 ];
 
 export function LandingView() {
@@ -80,7 +72,9 @@ export function LandingView() {
   return (
     <main className="landing-screen">
       <section className="landing-hero">
-        <img className="landing-hero-mark" src={logoUrl} alt="" aria-hidden="true" />
+        <div className="landing-hero-wordmark" aria-hidden="true">
+          VAJA
+        </div>
         <div className="landing-copy">
           <p className="eyebrow">VAJA 日本語</p>
           <h1>Học tiếng Nhật mỗi ngày bằng những bài nhỏ dễ theo.</h1>
@@ -117,25 +111,6 @@ export function LandingView() {
               <CheckCircle2 size={17} />
               Bảng học tập sẵn sàng
             </span>
-          </div>
-        </div>
-        <div className="landing-path-preview" aria-label="Lộ trình học mẫu">
-          <div className="path-preview-top">
-            <strong>今日のレッスン</strong>
-            <span>Chuỗi 5 ngày</span>
-          </div>
-          <div className="lesson-path">
-            {lessonPath.map((item, index) => (
-              <div className={`lesson-node ${item.state}`} key={item.jp}>
-                <span>{item.jp}</span>
-                <small>{item.vi}</small>
-                {index < lessonPath.length - 1 && <i aria-hidden="true" />}
-              </div>
-            ))}
-          </div>
-          <div className="path-xp-row">
-            <span>120 XP</span>
-            <span>目標 N4</span>
           </div>
         </div>
       </section>
@@ -177,7 +152,9 @@ export function LandingView() {
         </div>
         <div className="landing-product-preview" aria-label="Xem trước bảng học VAJA">
           <div className="preview-topbar">
-            <img src={logoUrl} alt="VAJA logo" />
+            <span className="preview-wordmark" aria-hidden="true">
+              VAJA
+            </span>
             <div>
               <strong>VAJA 学習スペース</strong>
               <span>Góc học tiếng Nhật của bạn</span>

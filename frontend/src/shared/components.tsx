@@ -1,11 +1,9 @@
 import { type HTMLAttributes, ReactNode } from "react";
-import { logoUrl } from "./assets";
 
 export function Headbar() {
   return (
     <header className="headbar">
       <a className="headbar-brand" href="/" aria-label="Trang chủ VAJA">
-        <img src={logoUrl} alt="VAJA logo" />
         <span>VAJA</span>
       </a>
       <nav className="headbar-nav" aria-label="Điều hướng chính">
