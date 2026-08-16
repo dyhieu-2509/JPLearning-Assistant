@@ -1,0 +1,1184 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VAJA Thesis Defense Slides</title>
+  <style>
+    :root {
+      --navy: #123047;
+      --blue: #2563eb;
+      --sky: #0ea5e9;
+      --mint: #1f9d73;
+      --green: #16a34a;
+      --amber: #f59e0b;
+      --rose: #e11d48;
+      --ink: #172033;
+      --muted: #64748b;
+      --line: #dbe5ef;
+      --soft: #f5f8fb;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #e5edf6;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    [data-document-role="page"] {
+      position: relative;
+      width: 1280px;
+      height: 720px;
+      margin: 0 auto 28px;
+      overflow: hidden;
+      background: var(--white);
+    }
+
+    .slide {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 24px;
+      padding: 54px 66px 44px;
+    }
+
+    .cover {
+      grid-template-rows: 1fr auto;
+      background:
+        linear-gradient(90deg, #ffffff 0%, #ffffff 56%, #eef7ff 56%, #eef7ff 100%);
+    }
+
+    .cover-mark {
+      position: absolute;
+      right: 82px;
+      top: 96px;
+      width: 315px;
+      height: 315px;
+      border: 2px solid rgba(37, 99, 235, 0.22);
+      border-radius: 50%;
+    }
+
+    .cover-mark::before,
+    .cover-mark::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+    }
+
+    .cover-mark::before {
+      left: 42px;
+      top: 42px;
+      width: 225px;
+      height: 225px;
+      border: 18px solid rgba(31, 157, 115, 0.18);
+    }
+
+    .cover-mark::after {
+      left: 105px;
+      top: 105px;
+      width: 105px;
+      height: 105px;
+      background: var(--blue);
+      box-shadow: 0 0 0 24px rgba(14, 165, 233, 0.12);
+    }
+
+    .jp {
+      position: absolute;
+      right: 142px;
+      top: 206px;
+      color: #ffffff;
+      font-size: 54px;
+      font-weight: 900;
+      letter-spacing: 0;
+      z-index: 2;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--mint);
+      font-size: 17px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 700px;
+      color: var(--navy);
+      font-size: 56px;
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      color: var(--navy);
+      font-size: 40px;
+      line-height: 1.16;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      color: var(--navy);
+      font-size: 24px;
+      line-height: 1.25;
+    }
+
+    .subtitle {
+      max-width: 720px;
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 23px;
+      line-height: 1.45;
+      font-weight: 700;
+    }
+
+    .meta-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      width: 720px;
+    }
+
+    .meta {
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .meta span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .meta strong {
+      display: block;
+      margin-top: 5px;
+      color: var(--navy);
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .header {
+      display: grid;
+      gap: 8px;
+      max-width: 920px;
+    }
+
+    .header p {
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.45;
+      font-weight: 700;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .defense-map {
+      gap: 18px;
+      padding-bottom: 54px;
+    }
+
+    .defense-map .card {
+      gap: 10px;
+      padding: 18px 20px;
+    }
+
+    .defense-map .card p {
+      line-height: 1.35;
+    }
+
+    .card {
+      display: grid;
+      align-content: start;
+      gap: 12px;
+      min-height: 118px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+    }
+
+    .card.white {
+      background: #ffffff;
+    }
+
+    .card strong {
+      color: var(--navy);
+      font-size: 24px;
+      line-height: 1.25;
+    }
+
+    .card p,
+    .card li {
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.45;
+      font-weight: 700;
+    }
+
+    .card ul {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .number {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      background: var(--blue);
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      min-height: 34px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: #e8f7f1;
+      color: var(--mint);
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 26px;
+      align-items: center;
+    }
+
+    .problem-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .problem-row {
+      display: grid;
+      grid-template-columns: 46px 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .problem-row span {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 8px;
+      background: #eef7ff;
+      color: var(--blue);
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .problem-row strong {
+      display: block;
+      color: var(--navy);
+      font-size: 22px;
+      line-height: 1.25;
+    }
+
+    .problem-row small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.35;
+      font-weight: 700;
+    }
+
+    .cycle {
+      position: relative;
+      width: 420px;
+      height: 420px;
+      margin-left: auto;
+      border: 2px solid rgba(37, 99, 235, 0.22);
+      border-radius: 50%;
+      background: #ffffff;
+    }
+
+    .cycle .node {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      width: 112px;
+      height: 112px;
+      border-radius: 50%;
+      background: #eef7ff;
+      color: var(--navy);
+      text-align: center;
+      font-size: 15px;
+      font-weight: 900;
+      line-height: 1.2;
+      border: 1px solid rgba(37, 99, 235, 0.24);
+    }
+
+    .cycle .n1 { left: 154px; top: -20px; }
+    .cycle .n2 { right: -20px; top: 154px; }
+    .cycle .n3 { left: 154px; bottom: -20px; }
+    .cycle .n4 { left: -20px; top: 154px; }
+
+    .cycle .center {
+      position: absolute;
+      left: 124px;
+      top: 124px;
+      display: grid;
+      place-items: center;
+      width: 172px;
+      height: 172px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #ffffff;
+      font-size: 29px;
+      font-weight: 900;
+    }
+
+    .rq-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .rq-card {
+      display: grid;
+      grid-template-columns: 74px 1fr;
+      gap: 14px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .rq-card b {
+      display: grid;
+      place-items: center;
+      height: 74px;
+      border-radius: 8px;
+      background: var(--navy);
+      color: #ffffff;
+      font-size: 22px;
+    }
+
+    .rq-card strong {
+      display: block;
+      color: var(--navy);
+      font-size: 21px;
+      line-height: 1.25;
+    }
+
+    .rq-card p {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.35;
+      font-weight: 700;
+    }
+
+    .architecture {
+      display: grid;
+      grid-template-columns: 1fr 82px 1.1fr 82px 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .layer {
+      display: grid;
+      gap: 12px;
+      min-height: 430px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .layer h3 {
+      font-size: 24px;
+    }
+
+    .layer .box {
+      padding: 13px;
+      border-radius: 8px;
+      background: var(--soft);
+      color: var(--navy);
+      font-size: 17px;
+      font-weight: 900;
+      line-height: 1.25;
+    }
+
+    .arrow {
+      height: 4px;
+      background: var(--sky);
+      position: relative;
+    }
+
+    .arrow::after {
+      content: "";
+      position: absolute;
+      right: -2px;
+      top: -7px;
+      width: 0;
+      height: 0;
+      border-left: 16px solid var(--sky);
+      border-top: 9px solid transparent;
+      border-bottom: 9px solid transparent;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .flow-step {
+      position: relative;
+      display: grid;
+      gap: 10px;
+      align-content: start;
+      min-height: 310px;
+      padding: 18px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .flow-step::after {
+      content: "";
+      position: absolute;
+      right: -13px;
+      top: 132px;
+      width: 18px;
+      height: 18px;
+      border-top: 4px solid var(--sky);
+      border-right: 4px solid var(--sky);
+      transform: rotate(45deg);
+      z-index: 3;
+    }
+
+    .flow-step:last-child::after {
+      display: none;
+    }
+
+    .flow-step .icon {
+      display: grid;
+      place-items: center;
+      width: 54px;
+      height: 54px;
+      border-radius: 8px;
+      background: #eef7ff;
+      color: var(--blue);
+      font-size: 26px;
+      font-weight: 900;
+    }
+
+    .flow-step strong {
+      color: var(--navy);
+      font-size: 19px;
+      line-height: 1.22;
+    }
+
+    .flow-step p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.35;
+      font-weight: 700;
+    }
+
+    .agent-map {
+      display: grid;
+      grid-template-columns: 1fr 1.25fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .agent-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .agent {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .agent span {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      background: var(--navy);
+      color: #ffffff;
+      font-weight: 900;
+    }
+
+    .agent strong {
+      color: var(--navy);
+      font-size: 21px;
+    }
+
+    .agent small {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .note-box {
+      padding: 24px;
+      border-left: 8px solid var(--amber);
+      border-radius: 8px;
+      background: #fff7e8;
+    }
+
+    .note-box strong {
+      display: block;
+      color: var(--navy);
+      font-size: 27px;
+      line-height: 1.25;
+    }
+
+    .note-box p {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 20px;
+      line-height: 1.45;
+      font-weight: 700;
+    }
+
+    .bar-chart {
+      display: grid;
+      gap: 16px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 135px 1fr 70px;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .bar-row span,
+    .bar-row b {
+      color: var(--navy);
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .track {
+      height: 30px;
+      border-radius: 8px;
+      background: #e8eef5;
+      overflow: hidden;
+    }
+
+    .fill {
+      height: 100%;
+      border-radius: 8px;
+      background: var(--blue);
+    }
+
+    .fill.mint {
+      background: var(--mint);
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .metric {
+      display: grid;
+      align-content: center;
+      min-height: 142px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 8px;
+      color: var(--navy);
+      font-size: 38px;
+      line-height: 1;
+    }
+
+    .metric small {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.3;
+      font-weight: 700;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .table th,
+    .table td {
+      padding: 14px 15px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      font-size: 17px;
+      line-height: 1.25;
+    }
+
+    .table th {
+      background: #eef7ff;
+      color: var(--navy);
+      font-weight: 900;
+    }
+
+    .table td {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .check-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .check {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .check b {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: #e8f7f1;
+      color: var(--mint);
+      font-size: 20px;
+    }
+
+    .check strong {
+      display: block;
+      color: var(--navy);
+      font-size: 20px;
+    }
+
+    .check small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.35;
+      font-weight: 700;
+    }
+
+    .demo-frame {
+      display: grid;
+      grid-template-columns: 0.84fr 1.16fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .phone {
+      width: 250px;
+      height: 460px;
+      margin: 0 auto;
+      padding: 22px 16px;
+      border: 10px solid var(--navy);
+      border-radius: 36px;
+      background: #ffffff;
+    }
+
+    .phone-top {
+      height: 22px;
+      margin: 0 auto 18px;
+      width: 76px;
+      border-radius: 99px;
+      background: var(--navy);
+    }
+
+    .screen-line {
+      height: 28px;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      background: #eef7ff;
+    }
+
+    .screen-line.short {
+      width: 70%;
+      background: #e8f7f1;
+    }
+
+    .screen-card {
+      display: grid;
+      gap: 8px;
+      margin: 18px 0;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+    }
+
+    .mini-kana {
+      display: grid;
+      place-items: center;
+      width: 74px;
+      height: 74px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: #ffffff;
+      font-size: 42px;
+      font-weight: 900;
+    }
+
+    .footer-tag {
+      position: absolute;
+      left: 66px;
+      bottom: 26px;
+      color: #94a3b8;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .slide-no {
+      position: absolute;
+      right: 66px;
+      bottom: 26px;
+      color: #94a3b8;
+      font-size: 13px;
+      font-weight: 900;
+    }
+  </style>
+</head>
+<body>
+  <section class="slide cover" data-document-role="page" data-label="01 Cover" data-speaker-notes="Em mở đầu bằng tên đề tài và nói ngắn phạm vi: đây là hệ thống trợ lý học tiếng Nhật N5/N4 cho sinh viên Việt Nam, tập trung vào thiết kế phần mềm, KG-RAG, pathway cá nhân hóa và đánh giá thử nghiệm.">
+    <div>
+      <p class="eyebrow">Master of Software Engineering - Thesis Defense</p>
+      <h1>VAJA: Trợ lý học tiếng Nhật cá nhân hóa</h1>
+      <p class="subtitle">Thiết kế và xây dựng web-based learning assistant dùng Knowledge Graph, RAG, pathway cá nhân hóa, flashcard và assessment cho người học N5/N4.</p>
+    </div>
+    <div class="meta-row">
+      <div class="meta"><span>Học viên</span><strong>Bùi Duy Hiếu</strong></div>
+      <div class="meta"><span>Lớp</span><strong>MSE K24</strong></div>
+      <div class="meta"><span>GVHD</span><strong>Dr. Nguyễn Duy Nghiêm</strong></div>
+    </div>
+    <div class="cover-mark"></div>
+    <div class="jp">あ</div>
+    <div class="slide-no">01</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="02 Problem" data-speaker-notes="Slide này nói vấn đề thực tế. Người học có nhiều công cụ, nhưng thường không biết nên học gì tiếp theo, và câu trả lời từ chatbot chung có thể không có nguồn rõ.">
+    <div class="header">
+      <p class="eyebrow">Problem</p>
+      <h2>Người học sơ cấp dễ bị rối khi tự học</h2>
+      <p>Đặc biệt với N5/N4, người học cần một luồng học rõ, câu trả lời có nguồn, và ôn tập đúng phần yếu.</p>
+    </div>
+    <div class="problem-grid">
+      <div class="problem-list">
+        <div class="problem-row"><span>1</span><div><strong>Không biết học gì tiếp theo</strong><small>Nhiều bạn học theo danh sách rời rạc, chưa có pathway rõ.</small></div></div>
+        <div class="problem-row"><span>2</span><div><strong>Chatbot trả lời thiếu nguồn</strong><small>LLM có thể giải thích hay, nhưng không phải lúc nào cũng bám tài liệu N5/N4.</small></div></div>
+        <div class="problem-row"><span>3</span><div><strong>Ôn tập chưa theo điểm yếu</strong><small>Quiz, flashcard và feedback thường không liên kết thành một trạng thái học.</small></div></div>
+      </div>
+      <div class="cycle">
+        <div class="node n1">Học rời rạc</div>
+        <div class="node n2">Sai nhưng không rõ vì sao</div>
+        <div class="node n3">Ôn không đúng trọng tâm</div>
+        <div class="node n4">Mất động lực</div>
+        <div class="center">VAJA</div>
+      </div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">02</div>
+  </section>
+
+  <section class="slide defense-map" data-document-role="page" data-label="03 Defense Map" data-speaker-notes="Slide này là bản đồ cho cả bài bảo vệ. Em nói hội đồng sẽ nghe theo 6 phần: vấn đề, phạm vi agent, kiến trúc, cá nhân hóa, đánh giá, và demo. Mục tiêu là giữ bài nói đi đúng luận văn.">
+    <div class="header">
+      <p class="eyebrow">Defense Map</p>
+      <h2>Nội dung em sẽ bảo vệ</h2>
+      <p>Trọng tâm không phải quảng bá app, mà là chứng minh thiết kế, triển khai và đánh giá hệ thống theo hướng MSE.</p>
+    </div>
+    <div class="three-col">
+      <div class="card"><div class="number">01</div><strong>Vấn đề học N5/N4</strong><p>Người học mới dễ rối vì nội dung rời rạc, thiếu đường học và thiếu nguồn rõ.</p></div>
+      <div class="card"><div class="number">02</div><strong>Phạm vi Agent</strong><p>Agent được hiểu là các role chuyên biệt, không nói là hệ multi-agent tự trị hoàn toàn.</p></div>
+      <div class="card"><div class="number">03</div><strong>Kiến trúc hệ thống</strong><p>React, Spring Boot, FastAPI AI service, PostgreSQL, Neo4j và Qdrant.</p></div>
+      <div class="card"><div class="number">04</div><strong>Cá nhân hóa học tập</strong><p>Dựa trên profile, pathway, quiz, flashcard, feedback và weak skills.</p></div>
+      <div class="card"><div class="number">05</div><strong>Đánh giá có số liệu</strong><p>RAG benchmark, pilot user test, SUS/trust, pass rate và test coverage.</p></div>
+      <div class="card"><div class="number">06</div><strong>Demo và giới hạn</strong><p>Trình bày app đang chạy, những gì đã đạt và phần cần cải thiện sau luận văn.</p></div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">03</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="04 Research Questions" data-speaker-notes="Slide này giúp hội đồng thấy đề tài có tính research. Em nói ngắn 4 câu hỏi và mỗi câu sẽ được trả lời ở các phần sau.">
+    <div class="header">
+      <p class="eyebrow">Research Questions</p>
+      <h2>4 câu hỏi chính</h2>
+      <p>Các câu hỏi được gắn với thiết kế hệ thống, RAG, pathway và pilot study.</p>
+    </div>
+    <div class="rq-grid">
+      <div class="rq-card"><b>RQ1</b><div><strong>Kiến trúc nào phù hợp?</strong><p>Làm sao kết hợp backend, AI service, KG, vector DB và frontend trong một hệ thống học?</p></div></div>
+      <div class="rq-card"><b>RQ2</b><div><strong>KG + Vector RAG có tốt hơn không?</strong><p>So sánh LLM only, Vector, KG và KG + Vector bằng benchmark tự động.</p></div></div>
+      <div class="rq-card"><b>RQ3</b><div><strong>Pathway cá nhân hóa ra sao?</strong><p>Hệ thống phản ứng theo profile, weak skills, kết quả quiz và feedback.</p></div></div>
+      <div class="rq-card"><b>RQ4</b><div><strong>Người học dùng có ổn không?</strong><p>Pilot test nhỏ với 10-12 người, đo SUS, trust, score, pass rate và comments.</p></div></div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">04</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="05 Terminology" data-speaker-notes="Đây là slide để tránh bị bắt bẻ. Em nói rõ agent ở đây là phân vai theo chức năng, không phải multi-agent tự trị có negotiation phức tạp.">
+    <div class="header">
+      <p class="eyebrow">Scope</p>
+      <h2>Cách dùng thuật ngữ Agent</h2>
+      <p>Trong báo cáo, hệ thống được trình bày theo hướng role-based agent architecture.</p>
+    </div>
+    <div class="agent-map">
+      <div class="agent-stack">
+        <div class="agent"><span>T</span><div><strong>Tutor Role</strong><small>Giải thích, lấy nguồn RAG, hỗ trợ khi sai quiz.</small></div></div>
+        <div class="agent"><span>P</span><div><strong>Pathway Role</strong><small>Chọn bài tiếp theo, điều chỉnh nhịp học.</small></div></div>
+        <div class="agent"><span>A</span><div><strong>Assessment Role</strong><small>Quiz, test chương, answer key backend-side.</small></div></div>
+        <div class="agent"><span>R</span><div><strong>Review Role</strong><small>Flashcard, SRS, ôn phần yếu.</small></div></div>
+      </div>
+      <div class="note-box">
+        <strong>Không overclaim</strong>
+        <p>Đây không phải hệ multi-agent tự trị hoàn toàn. Các role phối hợp qua API, state và rule/heuristic rõ ràng. Điểm mạnh nằm ở thiết kế phần mềm, RAG có nguồn và dữ liệu học được ghi lại.</p>
+      </div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">05</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="06 Architecture" data-speaker-notes="Nói hệ thống chia 3 lớp chính. Frontend cho trải nghiệm học, Spring Boot giữ nghiệp vụ và bảo mật, FastAPI xử lý phần AI. Dữ liệu nằm ở PostgreSQL, Neo4j và Qdrant.">
+    <div class="header">
+      <p class="eyebrow">System Architecture</p>
+      <h2>Kiến trúc tổng thể</h2>
+      <p>Hybrid architecture: React frontend, Spring Boot backend, Python FastAPI AI service.</p>
+    </div>
+    <div class="architecture">
+      <div class="layer">
+        <h3>Frontend</h3>
+        <div class="box">React + Vite</div>
+        <div class="box">Learner UI</div>
+        <div class="box">Floating Tutor</div>
+        <div class="box">Responsive Web</div>
+      </div>
+      <div class="arrow"></div>
+      <div class="layer">
+        <h3>Spring Boot Backend</h3>
+        <div class="box">Auth + JWT + Refresh Token</div>
+        <div class="box">Profile + Progress + Metrics</div>
+        <div class="box">Flashcard + Assessment APIs</div>
+        <div class="box">API Contract + Security</div>
+      </div>
+      <div class="arrow"></div>
+      <div class="layer">
+        <h3>AI + Data</h3>
+        <div class="box">FastAPI AI Service</div>
+        <div class="box">Neo4j Knowledge Graph</div>
+        <div class="box">Qdrant Vector Search</div>
+        <div class="box">PostgreSQL Storage</div>
+      </div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">06</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="07 Learner Flow" data-speaker-notes="Đây là slide demo flow. Em nhấn mạnh người mới chỉ cần đi theo nút chính: onboarding, học bài, flashcard, quiz, test chương.">
+    <div class="header">
+      <p class="eyebrow">Learner Flow</p>
+      <h2>Luồng học chính</h2>
+      <p>Người học đi theo một pathway mở dần, giống chương học ngắn.</p>
+    </div>
+    <div class="flow">
+      <div class="flow-step"><div class="icon">1</div><strong>Onboarding</strong><p>8 câu hỏi về level, mục tiêu, thời gian, điểm yếu.</p></div>
+      <div class="flow-step"><div class="icon">2</div><strong>Pathway</strong><p>Mỗi chương có khoảng 3 bài, mở dần theo kết quả.</p></div>
+      <div class="flow-step"><div class="icon">3</div><strong>Flashcard</strong><p>Học từ, mẫu câu, kana, kanji trước khi quiz.</p></div>
+      <div class="flow-step"><div class="icon">4</div><strong>Quiz bài</strong><p>Đạt từ 85% mới mở bài tiếp theo.</p></div>
+      <div class="flow-step"><div class="icon">5</div><strong>Test chương</strong><p>20 câu, đạt 85% mới qua chương sau.</p></div>
+      <div class="flow-step"><div class="icon">6</div><strong>Feedback</strong><p>Lưu cảm nhận để điều chỉnh nhịp học.</p></div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">07</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="08 Personalization" data-speaker-notes="Cá nhân hóa không chỉ là đổi tên user. Hệ thống dùng profile, weak skills, kết quả quiz, feedback, số lần fail để chọn nhịp hỗ trợ, ổn định hoặc nhanh.">
+    <div class="header">
+      <p class="eyebrow">Personalization</p>
+      <h2>Cá nhân hóa pathway</h2>
+      <p>Pathway thay đổi theo dữ liệu học thật, không chỉ theo if-else đơn giản ở UI.</p>
+    </div>
+    <div class="two-col">
+      <div class="card white">
+        <span class="pill">Input signals</span>
+        <ul>
+          <li>Current level: Zero, N5, N4</li>
+          <li>Learning pathway: JLPT, giao tiếp, lớp học, công việc, đọc hiểu</li>
+          <li>Daily study minutes</li>
+          <li>Weak skills: kana, grammar, vocab, kanji, listening, speaking</li>
+          <li>Quiz score, attempts, fail count, feedback</li>
+        </ul>
+      </div>
+      <div class="card white">
+        <span class="pill">Adaptive output</span>
+        <ul>
+          <li>Người mới từ số 0 học kana trước</li>
+          <li>Rớt nhiều: giữ bài, ôn lỗi sai, Tutor giải thích</li>
+          <li>Làm tốt: nhịp nhanh, mở bài tiếp theo</li>
+          <li>Hết chương: bắt buộc test 20 câu</li>
+          <li>Feedback khó/dễ được lưu làm tín hiệu pilot</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">08</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="09 Tutor RAG" data-speaker-notes="Nói rõ chatbot không tự ý tăng mastery. Nếu chỉ chat hoặc đọc nguồn thì chỉ tính exposure. Mastery chỉ thay đổi khi có quiz, assessment hoặc flashcard signal.">
+    <div class="header">
+      <p class="eyebrow">Tutor + RAG</p>
+      <h2>AI Tutor trả lời có nguồn</h2>
+      <p>Tutor dùng context của bài học, lấy nguồn trước khi trả lời, và lưu lại bằng chứng.</p>
+    </div>
+    <div class="two-col">
+      <div class="card white">
+        <strong>Luồng Tutor</strong>
+        <ul>
+          <li>Nhận câu hỏi + contextTopic</li>
+          <li>Tìm trong Knowledge Graph và Vector DB</li>
+          <li>Gọi LLM để giải thích bằng tiếng Việt</li>
+          <li>Trả về answer, sources, confidence</li>
+        </ul>
+      </div>
+      <div class="card white">
+        <strong>Quy tắc an toàn học tập</strong>
+        <ul>
+          <li>Không có nguồn thì không ghi exposure</li>
+          <li>Chat không tự tăng mastery</li>
+          <li>Quiz/Assessment mới ghi đúng hoặc sai</li>
+          <li>Flashcard review ghi Again, Hard, Good, Easy</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">09</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="10 Assessment" data-speaker-notes="Slide này giải thích lý do assessment quan trọng. Answer key không trả về frontend, backend chấm và ghi learning signal sau khi nộp.">
+    <div class="header">
+      <p class="eyebrow">Assessment + Mastery</p>
+      <h2>Đánh giá học tập có kiểm soát</h2>
+      <p>Quiz và test chương tạo tín hiệu học rõ ràng hơn so với chỉ chat.</p>
+    </div>
+    <div class="three-col">
+      <div class="card"><strong>Quiz cuối bài</strong><p>5 câu ngắn. Đạt từ 85% mới mở bài sau.</p></div>
+      <div class="card"><strong>Test chương</strong><p>20 câu tổng hợp. Đạt từ 85% mới mở chương sau.</p></div>
+      <div class="card"><strong>Answer key</strong><p>Lưu ở backend. Start session không trả đáp án về frontend.</p></div>
+      <div class="card"><strong>Learning signal</strong><p>QUIZ và ASSESSMENT chỉ nhận CORRECT hoặc WRONG.</p></div>
+      <div class="card"><strong>Flashcard SRS</strong><p>SM-2 schedule theo Again, Hard, Good, Easy.</p></div>
+      <div class="card"><strong>Feedback</strong><p>Lưu độ khó, nhịp học, lựa chọn ôn hoặc học tiếp.</p></div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">10</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="11 Software Engineering" data-speaker-notes="Đây là phần cần nhấn mạnh vì bằng MSE. Đóng góp không chỉ là AI, mà là thiết kế hệ thống chạy được, có API, test và deploy.">
+    <div class="header">
+      <p class="eyebrow">Software Engineering Contribution</p>
+      <h2>Đóng góp về kỹ thuật phần mềm</h2>
+      <p>Trọng tâm là một hệ thống có kiến trúc rõ, dễ kiểm thử, và có thể triển khai.</p>
+    </div>
+    <div class="check-list">
+      <div class="check"><b>✓</b><div><strong>Clean architecture</strong><small>Controller mỏng, service interface, DTO request/response, exception handler riêng.</small></div></div>
+      <div class="check"><b>✓</b><div><strong>API contract rõ</strong><small>Auth, profile, chat, flashcard, assessment, feedback, metrics, planner.</small></div></div>
+      <div class="check"><b>✓</b><div><strong>Security</strong><small>JWT access token, refresh token, Google OAuth linking, BCrypt password.</small></div></div>
+      <div class="check"><b>✓</b><div><strong>Reproducibility</strong><small>Docker compose, seed KG, benchmark script, automated tests.</small></div></div>
+      <div class="check"><b>✓</b><div><strong>Deployment</strong><small>Frontend Netlify, backend VPS, proxy API, public demo link.</small></div></div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">11</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="12 RAG Benchmark" data-speaker-notes="Nói thẳng: benchmark có 50 câu, 4 chế độ. KG+Vector có recall cao nhất 0.740. Đây là bằng chứng tốt nhất cho RQ2.">
+    <div class="header">
+      <p class="eyebrow">RAG Benchmark</p>
+      <h2>Kết quả truy xuất nguồn</h2>
+      <p>50 câu hỏi N5/N4, 4 chế độ: LLM only, Vector, KG, KG + Vector.</p>
+    </div>
+    <div class="two-col">
+      <div class="bar-chart">
+        <h3>Source Recall</h3>
+        <div class="bar-row"><span>LLM only</span><div class="track"><div class="fill" style="width: 0%"></div></div><b>0.000</b></div>
+        <div class="bar-row"><span>Vector</span><div class="track"><div class="fill" style="width: 62%"></div></div><b>0.620</b></div>
+        <div class="bar-row"><span>KG</span><div class="track"><div class="fill" style="width: 62%"></div></div><b>0.620</b></div>
+        <div class="bar-row"><span>KG + Vector</span><div class="track"><div class="fill mint" style="width: 74%"></div></div><b>0.740</b></div>
+      </div>
+      <div class="bar-chart">
+        <h3>Precision@3</h3>
+        <div class="bar-row"><span>LLM only</span><div class="track"><div class="fill" style="width: 0%"></div></div><b>0.000</b></div>
+        <div class="bar-row"><span>Vector</span><div class="track"><div class="fill" style="width: 30%"></div></div><b>0.300</b></div>
+        <div class="bar-row"><span>KG</span><div class="track"><div class="fill mint" style="width: 38.6%"></div></div><b>0.386</b></div>
+        <div class="bar-row"><span>KG + Vector</span><div class="track"><div class="fill mint" style="width: 38.6%"></div></div><b>0.386</b></div>
+      </div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">12</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="13 Pilot Study" data-speaker-notes="Nói số liệu thật và nói đúng giới hạn. SUS 58.6 là vừa phải, chưa cao. Đây là feedback giúp cải thiện sản phẩm, không phải kết luận học tốt tuyệt đối.">
+    <div class="header">
+      <p class="eyebrow">Pilot User Test</p>
+      <h2>Kết quả người dùng thử</h2>
+      <p>Pilot nhỏ với người học Việt Nam. Mục tiêu là kiểm tra flow và thu feedback ban đầu.</p>
+    </div>
+    <div class="metric-grid">
+      <div class="metric"><span>Survey users</span><strong>10</strong><small>Đạt mức thấp của kế hoạch 10-12 người.</small></div>
+      <div class="metric"><span>Feedback users</span><strong>11</strong><small>18 feedback rows trong quá trình học.</small></div>
+      <div class="metric"><span>Lesson attempts</span><strong>25</strong><small>10 users có hoàn thành bài học.</small></div>
+      <div class="metric"><span>Avg lesson score</span><strong>82.4%</strong><small>Pass rate hiện tại 56.0%.</small></div>
+      <div class="metric"><span>SUS</span><strong>58.6</strong><small>Usability mức vừa, còn cần cải thiện.</small></div>
+      <div class="metric"><span>Trust</span><strong>3.45/5</strong><small>Niềm tin ở mức trung bình khá.</small></div>
+      <div class="metric"><span>Passed attempts</span><strong>14</strong><small>11 attempts chưa đạt.</small></div>
+      <div class="metric"><span>Knowledge rows</span><strong>185</strong><small>Progress data được ghi lại.</small></div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">13</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="14 Feedback Improvements" data-speaker-notes="Slide này cho thấy em phản ứng theo feedback. Các thay đổi đều gắn với vấn đề người dùng nói: khó hiểu app, nhiều chữ, thiếu âm thanh, pathway chưa rõ.">
+    <div class="header">
+      <p class="eyebrow">After Feedback</p>
+      <h2>Các cải thiện sau user feedback</h2>
+      <p>Những thay đổi này đến từ phản hồi thực tế và test end-user.</p>
+    </div>
+    <table class="table">
+      <tr><th>Feedback</th><th>Thay đổi trong app</th><th>Mục đích</th></tr>
+      <tr><td>Người mới chưa hiểu tổng thể</td><td>Thêm tour guide và kana overview</td><td>Dễ bắt đầu từ số 0</td></tr>
+      <tr><td>Flow học bị rời rạc</td><td>Pathway theo chương, 3 bài mỗi chương</td><td>Học theo tiến độ rõ</td></tr>
+      <tr><td>Assessment chưa có vai trò</td><td>Test chương 20 câu, cần 85% để qua chương</td><td>Giống checkpoint học thật</td></tr>
+      <tr><td>Thiếu nghe/phát âm</td><td>Flashcard audio và pronunciation scoring MVP</td><td>Hỗ trợ giao tiếp tốt hơn</td></tr>
+      <tr><td>Chatbot không nên là tab riêng</td><td>Floating Tutor hỗ trợ trong quiz</td><td>Hỏi khi cần, không phá flow</td></tr>
+    </table>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">14</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="15 Demo Scenario" data-speaker-notes="Dùng slide này trước khi demo live. Nếu mạng lỗi, vẫn có thể nói theo 6 bước demo. Nên demo khoảng 4 đến 6 phút.">
+    <div class="header">
+      <p class="eyebrow">Demo Plan</p>
+      <h2>Kịch bản demo ngắn</h2>
+      <p>Demo tập trung vào một người học mới từ số 0.</p>
+    </div>
+    <div class="demo-frame">
+      <div class="phone">
+        <div class="phone-top"></div>
+        <div class="screen-line short"></div>
+        <div class="screen-line"></div>
+        <div class="screen-card">
+          <div class="mini-kana">あ</div>
+          <div class="screen-line short"></div>
+          <div class="screen-line"></div>
+        </div>
+        <div class="screen-line"></div>
+        <div class="screen-line short"></div>
+      </div>
+      <div class="check-list">
+        <div class="check"><b>1</b><div><strong>Landing → Onboarding</strong><small>Chọn người mới, trả lời 8 câu.</small></div></div>
+        <div class="check"><b>2</b><div><strong>Zero beginner</strong><small>Thấy lựa chọn tạo account hoặc học thử 3 bài.</small></div></div>
+        <div class="check"><b>3</b><div><strong>Học Kana</strong><small>Học thẻ, nghe phát âm, làm quiz cuối bài.</small></div></div>
+        <div class="check"><b>4</b><div><strong>Chapter Gate</strong><small>Hết 3 bài phải làm test chương 20 câu.</small></div></div>
+        <div class="check"><b>5</b><div><strong>Tutor và công cụ phụ</strong><small>Hỏi VAJA, tra cứu, flashcard.</small></div></div>
+      </div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">15</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="16 Conclusion" data-speaker-notes="Kết luận rõ ràng, không nói quá. Hệ thống đã chạy end-to-end, RAG benchmark có bằng chứng, pilot cho thấy dùng được nhưng usability còn cần cải thiện. Hướng sau là BKT IRT và dữ liệu lớn hơn.">
+    <div class="header">
+      <p class="eyebrow">Conclusion</p>
+      <h2>Kết luận và hướng phát triển</h2>
+      <p>VAJA đã đạt mục tiêu prototype và có dữ liệu đánh giá ban đầu.</p>
+    </div>
+    <div class="two-col">
+      <div class="card white">
+        <strong>Đã đạt được</strong>
+        <ul>
+          <li>Hệ thống chạy end-to-end</li>
+          <li>Pathway học rõ hơn cho người mới</li>
+          <li>Tutor RAG có nguồn</li>
+          <li>Benchmark và pilot data có thể đưa vào appendix</li>
+          <li>Automated tests: frontend, backend, AI service</li>
+        </ul>
+      </div>
+      <div class="card white">
+        <strong>Hạn chế và hướng sau</strong>
+        <ul>
+          <li>Pilot còn nhỏ, pre/post-test chưa mạnh</li>
+          <li>Pathway hiện còn dùng heuristic, chưa có BKT/IRT</li>
+          <li>Cần thêm audio/STT và dữ liệu phát âm thật</li>
+          <li>Cần mở rộng dataset và theo dõi dài hạn</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">16</div>
+  </section>
+</body>
+</html>
