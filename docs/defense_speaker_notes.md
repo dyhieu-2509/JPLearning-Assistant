@@ -8,9 +8,9 @@ Em xin trình bày đề tài VAJA, một trợ lý học tiếng Nhật cá nh�
 
 Vấn đề chính là người học sơ cấp thường không biết nên học gì tiếp theo. Ngoài ra, chatbot chung có thể trả lời thiếu nguồn, còn quiz và flashcard nhiều khi không nối lại thành một trạng thái học rõ ràng.
 
-## Slide 03 - Defense Map
+## Slide 03 - Agenda
 
-Bài bảo vệ đi theo 6 ý: vấn đề, phạm vi agent, kiến trúc, cá nhân hóa, kết quả đánh giá và demo. Em sẽ không trình bày VAJA như một app thương mại, mà trình bày như một hệ thống phần mềm đã được thiết kế, triển khai và kiểm thử.
+Đây là slide agenda. Bài bảo vệ đi theo 6 ý: vấn đề, phạm vi agent, kiến trúc, cá nhân hóa, kết quả đánh giá và demo. Em sẽ không trình bày VAJA như một app thương mại, mà trình bày như một hệ thống phần mềm đã được thiết kế, triển khai và kiểm thử.
 
 ## Slide 04 - Research Questions
 

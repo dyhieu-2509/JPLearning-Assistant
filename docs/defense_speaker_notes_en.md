@@ -8,9 +8,9 @@ I will present VAJA, a personalized Japanese learning assistant for N5/N4 learne
 
 The main problem is that beginner learners often do not know what to study next. General chatbots can answer many questions, but they may not give clear sources. Quiz and flashcards are also often separated from the learner's real progress.
 
-## Slide 03 - Defense Map
+## Slide 03 - Agenda
 
-This defense follows six parts: the learning problem, the scope of the agent architecture, system architecture, personalization, evaluation, and demo. The goal is not to promote an app, but to show the design, implementation, and evaluation of the system.
+This is the agenda slide. The defense follows six parts: the learning problem, the scope of the agent architecture, system architecture, personalization, evaluation, and demo. The goal is not to promote an app, but to show the design, implementation, and evaluation of the system.
 
 ## Slide 04 - Research Questions
 
