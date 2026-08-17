@@ -1,0 +1,1184 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VAJA Thesis Defense Slides - English</title>
+  <style>
+    :root {
+      --navy: #123047;
+      --blue: #2563eb;
+      --sky: #0ea5e9;
+      --mint: #1f9d73;
+      --green: #16a34a;
+      --amber: #f59e0b;
+      --rose: #e11d48;
+      --ink: #172033;
+      --muted: #64748b;
+      --line: #dbe5ef;
+      --soft: #f5f8fb;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #e5edf6;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    [data-document-role="page"] {
+      position: relative;
+      width: 1280px;
+      height: 720px;
+      margin: 0 auto 28px;
+      overflow: hidden;
+      background: var(--white);
+    }
+
+    .slide {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 24px;
+      padding: 54px 66px 44px;
+    }
+
+    .cover {
+      grid-template-rows: 1fr auto;
+      background:
+        linear-gradient(90deg, #ffffff 0%, #ffffff 56%, #eef7ff 56%, #eef7ff 100%);
+    }
+
+    .cover-mark {
+      position: absolute;
+      right: 82px;
+      top: 96px;
+      width: 315px;
+      height: 315px;
+      border: 2px solid rgba(37, 99, 235, 0.22);
+      border-radius: 50%;
+    }
+
+    .cover-mark::before,
+    .cover-mark::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+    }
+
+    .cover-mark::before {
+      left: 42px;
+      top: 42px;
+      width: 225px;
+      height: 225px;
+      border: 18px solid rgba(31, 157, 115, 0.18);
+    }
+
+    .cover-mark::after {
+      left: 105px;
+      top: 105px;
+      width: 105px;
+      height: 105px;
+      background: var(--blue);
+      box-shadow: 0 0 0 24px rgba(14, 165, 233, 0.12);
+    }
+
+    .jp {
+      position: absolute;
+      right: 142px;
+      top: 206px;
+      color: #ffffff;
+      font-size: 54px;
+      font-weight: 900;
+      letter-spacing: 0;
+      z-index: 2;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--mint);
+      font-size: 17px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 700px;
+      color: var(--navy);
+      font-size: 56px;
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      color: var(--navy);
+      font-size: 40px;
+      line-height: 1.16;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      color: var(--navy);
+      font-size: 24px;
+      line-height: 1.25;
+    }
+
+    .subtitle {
+      max-width: 720px;
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 23px;
+      line-height: 1.45;
+      font-weight: 700;
+    }
+
+    .meta-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      width: 720px;
+    }
+
+    .meta {
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .meta span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .meta strong {
+      display: block;
+      margin-top: 5px;
+      color: var(--navy);
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .header {
+      display: grid;
+      gap: 8px;
+      max-width: 920px;
+    }
+
+    .header p {
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.45;
+      font-weight: 700;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .defense-map {
+      gap: 18px;
+      padding-bottom: 54px;
+    }
+
+    .defense-map .card {
+      gap: 10px;
+      padding: 18px 20px;
+    }
+
+    .defense-map .card p {
+      line-height: 1.35;
+    }
+
+    .card {
+      display: grid;
+      align-content: start;
+      gap: 12px;
+      min-height: 118px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+    }
+
+    .card.white {
+      background: #ffffff;
+    }
+
+    .card strong {
+      color: var(--navy);
+      font-size: 24px;
+      line-height: 1.25;
+    }
+
+    .card p,
+    .card li {
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.45;
+      font-weight: 700;
+    }
+
+    .card ul {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .number {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      background: var(--blue);
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      min-height: 34px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: #e8f7f1;
+      color: var(--mint);
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 26px;
+      align-items: center;
+    }
+
+    .problem-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .problem-row {
+      display: grid;
+      grid-template-columns: 46px 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .problem-row span {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 8px;
+      background: #eef7ff;
+      color: var(--blue);
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .problem-row strong {
+      display: block;
+      color: var(--navy);
+      font-size: 22px;
+      line-height: 1.25;
+    }
+
+    .problem-row small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.35;
+      font-weight: 700;
+    }
+
+    .cycle {
+      position: relative;
+      width: 390px;
+      height: 390px;
+      margin-left: auto;
+      border: 2px solid rgba(37, 99, 235, 0.22);
+      border-radius: 50%;
+      background: #ffffff;
+    }
+
+    .cycle .node {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      width: 104px;
+      height: 104px;
+      border-radius: 50%;
+      background: #eef7ff;
+      color: var(--navy);
+      text-align: center;
+      font-size: 15px;
+      font-weight: 900;
+      line-height: 1.2;
+      border: 1px solid rgba(37, 99, 235, 0.24);
+    }
+
+    .cycle .n1 { left: 143px; top: -18px; }
+    .cycle .n2 { right: -18px; top: 143px; }
+    .cycle .n3 { left: 143px; bottom: -18px; }
+    .cycle .n4 { left: -18px; top: 143px; }
+
+    .cycle .center {
+      position: absolute;
+      left: 115px;
+      top: 115px;
+      display: grid;
+      place-items: center;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #ffffff;
+      font-size: 29px;
+      font-weight: 900;
+    }
+
+    .rq-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .rq-card {
+      display: grid;
+      grid-template-columns: 74px 1fr;
+      gap: 14px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .rq-card b {
+      display: grid;
+      place-items: center;
+      height: 74px;
+      border-radius: 8px;
+      background: var(--navy);
+      color: #ffffff;
+      font-size: 22px;
+    }
+
+    .rq-card strong {
+      display: block;
+      color: var(--navy);
+      font-size: 21px;
+      line-height: 1.25;
+    }
+
+    .rq-card p {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.35;
+      font-weight: 700;
+    }
+
+    .architecture {
+      display: grid;
+      grid-template-columns: 1fr 82px 1.1fr 82px 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .layer {
+      display: grid;
+      gap: 12px;
+      min-height: 430px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .layer h3 {
+      font-size: 24px;
+    }
+
+    .layer .box {
+      padding: 13px;
+      border-radius: 8px;
+      background: var(--soft);
+      color: var(--navy);
+      font-size: 17px;
+      font-weight: 900;
+      line-height: 1.25;
+    }
+
+    .arrow {
+      height: 4px;
+      background: var(--sky);
+      position: relative;
+    }
+
+    .arrow::after {
+      content: "";
+      position: absolute;
+      right: -2px;
+      top: -7px;
+      width: 0;
+      height: 0;
+      border-left: 16px solid var(--sky);
+      border-top: 9px solid transparent;
+      border-bottom: 9px solid transparent;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .flow-step {
+      position: relative;
+      display: grid;
+      gap: 10px;
+      align-content: start;
+      min-height: 310px;
+      padding: 18px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .flow-step::after {
+      content: "";
+      position: absolute;
+      right: -13px;
+      top: 132px;
+      width: 18px;
+      height: 18px;
+      border-top: 4px solid var(--sky);
+      border-right: 4px solid var(--sky);
+      transform: rotate(45deg);
+      z-index: 3;
+    }
+
+    .flow-step:last-child::after {
+      display: none;
+    }
+
+    .flow-step .icon {
+      display: grid;
+      place-items: center;
+      width: 54px;
+      height: 54px;
+      border-radius: 8px;
+      background: #eef7ff;
+      color: var(--blue);
+      font-size: 26px;
+      font-weight: 900;
+    }
+
+    .flow-step strong {
+      color: var(--navy);
+      font-size: 19px;
+      line-height: 1.22;
+    }
+
+    .flow-step p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.35;
+      font-weight: 700;
+    }
+
+    .agent-map {
+      display: grid;
+      grid-template-columns: 1fr 1.25fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .agent-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .agent {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .agent span {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      background: var(--navy);
+      color: #ffffff;
+      font-weight: 900;
+    }
+
+    .agent strong {
+      color: var(--navy);
+      font-size: 21px;
+    }
+
+    .agent small {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .note-box {
+      padding: 24px;
+      border-left: 8px solid var(--amber);
+      border-radius: 8px;
+      background: #fff7e8;
+    }
+
+    .note-box strong {
+      display: block;
+      color: var(--navy);
+      font-size: 27px;
+      line-height: 1.25;
+    }
+
+    .note-box p {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 20px;
+      line-height: 1.45;
+      font-weight: 700;
+    }
+
+    .bar-chart {
+      display: grid;
+      gap: 16px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 135px 1fr 70px;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .bar-row span,
+    .bar-row b {
+      color: var(--navy);
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .track {
+      height: 30px;
+      border-radius: 8px;
+      background: #e8eef5;
+      overflow: hidden;
+    }
+
+    .fill {
+      height: 100%;
+      border-radius: 8px;
+      background: var(--blue);
+    }
+
+    .fill.mint {
+      background: var(--mint);
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .metric {
+      display: grid;
+      align-content: center;
+      min-height: 142px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 8px;
+      color: var(--navy);
+      font-size: 38px;
+      line-height: 1;
+    }
+
+    .metric small {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.3;
+      font-weight: 700;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .table th,
+    .table td {
+      padding: 14px 15px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      font-size: 17px;
+      line-height: 1.25;
+    }
+
+    .table th {
+      background: #eef7ff;
+      color: var(--navy);
+      font-weight: 900;
+    }
+
+    .table td {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .check-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .check {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .check b {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: #e8f7f1;
+      color: var(--mint);
+      font-size: 20px;
+    }
+
+    .check strong {
+      display: block;
+      color: var(--navy);
+      font-size: 20px;
+    }
+
+    .check small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.35;
+      font-weight: 700;
+    }
+
+    .demo-frame {
+      display: grid;
+      grid-template-columns: 0.84fr 1.16fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .phone {
+      width: 250px;
+      height: 460px;
+      margin: 0 auto;
+      padding: 22px 16px;
+      border: 10px solid var(--navy);
+      border-radius: 36px;
+      background: #ffffff;
+    }
+
+    .phone-top {
+      height: 22px;
+      margin: 0 auto 18px;
+      width: 76px;
+      border-radius: 99px;
+      background: var(--navy);
+    }
+
+    .screen-line {
+      height: 28px;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      background: #eef7ff;
+    }
+
+    .screen-line.short {
+      width: 70%;
+      background: #e8f7f1;
+    }
+
+    .screen-card {
+      display: grid;
+      gap: 8px;
+      margin: 18px 0;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+    }
+
+    .mini-kana {
+      display: grid;
+      place-items: center;
+      width: 74px;
+      height: 74px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: #ffffff;
+      font-size: 42px;
+      font-weight: 900;
+    }
+
+    .footer-tag {
+      position: absolute;
+      left: 66px;
+      bottom: 26px;
+      color: #94a3b8;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .slide-no {
+      position: absolute;
+      right: 66px;
+      bottom: 26px;
+      color: #94a3b8;
+      font-size: 13px;
+      font-weight: 900;
+    }
+  </style>
+</head>
+<body>
+  <section class="slide cover" data-document-role="page" data-label="01 Cover" data-speaker-notes="Start with the topic and scope. This is a Japanese learning assistant for Vietnamese learners at N5/N4 level. The main focus is software design, KG-RAG, personalized pathways, and initial evaluation.">
+    <div>
+      <p class="eyebrow">Master of Software Engineering - Thesis Defense</p>
+      <h1>VAJA: Personalized Japanese Learning Assistant</h1>
+      <p class="subtitle">Design and implementation of a web-based learning assistant using Knowledge Graph, RAG, personalized pathways, flashcards, and assessment for N5/N4 learners.</p>
+    </div>
+    <div class="meta-row">
+      <div class="meta"><span>Student</span><strong>Bui Duy Hieu</strong></div>
+      <div class="meta"><span>Class</span><strong>MSE K24</strong></div>
+      <div class="meta"><span>Supervisor</span><strong>Dr. Nguyen Duy Nghiem</strong></div>
+    </div>
+    <div class="cover-mark"></div>
+    <div class="jp">あ</div>
+    <div class="slide-no">01</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="02 Problem" data-speaker-notes="This slide explains the practical problem. Learners have many tools, but they often do not know what to study next, and general chatbots may not give clear sources.">
+    <div class="header">
+      <p class="eyebrow">Problem</p>
+      <h2>Beginner learners can easily get lost when studying alone</h2>
+      <p>For N5/N4, learners need a clear study flow, grounded answers, and review tasks based on their weak points.</p>
+    </div>
+    <div class="problem-grid">
+      <div class="problem-list">
+        <div class="problem-row"><span>1</span><div><strong>Unclear next step</strong><small>Many learners study from separated lists without a clear pathway.</small></div></div>
+        <div class="problem-row"><span>2</span><div><strong>Chatbot answers lack sources</strong><small>LLMs can explain well, but they do not always follow N5/N4 learning material.</small></div></div>
+        <div class="problem-row"><span>3</span><div><strong>Review is not focused</strong><small>Quiz, flashcards, and feedback are often not connected into one learning state.</small></div></div>
+      </div>
+      <div class="cycle">
+        <div class="node n1">Separated study</div>
+        <div class="node n2">Wrong but unclear why</div>
+        <div class="node n3">Review the wrong focus</div>
+        <div class="node n4">Lose motivation</div>
+        <div class="center">VAJA</div>
+      </div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">02</div>
+  </section>
+
+  <section class="slide defense-map" data-document-role="page" data-label="03 Defense Map" data-speaker-notes="This slide is the map for the defense. The talk will cover the problem, agent scope, architecture, personalization, evaluation, and demo. The goal is to stay close to the thesis.">
+    <div class="header">
+      <p class="eyebrow">Defense Map</p>
+      <h2>What I will defend</h2>
+      <p>The focus is not to promote an app, but to show the system design, implementation, and evaluation from an MSE view.</p>
+    </div>
+    <div class="three-col">
+      <div class="card"><div class="number">01</div><strong>N5/N4 study problem</strong><p>New learners can get lost because content is separated and sources are unclear.</p></div>
+      <div class="card"><div class="number">02</div><strong>Agent scope</strong><p>Agents are role-based services, not a fully autonomous multi-agent system.</p></div>
+      <div class="card"><div class="number">03</div><strong>System architecture</strong><p>React, Spring Boot, FastAPI AI service, PostgreSQL, Neo4j, and Qdrant.</p></div>
+      <div class="card"><div class="number">04</div><strong>Personalized learning</strong><p>Based on profile, pathway, quiz, flashcards, feedback, and weak skills.</p></div>
+      <div class="card"><div class="number">05</div><strong>Measured results</strong><p>RAG benchmark, pilot test, SUS/trust, pass rate, and test coverage.</p></div>
+      <div class="card"><div class="number">06</div><strong>Demo and limits</strong><p>Show the running app, what was achieved, and what still needs improvement.</p></div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">03</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="04 Research Questions" data-speaker-notes="This slide shows the research direction. I will briefly present four questions, and the next slides answer them one by one.">
+    <div class="header">
+      <p class="eyebrow">Research Questions</p>
+      <h2>4 main questions</h2>
+      <p>The questions are linked to system design, RAG, personalized pathway, and pilot study.</p>
+    </div>
+    <div class="rq-grid">
+      <div class="rq-card"><b>RQ1</b><div><strong>Which architecture is suitable?</strong><p>How can frontend, backend, AI service, KG, and vector DB work together in one learning system?</p></div></div>
+      <div class="rq-card"><b>RQ2</b><div><strong>Does KG + Vector RAG help?</strong><p>Compare LLM only, Vector, KG, and KG + Vector with an automated benchmark.</p></div></div>
+      <div class="rq-card"><b>RQ3</b><div><strong>How is the pathway personalized?</strong><p>The system adapts using profile, weak skills, quiz results, and feedback.</p></div></div>
+      <div class="rq-card"><b>RQ4</b><div><strong>Can learners use it?</strong><p>A small pilot test with 10-12 users measures SUS, trust, score, pass rate, and comments.</p></div></div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">04</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="05 Terminology" data-speaker-notes="This slide prevents overclaiming. Agent here means a functional role, not a fully autonomous multi-agent system with complex negotiation.">
+    <div class="header">
+      <p class="eyebrow">Scope</p>
+      <h2>How the term Agent is used</h2>
+      <p>In this thesis, the system is presented as a role-based agent architecture.</p>
+    </div>
+    <div class="agent-map">
+      <div class="agent-stack">
+        <div class="agent"><span>T</span><div><strong>Tutor Role</strong><small>Explain, retrieve RAG sources, support quiz mistakes.</small></div></div>
+        <div class="agent"><span>P</span><div><strong>Pathway Role</strong><small>Select next lesson and adjust learning pace.</small></div></div>
+        <div class="agent"><span>A</span><div><strong>Assessment Role</strong><small>Quiz, chapter test, and backend-side answer key.</small></div></div>
+        <div class="agent"><span>R</span><div><strong>Review Role</strong><small>Flashcards, SRS, and weak-point review.</small></div></div>
+      </div>
+      <div class="note-box">
+        <strong>No overclaiming</strong>
+        <p>This is not a fully autonomous multi-agent system. The roles work through APIs, state, and clear rules/heuristics. The main value is software design, grounded RAG, and recorded learning data.</p>
+      </div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">05</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="06 Architecture" data-speaker-notes="Explain the three main parts. The frontend supports the learning experience, Spring Boot handles business logic and security, and FastAPI handles AI-related tasks. Data is stored in PostgreSQL, Neo4j, and Qdrant.">
+    <div class="header">
+      <p class="eyebrow">System Architecture</p>
+      <h2>Overall architecture</h2>
+      <p>Hybrid architecture: React frontend, Spring Boot backend, Python FastAPI AI service.</p>
+    </div>
+    <div class="architecture">
+      <div class="layer">
+        <h3>Frontend</h3>
+        <div class="box">React + Vite</div>
+        <div class="box">Learner UI</div>
+        <div class="box">Floating Tutor</div>
+        <div class="box">Responsive Web</div>
+      </div>
+      <div class="arrow"></div>
+      <div class="layer">
+        <h3>Spring Boot Backend</h3>
+        <div class="box">Auth + JWT + Refresh Token</div>
+        <div class="box">Profile + Progress + Metrics</div>
+        <div class="box">Flashcard + Assessment APIs</div>
+        <div class="box">API Contract + Security</div>
+      </div>
+      <div class="arrow"></div>
+      <div class="layer">
+        <h3>AI + Data</h3>
+        <div class="box">FastAPI AI Service</div>
+        <div class="box">Neo4j Knowledge Graph</div>
+        <div class="box">Qdrant Vector Search</div>
+        <div class="box">PostgreSQL Storage</div>
+      </div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">06</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="07 Learner Flow" data-speaker-notes="This slide explains the demo flow. A new learner only follows the main actions: onboarding, lesson, flashcards, quiz, and chapter test.">
+    <div class="header">
+      <p class="eyebrow">Learner Flow</p>
+      <h2>Main learning flow</h2>
+      <p>The learner follows an unlocked pathway, similar to short learning chapters.</p>
+    </div>
+    <div class="flow">
+      <div class="flow-step"><div class="icon">1</div><strong>Onboarding</strong><p>8 questions about level, goal, time, and weak points.</p></div>
+      <div class="flow-step"><div class="icon">2</div><strong>Pathway</strong><p>Each chapter has about 3 lessons and unlocks by result.</p></div>
+      <div class="flow-step"><div class="icon">3</div><strong>Flashcards</strong><p>Study words, patterns, kana, and kanji before the quiz.</p></div>
+      <div class="flow-step"><div class="icon">4</div><strong>Lesson quiz</strong><p>Score 85% or higher to unlock the next lesson.</p></div>
+      <div class="flow-step"><div class="icon">5</div><strong>Chapter test</strong><p>20 questions; 85% is required for the next chapter.</p></div>
+      <div class="flow-step"><div class="icon">6</div><strong>Feedback</strong><p>Store learner feeling to adjust the pace.</p></div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">07</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="08 Personalization" data-speaker-notes="Personalization is not only showing the user name. The system uses profile, weak skills, quiz results, feedback, and fail count to choose support, steady, or faster pace.">
+    <div class="header">
+      <p class="eyebrow">Personalization</p>
+      <h2>Personalized pathway</h2>
+      <p>The pathway changes based on real learning data, not only simple UI branching.</p>
+    </div>
+    <div class="two-col">
+      <div class="card white">
+        <span class="pill">Input signals</span>
+        <ul>
+          <li>Current level: Zero, N5, N4</li>
+          <li>Learning pathway: JLPT, conversation, school, work, reading</li>
+          <li>Daily study minutes</li>
+          <li>Weak skills: kana, grammar, vocab, kanji, listening, speaking</li>
+          <li>Quiz score, attempts, fail count, feedback</li>
+        </ul>
+      </div>
+      <div class="card white">
+        <span class="pill">Adaptive output</span>
+        <ul>
+          <li>Zero beginners study kana first</li>
+          <li>Many failures: stay, review mistakes, ask Tutor</li>
+          <li>Good results: faster pace, unlock next lesson</li>
+          <li>End of chapter: required 20-question test</li>
+          <li>Hard/easy feedback is stored as a pilot signal</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">08</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="09 Tutor RAG" data-speaker-notes="Make clear that chat does not automatically increase mastery. Chat or source reading only records exposure. Mastery changes only through quiz, assessment, or flashcard signals.">
+    <div class="header">
+      <p class="eyebrow">Tutor + RAG</p>
+      <h2>AI Tutor answers with sources</h2>
+      <p>The Tutor uses lesson context, retrieves sources before answering, and stores evidence.</p>
+    </div>
+    <div class="two-col">
+      <div class="card white">
+        <strong>Tutor flow</strong>
+        <ul>
+          <li>Receive question + contextTopic</li>
+          <li>Search Knowledge Graph and Vector DB</li>
+          <li>Call LLM to explain in Vietnamese</li>
+          <li>Return answer, sources, and confidence</li>
+        </ul>
+      </div>
+      <div class="card white">
+        <strong>Learning safety rules</strong>
+        <ul>
+          <li>No source means no exposure record</li>
+          <li>Chat does not increase mastery</li>
+          <li>Quiz/Assessment records correct or wrong</li>
+          <li>Flashcard review records Again, Hard, Good, Easy</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">09</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="10 Assessment" data-speaker-notes="This slide explains why assessment matters. The answer key is not returned to the frontend. The backend grades the session and writes the learning signal after submit.">
+    <div class="header">
+      <p class="eyebrow">Assessment + Mastery</p>
+      <h2>Controlled learning assessment</h2>
+      <p>Quiz and chapter test give clearer learning signals than chat alone.</p>
+    </div>
+    <div class="three-col">
+      <div class="card"><strong>Lesson quiz</strong><p>5 short questions. 85% is required to unlock the next lesson.</p></div>
+      <div class="card"><strong>Chapter test</strong><p>20 mixed questions. 85% is required for the next chapter.</p></div>
+      <div class="card"><strong>Answer key</strong><p>Stored in backend. Start session does not return answers.</p></div>
+      <div class="card"><strong>Learning signal</strong><p>QUIZ and ASSESSMENT only accept CORRECT or WRONG.</p></div>
+      <div class="card"><strong>Flashcard SRS</strong><p>SM-2 schedule with Again, Hard, Good, Easy.</p></div>
+      <div class="card"><strong>Feedback</strong><p>Stores difficulty, pace, and review or move-on choice.</p></div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">10</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="11 Software Engineering" data-speaker-notes="This part should be emphasized because the degree is MSE. The contribution is not only AI, but also a working system with architecture, APIs, tests, and deployment.">
+    <div class="header">
+      <p class="eyebrow">Software Engineering Contribution</p>
+      <h2>Software engineering contribution</h2>
+      <p>The focus is a system with clear architecture, testability, and deployability.</p>
+    </div>
+    <div class="check-list">
+      <div class="check"><b>✓</b><div><strong>Clean architecture</strong><small>Thin controllers, service interfaces, request/response DTOs, separate exception handler.</small></div></div>
+      <div class="check"><b>✓</b><div><strong>Clear API contract</strong><small>Auth, profile, chat, flashcards, assessment, feedback, metrics, planner.</small></div></div>
+      <div class="check"><b>✓</b><div><strong>Security</strong><small>JWT access token, refresh token, Google OAuth linking, BCrypt password.</small></div></div>
+      <div class="check"><b>✓</b><div><strong>Reproducibility</strong><small>Docker Compose, KG seed, benchmark script, automated tests.</small></div></div>
+      <div class="check"><b>✓</b><div><strong>Deployment</strong><small>Frontend Netlify, backend VPS, proxy API, public demo link.</small></div></div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">11</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="12 RAG Benchmark" data-speaker-notes="State the result directly. The benchmark has 50 questions and 4 modes. KG+Vector has the highest recall at 0.740. This is the strongest evidence for RQ2.">
+    <div class="header">
+      <p class="eyebrow">RAG Benchmark</p>
+      <h2>Retrieval result</h2>
+      <p>50 N5/N4 questions, 4 modes: LLM only, Vector, KG, KG + Vector.</p>
+    </div>
+    <div class="two-col">
+      <div class="bar-chart">
+        <h3>Source Recall</h3>
+        <div class="bar-row"><span>LLM only</span><div class="track"><div class="fill" style="width: 0%"></div></div><b>0.000</b></div>
+        <div class="bar-row"><span>Vector</span><div class="track"><div class="fill" style="width: 62%"></div></div><b>0.620</b></div>
+        <div class="bar-row"><span>KG</span><div class="track"><div class="fill" style="width: 62%"></div></div><b>0.620</b></div>
+        <div class="bar-row"><span>KG + Vector</span><div class="track"><div class="fill mint" style="width: 74%"></div></div><b>0.740</b></div>
+      </div>
+      <div class="bar-chart">
+        <h3>Precision@3</h3>
+        <div class="bar-row"><span>LLM only</span><div class="track"><div class="fill" style="width: 0%"></div></div><b>0.000</b></div>
+        <div class="bar-row"><span>Vector</span><div class="track"><div class="fill" style="width: 30%"></div></div><b>0.300</b></div>
+        <div class="bar-row"><span>KG</span><div class="track"><div class="fill mint" style="width: 38.6%"></div></div><b>0.386</b></div>
+        <div class="bar-row"><span>KG + Vector</span><div class="track"><div class="fill mint" style="width: 38.6%"></div></div><b>0.386</b></div>
+      </div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">12</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="13 Pilot Study" data-speaker-notes="Use the real data and state the limitation. SUS 58.6 is moderate, not high. This is feedback for product improvement, not a final claim that the system improves learning.">
+    <div class="header">
+      <p class="eyebrow">Pilot User Test</p>
+      <h2>User test result</h2>
+      <p>A small pilot with Vietnamese learners. The goal was to check the flow and collect initial feedback.</p>
+    </div>
+    <div class="metric-grid">
+      <div class="metric"><span>Survey users</span><strong>10</strong><small>Meets the lower bound of the 10-12 user plan.</small></div>
+      <div class="metric"><span>Feedback users</span><strong>11</strong><small>18 feedback rows during study.</small></div>
+      <div class="metric"><span>Lesson attempts</span><strong>25</strong><small>10 users completed lessons.</small></div>
+      <div class="metric"><span>Avg lesson score</span><strong>82.4%</strong><small>Current pass rate: 56.0%.</small></div>
+      <div class="metric"><span>SUS</span><strong>58.6</strong><small>Moderate usability, needs improvement.</small></div>
+      <div class="metric"><span>Trust</span><strong>3.45/5</strong><small>Medium level of trust.</small></div>
+      <div class="metric"><span>Passed attempts</span><strong>14</strong><small>11 attempts did not pass.</small></div>
+      <div class="metric"><span>Knowledge rows</span><strong>185</strong><small>Progress data was recorded.</small></div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">13</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="14 Feedback Improvements" data-speaker-notes="This slide shows how the system was improved from feedback. Each change is linked to a real user issue: unclear flow, too much text, missing audio, and unclear pathway.">
+    <div class="header">
+      <p class="eyebrow">After Feedback</p>
+      <h2>Improvements after user feedback</h2>
+      <p>These changes came from real feedback and end-user testing.</p>
+    </div>
+    <table class="table">
+      <tr><th>Feedback</th><th>App change</th><th>Purpose</th></tr>
+      <tr><td>New users did not see the big picture</td><td>Added tour guide and kana overview</td><td>Easier start from zero</td></tr>
+      <tr><td>The learning flow felt separated</td><td>Chapter pathway, 3 lessons per chapter</td><td>Clear study progress</td></tr>
+      <tr><td>Assessment had no clear role</td><td>20-question chapter test, 85% required</td><td>Real learning checkpoint</td></tr>
+      <tr><td>Missing audio/pronunciation</td><td>Flashcard audio and pronunciation scoring MVP</td><td>Better support for communication</td></tr>
+      <tr><td>Chatbot should not be a separate tab</td><td>Floating Tutor supports quiz context</td><td>Ask when needed, without breaking flow</td></tr>
+    </table>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">14</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="15 Demo Scenario" data-speaker-notes="Use this slide before the live demo. If the network fails, the demo can still be explained through these steps. The live demo should be around 4 to 6 minutes.">
+    <div class="header">
+      <p class="eyebrow">Demo Plan</p>
+      <h2>Short demo scenario</h2>
+      <p>The demo focuses on a zero-beginner learner.</p>
+    </div>
+    <div class="demo-frame">
+      <div class="phone">
+        <div class="phone-top"></div>
+        <div class="screen-line short"></div>
+        <div class="screen-line"></div>
+        <div class="screen-card">
+          <div class="mini-kana">あ</div>
+          <div class="screen-line short"></div>
+          <div class="screen-line"></div>
+        </div>
+        <div class="screen-line"></div>
+        <div class="screen-line short"></div>
+      </div>
+      <div class="check-list">
+        <div class="check"><b>1</b><div><strong>Landing → Onboarding</strong><small>Choose new learner and answer 8 questions.</small></div></div>
+        <div class="check"><b>2</b><div><strong>Zero beginner</strong><small>See create-account option or 3-lesson trial.</small></div></div>
+        <div class="check"><b>3</b><div><strong>Study Kana</strong><small>Use cards, listen to audio, finish lesson quiz.</small></div></div>
+        <div class="check"><b>4</b><div><strong>Chapter gate</strong><small>After 3 lessons, take a 20-question chapter test.</small></div></div>
+        <div class="check"><b>5</b><div><strong>Tutor and tools</strong><small>Ask VAJA, use lookup, review flashcards.</small></div></div>
+      </div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">15</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="16 Conclusion" data-speaker-notes="Conclude clearly and do not overclaim. The system works end-to-end, RAG benchmark gives evidence, and pilot data shows the flow can be used but usability still needs improvement. Future work includes BKT/IRT and more data.">
+    <div class="header">
+      <p class="eyebrow">Conclusion</p>
+      <h2>Conclusion and future work</h2>
+      <p>VAJA reached the prototype goal and collected initial evaluation data.</p>
+    </div>
+    <div class="two-col">
+      <div class="card white">
+        <strong>Achieved</strong>
+        <ul>
+          <li>End-to-end system works</li>
+          <li>Clearer pathway for new learners</li>
+          <li>Grounded Tutor with RAG sources</li>
+          <li>Benchmark and pilot data for appendix</li>
+          <li>Automated tests: frontend, backend, AI service</li>
+        </ul>
+      </div>
+      <div class="card white">
+        <strong>Limitations and next steps</strong>
+        <ul>
+          <li>Pilot is small; pre/post-test data is weak</li>
+          <li>Pathway still uses heuristic, not BKT/IRT yet</li>
+          <li>Need more audio/STT and real pronunciation data</li>
+          <li>Need larger dataset and longer tracking</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">16</div>
+  </section>
+</body>
+</html>
