@@ -14,15 +14,15 @@ This is the agenda slide. The defense follows six parts: the learning problem, t
 
 ## Slide 04 - Research Questions
 
-The thesis has four research questions. They focus on system architecture, whether KG plus Vector RAG improves retrieval, how the pathway is personalized, and whether learners can use the system in a small pilot test.
+The thesis has five research questions. They focus on the Knowledge Graph design, whether KG plus Vector RAG improves retrieval, how mastery signals change the next task, how the learning roles share state, and whether learners can use the system in a small pilot test.
 
-## Slide 05 - Terminology
+## Slide 05 - Agent Scope
 
-To avoid overclaiming, agent in this thesis means a role-based agent architecture. Tutor, Pathway, Assessment, and Review are specialized roles. This is not a fully autonomous multi-agent system with complex negotiation.
+This slide follows Appendix A. In this thesis, agent means a role-based learning component with clear input, output, and shared learner state. Tutor, Pathway, Assessment, and Review are service roles. The thesis does not claim autonomous multi-agent AI, negotiation, or BKT/IRT in the current MVP.
 
 ## Slide 06 - Architecture
 
-The system has three main parts: React frontend, Spring Boot backend, and Python FastAPI AI service. Spring Boot handles business logic, security, APIs, and learner data. FastAPI handles AI-related tasks such as RAG, Tutor, and planning support. Data is stored in PostgreSQL, Neo4j, and Qdrant.
+The system has three main parts in the thesis: React frontend, Python FastAPI backend, and data/retrieval services. FastAPI handles APIs and AI-related tasks such as RAG, Tutor, planning support, assessment, and learner progress. Data is stored in PostgreSQL, Neo4j, and Qdrant.
 
 ## Slide 07 - Learner Flow
 
@@ -54,7 +54,7 @@ The pilot has 10 survey users, 11 feedback users, and 25 lesson attempts. The SU
 
 ## Slide 14 - Feedback Improvements
 
-Based on user feedback, the system was improved with a kana overview, tour guide, chapter pathway, chapter test, audio, pronunciation scoring MVP, and a floating Tutor during study.
+Based on user feedback, the system was improved with a kana overview, tour guide, chapter pathway, chapter test, flashcard audio, pronunciation guidance, and a floating Tutor during study.
 
 ## Slide 15 - Demo Scenario
 

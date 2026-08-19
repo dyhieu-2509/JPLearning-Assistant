@@ -377,6 +377,10 @@
       gap: 16px;
     }
 
+    .rq-grid.five {
+      gap: 12px;
+    }
+
     .rq-card {
       display: grid;
       grid-template-columns: 74px 1fr;
@@ -385,6 +389,12 @@
       border: 1px solid var(--line);
       border-radius: 8px;
       background: #ffffff;
+    }
+
+    .rq-grid.five .rq-card {
+      grid-template-columns: 58px 1fr;
+      gap: 12px;
+      padding: 13px 14px;
     }
 
     .rq-card b {
@@ -397,11 +407,20 @@
       font-size: 22px;
     }
 
+    .rq-grid.five .rq-card b {
+      height: 58px;
+      font-size: 18px;
+    }
+
     .rq-card strong {
       display: block;
       color: var(--navy);
       font-size: 21px;
       line-height: 1.25;
+    }
+
+    .rq-grid.five .rq-card strong {
+      font-size: 18px;
     }
 
     .rq-card p {
@@ -410,6 +429,12 @@
       font-size: 17px;
       line-height: 1.35;
       font-weight: 700;
+    }
+
+    .rq-grid.five .rq-card p {
+      margin-top: 4px;
+      font-size: 15px;
+      line-height: 1.28;
     }
 
     .architecture {
@@ -590,6 +615,59 @@
       font-size: 20px;
       line-height: 1.45;
       font-weight: 700;
+    }
+
+    .scope-table {
+      display: grid;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    .scope-row {
+      display: grid;
+      grid-template-columns: 0.78fr 1.35fr 1.18fr;
+      min-height: 70px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .scope-row:last-child {
+      border-bottom: 0;
+    }
+
+    .scope-row.header-row {
+      min-height: 44px;
+      background: #eef7ff;
+    }
+
+    .scope-row > div {
+      display: grid;
+      align-content: center;
+      padding: 10px 14px;
+      border-right: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.3;
+      font-weight: 700;
+    }
+
+    .scope-row > div:last-child {
+      border-right: 0;
+    }
+
+    .scope-row.header-row > div {
+      color: var(--navy);
+      font-size: 14px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .scope-row strong {
+      display: block;
+      color: var(--navy);
+      font-size: 19px;
+      line-height: 1.2;
     }
 
     .bar-chart {
@@ -828,7 +906,7 @@
     <div>
       <p class="eyebrow">Master of Software Engineering - Thesis Defense</p>
       <h1>VAJA: Personalized Japanese Learning Assistant</h1>
-      <p class="subtitle">Design and implementation of a web-based learning assistant using Knowledge Graph, RAG, personalized pathways, flashcards, and assessment for N5/N4 learners.</p>
+      <p class="subtitle">Design and implementation of a web-based learning assistant using role-based learning agents, Knowledge Graph, RAG, personalized pathways, flashcards, and assessment for N5/N4 learners.</p>
     </div>
     <div class="meta-row">
       <div class="meta"><span>Student</span><strong>Bui Duy Hieu</strong></div>
@@ -872,7 +950,7 @@
     <div class="three-col">
       <div class="card"><div class="number">01</div><strong>N5/N4 study problem</strong><p>New learners can get lost because content is separated and sources are unclear.</p></div>
       <div class="card"><div class="number">02</div><strong>Agent scope</strong><p>Agents are role-based services, not a fully autonomous multi-agent system.</p></div>
-      <div class="card"><div class="number">03</div><strong>System architecture</strong><p>React, Spring Boot, FastAPI AI service, PostgreSQL, Neo4j, and Qdrant.</p></div>
+      <div class="card"><div class="number">03</div><strong>System architecture</strong><p>React, Python FastAPI backend, PostgreSQL, Neo4j, and Qdrant.</p></div>
       <div class="card"><div class="number">04</div><strong>Personalized learning</strong><p>Based on profile, pathway, quiz, flashcards, feedback, and weak skills.</p></div>
       <div class="card"><div class="number">05</div><strong>Measured results</strong><p>RAG benchmark, pilot test, SUS/trust, pass rate, and test coverage.</p></div>
       <div class="card"><div class="number">06</div><strong>Demo and limits</strong><p>Show the running app, what was achieved, and what still needs improvement.</p></div>
@@ -880,47 +958,43 @@
     <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">03</div>
   </section>
 
-  <section class="slide" data-document-role="page" data-label="04 Research Questions" data-speaker-notes="This slide shows the research direction. I will briefly present four questions, and the next slides answer them one by one.">
+  <section class="slide" data-document-role="page" data-label="04 Research Questions" data-speaker-notes="This slide follows Table 1 in the thesis. I will briefly present five research questions and show how the next slides answer them.">
     <div class="header">
       <p class="eyebrow">Research Questions</p>
-      <h2>4 main questions</h2>
-      <p>The questions are linked to system design, RAG, personalized pathway, and pilot study.</p>
+      <h2>5 main questions</h2>
+      <p>The questions match the thesis evaluation plan: KG, RAG, mastery, role state, and pilot usability.</p>
     </div>
-    <div class="rq-grid">
-      <div class="rq-card"><b>RQ1</b><div><strong>Which architecture is suitable?</strong><p>How can frontend, backend, AI service, KG, and vector DB work together in one learning system?</p></div></div>
-      <div class="rq-card"><b>RQ2</b><div><strong>Does KG + Vector RAG help?</strong><p>Compare LLM only, Vector, KG, and KG + Vector with an automated benchmark.</p></div></div>
-      <div class="rq-card"><b>RQ3</b><div><strong>How is the pathway personalized?</strong><p>The system adapts using profile, weak skills, quiz results, and feedback.</p></div></div>
-      <div class="rq-card"><b>RQ4</b><div><strong>Can learners use it?</strong><p>A small pilot test with 10-12 users measures SUS, trust, score, pass rate, and comments.</p></div></div>
+    <div class="rq-grid five">
+      <div class="rq-card"><b>RQ1</b><div><strong>How is the KG built?</strong><p>Store N5/N4 words, grammar, kanji, lessons, and study links in Neo4j.</p></div></div>
+      <div class="rq-card"><b>RQ2</b><div><strong>Does KG + Vector RAG help?</strong><p>Compare LLM only, Vector, KG, and KG + Vector using retrieval metrics.</p></div></div>
+      <div class="rq-card"><b>RQ3</b><div><strong>How does mastery change tasks?</strong><p>Use quiz and flashcard signals to slow down, review, or move faster.</p></div></div>
+      <div class="rq-card"><b>RQ4</b><div><strong>How do roles share state?</strong><p>Tutor, Pathway, Assessment, and Review share learner state without mixing jobs.</p></div></div>
+      <div class="rq-card"><b>RQ5</b><div><strong>Can learners use it?</strong><p>Pilot test with Vietnamese learners: SUS, trust, scores, feedback, and comments.</p></div></div>
     </div>
     <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">04</div>
   </section>
 
-  <section class="slide" data-document-role="page" data-label="05 Terminology" data-speaker-notes="This slide prevents overclaiming. Agent here means a functional role, not a fully autonomous multi-agent system with complex negotiation.">
+  <section class="slide" data-document-role="page" data-label="05 Agent Scope" data-speaker-notes="This slide follows Appendix A. Agent here means a role-based learning component with clear input, output, and shared learner state. The thesis does not claim autonomous multi-agent AI.">
     <div class="header">
-      <p class="eyebrow">Scope</p>
-      <h2>How the term Agent is used</h2>
-      <p>In this thesis, the system is presented as a role-based agent architecture.</p>
+      <p class="eyebrow">Scope Clarification</p>
+      <h2>Role-based learning agent scope</h2>
+      <p>Each role has a clear job, input, output, and shared learner state. This is not autonomous multi-agent AI.</p>
     </div>
-    <div class="agent-map">
-      <div class="agent-stack">
-        <div class="agent"><span>T</span><div><strong>Tutor Role</strong><small>Explain, retrieve RAG sources, support quiz mistakes.</small></div></div>
-        <div class="agent"><span>P</span><div><strong>Pathway Role</strong><small>Select next lesson and adjust learning pace.</small></div></div>
-        <div class="agent"><span>A</span><div><strong>Assessment Role</strong><small>Quiz, chapter test, and backend-side answer key.</small></div></div>
-        <div class="agent"><span>R</span><div><strong>Review Role</strong><small>Flashcards, SRS, and weak-point review.</small></div></div>
-      </div>
-      <div class="note-box">
-        <strong>No overclaiming</strong>
-        <p>This is not a fully autonomous multi-agent system. The roles work through APIs, state, and clear rules/heuristics. The main value is software design, grounded RAG, and recorded learning data.</p>
-      </div>
+    <div class="scope-table">
+      <div class="scope-row header-row"><div>Term in thesis</div><div>Real implementation</div><div>Not claimed</div></div>
+      <div class="scope-row"><div><strong>Tutor role</strong></div><div>Retrieves KG/vector sources and asks the LLM to answer.</div><div>No autonomous goal setting.</div></div>
+      <div class="scope-row"><div><strong>Pathway role</strong></div><div>Reads profile, scores, weak items, due cards, and study time.</div><div>No BKT/DKT/IRT model in the current MVP.</div></div>
+      <div class="scope-row"><div><strong>Assessment role</strong></div><div>Grades quiz/test answers and records mastery signals.</div><div>No adaptive testing model yet.</div></div>
+      <div class="scope-row"><div><strong>Review role</strong></div><div>Uses SM-2 style flashcard ratings and next-review time.</div><div>No independent planning agent.</div></div>
     </div>
     <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">05</div>
   </section>
 
-  <section class="slide" data-document-role="page" data-label="06 Architecture" data-speaker-notes="Explain the three main parts. The frontend supports the learning experience, Spring Boot handles business logic and security, and FastAPI handles AI-related tasks. Data is stored in PostgreSQL, Neo4j, and Qdrant.">
+  <section class="slide" data-document-role="page" data-label="06 Architecture" data-speaker-notes="Explain the three main parts used in the thesis: React frontend, Python FastAPI backend, and data/AI retrieval services. Data is stored in PostgreSQL, Neo4j, and Qdrant.">
     <div class="header">
       <p class="eyebrow">System Architecture</p>
       <h2>Overall architecture</h2>
-      <p>Hybrid architecture: React frontend, Spring Boot backend, Python FastAPI AI service.</p>
+      <p>Thesis architecture: React frontend, Python FastAPI backend, PostgreSQL, Neo4j, and Qdrant.</p>
     </div>
     <div class="architecture">
       <div class="layer">
@@ -932,19 +1006,19 @@
       </div>
       <div class="arrow"></div>
       <div class="layer">
-        <h3>Spring Boot Backend</h3>
+        <h3>FastAPI Backend</h3>
         <div class="box">Auth + JWT + Refresh Token</div>
         <div class="box">Profile + Progress + Metrics</div>
-        <div class="box">Flashcard + Assessment APIs</div>
+        <div class="box">Tutor + Planner + Assessment APIs</div>
         <div class="box">API Contract + Security</div>
       </div>
       <div class="arrow"></div>
       <div class="layer">
-        <h3>AI + Data</h3>
-        <div class="box">FastAPI AI Service</div>
+        <h3>Data + Retrieval</h3>
+        <div class="box">PostgreSQL Learner Data</div>
         <div class="box">Neo4j Knowledge Graph</div>
         <div class="box">Qdrant Vector Search</div>
-        <div class="box">PostgreSQL Storage</div>
+        <div class="box">LLM Provider</div>
       </div>
     </div>
     <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">06</div>
@@ -1115,7 +1189,7 @@
       <tr><td>New users did not see the big picture</td><td>Added tour guide and kana overview</td><td>Easier start from zero</td></tr>
       <tr><td>The learning flow felt separated</td><td>Chapter pathway, 3 lessons per chapter</td><td>Clear study progress</td></tr>
       <tr><td>Assessment had no clear role</td><td>20-question chapter test, 85% required</td><td>Real learning checkpoint</td></tr>
-      <tr><td>Missing audio/pronunciation</td><td>Flashcard audio and pronunciation scoring MVP</td><td>Better support for communication</td></tr>
+      <tr><td>Missing audio/pronunciation</td><td>Flashcard audio and pronunciation guidance</td><td>Better support for communication</td></tr>
       <tr><td>Chatbot should not be a separate tab</td><td>Floating Tutor supports quiz context</td><td>Ask when needed, without breaking flow</td></tr>
     </table>
     <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">14</div>
@@ -1165,7 +1239,7 @@
           <li>Clearer pathway for new learners</li>
           <li>Grounded Tutor with RAG sources</li>
           <li>Benchmark and pilot data for appendix</li>
-          <li>Automated tests: frontend, backend, AI service</li>
+          <li>Automated tests: frontend, backend, and retrieval modules</li>
         </ul>
       </div>
       <div class="card white">
@@ -1173,7 +1247,7 @@
         <ul>
           <li>Pilot is small; pre/post-test data is weak</li>
           <li>Pathway still uses heuristic, not BKT/IRT yet</li>
-          <li>Need more audio/STT and real pronunciation data</li>
+          <li>Need speech recognition and real pronunciation data</li>
           <li>Need larger dataset and longer tracking</li>
         </ul>
       </div>
