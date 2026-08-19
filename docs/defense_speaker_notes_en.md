@@ -20,46 +20,50 @@ The thesis has five research questions. They focus on the Knowledge Graph design
 
 This slide follows Appendix A. In this thesis, agent means a role-based learning component with clear input, output, and shared learner state. Tutor, Pathway, Assessment, and Review are service roles. The thesis does not claim autonomous multi-agent AI, negotiation, or BKT/IRT in the current MVP.
 
-## Slide 06 - Architecture
+## Slide 06 - What This Thesis Does Not Claim
+
+This slide protects the research scope. The thesis does not claim autonomous multi-agent AI, BKT/DKT/IRT, proven learning gain, always-correct LLM answers, or representative pilot results for all learners.
+
+## Slide 07 - Architecture
 
 The system has three main parts in the thesis: React frontend, Python FastAPI backend, and data/retrieval services. FastAPI handles APIs and AI-related tasks such as RAG, Tutor, planning support, assessment, and learner progress. Data is stored in PostgreSQL, Neo4j, and Qdrant.
 
-## Slide 07 - Learner Flow
+## Slide 08 - Learner Flow
 
 The learner follows a clear flow: onboarding, pathway, flashcards, lesson quiz, chapter test, and feedback. A learner needs 85% to unlock the next lesson. After three lessons, the learner needs to pass a 20-question chapter test.
 
-## Slide 08 - Personalization
+## Slide 09 - Personalization
 
 Personalization is based on level, learning goal, daily study time, weak skills, quiz results, flashcard review, fail count, and feedback. A zero beginner studies kana first. A learner who fails many times gets more review. A learner who does well can move faster.
 
-## Slide 09 - Tutor + RAG
+## Slide 10 - Tutor + RAG
 
 The Tutor is not only free chat. It receives the lesson context, retrieves sources from Knowledge Graph and Vector DB, then generates an answer. Chat only records exposure. Mastery changes only when there is a structured signal from quiz, assessment, or flashcard review.
 
-## Slide 10 - Assessment + Mastery
+## Slide 11 - Assessment + Mastery
 
 Quiz and assessment are important because they create clear learning signals. The answer key is stored in the backend. The frontend does not receive answers when a session starts. After submission, the backend grades the answers and records correct or wrong results.
 
-## Slide 11 - Software Engineering
+## Slide 12 - Software Engineering
 
 Because this is an MSE thesis, the main contribution is also software engineering. The system has clean architecture, clear API contracts, JWT and refresh token, Docker setup, benchmark scripts, automated tests, and public deployment.
 
-## Slide 12 - RAG Benchmark
+## Slide 13 - RAG Benchmark
 
-The benchmark uses 50 N5/N4 questions and four modes. KG plus Vector has the highest Source Recall at 0.740. This supports RQ2, because combining graph and vector retrieval gives better source coverage.
+The benchmark uses 50 N5/N4 questions and four modes. KG plus Vector has the highest Source Recall at 0.740. This measures retrieval quality only. It is not answer accuracy, and answer correctness or faithfulness still needs a separate evaluation.
 
-## Slide 13 - Pilot User Test
+## Slide 14 - Pilot User Test
 
-The pilot has 10 survey users, 11 feedback users, and 25 lesson attempts. The SUS score is 58.6, trust is 3.45 out of 5, average lesson score is 82.4%, and pass rate is 56%. The result shows that the flow can be completed, but usability still needs improvement.
+The pilot data has different denominators: 10 pilot learners, 11 survey rows, 11 feedback users, and 19 knowledge-progress users. These should not be combined into one sample size. The SUS score is 58.6, trust is 3.45 out of 5, average lesson score is 82.4%, and pass rate is 56%.
 
-## Slide 14 - Feedback Improvements
+## Slide 15 - Feedback Improvements
 
 Based on user feedback, the system was improved with a kana overview, tour guide, chapter pathway, chapter test, flashcard audio, pronunciation guidance, and a floating Tutor during study.
 
-## Slide 15 - Demo Scenario
+## Slide 16 - Demo Scenario
 
 The demo will focus on a zero-beginner learner. The learner opens the landing page, answers onboarding questions, studies kana, uses flashcards and audio, completes a quiz, sees the chapter gate, and can ask VAJA when needed.
 
-## Slide 16 - Conclusion
+## Slide 17 - Conclusion
 
-VAJA works end-to-end, uses KG-RAG, supports a personalized pathway at prototype level, and has benchmark and pilot data. The limitations are small pilot size, weak pre/post-test data, heuristic pathway logic, and the need for stronger BKT/IRT or long-term learning data.
+VAJA works end-to-end, uses KG-RAG, supports a personalized pathway at prototype level, and has retrieval benchmark and pilot data. The limitations are small pilot size, no learning-gain claim, no BKT/IRT yet, and no separate answer-quality or faithfulness evaluation yet.

@@ -670,6 +670,60 @@
       line-height: 1.2;
     }
 
+    .claim-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .claim-card {
+      display: grid;
+      align-content: start;
+      gap: 12px;
+      min-height: 330px;
+      padding: 18px;
+      border: 1px solid #f4c7d2;
+      border-radius: 8px;
+      background: #fff5f7;
+    }
+
+    .claim-card b {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      background: var(--rose);
+      color: #ffffff;
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .claim-card strong {
+      color: var(--navy);
+      font-size: 20px;
+      line-height: 1.22;
+    }
+
+    .claim-card p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.35;
+      font-weight: 700;
+    }
+
+    .evidence-note {
+      padding: 15px 18px;
+      border: 1px solid #fed7aa;
+      border-radius: 8px;
+      background: #fff7ed;
+      color: #9a3412;
+      font-size: 17px;
+      line-height: 1.35;
+      font-weight: 900;
+    }
+
     .bar-chart {
       display: grid;
       gap: 16px;
@@ -990,7 +1044,23 @@
     <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">05</div>
   </section>
 
-  <section class="slide" data-document-role="page" data-label="06 Architecture" data-speaker-notes="Explain the three main parts used in the thesis: React frontend, Python FastAPI backend, and data/AI retrieval services. Data is stored in PostgreSQL, Neo4j, and Qdrant.">
+  <section class="slide" data-document-role="page" data-label="06 What This Thesis Does Not Claim" data-speaker-notes="This slide protects the research scope. State clearly that the thesis does not claim autonomous multi-agent AI, BKT/DKT/IRT, proven learning gain, always-correct LLM answers, or representative pilot results.">
+    <div class="header">
+      <p class="eyebrow">Research Scope</p>
+      <h2>What this thesis does not claim</h2>
+      <p>These limits are stated clearly so the evaluation is interpreted in the right scope.</p>
+    </div>
+    <div class="claim-grid">
+      <div class="claim-card"><b>!</b><strong>No autonomous multi-agent claim</strong><p>Agents mean role-based learning services with shared learner state, not fully autonomous negotiation or planning agents.</p></div>
+      <div class="claim-card"><b>!</b><strong>No BKT, DKT, or IRT claim</strong><p>The current pathway uses heuristic rules and learning signals. Formal mastery models are future work.</p></div>
+      <div class="claim-card"><b>!</b><strong>No proven learning gain claim</strong><p>The pilot checks usability and flow. It does not prove long-term improvement in Japanese ability.</p></div>
+      <div class="claim-card"><b>!</b><strong>No always-correct LLM claim</strong><p>RAG provides sources and grounding, but answer correctness and faithfulness still need separate human evaluation.</p></div>
+      <div class="claim-card"><b>!</b><strong>No population-wide pilot claim</strong><p>The pilot is small and local. It is not representative of all Vietnamese Japanese learners.</p></div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">06</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="07 Architecture" data-speaker-notes="Explain the three main parts used in the thesis: React frontend, Python FastAPI backend, and data/AI retrieval services. Data is stored in PostgreSQL, Neo4j, and Qdrant.">
     <div class="header">
       <p class="eyebrow">System Architecture</p>
       <h2>Overall architecture</h2>
@@ -1021,10 +1091,10 @@
         <div class="box">LLM Provider</div>
       </div>
     </div>
-    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">06</div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">07</div>
   </section>
 
-  <section class="slide" data-document-role="page" data-label="07 Learner Flow" data-speaker-notes="This slide explains the demo flow. A new learner only follows the main actions: onboarding, lesson, flashcards, quiz, and chapter test.">
+  <section class="slide" data-document-role="page" data-label="08 Learner Flow" data-speaker-notes="This slide explains the demo flow. A new learner only follows the main actions: onboarding, lesson, flashcards, quiz, and chapter test.">
     <div class="header">
       <p class="eyebrow">Learner Flow</p>
       <h2>Main learning flow</h2>
@@ -1038,10 +1108,10 @@
       <div class="flow-step"><div class="icon">5</div><strong>Chapter test</strong><p>20 questions; 85% is required for the next chapter.</p></div>
       <div class="flow-step"><div class="icon">6</div><strong>Feedback</strong><p>Store learner feeling to adjust the pace.</p></div>
     </div>
-    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">07</div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">08</div>
   </section>
 
-  <section class="slide" data-document-role="page" data-label="08 Personalization" data-speaker-notes="Personalization is not only showing the user name. The system uses profile, weak skills, quiz results, feedback, and fail count to choose support, steady, or faster pace.">
+  <section class="slide" data-document-role="page" data-label="09 Personalization" data-speaker-notes="Personalization is not only showing the user name. The system uses profile, weak skills, quiz results, feedback, and fail count to choose support, steady, or faster pace.">
     <div class="header">
       <p class="eyebrow">Personalization</p>
       <h2>Personalized pathway</h2>
@@ -1069,10 +1139,10 @@
         </ul>
       </div>
     </div>
-    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">08</div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">09</div>
   </section>
 
-  <section class="slide" data-document-role="page" data-label="09 Tutor RAG" data-speaker-notes="Make clear that chat does not automatically increase mastery. Chat or source reading only records exposure. Mastery changes only through quiz, assessment, or flashcard signals.">
+  <section class="slide" data-document-role="page" data-label="10 Tutor RAG" data-speaker-notes="Make clear that chat does not automatically increase mastery. Chat or source reading only records exposure. Mastery changes only through quiz, assessment, or flashcard signals.">
     <div class="header">
       <p class="eyebrow">Tutor + RAG</p>
       <h2>AI Tutor answers with sources</h2>
@@ -1098,10 +1168,10 @@
         </ul>
       </div>
     </div>
-    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">09</div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">10</div>
   </section>
 
-  <section class="slide" data-document-role="page" data-label="10 Assessment" data-speaker-notes="This slide explains why assessment matters. The answer key is not returned to the frontend. The backend grades the session and writes the learning signal after submit.">
+  <section class="slide" data-document-role="page" data-label="11 Assessment" data-speaker-notes="This slide explains why assessment matters. The answer key is not returned to the frontend. The backend grades the session and writes the learning signal after submit.">
     <div class="header">
       <p class="eyebrow">Assessment + Mastery</p>
       <h2>Controlled learning assessment</h2>
@@ -1115,10 +1185,10 @@
       <div class="card"><strong>Flashcard SRS</strong><p>SM-2 schedule with Again, Hard, Good, Easy.</p></div>
       <div class="card"><strong>Feedback</strong><p>Stores difficulty, pace, and review or move-on choice.</p></div>
     </div>
-    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">10</div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">11</div>
   </section>
 
-  <section class="slide" data-document-role="page" data-label="11 Software Engineering" data-speaker-notes="This part should be emphasized because the degree is MSE. The contribution is not only AI, but also a working system with architecture, APIs, tests, and deployment.">
+  <section class="slide" data-document-role="page" data-label="12 Software Engineering" data-speaker-notes="This part should be emphasized because the degree is MSE. The contribution is not only AI, but also a working system with architecture, APIs, tests, and deployment.">
     <div class="header">
       <p class="eyebrow">Software Engineering Contribution</p>
       <h2>Software engineering contribution</h2>
@@ -1131,14 +1201,14 @@
       <div class="check"><b>✓</b><div><strong>Reproducibility</strong><small>Docker Compose, KG seed, benchmark script, automated tests.</small></div></div>
       <div class="check"><b>✓</b><div><strong>Deployment</strong><small>Frontend Netlify, backend VPS, proxy API, public demo link.</small></div></div>
     </div>
-    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">11</div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">12</div>
   </section>
 
-  <section class="slide" data-document-role="page" data-label="12 RAG Benchmark" data-speaker-notes="State the result directly. The benchmark has 50 questions and 4 modes. KG+Vector has the highest recall at 0.740. This is the strongest evidence for RQ2.">
+  <section class="slide" data-document-role="page" data-label="13 RAG Benchmark" data-speaker-notes="State the result carefully. The benchmark measures retrieval quality, not answer accuracy. KG+Vector has Source Recall 0.740, but correctness and faithfulness are not evaluated yet.">
     <div class="header">
       <p class="eyebrow">RAG Benchmark</p>
-      <h2>Retrieval result</h2>
-      <p>50 N5/N4 questions, 4 modes: LLM only, Vector, KG, KG + Vector.</p>
+      <h2>Retrieval quality result</h2>
+      <p>50 N5/N4 questions, 4 modes. These metrics measure retrieved sources, not final answer correctness.</p>
     </div>
     <div class="two-col">
       <div class="bar-chart">
@@ -1156,29 +1226,30 @@
         <div class="bar-row"><span>KG + Vector</span><div class="track"><div class="fill mint" style="width: 38.6%"></div></div><b>0.386</b></div>
       </div>
     </div>
-    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">12</div>
-  </section>
-
-  <section class="slide" data-document-role="page" data-label="13 Pilot Study" data-speaker-notes="Use the real data and state the limitation. SUS 58.6 is moderate, not high. This is feedback for product improvement, not a final claim that the system improves learning.">
-    <div class="header">
-      <p class="eyebrow">Pilot User Test</p>
-      <h2>User test result</h2>
-      <p>A small pilot with Vietnamese learners. The goal was to check the flow and collect initial feedback.</p>
-    </div>
-    <div class="metric-grid">
-      <div class="metric"><span>Survey users</span><strong>10</strong><small>Meets the lower bound of the 10-12 user plan.</small></div>
-      <div class="metric"><span>Feedback users</span><strong>11</strong><small>18 feedback rows during study.</small></div>
-      <div class="metric"><span>Lesson attempts</span><strong>25</strong><small>10 users completed lessons.</small></div>
-      <div class="metric"><span>Avg lesson score</span><strong>82.4%</strong><small>Current pass rate: 56.0%.</small></div>
-      <div class="metric"><span>SUS</span><strong>58.6</strong><small>Moderate usability, needs improvement.</small></div>
-      <div class="metric"><span>Trust</span><strong>3.45/5</strong><small>Medium level of trust.</small></div>
-      <div class="metric"><span>Passed attempts</span><strong>14</strong><small>11 attempts did not pass.</small></div>
-      <div class="metric"><span>Knowledge rows</span><strong>185</strong><small>Progress data was recorded.</small></div>
-    </div>
+    <div class="evidence-note">Important: Source Recall 0.740 is not answer accuracy 74%. Answer correctness and faithfulness require a separate evaluation.</div>
     <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">13</div>
   </section>
 
-  <section class="slide" data-document-role="page" data-label="14 Feedback Improvements" data-speaker-notes="This slide shows how the system was improved from feedback. Each change is linked to a real user issue: unclear flow, too much text, missing audio, and unclear pathway.">
+  <section class="slide" data-document-role="page" data-label="14 Pilot Study" data-speaker-notes="Explain sample consistency. The numbers use different denominators: learners, survey rows, feedback users, and knowledge-progress users. Do not combine them into one sample size.">
+    <div class="header">
+      <p class="eyebrow">Pilot User Test</p>
+      <h2>Pilot sample consistency</h2>
+      <p>Different endpoints produce different counts. They are related logs, not one combined sample size.</p>
+    </div>
+    <div class="metric-grid">
+      <div class="metric"><span>Pilot learners</span><strong>10</strong><small>Main learner group used for lesson-flow observation.</small></div>
+      <div class="metric"><span>Survey rows</span><strong>11</strong><small>SUS/trust submissions; counted as rows, not unique learners.</small></div>
+      <div class="metric"><span>Feedback users</span><strong>11</strong><small>Distinct users who submitted in-app study feedback.</small></div>
+      <div class="metric"><span>Progress users</span><strong>19</strong><small>Users with knowledge-progress records, including pilot/demo/test use.</small></div>
+      <div class="metric"><span>Lesson attempts</span><strong>25</strong><small>Attempt logs, not unique learner count.</small></div>
+      <div class="metric"><span>Avg score</span><strong>82.4%</strong><small>Average over recorded lesson attempts.</small></div>
+      <div class="metric"><span>Pass rate</span><strong>56%</strong><small>14 passed attempts out of 25 attempts.</small></div>
+      <div class="metric"><span>SUS / Trust</span><strong>58.6</strong><small>Trust average: 3.45/5. Moderate, not high.</small></div>
+    </div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">14</div>
+  </section>
+
+  <section class="slide" data-document-role="page" data-label="15 Feedback Improvements" data-speaker-notes="This slide shows how the system was improved from feedback. Each change is linked to a real user issue: unclear flow, too much text, missing audio, and unclear pathway.">
     <div class="header">
       <p class="eyebrow">After Feedback</p>
       <h2>Improvements after user feedback</h2>
@@ -1192,10 +1263,10 @@
       <tr><td>Missing audio/pronunciation</td><td>Flashcard audio and pronunciation guidance</td><td>Better support for communication</td></tr>
       <tr><td>Chatbot should not be a separate tab</td><td>Floating Tutor supports quiz context</td><td>Ask when needed, without breaking flow</td></tr>
     </table>
-    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">14</div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">15</div>
   </section>
 
-  <section class="slide" data-document-role="page" data-label="15 Demo Scenario" data-speaker-notes="Use this slide before the live demo. If the network fails, the demo can still be explained through these steps. The live demo should be around 4 to 6 minutes.">
+  <section class="slide" data-document-role="page" data-label="16 Demo Scenario" data-speaker-notes="Use this slide before the live demo. If the network fails, the demo can still be explained through these steps. The live demo should be around 4 to 6 minutes.">
     <div class="header">
       <p class="eyebrow">Demo Plan</p>
       <h2>Short demo scenario</h2>
@@ -1222,10 +1293,10 @@
         <div class="check"><b>5</b><div><strong>Tutor and tools</strong><small>Ask VAJA, use lookup, review flashcards.</small></div></div>
       </div>
     </div>
-    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">15</div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">16</div>
   </section>
 
-  <section class="slide" data-document-role="page" data-label="16 Conclusion" data-speaker-notes="Conclude clearly and do not overclaim. The system works end-to-end, RAG benchmark gives evidence, and pilot data shows the flow can be used but usability still needs improvement. Future work includes BKT/IRT and more data.">
+  <section class="slide" data-document-role="page" data-label="17 Conclusion" data-speaker-notes="Conclude clearly and do not overclaim. The system works end-to-end, RAG benchmark gives evidence for retrieval quality, and pilot data shows the flow can be used but usability still needs improvement. Future work includes answer-quality evaluation, BKT/IRT, and more data.">
     <div class="header">
       <p class="eyebrow">Conclusion</p>
       <h2>Conclusion and future work</h2>
@@ -1238,21 +1309,21 @@
           <li>End-to-end system works</li>
           <li>Clearer pathway for new learners</li>
           <li>Grounded Tutor with RAG sources</li>
-          <li>Benchmark and pilot data for appendix</li>
+          <li>Retrieval benchmark and pilot data for appendix</li>
           <li>Automated tests: frontend, backend, and retrieval modules</li>
         </ul>
       </div>
       <div class="card white">
         <strong>Limitations and next steps</strong>
         <ul>
-          <li>Pilot is small; pre/post-test data is weak</li>
+          <li>Pilot is small; results are not population-wide</li>
           <li>Pathway still uses heuristic, not BKT/IRT yet</li>
+          <li>Answer quality and faithfulness need separate evaluation</li>
           <li>Need speech recognition and real pronunciation data</li>
-          <li>Need larger dataset and longer tracking</li>
         </ul>
       </div>
     </div>
-    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">16</div>
+    <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">17</div>
   </section>
 </body>
 </html>

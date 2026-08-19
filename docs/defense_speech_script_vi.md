@@ -61,9 +61,9 @@ Mục tiêu slide: cho hội đồng biết bài nói sẽ đi theo cấu trúc 
 
 Script nói:
 
-Bài trình bày của em gồm 6 phần chính. Phần đầu là vấn đề học N5/N4 và lý do cần một luồng học rõ ràng hơn.
+Bài trình bày của em gồm các phần chính sau. Phần đầu là vấn đề học N5/N4 và lý do cần một luồng học rõ ràng hơn.
 
-Phần thứ hai là phạm vi của chữ “agent” trong đề tài. Em sẽ nói rõ agent ở đây là các vai trò học tập, không phải một hệ thống multi-agent tự trị hoàn toàn.
+Phần thứ hai là phạm vi của chữ “agent” trong đề tài và các điều thesis không claim. Em sẽ nói rõ agent ở đây là các vai trò học tập, không phải một hệ thống multi-agent tự trị hoàn toàn.
 
 Phần thứ ba là kiến trúc hệ thống, gồm frontend, backend FastAPI, cơ sở dữ liệu, Knowledge Graph và Vector Search.
 
@@ -131,14 +131,43 @@ Vì vậy, em không claim đây là một multi-agent system tự trị hoàn t
 
 Câu chuyển slide:
 
-Sau khi làm rõ phạm vi agent, em xin chuyển sang kiến trúc hệ thống.
+Để tránh hiểu quá phạm vi nghiên cứu, em xin tách riêng một slide về những điều thesis không claim.
 
 Lưu ý khi bị hỏi:
 
 - Câu trả lời an toàn: “Trong thesis, agent là role-based service/component, không phải autonomous agent theo nghĩa đầy đủ.”
 - Nếu bị hỏi sao không dùng LangGraph/AutoGen/CrewAI: trả lời đây là hướng phát triển sau; MVP tập trung vào workflow ổn định, đo được và triển khai được.
 
-## Slide 06 - Architecture
+## Slide 06 - What This Thesis Does Not Claim
+
+Thời lượng gợi ý: 60-75 giây
+
+Mục tiêu slide: nói rõ giới hạn nghiên cứu để hội đồng hiểu đây là limitation được kiểm soát, không phải lỗi claim quá mức.
+
+Script nói:
+
+Slide này là phần em muốn nói rõ trước khi đi tiếp vào kiến trúc và kết quả. Thesis của em có dùng AI, RAG và agent roles, nhưng có một số điều em không claim.
+
+Thứ nhất, em không claim đây là autonomous multi-agent system đầy đủ. Agent trong đề tài là role-based learning services, có nhiệm vụ riêng và chia sẻ trạng thái người học.
+
+Thứ hai, em không claim pathway hiện tại dùng BKT, DKT hay IRT. Pathway trong MVP dùng heuristic rule và learning signals như quiz score, fail count, flashcard rating và feedback.
+
+Thứ ba, em không claim hệ thống đã chứng minh learning gain. Pilot user test chỉ kiểm tra usability, flow, trust và dữ liệu ban đầu, chưa đủ để kết luận người học giỏi lên sau thời gian dài.
+
+Thứ tư, em không claim LLM answer luôn đúng. RAG giúp câu trả lời có nguồn hơn, nhưng answer correctness và faithfulness vẫn cần một đánh giá riêng.
+
+Thứ năm, em không claim pilot đại diện cho toàn bộ người học tiếng Nhật ở Việt Nam. Pilot nhỏ chỉ dùng để kiểm tra ban đầu với nhóm gần đối tượng thesis.
+
+Câu chuyển slide:
+
+Sau khi làm rõ các giới hạn này, em xin chuyển sang kiến trúc hệ thống.
+
+Lưu ý khi bị hỏi:
+
+- Đây là slide nên nói chậm và chắc, vì nó chặn trước các câu hỏi khó.
+- Nếu hội đồng hỏi vào limitation, nhắc lại: “Dạ phần này em có ghi rõ là chưa claim, và em xem là future work.”
+
+## Slide 07 - Architecture
 
 Thời lượng gợi ý: 60-75 giây
 
@@ -165,7 +194,7 @@ Lưu ý khi bị hỏi:
 - Nếu thầy hỏi “backend là gì?”, trả lời theo thesis: Python FastAPI.
 - Nhấn mạnh answer key nằm ở backend để tránh gian lận và tạo learning signal đáng tin hơn.
 
-## Slide 07 - Learner Flow
+## Slide 08 - Learner Flow
 
 Thời lượng gợi ý: 60-75 giây
 
@@ -190,7 +219,7 @@ Lưu ý khi bị hỏi:
 - Nói rõ “85%” là rule dùng trong MVP để kiểm soát tiến độ.
 - Nếu bị hỏi vì sao cần test chương: trả lời quiz ngắn kiểm tra từng bài, còn chapter test kiểm tra khả năng tổng hợp.
 
-## Slide 08 - Personalization
+## Slide 09 - Personalization
 
 Thời lượng gợi ý: 75-90 giây
 
@@ -217,7 +246,7 @@ Lưu ý khi bị hỏi:
 - Câu trả lời an toàn: “MVP có adaptive pathway theo rule và learning signals, chưa phải ML model.”
 - Không dùng từ “tự học sâu” hay “AI tự tối ưu hoàn toàn”.
 
-## Slide 09 - Tutor + RAG
+## Slide 10 - Tutor + RAG
 
 Thời lượng gợi ý: 60-75 giây
 
@@ -242,7 +271,7 @@ Lưu ý khi bị hỏi:
 - Nếu hỏi “AI Tutor có thể trả lời sai không?”, trả lời: có rủi ro, nên hệ thống dùng RAG/source và không dùng chat để tăng mastery trực tiếp.
 - Nói “Tutor hỗ trợ học”, không nói Tutor thay giáo viên hoàn toàn.
 
-## Slide 10 - Assessment + Mastery
+## Slide 11 - Assessment + Mastery
 
 Thời lượng gợi ý: 60-75 giây
 
@@ -267,7 +296,7 @@ Lưu ý khi bị hỏi:
 - Nếu hỏi vì sao 85%: trả lời đây là threshold rõ ràng cho MVP, có thể điều chỉnh sau khi có thêm dữ liệu.
 - Nếu hỏi có adaptive testing chưa: trả lời chưa; hiện tại là controlled assessment, adaptive testing là hướng sau.
 
-## Slide 11 - Software Engineering Contribution
+## Slide 12 - Software Engineering Contribution
 
 Thời lượng gợi ý: 60-75 giây
 
@@ -294,21 +323,23 @@ Lưu ý khi bị hỏi:
 - Nhấn mạnh “MSE contribution”: architecture, API contract, testing, deployment, reproducibility.
 - Không để phần bảo vệ bị lệch thành “em chỉ gọi LLM”.
 
-## Slide 12 - RAG Benchmark
+## Slide 13 - RAG Benchmark
 
 Thời lượng gợi ý: 60-75 giây
 
-Mục tiêu slide: trình bày số liệu chính cho RQ2.
+Mục tiêu slide: trình bày số liệu chính cho RQ2 và phân biệt rõ retrieval quality với answer quality.
 
 Script nói:
 
 Để đánh giá RQ2, em chạy benchmark với 50 câu hỏi N5/N4 và so sánh 4 chế độ. Chế độ thứ nhất là LLM only, tức là không có retrieval. Chế độ thứ hai là Vector. Chế độ thứ ba là Knowledge Graph. Chế độ thứ tư là kết hợp KG và Vector.
 
-Kết quả chính là KG cộng Vector có Source Recall cao nhất, đạt 0.740. Vector riêng và KG riêng đều đạt 0.620. Điều này cho thấy khi kết hợp hai hướng truy xuất, hệ thống tìm được nhiều nguồn đúng hơn.
+Kết quả chính là KG cộng Vector có Source Recall cao nhất, đạt 0.740. Vector riêng và KG riêng đều đạt 0.620. Điều này cho thấy khi kết hợp hai hướng truy xuất, hệ thống tìm được nhiều nguồn liên quan hơn.
 
 Với Precision@3, Vector đạt 0.300, KG đạt 0.386, và KG cộng Vector cũng đạt 0.386. Kết quả này cho thấy KG giúp precision tốt hơn vector-only, còn phần kết hợp giúp tăng recall rõ hơn.
 
-Em không dùng kết quả này để nói hệ thống trả lời hoàn hảo. Em chỉ kết luận ở mức vừa phải: với bộ câu hỏi thử nghiệm, KG cộng Vector cải thiện khả năng tìm nguồn liên quan cho Tutor.
+Điểm quan trọng nhất ở slide này là Source Recall 0.740 không có nghĩa là answer accuracy 74%. Đây là metric của phần retrieval, tức là hệ thống có tìm được nguồn đúng hay không. Nó chưa chấm câu trả lời cuối cùng của LLM có đúng hoàn toàn hay có faithful với nguồn hay không.
+
+Vì vậy, em chỉ kết luận ở mức vừa phải: với bộ câu hỏi thử nghiệm, KG cộng Vector cải thiện khả năng tìm nguồn liên quan cho Tutor. Answer correctness và faithfulness cần một đánh giá riêng, có thể bằng human annotation hoặc rubric ở hướng phát triển sau.
 
 Câu chuyển slide:
 
@@ -317,19 +348,24 @@ Ngoài benchmark tự động, em cũng có pilot user test nhỏ với người
 Lưu ý khi bị hỏi:
 
 - Nhớ số chính: 50 câu hỏi, Source Recall KG+Vector = 0.740, Precision@3 KG+Vector = 0.386.
-- Không nói benchmark chứng minh người học giỏi hơn; nó chỉ đánh giá retrieval.
+- Không nói 0.740 là answer accuracy 74%.
+- Không nói benchmark chứng minh người học giỏi hơn; nó chỉ đánh giá retrieval quality.
 
-## Slide 13 - Pilot User Test
+## Slide 14 - Pilot User Test
 
 Thời lượng gợi ý: 75-90 giây
 
-Mục tiêu slide: trình bày user study nhỏ và nói giới hạn đúng.
+Mục tiêu slide: giải thích sample consistency của pilot và nói giới hạn đúng.
 
 Script nói:
 
 Phần pilot user test được làm với quy mô nhỏ, đúng với giới hạn thời gian của thesis. Mục tiêu chính là xem nhóm người học gần với đối tượng thesis, tức sinh viên hoặc người học Việt Nam ở mức N5/N4, có đi được qua luồng học hay không, phần nào dễ rối, và người học có tin Tutor ở mức nào.
 
-Dữ liệu hiện tại gồm 10 survey users, 11 feedback users, 25 lesson attempts, và 185 knowledge rows được ghi nhận. Điểm lesson trung bình là 82.4%, pass rate là 56%. SUS là 58.6, tức là mức usability trung bình, chưa cao. Trust score là 3.45 trên 5, cũng ở mức trung bình.
+Ở phần này em cần giải thích rõ sample consistency. Các con số không dùng cùng một mẫu số. 10 learners là nhóm người học chính trong pilot dùng để quan sát luồng học. 11 survey rows là số dòng khảo sát SUS/trust được gửi lên, nên em gọi là rows chứ không gọi là 11 learners. 11 feedback users là số người dùng có gửi feedback trong app. 19 knowledge progress users là số tài khoản có phát sinh progress log, trong đó có thể gồm pilot, demo hoặc test account.
+
+Vì vậy, em không cộng các con số này lại và cũng không dùng chúng như một sample size duy nhất. Chúng là các log khác nhau từ các endpoint khác nhau.
+
+Dữ liệu kết quả gồm 25 lesson attempts. Điểm lesson trung bình là 82.4%, pass rate là 56%, tức 14/25 attempts đạt. SUS là 58.6, tức là mức usability trung bình, chưa cao. Trust score là 3.45 trên 5, cũng ở mức trung bình.
 
 Em diễn giải kết quả này theo hướng thận trọng. Dữ liệu cho thấy hệ thống có thể dùng được và có thể ghi nhận tiến độ, nhưng trải nghiệm ban đầu vẫn cần cải thiện. Một số feedback nói luồng học còn khó hiểu với người mới, cần thêm tour guide, bảng chữ cái, audio và hướng dẫn khi đang làm bài.
 
@@ -341,10 +377,11 @@ Từ các feedback đó, em đã điều chỉnh lại một số phần của h
 
 Lưu ý khi bị hỏi:
 
+- Nếu thầy hỏi vì sao 10, 11 và 19 khác nhau: trả lời đây là các loại log khác nhau, không cùng mẫu số.
 - Nếu thầy hỏi SUS 58.6 có tốt không: trả lời trung bình, chưa tốt; đây là lý do em có phần cải thiện sau feedback.
 - Nói rõ “small pilot”, không nói “large user study”.
 
-## Slide 14 - Feedback Improvements
+## Slide 15 - Feedback Improvements
 
 Thời lượng gợi ý: 60-75 giây
 
@@ -373,7 +410,7 @@ Lưu ý khi bị hỏi:
 - Nói “pronunciation guidance MVP”, không nói đã có scoring phát âm hoàn chỉnh nếu chưa đủ dữ liệu.
 - Nhấn mạnh feedback được dùng làm input cải thiện UI và flow.
 
-## Slide 15 - Demo Scenario
+## Slide 16 - Demo Scenario
 
 Thời lượng gợi ý: 30-45 giây trước demo, demo 4-6 phút
 
@@ -400,7 +437,7 @@ Lưu ý khi bị hỏi:
 - Khi demo, đi chậm, nói rõ mỗi nút dùng để làm gì.
 - Không demo quá dài; tập trung vào onboarding, pathway, lesson, quiz, Tutor và chapter test.
 
-## Slide 16 - Conclusion and Future Work
+## Slide 17 - Conclusion and Future Work
 
 Thời lượng gợi ý: 60-75 giây
 
@@ -410,13 +447,13 @@ Script nói:
 
 Tóm lại, VAJA đã đạt mục tiêu prototype chính. Hệ thống chạy end-to-end, có luồng học cho người mới, có pathway, flashcard, quiz, test chương, Tutor có nguồn RAG, lookup, feedback và ghi nhận tiến độ học.
 
-Về mặt research, thesis có 5 câu hỏi nghiên cứu, có thiết kế Knowledge Graph, benchmark RAG với 50 câu hỏi, có pilot user test nhỏ, và có dữ liệu ban đầu về SUS, trust, pass rate và lesson score.
+Về mặt research, thesis có 5 câu hỏi nghiên cứu, có thiết kế Knowledge Graph, benchmark RAG với 50 câu hỏi, có pilot user test nhỏ, và có dữ liệu ban đầu về SUS, trust, pass rate và lesson score. Với RAG benchmark, em chỉ kết luận về retrieval quality, chưa kết luận answer quality.
 
 Về mặt kỹ thuật phần mềm, đề tài có kiến trúc rõ, API contract, xác thực, lưu dữ liệu học tập, Docker, deployment và automated tests. Đây là phần em muốn nhấn mạnh vì đề tài thuộc chương trình MSE.
 
-Tuy nhiên, đề tài vẫn có giới hạn. Pilot còn nhỏ, dữ liệu pre-test/post-test còn yếu, pathway hiện tại là heuristic chứ chưa dùng BKT, DKT hoặc IRT. Phần phát âm mới ở mức guidance, chưa có scoring đầy đủ dựa trên dữ liệu giọng nói.
+Tuy nhiên, đề tài vẫn có giới hạn. Pilot còn nhỏ và không đại diện cho toàn bộ người học. Dữ liệu pre-test/post-test còn yếu, nên em không claim learning gain. Pathway hiện tại là heuristic chứ chưa dùng BKT, DKT hoặc IRT. RAG benchmark chưa chấm answer correctness hoặc faithfulness. Phần phát âm mới ở mức guidance, chưa có scoring đầy đủ dựa trên dữ liệu giọng nói.
 
-Hướng phát triển tiếp theo là mở rộng dữ liệu học, chạy user study lớn hơn, bổ sung BKT hoặc IRT cho mastery model, cải thiện speech/pronunciation, và tiếp tục làm pathway thông minh hơn dựa trên dữ liệu thật.
+Hướng phát triển tiếp theo là mở rộng dữ liệu học, chạy user study lớn hơn, bổ sung BKT hoặc IRT cho mastery model, bổ sung đánh giá answer correctness/faithfulness cho Tutor, cải thiện speech/pronunciation, và tiếp tục làm pathway thông minh hơn dựa trên dữ liệu thật.
 
 Em xin kết thúc phần trình bày tại đây. Em cảm ơn quý thầy cô đã lắng nghe và mong nhận được góp ý của hội đồng.
 
@@ -441,7 +478,7 @@ Dạ chưa đủ để kết luận hiệu quả học dài hạn. Đây là pil
 
 ### 4. “RAG benchmark chứng minh điều gì?”
 
-Dạ benchmark chứng minh ở mức truy xuất nguồn. Với 50 câu hỏi N5/N4, KG cộng Vector có Source Recall cao nhất là 0.740. Kết quả này hỗ trợ RQ2 rằng kết hợp KG và Vector giúp Tutor có nguồn tốt hơn.
+Dạ benchmark chứng minh ở mức truy xuất nguồn. Với 50 câu hỏi N5/N4, KG cộng Vector có Source Recall cao nhất là 0.740. Con số này không phải answer accuracy 74%. Nó chỉ nói rằng hệ thống tìm được nguồn liên quan tốt hơn. Answer correctness và faithfulness cần một đánh giá riêng.
 
 ### 5. “Điểm đóng góp MSE là gì?”
 
@@ -454,3 +491,7 @@ Dạ vì nếu người học chưa biết bảng chữ cái thì học từ v�
 ### 7. “Chatbot có làm người học giỏi hơn không?”
 
 Dạ em không kết luận như vậy. Tutor là công cụ hỗ trợ giải thích theo nguồn. Mastery chỉ được cập nhật rõ qua quiz, assessment và flashcard review, chứ không phải chỉ chat là tăng trình độ.
+
+### 8. “Vì sao số liệu pilot có 10, 11 và 19 khác nhau?”
+
+Dạ vì đó là các mẫu số khác nhau. 10 là số pilot learners chính. 11 survey rows là số dòng khảo sát SUS/trust. 11 feedback users là số user có gửi feedback trong app. 19 knowledge progress users là số tài khoản có progress log, có thể gồm cả pilot, demo hoặc test account. Em không cộng các số này thành một sample size duy nhất.
