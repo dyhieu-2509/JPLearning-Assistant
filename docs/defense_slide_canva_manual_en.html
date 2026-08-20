@@ -715,6 +715,106 @@
       line-height: 1.1;
     }
 
+    .evidence-layout {
+      display: grid;
+      grid-template-columns: 0.86fr 1.14fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .evidence-layout.reverse {
+      grid-template-columns: 1fr 0.92fr;
+    }
+
+    .evidence-copy {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .proof-card {
+      display: grid;
+      gap: 7px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .proof-card strong {
+      color: var(--navy);
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    .proof-card p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.34;
+      font-weight: 700;
+    }
+
+    .app-shot-frame {
+      position: relative;
+      height: 396px;
+      min-height: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #ffffff;
+      box-shadow: 0 18px 38px rgba(18, 48, 71, 0.11);
+    }
+
+    .app-shot-frame::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 8px;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .app-shot-frame img {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      object-fit: cover;
+      display: block;
+    }
+
+    .app-shot-frame.pathway img {
+      object-position: left bottom;
+      transform: scale(1.03);
+      transform-origin: left bottom;
+    }
+
+    .app-shot-frame.tutor img {
+      object-position: center center;
+    }
+
+    .app-shot-frame.assessment img {
+      object-position: left bottom;
+      transform: scale(1.08);
+      transform-origin: left bottom;
+    }
+
+    .shot-label {
+      position: absolute;
+      left: 14px;
+      top: 14px;
+      z-index: 3;
+      display: inline-grid;
+      place-items: center;
+      min-height: 30px;
+      padding: 6px 11px;
+      border-radius: 999px;
+      background: rgba(18, 48, 71, 0.9);
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
     .agent-map {
       display: grid;
       grid-template-columns: 1fr 1.25fr;
@@ -1333,26 +1433,15 @@
       <h2>Personalized pathway</h2>
       <p>The pathway changes based on real learning data, not only simple UI branching.</p>
     </div>
-    <div class="two-col">
-      <div class="card white">
-        <span class="pill">Input signals</span>
-        <ul>
-          <li>Current level: Zero, N5, N4</li>
-          <li>Learning pathway: JLPT, conversation, school, work, reading</li>
-          <li>Daily study minutes</li>
-          <li>Weak skills: kana, grammar, vocab, kanji, listening, speaking</li>
-          <li>Quiz score, attempts, fail count, feedback</li>
-        </ul>
+    <div class="evidence-layout">
+      <div class="evidence-copy">
+        <div class="proof-card"><strong>Input signals</strong><p>Level, goal, daily minutes, weak skills, quiz attempts, flashcard review, and feedback.</p></div>
+        <div class="proof-card"><strong>Adaptive output</strong><p>The learner sees a chapter pathway, locked lessons, review hints, and pace labels.</p></div>
+        <div class="proof-card"><strong>Current MVP scope</strong><p>This is heuristic adaptation from learning signals, not BKT/DKT/IRT yet.</p></div>
       </div>
-      <div class="card white">
-        <span class="pill">Adaptive output</span>
-        <ul>
-          <li>Zero beginners study kana first</li>
-          <li>Many failures: stay, review mistakes, ask Tutor</li>
-          <li>Good results: faster pace, unlock next lesson</li>
-          <li>End of chapter: required 20-question test</li>
-          <li>Hard/easy feedback is stored as a pilot signal</li>
-        </ul>
+      <div class="app-shot-frame pathway">
+        <span class="shot-label">App evidence: personalized pathway</span>
+        <img src="assets/defense-app-screens/app-personalized-pathway-clean.png" alt="VAJA personalized pathway screen" />
       </div>
     </div>
     <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">09</div>
@@ -1364,24 +1453,15 @@
       <h2>AI Tutor answers with sources</h2>
       <p>The Tutor uses lesson context, retrieves sources before answering, and stores evidence.</p>
     </div>
-    <div class="two-col">
-      <div class="card white">
-        <strong>Tutor flow</strong>
-        <ul>
-          <li>Receive question + contextTopic</li>
-          <li>Search Knowledge Graph and Vector DB</li>
-          <li>Call LLM to explain in Vietnamese</li>
-          <li>Return answer, sources, and confidence</li>
-        </ul>
+    <div class="evidence-layout reverse">
+      <div class="app-shot-frame tutor">
+        <span class="shot-label">App evidence: Tutor answer + sources</span>
+        <img src="assets/defense-app-screens/app-floating-tutor-rag.png" alt="VAJA floating tutor answer with sources" />
       </div>
-      <div class="card white">
-        <strong>Learning safety rules</strong>
-        <ul>
-          <li>No source means no exposure record</li>
-          <li>Chat does not increase mastery</li>
-          <li>Quiz/Assessment records correct or wrong</li>
-          <li>Flashcard review records Again, Hard, Good, Easy</li>
-        </ul>
+      <div class="evidence-copy">
+        <div class="proof-card"><strong>RAG flow</strong><p>Question + lesson context are sent to KG/vector retrieval before LLM generation.</p></div>
+        <div class="proof-card"><strong>Returned evidence</strong><p>The answer shows confidence and retrieved sources so the learner can see grounding.</p></div>
+        <div class="proof-card"><strong>Safety rule</strong><p>Chat records support/exposure only. Mastery changes through quiz, assessment, or flashcards.</p></div>
       </div>
     </div>
     <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">10</div>
@@ -1393,13 +1473,16 @@
       <h2>Controlled learning assessment</h2>
       <p>Quiz and chapter test give clearer learning signals than chat alone.</p>
     </div>
-    <div class="three-col">
-      <div class="card"><strong>Lesson quiz</strong><p>5 short questions. 85% is required to unlock the next lesson.</p></div>
-      <div class="card"><strong>Chapter test</strong><p>20 mixed questions. 85% is required for the next chapter.</p></div>
-      <div class="card"><strong>Answer key</strong><p>Stored in backend. Start session does not return answers.</p></div>
-      <div class="card"><strong>Learning signal</strong><p>QUIZ and ASSESSMENT only accept CORRECT or WRONG.</p></div>
-      <div class="card"><strong>Flashcard SRS</strong><p>SM-2 schedule with Again, Hard, Good, Easy.</p></div>
-      <div class="card"><strong>Feedback</strong><p>Stores difficulty, pace, and review or move-on choice.</p></div>
+    <div class="evidence-layout reverse">
+      <div class="app-shot-frame assessment">
+        <span class="shot-label">App evidence: chapter assessment</span>
+        <img src="assets/defense-app-screens/app-assessment-chapter-test-clean.png" alt="VAJA chapter assessment screen" />
+      </div>
+      <div class="evidence-copy">
+        <div class="proof-card"><strong>Lesson quiz</strong><p>Short quiz after each lesson. 85% is required to unlock the next lesson.</p></div>
+        <div class="proof-card"><strong>Chapter test</strong><p>20 mixed questions act as a checkpoint before opening the next chapter.</p></div>
+        <div class="proof-card"><strong>Learning signal</strong><p>Backend grading writes CORRECT/WRONG signals; answer keys are not exposed at session start.</p></div>
+      </div>
     </div>
     <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">11</div>
   </section>
