@@ -439,42 +439,172 @@
 
     .architecture {
       display: grid;
-      grid-template-columns: 1fr 82px 1.1fr 82px 1fr;
-      gap: 10px;
+      grid-template-columns: 0.95fr 58px 1.04fr 58px 1.15fr;
+      gap: 12px;
       align-items: center;
     }
 
-    .layer {
+    .arch-panel {
+      position: relative;
       display: grid;
-      gap: 12px;
-      min-height: 430px;
-      padding: 20px;
+      align-content: start;
+      gap: 14px;
+      min-height: 428px;
+      padding: 22px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: #ffffff;
     }
 
-    .layer h3 {
-      font-size: 24px;
+    .arch-panel.frontend {
+      background: linear-gradient(180deg, #f8fbff 0%, #ffffff 68%);
     }
 
-    .layer .box {
-      padding: 13px;
+    .arch-panel.backend {
+      background: linear-gradient(180deg, #f2fbf7 0%, #ffffff 68%);
+      border-color: #bdebd8;
+    }
+
+    .arch-panel.retrieval {
+      background: linear-gradient(180deg, #fff8ed 0%, #ffffff 68%);
+      border-color: #fed7aa;
+    }
+
+    .arch-head {
+      display: grid;
+      grid-template-columns: 78px 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .arch-icon {
+      display: grid;
+      place-items: center;
+      width: 78px;
+      height: 78px;
+      border-radius: 8px;
+      background: #eef7ff;
+      color: var(--blue);
+    }
+
+    .backend .arch-icon {
+      background: #e8f7f1;
+      color: var(--mint);
+    }
+
+    .retrieval .arch-icon {
+      background: #fff1d7;
+      color: var(--amber);
+    }
+
+    .arch-icon svg {
+      width: 54px;
+      height: 54px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .arch-head h3 {
+      font-size: 24px;
+      line-height: 1.2;
+    }
+
+    .arch-head p {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.32;
+      font-weight: 800;
+    }
+
+    .arch-stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .arch-chip {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      align-items: center;
+      min-height: 50px;
+      padding: 10px 12px;
       border-radius: 8px;
       background: var(--soft);
       color: var(--navy);
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 900;
-      line-height: 1.25;
+      line-height: 1.2;
     }
 
-    .arrow {
-      height: 4px;
+    .arch-chip span {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: #ffffff;
+      color: var(--blue);
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .backend .arch-chip span {
+      color: var(--mint);
+    }
+
+    .arch-data-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .data-card {
+      display: grid;
+      gap: 6px;
+      min-height: 105px;
+      padding: 12px;
+      border-radius: 8px;
+      background: #ffffff;
+      border: 1px solid #f6d7a8;
+    }
+
+    .data-card .mini-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: #fff7ed;
+      color: #b45309;
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .data-card strong {
+      color: var(--navy);
+      font-size: 15px;
+      line-height: 1.18;
+    }
+
+    .data-card small {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.25;
+      font-weight: 800;
+    }
+
+    .arch-connector {
+      height: 5px;
       background: var(--sky);
       position: relative;
+      border-radius: 999px;
     }
 
-    .arrow::after {
+    .arch-connector::after {
       content: "";
       position: absolute;
       right: -2px;
@@ -487,64 +617,102 @@
     }
 
     .flow {
+      position: relative;
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 10px;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 13px;
       align-items: stretch;
+      padding-top: 30px;
+    }
+
+    .flow::before {
+      content: "";
+      position: absolute;
+      left: 70px;
+      right: 70px;
+      top: 76px;
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #93c5fd, #67e8f9, #86efac, #fde68a);
+      opacity: 0.75;
     }
 
     .flow-step {
       position: relative;
+      z-index: 2;
       display: grid;
+      grid-template-rows: auto auto 1fr auto;
       gap: 10px;
       align-content: start;
-      min-height: 310px;
-      padding: 18px 14px;
+      min-height: 330px;
+      padding: 16px 13px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: #ffffff;
+      box-shadow: 0 12px 24px rgba(18, 48, 71, 0.08);
     }
 
-    .flow-step::after {
-      content: "";
-      position: absolute;
-      right: -13px;
-      top: 132px;
-      width: 18px;
-      height: 18px;
-      border-top: 4px solid var(--sky);
-      border-right: 4px solid var(--sky);
-      transform: rotate(45deg);
-      z-index: 3;
+    .flow-step:nth-child(even) {
+      margin-top: 28px;
     }
 
-    .flow-step:last-child::after {
-      display: none;
+    .flow-step.gate {
+      border-color: #fbbf24;
+      background: #fffaf0;
+    }
+
+    .flow-step.feedback {
+      border-color: #bae6fd;
+      background: #f0f9ff;
     }
 
     .flow-step .icon {
       display: grid;
       place-items: center;
-      width: 54px;
-      height: 54px;
-      border-radius: 8px;
-      background: #eef7ff;
-      color: var(--blue);
-      font-size: 26px;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: #ffffff;
+      font-size: 23px;
       font-weight: 900;
+      box-shadow: 0 0 0 7px #eef7ff;
+    }
+
+    .flow-step.gate .icon {
+      background: var(--amber);
+      box-shadow: 0 0 0 7px #fff1d7;
+    }
+
+    .flow-step.feedback .icon {
+      background: var(--mint);
+      box-shadow: 0 0 0 7px #e8f7f1;
     }
 
     .flow-step strong {
       color: var(--navy);
-      font-size: 19px;
-      line-height: 1.22;
+      font-size: 18px;
+      line-height: 1.2;
     }
 
     .flow-step p {
       color: var(--muted);
-      font-size: 15px;
+      font-size: 14px;
       line-height: 1.35;
       font-weight: 700;
+    }
+
+    .flow-tag {
+      display: inline-grid;
+      place-items: center;
+      min-height: 28px;
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: #eef7ff;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1.1;
     }
 
     .agent-map {
@@ -1067,28 +1235,76 @@
       <p>Thesis architecture: React frontend, Python FastAPI backend, PostgreSQL, Neo4j, and Qdrant.</p>
     </div>
     <div class="architecture">
-      <div class="layer">
-        <h3>Frontend</h3>
-        <div class="box">React + Vite</div>
-        <div class="box">Learner UI</div>
-        <div class="box">Floating Tutor</div>
-        <div class="box">Responsive Web</div>
+      <div class="arch-panel frontend">
+        <div class="arch-head">
+          <div class="arch-icon">
+            <svg viewBox="0 0 64 64" aria-hidden="true">
+              <rect x="10" y="13" width="44" height="32" rx="4"></rect>
+              <path d="M22 53h20"></path>
+              <path d="M28 45v8"></path>
+              <path d="M36 45v8"></path>
+              <path d="M18 23h28"></path>
+            </svg>
+          </div>
+          <div>
+            <h3>React Learner Web</h3>
+            <p>One guided study surface for Vietnamese N5/N4 learners.</p>
+          </div>
+        </div>
+        <div class="arch-stack">
+          <div class="arch-chip"><span>UI</span>Learner dashboard + pathway</div>
+          <div class="arch-chip"><span>FC</span>Flashcards, audio, review</div>
+          <div class="arch-chip"><span>QZ</span>Lesson quiz + chapter test</div>
+          <div class="arch-chip"><span>AI</span>Floating Tutor in context</div>
+        </div>
       </div>
-      <div class="arrow"></div>
-      <div class="layer">
-        <h3>FastAPI Backend</h3>
-        <div class="box">Auth + JWT + Refresh Token</div>
-        <div class="box">Profile + Progress + Metrics</div>
-        <div class="box">Tutor + Planner + Assessment APIs</div>
-        <div class="box">API Contract + Security</div>
+      <div class="arch-connector"></div>
+      <div class="arch-panel backend">
+        <div class="arch-head">
+          <div class="arch-icon">
+            <svg viewBox="0 0 64 64" aria-hidden="true">
+              <rect x="12" y="10" width="40" height="12" rx="3"></rect>
+              <rect x="12" y="26" width="40" height="12" rx="3"></rect>
+              <rect x="12" y="42" width="40" height="12" rx="3"></rect>
+              <path d="M20 16h2"></path>
+              <path d="M20 32h2"></path>
+              <path d="M20 48h2"></path>
+            </svg>
+          </div>
+          <div>
+            <h3>FastAPI Backend</h3>
+            <p>Controls APIs, security, assessment, and learner state.</p>
+          </div>
+        </div>
+        <div class="arch-stack">
+          <div class="arch-chip"><span>JWT</span>Auth, refresh token, session safety</div>
+          <div class="arch-chip"><span>PR</span>Profile, progress, feedback, metrics</div>
+          <div class="arch-chip"><span>TA</span>Tutor, planner, assessment APIs</div>
+          <div class="arch-chip"><span>API</span>Contracts, validation, reproducibility</div>
+        </div>
       </div>
-      <div class="arrow"></div>
-      <div class="layer">
-        <h3>Data + Retrieval</h3>
-        <div class="box">PostgreSQL Learner Data</div>
-        <div class="box">Neo4j Knowledge Graph</div>
-        <div class="box">Qdrant Vector Search</div>
-        <div class="box">LLM Provider</div>
+      <div class="arch-connector"></div>
+      <div class="arch-panel retrieval">
+        <div class="arch-head">
+          <div class="arch-icon">
+            <svg viewBox="0 0 64 64" aria-hidden="true">
+              <ellipse cx="32" cy="14" rx="19" ry="7"></ellipse>
+              <path d="M13 14v26c0 4 8.5 8 19 8s19-4 19-8V14"></path>
+              <path d="M13 27c0 4 8.5 8 19 8s19-4 19-8"></path>
+              <path d="M43 44l9 9"></path>
+            </svg>
+          </div>
+          <div>
+            <h3>Data + Retrieval</h3>
+            <p>Separate stores for learner data, KG facts, vectors, and generation.</p>
+          </div>
+        </div>
+        <div class="arch-data-grid">
+          <div class="data-card"><div class="mini-mark">SQL</div><strong>PostgreSQL</strong><small>learner accounts, progress, attempts, feedback</small></div>
+          <div class="data-card"><div class="mini-mark">KG</div><strong>Neo4j</strong><small>N5/N4 words, grammar, kanji, lesson links</small></div>
+          <div class="data-card"><div class="mini-mark">VEC</div><strong>Qdrant</strong><small>semantic search for lesson/source chunks</small></div>
+          <div class="data-card"><div class="mini-mark">LLM</div><strong>Provider</strong><small>Vietnamese explanation after retrieval</small></div>
+        </div>
       </div>
     </div>
     <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">07</div>
@@ -1101,12 +1317,12 @@
       <p>The learner follows an unlocked pathway, similar to short learning chapters.</p>
     </div>
     <div class="flow">
-      <div class="flow-step"><div class="icon">1</div><strong>Onboarding</strong><p>8 questions about level, goal, time, and weak points.</p></div>
-      <div class="flow-step"><div class="icon">2</div><strong>Pathway</strong><p>Each chapter has about 3 lessons and unlocks by result.</p></div>
-      <div class="flow-step"><div class="icon">3</div><strong>Flashcards</strong><p>Study words, patterns, kana, and kanji before the quiz.</p></div>
-      <div class="flow-step"><div class="icon">4</div><strong>Lesson quiz</strong><p>Score 85% or higher to unlock the next lesson.</p></div>
-      <div class="flow-step"><div class="icon">5</div><strong>Chapter test</strong><p>20 questions; 85% is required for the next chapter.</p></div>
-      <div class="flow-step"><div class="icon">6</div><strong>Feedback</strong><p>Store learner feeling to adjust the pace.</p></div>
+      <div class="flow-step"><div class="icon">1</div><strong>Onboarding</strong><p>Level, goal, daily time, and weak skills.</p><span class="flow-tag">profile signal</span></div>
+      <div class="flow-step"><div class="icon">2</div><strong>Chapter Pathway</strong><p>Each chapter has about 3 short lessons.</p><span class="flow-tag">personalized route</span></div>
+      <div class="flow-step"><div class="icon">3</div><strong>Study Cards</strong><p>Kana, words, patterns, kanji, audio, and examples.</p><span class="flow-tag">learn first</span></div>
+      <div class="flow-step gate"><div class="icon">4</div><strong>Lesson Quiz</strong><p>5 short questions. Pass unlocks the next lesson.</p><span class="flow-tag">85% gate</span></div>
+      <div class="flow-step gate"><div class="icon">5</div><strong>Chapter Test</strong><p>20 mixed questions before the next chapter.</p><span class="flow-tag">checkpoint</span></div>
+      <div class="flow-step feedback"><div class="icon">6</div><strong>Feedback Loop</strong><p>Hard, easy, review again, or move faster.</p><span class="flow-tag">pace signal</span></div>
     </div>
     <div class="footer-tag">VAJA Thesis Defense</div><div class="slide-no">08</div>
   </section>
