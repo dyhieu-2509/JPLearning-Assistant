@@ -5352,3 +5352,761 @@ progress::-webkit-progress-value {
     flex: 1 1 34px;
   }
 }
+
+/* VAJA UI/UX refresh: softer learning palette, clearer hierarchy, and safer responsive states. */
+:root {
+  --sky-50: #edfdfa;
+  --sky-100: #ccfbf1;
+  --sky-200: #99f6e4;
+  --sky-500: #14b8a6;
+  --sky-600: #0f766e;
+  --sky-700: #115e59;
+  --blue-950: #243044;
+  --ink: #1f2937;
+  --muted: #596579;
+  --line: #dbe4f0;
+  --green: #15803d;
+  --green-600: #168755;
+  --mint-50: #ecfdf5;
+  --mint-600: #0f766e;
+  --amber: #d97706;
+  --sun-50: #fff7ed;
+  --rose: #e11d48;
+  --rose-600: #be123c;
+  --coral: #ea580c;
+  --lavender: #7c3aed;
+  --teal-50: #edfdfa;
+  --teal-100: #ccfbf1;
+  --teal-600: #0f766e;
+  --violet-50: #f5f3ff;
+  --amber-100: #ffedd5;
+  --surface: #ffffff;
+  --surface-soft: #f8fafc;
+  --surface-warm: #fffaf2;
+  --focus-ring: #f59e0b;
+  --shadow: 0 18px 44px rgba(31, 41, 55, 0.09);
+}
+
+body {
+  color: var(--ink);
+  background: #f6f8fc;
+}
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.app-viewport,
+.learner-shell,
+.app-shell {
+  background:
+    linear-gradient(180deg, rgba(79, 70, 229, 0.08), rgba(15, 118, 110, 0.06) 390px, rgba(255, 250, 242, 0.56) 760px, #f7f9fc 100%);
+}
+
+.headbar,
+.sidebar,
+.topbar,
+.workspace-panel,
+.auth-panel,
+.landing-conversion-band,
+.landing-product-preview,
+.friendly-lesson-card,
+.friendly-dashboard .workspace-panel,
+.study-lesson-stage,
+.study-lesson-rail,
+.study-support-panel,
+.flashcard-create-panel,
+.flashcard-study-panel,
+.flashcard-filter-panel,
+.flashcard-workspace .workspace-panel,
+.knowledge-search-panel,
+.knowledge-results-panel {
+  border-color: rgba(219, 228, 240, 0.96);
+  box-shadow: var(--shadow);
+}
+
+.headbar,
+.topbar,
+.sidebar {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(16px);
+}
+
+.headbar-brand,
+.brand-block strong,
+.topbar h1,
+.section-heading h2,
+.panel-heading h3 {
+  color: var(--blue-950);
+}
+
+.eyebrow {
+  color: var(--teal-600);
+  font-weight: 950;
+}
+
+.headbar-nav a,
+.tour-trigger-button,
+.icon-text-button.ghost,
+.icon-button,
+.friendly-secondary-action {
+  border-color: rgba(203, 213, 225, 0.9);
+  background: #ffffff;
+  color: var(--sky-700);
+}
+
+.headbar-nav a:hover,
+.tour-trigger-button:hover,
+.icon-text-button.ghost:hover,
+.icon-button:hover,
+.friendly-secondary-action:hover {
+  border-color: rgba(15, 118, 110, 0.34);
+  background: var(--teal-50);
+  color: var(--teal-600);
+}
+
+.primary-button,
+.icon-text-button:not(.ghost),
+.send-button {
+  border-color: transparent;
+  background: var(--sky-600);
+  color: #ffffff;
+  box-shadow: 0 12px 26px rgba(15, 118, 110, 0.2);
+  transition:
+    transform 160ms ease,
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.primary-button:hover,
+.icon-text-button:not(.ghost):hover,
+.send-button:hover {
+  background: var(--sky-700);
+  box-shadow: 0 16px 32px rgba(15, 118, 110, 0.24);
+}
+
+.primary-button:disabled,
+.icon-text-button:disabled {
+  transform: none;
+  box-shadow: none;
+}
+
+.nav-link {
+  border: 1px solid transparent;
+  color: #46556d;
+  transition:
+    border-color 150ms ease,
+    background 150ms ease,
+    color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.nav-link.active,
+.nav-link:hover,
+.learner-shell .nav-link.active,
+.learner-shell .nav-link:hover {
+  border-color: rgba(15, 118, 110, 0.16);
+  background:
+    linear-gradient(90deg, rgba(15, 118, 110, 0.1), rgba(124, 58, 237, 0.08)),
+    #ffffff;
+  color: var(--blue-950);
+  box-shadow: 0 10px 22px rgba(31, 41, 55, 0.06);
+}
+
+.nav-link.active {
+  box-shadow:
+    inset 4px 0 0 var(--teal-600),
+    0 10px 22px rgba(31, 41, 55, 0.06);
+}
+
+.topic-chip {
+  border-color: rgba(79, 70, 229, 0.22);
+  background: var(--violet-50);
+  color: var(--sky-700);
+}
+
+.landing-screen {
+  background:
+    linear-gradient(135deg, rgba(79, 70, 229, 0.1), transparent 38%),
+    linear-gradient(180deg, #ffffff 0%, #f2fbf8 54%, #fffaf2 100%);
+}
+
+.landing-hero {
+  min-height: min(700px, calc(100dvh - var(--headbar-height) - 88px));
+}
+
+.landing-copy h1 {
+  max-width: 860px;
+  color: var(--blue-950);
+}
+
+.landing-copy p:not(.eyebrow),
+.landing-preview-copy p:not(.eyebrow),
+.landing-choice-copy p:not(.eyebrow) {
+  color: var(--muted);
+}
+
+.landing-hero-wordmark {
+  color: rgba(15, 118, 110, 0.08);
+}
+
+.landing-proof-row span {
+  border-color: rgba(15, 118, 110, 0.18);
+  background: rgba(237, 253, 250, 0.82);
+  color: var(--blue-950);
+}
+
+.landing-conversion-band {
+  background:
+    linear-gradient(135deg, rgba(255, 250, 242, 0.94), rgba(255, 255, 255, 0.96)),
+    #ffffff;
+}
+
+.preview-wordmark,
+.preview-metric {
+  background: var(--teal-50);
+}
+
+.preview-chat {
+  background: var(--sky-600);
+}
+
+.info-card {
+  background:
+    linear-gradient(180deg, #ffffff, rgba(248, 250, 252, 0.86));
+}
+
+.info-card > span {
+  background: var(--violet-50);
+  color: var(--sky-700);
+}
+
+.info-card:nth-child(2) > span {
+  background: var(--teal-50);
+  color: var(--teal-600);
+}
+
+.info-card:nth-child(3) > span {
+  background: var(--sun-50);
+  color: var(--amber);
+}
+
+.friendly-hero {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(237, 253, 250, 0.9) 54%, rgba(241, 245, 255, 0.94)),
+    #ffffff;
+}
+
+.friendly-hero::after {
+  background: linear-gradient(90deg, var(--teal-600), var(--sky-600), var(--amber), var(--coral));
+}
+
+.friendly-mission-item {
+  border-color: rgba(219, 228, 240, 0.96);
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.friendly-mission-item:nth-child(1) svg,
+.friendly-step-row:first-child .friendly-step-icon {
+  color: #ffffff;
+  background: var(--coral);
+}
+
+.friendly-mission-item:nth-child(2) svg {
+  color: var(--sky-600);
+}
+
+.friendly-mission-item:nth-child(3) svg {
+  color: var(--teal-600);
+}
+
+.friendly-mission-item:nth-child(4) svg {
+  color: var(--amber);
+}
+
+.friendly-step-row:first-child {
+  border-color: rgba(234, 88, 12, 0.26);
+  background:
+    linear-gradient(135deg, rgba(255, 247, 237, 0.96), #ffffff);
+}
+
+.friendly-step-row:hover,
+.friendly-review-row:hover {
+  border-color: rgba(15, 118, 110, 0.3);
+  background: var(--teal-50);
+}
+
+.friendly-step-icon {
+  background: var(--sky-600);
+}
+
+.friendly-step-row:nth-child(2) .friendly-step-icon {
+  background: var(--teal-600);
+}
+
+.friendly-step-row:nth-child(3) .friendly-step-icon {
+  background: var(--amber);
+}
+
+.friendly-step-row:nth-child(4) .friendly-step-icon {
+  background: var(--lavender);
+}
+
+.friendly-progress-card,
+.friendly-side-panel .friendly-mini-stat {
+  background:
+    linear-gradient(180deg, #ffffff, rgba(241, 245, 255, 0.72));
+}
+
+.friendly-ai-note,
+.learning-note {
+  border-color: rgba(15, 118, 110, 0.22);
+  background: var(--teal-50);
+  color: var(--blue-950);
+}
+
+.study-path-hero {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 250, 242, 0.78), rgba(241, 245, 255, 0.88)),
+    #ffffff;
+}
+
+.study-path-score {
+  border-color: rgba(22, 135, 85, 0.24);
+  background: rgba(236, 253, 245, 0.64);
+}
+
+.study-lesson-stage {
+  border-top: 4px solid var(--lavender);
+}
+
+.study-support-panel {
+  border-top: 4px solid var(--teal-600);
+}
+
+.study-support-panel + .study-support-panel {
+  border-top-color: var(--amber);
+}
+
+.study-lesson-rail {
+  border-top: 4px solid #a8b4c7;
+}
+
+.study-phase-node {
+  border-color: rgba(219, 228, 240, 0.95);
+  background: var(--surface-soft);
+}
+
+.study-phase-node.done {
+  border-color: rgba(22, 135, 85, 0.24);
+  background: var(--mint-50);
+}
+
+.study-phase-node.active {
+  border-color: rgba(124, 58, 237, 0.26);
+  background: var(--violet-50);
+  box-shadow: inset 0 -3px 0 var(--lavender);
+}
+
+.study-pattern-card {
+  border-color: rgba(79, 70, 229, 0.2);
+  background:
+    linear-gradient(135deg, rgba(241, 245, 255, 0.96), #ffffff);
+}
+
+.study-example-card {
+  border-color: rgba(15, 118, 110, 0.22);
+  background:
+    linear-gradient(135deg, rgba(237, 253, 250, 0.94), #ffffff);
+}
+
+.study-practice-card {
+  background: #ffffff;
+}
+
+.study-practice-card:nth-child(1) {
+  border-color: rgba(79, 70, 229, 0.18);
+}
+
+.study-practice-card:nth-child(2) {
+  border-color: rgba(15, 118, 110, 0.2);
+}
+
+.study-practice-card:nth-child(3) {
+  border-color: rgba(217, 119, 6, 0.22);
+}
+
+.study-tutor-brief,
+.study-tutor-insight,
+.chapter-assessment-heading {
+  border-color: rgba(217, 119, 6, 0.24);
+  background:
+    linear-gradient(135deg, rgba(255, 247, 237, 0.96), #ffffff);
+}
+
+.study-lesson-row {
+  border-color: rgba(219, 228, 240, 0.96);
+  background: #ffffff;
+}
+
+.study-lesson-row:hover {
+  border-color: rgba(124, 58, 237, 0.22);
+  background: var(--violet-50);
+}
+
+.study-lesson-row.active {
+  border-color: rgba(15, 118, 110, 0.32);
+  background:
+    linear-gradient(135deg, rgba(236, 253, 245, 0.92), #ffffff);
+}
+
+.study-lesson-row:disabled {
+  background: #f8fafc;
+  color: #94a3b8;
+}
+
+.study-lesson-index {
+  background: var(--sky-50);
+}
+
+.study-lesson-row.active .study-lesson-index {
+  background: var(--lavender);
+}
+
+.study-lesson-status.current,
+.study-lesson-status.open {
+  background: var(--violet-50);
+  color: var(--sky-700);
+}
+
+.study-lesson-status.done {
+  background: var(--mint-50);
+  color: var(--green-600);
+}
+
+.study-lesson-status.review {
+  background: var(--sun-50);
+  color: var(--amber);
+}
+
+.study-flashcard,
+.flashcard-card {
+  border-color: rgba(124, 58, 237, 0.22);
+  background:
+    linear-gradient(135deg, rgba(241, 245, 255, 0.96), rgba(255, 255, 255, 0.98));
+  box-shadow:
+    inset 0 -4px 0 rgba(124, 58, 237, 0.12),
+    0 14px 34px rgba(31, 41, 55, 0.07);
+}
+
+.study-flashcard.flipped,
+.flashcard-card.flipped {
+  border-color: rgba(15, 118, 110, 0.32);
+  background:
+    linear-gradient(135deg, rgba(236, 253, 245, 0.96), rgba(255, 255, 255, 0.98));
+  box-shadow:
+    inset 0 -4px 0 rgba(15, 118, 110, 0.15),
+    0 14px 34px rgba(31, 41, 55, 0.07);
+}
+
+.study-option {
+  background: #ffffff;
+}
+
+.study-option:hover {
+  border-color: var(--lavender);
+  background: var(--violet-50);
+  color: var(--blue-950);
+}
+
+.study-option.selected {
+  border-color: var(--lavender);
+  background: var(--lavender);
+  color: #ffffff;
+}
+
+.study-question.active-support {
+  border-color: var(--amber);
+  box-shadow:
+    inset 4px 0 0 var(--amber),
+    0 12px 24px rgba(217, 119, 6, 0.08);
+}
+
+.study-result.passed {
+  background:
+    linear-gradient(135deg, rgba(236, 253, 245, 0.96), #ffffff);
+}
+
+.study-result.retry {
+  background:
+    linear-gradient(135deg, rgba(255, 241, 242, 0.94), #ffffff);
+}
+
+.study-adaptive-card {
+  background: var(--surface-soft);
+}
+
+.study-adaptive-card.support {
+  background: var(--sun-50);
+}
+
+.study-adaptive-card.fast {
+  background: var(--mint-50);
+}
+
+.knowledge-category.active,
+.knowledge-category:hover,
+.knowledge-quick-row button:hover {
+  border-color: rgba(15, 118, 110, 0.28);
+  background: var(--teal-50);
+}
+
+.knowledge-card {
+  background:
+    linear-gradient(135deg, rgba(241, 245, 255, 0.78), #ffffff);
+}
+
+.knowledge-card:nth-child(even) {
+  background:
+    linear-gradient(135deg, rgba(237, 253, 250, 0.76), #ffffff);
+}
+
+.dictionary-usage {
+  background: var(--surface-warm);
+}
+
+.flashcard-mode-tabs {
+  background: var(--surface-soft);
+}
+
+.flashcard-mode-tabs button.active,
+.flashcard-mode-tabs button:hover,
+.flashcard-filter-group button.active,
+.flashcard-filter-group button:hover {
+  border-color: rgba(79, 70, 229, 0.22);
+  background: var(--sky-600);
+  color: #ffffff;
+}
+
+.flashcard-filter-group.category button:nth-child(2).active,
+.flashcard-filter-group.category button:nth-child(2):hover {
+  background: var(--teal-600);
+}
+
+.flashcard-filter-group.category button:nth-child(3).active,
+.flashcard-filter-group.category button:nth-child(3):hover {
+  background: var(--amber);
+}
+
+.flashcard-rule-list span,
+.assessment-status-list span {
+  background: var(--teal-50);
+}
+
+.study-feedback {
+  border: 1px solid rgba(124, 58, 237, 0.22);
+  border-top: 4px solid var(--lavender);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(241, 245, 255, 0.74));
+  box-shadow: 0 16px 34px rgba(31, 41, 55, 0.08);
+}
+
+.study-feedback.tutor {
+  border-top-color: var(--teal-600);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(237, 253, 250, 0.76));
+}
+
+.study-feedback-heading svg {
+  background: var(--lavender);
+}
+
+.study-feedback.tutor .study-feedback-heading svg {
+  background: var(--teal-600);
+}
+
+.study-feedback-question,
+.study-feedback-rating,
+.pilot-survey-question {
+  background: rgba(255, 255, 255, 0.84);
+}
+
+.study-feedback-rating button,
+.study-feedback-choice-row button,
+.pilot-survey-rating-buttons button {
+  border-color: rgba(148, 163, 184, 0.42);
+  background: #ffffff;
+}
+
+.study-feedback-rating button:hover,
+.study-feedback-choice-row button:hover,
+.pilot-survey-rating-buttons button:hover {
+  border-color: rgba(124, 58, 237, 0.32);
+  background: var(--violet-50);
+  color: var(--blue-950);
+}
+
+.study-feedback-rating button.active,
+.study-feedback-choice-row button.active,
+.pilot-survey-rating-buttons button.active {
+  border-color: var(--teal-600);
+  background: var(--teal-600);
+  color: #ffffff;
+  box-shadow: 0 8px 18px rgba(15, 118, 110, 0.2);
+}
+
+.study-feedback-actions button:last-child {
+  border-color: var(--sky-600);
+  background: var(--sky-600);
+}
+
+.study-feedback-actions button:first-child:hover {
+  background: var(--surface-soft);
+  color: var(--ink);
+}
+
+.pilot-survey {
+  border-color: rgba(15, 118, 110, 0.2);
+  border-top: 4px solid var(--teal-600);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(237, 253, 250, 0.72));
+}
+
+.pilot-survey.compact {
+  background:
+    linear-gradient(135deg, rgba(255, 247, 237, 0.72), #ffffff);
+}
+
+.pilot-survey-heading svg {
+  background: var(--teal-600);
+}
+
+.pilot-survey-scale {
+  background: var(--surface-warm);
+}
+
+.floating-tutor:not(.open) .floating-tutor-bar {
+  border-color: rgba(124, 58, 237, 0.2);
+  background: #ffffff;
+  box-shadow: 0 14px 34px rgba(124, 58, 237, 0.18);
+}
+
+.floating-tutor-icon {
+  background: var(--lavender);
+}
+
+.floating-tutor.has-nudge:not(.open) .floating-tutor-bar {
+  border-color: rgba(217, 119, 6, 0.5);
+  box-shadow: 0 16px 38px rgba(217, 119, 6, 0.22);
+}
+
+.floating-tutor-panel {
+  border-color: rgba(124, 58, 237, 0.18);
+}
+
+.floating-nudge-card {
+  border-color: rgba(217, 119, 6, 0.28);
+  background: var(--sun-50);
+}
+
+.learner-tour-highlight {
+  border-color: #ffffff;
+  box-shadow:
+    0 0 0 9999px rgba(15, 23, 42, 0.68),
+    0 0 0 6px rgba(245, 158, 11, 0.22),
+    0 16px 42px rgba(15, 23, 42, 0.28);
+}
+
+.learner-tour-card {
+  border-top: 4px solid var(--amber);
+}
+
+.learner-tour-progress span.active {
+  background: var(--amber);
+}
+
+@media (max-width: 940px) {
+  .study-lesson-rail {
+    max-height: 76vh;
+    overflow: hidden;
+  }
+
+  .study-lesson-rail .study-lesson-list {
+    max-height: 62vh;
+    overflow: auto;
+    padding-right: 2px;
+  }
+
+  .friendly-mission-strip,
+  .study-phase-track {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .app-main {
+    padding: 12px;
+  }
+
+  .topbar {
+    padding: 10px;
+  }
+
+  .landing-screen,
+  .public-onboarding-screen {
+    padding: 12px;
+  }
+
+  .landing-hero {
+    padding: 24px 14px;
+  }
+
+  .friendly-hero,
+  .study-path-hero,
+  .workspace-panel,
+  .friendly-lesson-card,
+  .study-lesson-stage,
+  .study-lesson-rail,
+  .study-support-panel {
+    padding: 14px;
+  }
+
+  .friendly-mission-strip,
+  .study-phase-track,
+  .preview-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .study-action-row .primary-button,
+  .study-action-row .icon-text-button,
+  .study-support-panel button,
+  .friendly-secondary-action {
+    min-height: 46px;
+  }
+
+  .study-flashcard,
+  .flashcard-card {
+    min-height: 220px;
+  }
+
+  .study-feedback-actions {
+    flex-direction: column-reverse;
+  }
+
+  .study-feedback-actions button {
+    width: 100%;
+  }
+}
